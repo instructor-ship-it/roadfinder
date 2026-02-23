@@ -1,16 +1,15 @@
 {
-  "download_date": "2026-02-23T15:06:47.545Z",
-  "total_roads": 69471,
+  "download_date": "2026-02-23T22:13:25.087Z",
+  "total_roads": 67234,
   "total_speed_zones": 69455,
   "regions": [
-    "Metropolitan",
-    "Wheatbelt",
-    "South West",
     "Great Southern",
     "Kimberley",
+    "Metropolitan",
     "Mid West-Gascoyne",
     "Pilbara",
-    "Unknown"
+    "South West",
+    "Wheatbelt"
   ],
-  "source": "Layer 17 - Road Network (with RA_NAME)"
+  "source": "Layer 17 - Road Network (with RA_NAME for all roads)"
 }

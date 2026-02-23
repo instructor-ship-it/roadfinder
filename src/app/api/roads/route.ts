@@ -12,7 +12,7 @@
 import { NextResponse } from 'next/server';
 
 const STATE_ROAD_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/24/query";
-const ALL_ROADS_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/18/query";
+const ALL_ROADS_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/17/query"; // Layer 17 has RA_NAME for all roads
 const SPEED_ZONE_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/8/query";
 
 async function fetchArcGIS(params: Record<string, string>, baseUrl: string = STATE_ROAD_URL): Promise<any> {
@@ -382,9 +382,7 @@ export async function POST(request: Request) {
     // Get road geometry within TC zone
     const query = {
       where: `ROAD = '${road_id}' AND START_SLK < ${tcEndSlk} AND END_SLK > ${tcStartSlk}`,
-      outFields: isStateRoad 
-        ? "ROAD,ROAD_NAME,START_SLK,END_SLK,RA_NAME" 
-        : "ROAD,ROAD_NAME,START_SLK,END_SLK,NETWORK_TYPE",
+      outFields: "ROAD,ROAD_NAME,START_SLK,END_SLK,RA_NAME,NETWORK_TYPE",
       returnGeometry: "true",
       f: "json"
     };

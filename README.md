@@ -97,8 +97,21 @@ If the SLK reading is inaccurate:
 ## Data Sources
 
 - **Road Data**: Main Roads WA ArcGIS REST API
-  - Layer 18: Road Network with SLK geometry
+  - Layer 17: Road Network with SLK geometry AND region info (RA_NAME) for ALL roads
   - Layer 8: Speed Zones
+
+### Offline Data
+
+The app includes pre-downloaded road data for **67,000+ roads** across all 7 MRWA regions:
+- **Metropolitan**: 38,000+ roads
+- **South West**: 11,000+ roads
+- **Wheatbelt**: 7,900+ roads
+- **Great Southern**: 3,800+ roads
+- **Mid West-Gascoyne**: 3,700+ roads
+- **Pilbara**: 1,800+ roads
+- **Kimberley**: 1,100+ roads
+
+Plus **69,000+ speed zones** for accurate speed limit display.
 - **Weather**: Open-Meteo API
 - **Traffic**: Main Roads WA Traffic Count Data
 - **Amenities**: Overpass API (OpenStreetMap)
@@ -157,7 +170,15 @@ src/
 
 ## Version History
 
-### v2.5.5 (Current)
+### v2.6.1 (Current)
+- **Major data improvement**: Now using Layer 17 which includes region (RA_NAME) for ALL roads
+- **67,000+ roads** with correct MRWA region assignments
+- **Local roads now included** with proper region mapping
+- Fixed H005 showing only Metropolitan (now correctly spans Metro/Wheatbelt/Goldfields)
+- Fixed M056 now correctly shows Wheatbelt region
+- Local roads like Hovea Crescent in Wundowie now correctly show Wheatbelt/Northam
+
+### v2.5.5
 - Fixed TypeScript build error (parameter order)
 - Region-based downloading (downloads one region at a time)
 - Avoids Vercel timeout by fetching smaller chunks

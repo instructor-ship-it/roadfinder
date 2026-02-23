@@ -15,15 +15,12 @@ export interface DownloadProgress {
 
 const REGIONS = [
   'metropolitan',
-  'pilbara',
-  'other',
   'wheatbelt',
   'south-west',
-  'goldfields-esperance',
-  'kimberley',
-  'mid-west',
   'great-southern',
-  'gascoyne',
+  'kimberley',
+  'mid-west-gascoyne',
+  'pilbara',
 ];
 
 /**

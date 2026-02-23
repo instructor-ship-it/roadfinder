@@ -2,12 +2,12 @@
  * API Route: /api/gps
  * 
  * Reverse geocoding - converts GPS coordinates to Road ID, Name, SLK
- * Uses MRWA Layer 18 which includes ALL roads (State + Local)
+ * Uses MRWA Layer 17 which includes ALL roads (State + Local) with RA_NAME
  */
 
 import { NextResponse } from 'next/server';
 
-const ROAD_NETWORK_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/18/query";
+const ROAD_NETWORK_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/17/query"; // Layer 17 has RA_NAME for all roads
 
 interface RoadResult {
   road_id: string;
@@ -129,7 +129,7 @@ export async function GET(request: Request) {
       geometry: bbox,
       geometryType: 'esriGeometryEnvelope',
       spatialRel: 'esriSpatialRelIntersects',
-      outFields: 'ROAD,ROAD_NAME,START_SLK,END_SLK,CWY,NETWORK_TYPE',
+      outFields: 'ROAD,ROAD_NAME,START_SLK,END_SLK,RA_NAME,CWY,NETWORK_TYPE',
       returnGeometry: 'true',
       f: 'json',
       resultRecordCount: '50'
@@ -167,6 +167,7 @@ export async function GET(request: Request) {
       distance_m: closest.distance_m,
       carriageway: closest.carriageway,
       network_type: closest.network_type,
+      region: closest.region,
       
       // Location
       lat,
