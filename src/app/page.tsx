@@ -186,6 +186,8 @@ export default function Home() {
   const [downloading, setDownloading] = useState<boolean>(false)
   const [downloadProgress, setDownloadProgress] = useState<string>('')
   const [offlineStats, setOfflineStats] = useState<{total_roads: number; download_date: string} | null>(null)
+  const [debugInfo, setDebugInfo] = useState<string>('')
+  const [showDebug, setShowDebug] = useState<boolean>(false)
   
   // Collapsible sections state
   const [showTraffic, setShowTraffic] = useState<boolean>(true)
@@ -299,6 +301,53 @@ export default function Home() {
     } catch (e) {
       setDownloadProgress('Failed to clear data')
     }
+  }
+
+  const generateDebugInfo = async () => {
+    const lines: string[] = []
+    lines.push('=== TC Work Zone Locator Debug Info ===')
+    lines.push(`Generated: ${new Date().toISOString()}`)
+    lines.push(`Version: 2.7.4`)
+    lines.push('')
+    lines.push('=== Offline Data Status ===')
+    lines.push(`Offline Ready: ${offlineReady}`)
+    lines.push(`Offline Stats: ${JSON.stringify(offlineStats)}`)
+    lines.push('')
+    lines.push('=== Current Selection ===')
+    lines.push(`Region: ${selectedRegion}`)
+    lines.push(`Road ID: ${selectedRoad}`)
+    lines.push(`Road Info: ${JSON.stringify(roadInfo)}`)
+    lines.push(`Start SLK: ${startSlk}`)
+    lines.push(`End SLK: ${endSlk}`)
+    lines.push('')
+    lines.push('=== GPS Location ===')
+    lines.push(`GPS Lat: ${gpsLat}`)
+    lines.push(`GPS Lon: ${gpsLon}`)
+    lines.push(`GPS Road Info: ${JSON.stringify(gpsRoadInfo)}`)
+    lines.push('')
+    lines.push('=== Result ===')
+    if (result) {
+      lines.push(`Road ID: ${result.road_id}`)
+      lines.push(`Road Name: ${result.road_name}`)
+      lines.push(`Network Type: ${result.network_type}`)
+      lines.push(`Work Zone: SLK ${result.work_zone.start_slk} - ${result.work_zone.end_slk}`)
+      lines.push(`Carriageway: ${result.carriageway}`)
+      lines.push(`Speed Zones: ${JSON.stringify(result.speed_zones)}`)
+    } else {
+      lines.push('No result')
+    }
+    lines.push('')
+    lines.push('=== Error ===')
+    lines.push(`Error: ${error || 'None'}`)
+    lines.push('')
+    lines.push('=== Weather ===')
+    lines.push(JSON.stringify(weather, null, 2))
+    lines.push('')
+    lines.push('=== Traffic ===')
+    lines.push(JSON.stringify(traffic, null, 2))
+    
+    setDebugInfo(lines.join('\n'))
+    setShowDebug(true)
   }
 
   const fetchRegions = async () => {
@@ -630,7 +679,7 @@ export default function Home() {
           </button>
         </div>
         <p className="text-xs text-gray-400 text-center mb-4">
-          v2.7.3 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}
+          v2.7.4 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}
         </p>
 
         {/* Setup Dialog */}
@@ -656,7 +705,7 @@ export default function Home() {
               </p>
             )}
             
-            <div className="flex gap-2">
+            <div className="flex gap-2 mb-2">
               <Button
                 onClick={handleDownloadOfflineData}
                 disabled={downloading}
@@ -673,6 +722,55 @@ export default function Home() {
                   Clear
                 </Button>
               )}
+            </div>
+            
+            {/* Debug Button */}
+            <Button
+              onClick={generateDebugInfo}
+              className="w-full bg-gray-600 hover:bg-gray-500 text-sm"
+            >
+              🔧 Generate Debug Info
+            </Button>
+          </div>
+        )}
+
+        {/* Debug Info Popup */}
+        {showDebug && (
+          <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+            <div className="bg-gray-800 rounded-lg p-4 max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-sm font-semibold text-blue-400">🔧 Debug Info</h3>
+                <Button
+                  onClick={() => setShowDebug(false)}
+                  className="h-8 w-8 p-0 bg-gray-700 hover:bg-gray-600"
+                >
+                  ✕
+                </Button>
+              </div>
+              <textarea
+                readOnly
+                value={debugInfo}
+                className="flex-1 w-full bg-gray-900 text-gray-300 text-xs font-mono p-3 rounded border border-gray-700 resize-none min-h-[300px]"
+                onClick={(e) => (e.target as HTMLTextAreaElement).select()}
+              />
+              <div className="flex gap-2 mt-3">
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(debugInfo)
+                    setDownloadProgress('Debug info copied!')
+                    setTimeout(() => setDownloadProgress(''), 2000)
+                  }}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                >
+                  📋 Copy to Clipboard
+                </Button>
+                <Button
+                  onClick={() => setShowDebug(false)}
+                  className="bg-gray-600 hover:bg-gray-500"
+                >
+                  Close
+                </Button>
+              </div>
             </div>
           </div>
         )}

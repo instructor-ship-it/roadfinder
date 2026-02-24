@@ -78,6 +78,10 @@ function DriveContent() {
   const [calibrateSlk, setCalibrateSlk] = useState('');
   const [calibrateMessage, setCalibrateMessage] = useState('');
   
+  // Debug state
+  const [debugInfo, setDebugInfo] = useState<string>('');
+  const [showDebug, setShowDebug] = useState(false);
+  
   // Refs
   const roadFetchTime = useRef(0);
   const previousSlkRef = useRef<number | null>(null);
@@ -317,6 +321,68 @@ function DriveContent() {
     setRoadLoading(false);
   };
 
+  // Generate debug info for troubleshooting
+  const generateDebugInfo = () => {
+    const lines: string[] = [];
+    lines.push('=== SLK Tracking Debug Info ===');
+    lines.push(`Generated: ${new Date().toISOString()}`);
+    lines.push(`Version: 2.7.4`);
+    lines.push('');
+    lines.push('=== Destination ===');
+    lines.push(`Road ID: ${destRoadId}`);
+    lines.push(`Road Name: ${destRoadName}`);
+    lines.push(`Target SLK: ${destSlk}`);
+    lines.push('');
+    lines.push('=== Current Location ===');
+    lines.push(`Lat: ${currentLocation?.lat}`);
+    lines.push(`Lon: ${currentLocation?.lon}`);
+    lines.push(`Speed: ${currentLocation?.speed} m/s (${currentSpeedKmh} km/h)`);
+    lines.push(`Heading: ${currentLocation?.heading}°`);
+    lines.push(`Accuracy: ${currentLocation?.accuracy}m`);
+    lines.push('');
+    lines.push('=== Road Info ===');
+    lines.push(`Road ID: ${roadInfo?.road_id}`);
+    lines.push(`Road Name: ${roadInfo?.road_name}`);
+    lines.push(`Current SLK: ${roadInfo?.slk}`);
+    lines.push(`Calibrated SLK: ${calibratedSlk}`);
+    lines.push(`Network Type: ${roadInfo?.network_type}`);
+    lines.push(`Distance from road: ${roadInfo?.distance_m}m`);
+    lines.push('');
+    lines.push('=== Speed Zones ===');
+    lines.push(`Total zones loaded: ${speedZones.length}`);
+    if (speedZones.length > 0) {
+      lines.push('');
+      lines.push('All speed zones for this road:');
+      const sortedZones = [...speedZones].sort((a, b) => a.start_slk - b.start_slk);
+      for (const zone of sortedZones) {
+        const matches = calibratedSlk !== null && 
+          calibratedSlk >= zone.start_slk && 
+          calibratedSlk <= zone.end_slk;
+        lines.push(`  SLK ${zone.start_slk.toFixed(2)}-${zone.end_slk.toFixed(2)}: ${zone.speed_limit}km/h ${matches ? '<<< MATCHED' : ''}`);
+      }
+    }
+    lines.push('');
+    lines.push('=== Speed Limit ===');
+    lines.push(`Current displayed: ${currentSpeedLimit} km/h`);
+    lines.push(`Is speeding: ${isSpeeding}`);
+    lines.push('');
+    lines.push('=== Calibration ===');
+    lines.push(`Offset for ${roadInfo?.road_id}: ${calibrations[roadInfo?.road_id || ''] || 0} km`);
+    lines.push('');
+    lines.push('=== Direction ===');
+    lines.push(`Direction: ${direction}`);
+    lines.push(`Distance to dest: ${distanceToDest?.toFixed(3)} km`);
+    lines.push('');
+    lines.push('=== Offline Status ===');
+    lines.push(`Offline Ready: ${offlineReady}`);
+    lines.push('');
+    lines.push('=== Error ===');
+    lines.push(`Location Error: ${locationError || 'None'}`);
+    
+    setDebugInfo(lines.join('\n'));
+    setShowDebug(true);
+  };
+
   // Start GPS tracking
   function startTracking() {
     if (!navigator.geolocation) {
@@ -415,7 +481,7 @@ function DriveContent() {
       {/* Header */}
       <div className="text-center mb-4">
         <h1 className="text-xl font-bold text-blue-400">SLK Tracking</h1>
-        <p className="text-xs text-gray-400">v2.7.3 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}</p>
+        <p className="text-xs text-gray-400">v2.7.4 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}</p>
         {offlineReady ? (
           <p className="text-xs text-green-400 mt-1">📦 Offline Mode Ready</p>
         ) : (
@@ -719,6 +785,55 @@ function DriveContent() {
       {watchId !== null && !currentLocation && (
         <div className="bg-gray-800 rounded-lg p-4 mb-4 text-center">
           <p className="text-gray-400">Waiting for GPS fix...</p>
+        </div>
+      )}
+
+      {/* Debug Button */}
+      <div className="bg-gray-800 rounded-lg p-4 mb-4">
+        <Button
+          onClick={generateDebugInfo}
+          className="w-full bg-gray-600 hover:bg-gray-500 text-sm"
+        >
+          🔧 Generate Debug Info
+        </Button>
+      </div>
+
+      {/* Debug Info Popup */}
+      {showDebug && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-800 rounded-lg p-4 max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
+            <div className="flex justify-between items-center mb-3">
+              <h3 className="text-sm font-semibold text-blue-400">🔧 Debug Info</h3>
+              <Button
+                onClick={() => setShowDebug(false)}
+                className="h-8 w-8 p-0 bg-gray-700 hover:bg-gray-600"
+              >
+                ✕
+              </Button>
+            </div>
+            <textarea
+              readOnly
+              value={debugInfo}
+              className="flex-1 w-full bg-gray-900 text-gray-300 text-xs font-mono p-3 rounded border border-gray-700 resize-none min-h-[300px]"
+              onClick={(e) => (e.target as HTMLTextAreaElement).select()}
+            />
+            <div className="flex gap-2 mt-3">
+              <Button
+                onClick={() => {
+                  navigator.clipboard.writeText(debugInfo);
+                }}
+                className="flex-1 bg-blue-600 hover:bg-blue-700"
+              >
+                📋 Copy to Clipboard
+              </Button>
+              <Button
+                onClick={() => setShowDebug(false)}
+                className="bg-gray-600 hover:bg-gray-500"
+              >
+                Close
+              </Button>
+            </div>
+          </div>
         </div>
       )}
     </div>
