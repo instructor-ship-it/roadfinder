@@ -102,23 +102,24 @@ If the SLK reading is inaccurate:
 
 ### Offline Data
 
-The app includes pre-downloaded road data for **67,000+ roads** across all 7 MRWA regions:
-- **Metropolitan**: 38,000+ roads
-- **South West**: 11,000+ roads
-- **Wheatbelt**: 7,900+ roads
-- **Great Southern**: 3,800+ roads
-- **Mid West-Gascoyne**: 3,700+ roads
-- **Pilbara**: 1,800+ roads
-- **Kimberley**: 1,100+ roads
+The app includes pre-downloaded road data for **69,471 roads** across all 8 MRWA regions:
+- **Metropolitan**: 37,995 roads
+- **South West**: 10,952 roads
+- **Wheatbelt**: 7,895 roads
+- **Great Southern**: 3,760 roads
+- **Mid West-Gascoyne**: 3,707 roads
+- **Pilbara**: 1,793 roads
+- **Kimberley**: 1,132 roads
+- **Other/Unknown**: 2,237 roads
 
-Plus **69,000+ speed zones** for accurate speed limit display.
+Plus **69,455 speed zones** for accurate speed limit display.
 - **Weather**: Open-Meteo API
 - **Traffic**: Main Roads WA Traffic Count Data
 - **Amenities**: Overpass API (OpenStreetMap)
 
 ## Technical Stack
 
-- **Framework**: Next.js 16 with App Router
+- **Framework**: Next.js 15 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **UI Components**: shadcn/ui
@@ -170,7 +171,14 @@ src/
 
 ## Version History
 
-### v2.6.1 (Current)
+### v2.7.0 (Current)
+- **Complete WA road coverage**: 69,471 roads across all 8 MRWA regions
+- **69,455 speed zones** for speed limit lookup
+- Data sourced from Layer 17 (Road Network with RA_NAME for all roads)
+- Static data files in `/public/data/` for reliable offline loading
+- Updated status indicator shows "69K Roads • 8 Regions"
+
+### v2.6.1
 - **Major data improvement**: Now using Layer 17 which includes region (RA_NAME) for ALL roads
 - **67,000+ roads** with correct MRWA region assignments
 - **Local roads now included** with proper region mapping
