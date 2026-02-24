@@ -618,7 +618,7 @@ export default function Home() {
           </button>
         </div>
         <p className="text-xs text-gray-400 text-center mb-4">
-          v2.6.4 {offlineReady && <span className="text-green-400">• 69K Roads</span>}
+          v2.7.0 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}
         </p>
 
         {/* Setup Dialog */}
