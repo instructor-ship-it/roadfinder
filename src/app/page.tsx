@@ -18,6 +18,7 @@ import {
   storeSpeedZones,
   storeMetadata,
   clearOfflineData,
+  getSpeedZones,
 } from '@/lib/offline-db'
 import {
   loadStaticData,
@@ -186,6 +187,7 @@ export default function Home() {
   const [downloading, setDownloading] = useState<boolean>(false)
   const [downloadProgress, setDownloadProgress] = useState<string>('')
   const [offlineStats, setOfflineStats] = useState<{total_roads: number; download_date: string} | null>(null)
+  const [speedLimit, setSpeedLimit] = useState<number | null>(null)
   const [debugInfo, setDebugInfo] = useState<string>('')
   const [showDebug, setShowDebug] = useState<boolean>(false)
   
@@ -307,7 +309,7 @@ export default function Home() {
     const lines: string[] = []
     lines.push('=== TC Work Zone Locator Debug Info ===')
     lines.push(`Generated: ${new Date().toISOString()}`)
-    lines.push(`Version: 2.7.4`)
+    lines.push(`Version: 2.7.5`)
     lines.push('')
     lines.push('=== Offline Data Status ===')
     lines.push(`Offline Ready: ${offlineReady}`)
@@ -442,6 +444,9 @@ export default function Home() {
       } else {
         setResult(data)
         
+        // Fetch speed limit for this road at the start SLK
+        fetchSpeedLimit(selectedRoad, parseFloat(startSlk))
+        
         // Fetch additional data using midpoint
         if (data.midpoint) {
           fetchWeather(data.midpoint.lat, data.midpoint.lon)
@@ -455,6 +460,35 @@ export default function Home() {
       setError('Failed to get location')
     } finally {
       setLoading(false)
+    }
+  }
+
+  // Look up speed limit for a road at a specific SLK
+  const fetchSpeedLimit = async (roadId: string, slk: number) => {
+    try {
+      const zones = await getSpeedZones(roadId)
+      if (zones.length === 0) {
+        setSpeedLimit(null)
+        return
+      }
+      // Find the zone that contains this SLK
+      const matchingZone = zones.find(z => slk >= z.start_slk && slk <= z.end_slk)
+      if (matchingZone) {
+        setSpeedLimit(matchingZone.speed_limit)
+      } else {
+        // Find nearest zone if not in any zone
+        const sortedZones = [...zones].sort((a, b) => {
+          const distA = Math.min(Math.abs(a.start_slk - slk), Math.abs(a.end_slk - slk))
+          const distB = Math.min(Math.abs(b.start_slk - slk), Math.abs(b.end_slk - slk))
+          return distA - distB
+        })
+        if (sortedZones.length > 0) {
+          setSpeedLimit(sortedZones[0].speed_limit)
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching speed limit:', err)
+      setSpeedLimit(null)
     }
   }
 
@@ -679,7 +713,7 @@ export default function Home() {
           </button>
         </div>
         <p className="text-xs text-gray-400 text-center mb-4">
-          v2.7.4 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}
+          v2.7.5 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}
         </p>
 
         {/* Setup Dialog */}

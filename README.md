@@ -171,7 +171,12 @@ src/
 
 ## Version History
 
-### v2.7.0 (Current)
+### v2.7.5 (Current)
+- **Fixed speed limit calculation**: Speed zones now correctly display the actual speed limit at your current SLK position
+- Speed limits are now numeric values (e.g., 110 instead of "110km/h") for accurate comparison
+- Posted limit display now correctly shows the speed limit from MRWA data based on current road ID and SLK
+
+### v2.7.0
 - **Complete WA road coverage**: 69,471 roads across all 8 MRWA regions
 - **69,455 speed zones** for speed limit lookup
 - Data sourced from Layer 17 (Road Network with RA_NAME for all roads)
