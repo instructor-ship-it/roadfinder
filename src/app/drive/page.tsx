@@ -296,9 +296,9 @@ function DriveContent() {
           accuracy: position.coords.accuracy
         });
 
-        // Fetch road info every 1 second
+        // Fetch road info every 0.5 seconds
         const now = Date.now();
-        if (now - roadFetchTime.current > 1000) {
+        if (now - roadFetchTime.current > 500) {
           roadFetchTime.current = now;
           fetchRoadInfo(position.coords.latitude, position.coords.longitude);
         }
@@ -308,7 +308,7 @@ function DriveContent() {
       },
       {
         enableHighAccuracy: true,
-        maximumAge: 1000,
+        maximumAge: 500,
         timeout: 10000
       }
     );
@@ -375,7 +375,7 @@ function DriveContent() {
       {/* Header */}
       <div className="text-center mb-4">
         <h1 className="text-xl font-bold text-blue-400">SLK Tracking</h1>
-        <p className="text-xs text-gray-400">v2.5.9 {offlineReady && <span className="text-green-400">• Offline Ready</span>}</p>
+        <p className="text-xs text-gray-400">v2.6.2 {offlineReady && <span className="text-green-400">• Offline Ready</span>}</p>
         {offlineReady ? (
           <p className="text-xs text-green-400 mt-1">📦 Offline Mode Ready</p>
         ) : (
