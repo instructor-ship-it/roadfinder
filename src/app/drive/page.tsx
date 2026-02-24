@@ -31,7 +31,7 @@ interface SpeedZone {
   road_id: string;
   start_slk: number;
   end_slk: number;
-  speed_limit: number;
+  speed_limit: number; // Parsed number (was "110km/h" string from MRWA)
 }
 
 interface CalibrationSettings {
@@ -196,6 +196,43 @@ function DriveContent() {
    
   }, [calibratedSlk, currentLocation, destSlk, destRoadId, roadInfo?.road_id]);
 
+  // Derive current speed limit from speed zones based on SLK
+  const currentSpeedLimit = (() => {
+    if (!speedZones.length || calibratedSlk === null) {
+      return speedLimit; // Fall back to initial speed limit
+    }
+    
+    // Sort zones by start_slk for proper ordering
+    const sortedZones = [...speedZones].sort((a, b) => a.start_slk - b.start_slk);
+    
+    for (const zone of sortedZones) {
+      if (calibratedSlk >= zone.start_slk && calibratedSlk <= zone.end_slk) {
+        return zone.speed_limit;
+      }
+    }
+    
+    return speedLimit; // Default to initial if no matching zone
+  })();
+
+  // Derive next speed zone for advance warning
+  const nextSpeedZone = (() => {
+    if (!speedZones.length || calibratedSlk === null) return null;
+    
+    // Sort zones by start_slk for proper ordering
+    const sortedZones = [...speedZones].sort((a, b) => a.start_slk - b.start_slk);
+    
+    for (const zone of sortedZones) {
+      if (zone.start_slk > calibratedSlk) {
+        return {
+          speed_limit: zone.speed_limit,
+          distance_km: zone.start_slk - calibratedSlk
+        };
+      }
+    }
+    
+    return null;
+  })();
+
   // Distance calculation
   const distanceToDest = (() => {
     if (!roadInfo || !destSlk || roadInfo.road_id !== destRoadId || calibratedSlk === null) return null;
@@ -204,7 +241,7 @@ function DriveContent() {
 
   // Current speed
   const currentSpeedKmh = currentLocation ? Math.round(currentLocation.speed * 3.6) : 0;
-  const isSpeeding = currentSpeedKmh > speedLimit;
+  const isSpeeding = currentSpeedKmh > currentSpeedLimit;
 
   // Fetch road info using offline data (client-side)
   const fetchRoadInfoOffline = async (lat: number, lon: number) => {
@@ -375,7 +412,7 @@ function DriveContent() {
       {/* Header */}
       <div className="text-center mb-4">
         <h1 className="text-xl font-bold text-blue-400">SLK Tracking</h1>
-        <p className="text-xs text-gray-400">v2.6.2 {offlineReady && <span className="text-green-400">• Offline Ready</span>}</p>
+        <p className="text-xs text-gray-400">v2.6.4 {offlineReady && <span className="text-green-400">• Offline Ready</span>}</p>
         {offlineReady ? (
           <p className="text-xs text-green-400 mt-1">📦 Offline Mode Ready</p>
         ) : (
@@ -422,6 +459,9 @@ function DriveContent() {
                 {currentSpeedKmh}
               </div>
               <p className="text-gray-400 text-sm">km/h</p>
+              {isSpeeding && (
+                <p className="text-red-400 text-xs mt-1">⚠️ Over limit</p>
+              )}
             </div>
             
             {/* Divider */}
@@ -430,13 +470,29 @@ function DriveContent() {
             {/* Speed Limit */}
             <div className="text-center flex-1">
               <div className="flex items-center justify-center">
-                <div className="bg-black border-4 border-white rounded-full w-16 h-16 flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">{speedLimit}</span>
+                <div className={`rounded-full w-16 h-16 flex items-center justify-center ${
+                  isSpeeding 
+                    ? 'bg-red-900 border-4 border-red-500 animate-pulse' 
+                    : 'bg-black border-4 border-white'
+                }`}>
+                  <span className={`font-bold text-xl ${isSpeeding ? 'text-red-400' : 'text-white'}`}>{currentSpeedLimit}</span>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm mt-1">Speed Limit</p>
+              <p className="text-gray-400 text-sm mt-1">Posted Limit</p>
+              {speedZones.length > 0 && (
+                <p className="text-xs text-gray-500">From MRWA Data</p>
+              )}
             </div>
           </div>
+          
+          {/* Next Speed Zone Warning */}
+          {nextSpeedZone && nextSpeedZone.distance_km < 2 && (
+            <div className="mt-3 bg-amber-900/30 border border-amber-600 rounded p-2 text-center">
+              <p className="text-amber-400 text-sm">
+                ⚠️ Speed changes to <span className="font-bold">{nextSpeedZone.speed_limit} km/h</span> in {nextSpeedZone.distance_km < 0.5 ? `${Math.round(nextSpeedZone.distance_km * 1000)}m` : `${nextSpeedZone.distance_km.toFixed(2)} km`}
+              </p>
+            </div>
+          )}
         </div>
       )}
 

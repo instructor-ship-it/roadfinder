@@ -21,6 +21,7 @@ const REGIONS = [
   'kimberley',
   'mid-west-gascoyne',
   'pilbara',
+  'unknown',
 ];
 
 /**

@@ -191,14 +191,25 @@ async function main() {
   
   // Fetch speed zones
   const speedFeatures = await fetchAllSpeedZones();
-  const speedZones = speedFeatures.map(f => ({
-    road_id: f.attributes.ROAD,
-    road_name: f.attributes.ROAD_NAME || '',
-    start_slk: f.attributes.START_SLK || 0,
-    end_slk: f.attributes.END_SLK || 0,
-    speed_limit: f.attributes.SPEED_LIMIT || 100,
-    carriageway: f.attributes.CWY || 'Single'
-  }));
+  const speedZones = speedFeatures.map(f => {
+    // Parse speed limit - MRWA returns it as "110km/h" string, extract the number
+    let speedLimit = 100;
+    const speedStr = f.attributes.SPEED_LIMIT;
+    if (speedStr) {
+      const match = String(speedStr).match(/(\d+)/);
+      if (match) {
+        speedLimit = parseInt(match[1], 10);
+      }
+    }
+    return {
+      road_id: f.attributes.ROAD,
+      road_name: f.attributes.ROAD_NAME || '',
+      start_slk: f.attributes.START_SLK || 0,
+      end_slk: f.attributes.END_SLK || 0,
+      speed_limit: speedLimit,
+      carriageway: f.attributes.CWY || 'Single'
+    };
+  });
   
   console.log(`\nDownloaded ${speedZones.length} speed zones`);
   

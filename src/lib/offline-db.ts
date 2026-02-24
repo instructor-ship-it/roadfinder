@@ -24,7 +24,7 @@ interface SpeedZoneData {
   road_name: string;
   start_slk: number;
   end_slk: number;
-  speed_limit: number;
+  speed_limit: number | string; // Can be number or "110km/h" string from MRWA
   carriageway: string;
 }
 
@@ -87,6 +87,22 @@ export async function isOfflineDataAvailable(): Promise<boolean> {
 }
 
 /**
+ * Parse speed limit from various formats (number or "110km/h" string)
+ */
+function parseSpeedLimit(speedLimit: number | string): number {
+  if (typeof speedLimit === 'number') {
+    return speedLimit;
+  }
+  if (typeof speedLimit === 'string') {
+    const match = speedLimit.match(/(\d+)/);
+    if (match) {
+      return parseInt(match[1], 10);
+    }
+  }
+  return 100; // Default
+}
+
+/**
  * Get speed zones for a road
  */
 export async function getSpeedZones(roadId: string): Promise<SpeedZoneData[]> {
@@ -98,7 +114,13 @@ export async function getSpeedZones(roadId: string): Promise<SpeedZoneData[]> {
       const request = store.get(roadId);
 
       request.onsuccess = () => {
-        resolve(request.result?.zones || []);
+        const zones = request.result?.zones || [];
+        // Parse speed limits to numbers
+        const parsedZones = zones.map((zone: SpeedZoneData) => ({
+          ...zone,
+          speed_limit: parseSpeedLimit(zone.speed_limit)
+        }));
+        resolve(parsedZones);
       };
 
       request.onerror = () => resolve([]);
