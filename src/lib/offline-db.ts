@@ -325,6 +325,8 @@ export async function storeRegionData(region: string, roads: RoadData[]): Promis
  * Store speed zones (merges with existing zones for multi-region roads)
  */
 export async function storeSpeedZones(zones: SpeedZoneData[]): Promise<void> {
+  if (!zones.length) return;
+  
   const db = await initDB();
   
   // Group new zones by road_id
@@ -336,37 +338,62 @@ export async function storeSpeedZones(zones: SpeedZoneData[]): Promise<void> {
     byRoad.get(zone.road_id)!.push(zone);
   }
 
-  // Now merge with existing zones in IndexedDB
+  // First, get all existing zones for these roads (separate transaction)
+  const existingZones = new Map<string, SpeedZoneData[]>();
+  
+  await new Promise<void>((resolve, reject) => {
+    const tx = db.transaction('speedZones', 'readonly');
+    const store = tx.objectStore('speedZones');
+    
+    let pending = byRoad.size;
+    
+    for (const road_id of byRoad.keys()) {
+      const request = store.get(road_id);
+      request.onsuccess = () => {
+        if (request.result?.zones) {
+          existingZones.set(road_id, request.result.zones);
+        }
+        pending--;
+        if (pending === 0) resolve();
+      };
+      request.onerror = () => {
+        pending--;
+        if (pending === 0) resolve();
+      };
+    }
+    
+    tx.onerror = () => reject(tx.error);
+    
+    // Handle case where byRoad is empty
+    if (pending === 0) resolve();
+  });
+
+  // Now merge and store in a single write transaction
   return new Promise((resolve, reject) => {
     const tx = db.transaction('speedZones', 'readwrite');
     const store = tx.objectStore('speedZones');
 
     for (const [road_id, newZones] of byRoad) {
-      // Get existing zones for this road
-      const getRequest = store.get(road_id);
+      const existing = existingZones.get(road_id) || [];
       
-      getRequest.onsuccess = () => {
-        const existing = getRequest.result?.zones || [];
-        
-        // Merge: create a map to dedupe by SLK range
-        const mergedMap = new Map<string, SpeedZoneData>();
-        
-        // Add existing zones
-        for (const z of existing) {
-          const key = `${z.start_slk}-${z.end_slk}-${z.carriageway}`;
-          mergedMap.set(key, z);
-        }
-        
-        // Add/overwrite with new zones
-        for (const z of newZones) {
-          const key = `${z.start_slk}-${z.end_slk}-${z.carriageway}`;
-          mergedMap.set(key, z);
-        }
-        
-        // Store merged result
-        const mergedZones = Array.from(mergedMap.values());
-        store.put({ road_id, zones: mergedZones });
-      };
+      // Merge: create a map to dedupe by SLK range
+      const mergedMap = new Map<string, SpeedZoneData>();
+      
+      // Add existing zones first
+      for (const z of existing) {
+        const key = `${z.start_slk}-${z.end_slk}-${z.carriageway}`;
+        mergedMap.set(key, z);
+      }
+      
+      // Add/overwrite with new zones
+      for (const z of newZones) {
+        const key = `${z.start_slk}-${z.end_slk}-${z.carriageway}`;
+        mergedMap.set(key, z);
+      }
+      
+      // Store merged result
+      const mergedZones = Array.from(mergedMap.values());
+      store.put({ road_id, zones: mergedZones });
     }
 
     tx.oncomplete = () => resolve();

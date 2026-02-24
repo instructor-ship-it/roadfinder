@@ -195,18 +195,21 @@ function DriveContent() {
   // Derive current speed limit from speed zones based on SLK
   const currentSpeedLimit = (() => {
     if (!speedZones.length || calibratedSlk === null) {
+      console.log(`[DEBUG] currentSpeedLimit fallback: speedZones=${speedZones.length}, calibratedSlk=${calibratedSlk}, default=${speedLimit}`);
       return speedLimit; // Fall back to initial speed limit
     }
-    
+
     // Sort zones by start_slk for proper ordering
     const sortedZones = [...speedZones].sort((a, b) => a.start_slk - b.start_slk);
-    
+
     for (const zone of sortedZones) {
       if (calibratedSlk >= zone.start_slk && calibratedSlk <= zone.end_slk) {
+        console.log(`[DEBUG] currentSpeedLimit matched: SLK ${calibratedSlk.toFixed(2)} in zone ${zone.start_slk}-${zone.end_slk} = ${zone.speed_limit}km/h`);
         return zone.speed_limit;
       }
     }
-    
+
+    console.log(`[DEBUG] currentSpeedLimit no match for SLK ${calibratedSlk.toFixed(2)}, defaulting to ${speedLimit}`);
     return speedLimit; // Default to initial if no matching zone
   })();
 
@@ -257,15 +260,19 @@ function DriveContent() {
         
         // Get speed zones for this road from offline data
         const zones = await getSpeedZones(result.road_id);
+        console.log(`[DEBUG] getSpeedZones(${result.road_id}):`, zones?.length || 0, 'zones');
         if (zones && zones.length > 0) {
           setSpeedZones(zones);
           // Find applicable speed zone
           for (const zone of zones) {
             if (result.slk >= zone.start_slk && result.slk <= zone.end_slk) {
+              console.log(`[DEBUG] Matched zone: SLK ${zone.start_slk}-${zone.end_slk} = ${zone.speed_limit}km/h`);
               setSpeedLimit(zone.speed_limit);
               break;
             }
           }
+        } else {
+          console.log('[DEBUG] No speed zones found for road:', result.road_id);
         }
         return true;
       }
@@ -408,7 +415,7 @@ function DriveContent() {
       {/* Header */}
       <div className="text-center mb-4">
         <h1 className="text-xl font-bold text-blue-400">SLK Tracking</h1>
-        <p className="text-xs text-gray-400">v2.7.2 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}</p>
+        <p className="text-xs text-gray-400">v2.7.3 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}</p>
         {offlineReady ? (
           <p className="text-xs text-green-400 mt-1">📦 Offline Mode Ready</p>
         ) : (
