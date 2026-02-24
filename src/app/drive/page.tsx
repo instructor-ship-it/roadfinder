@@ -8,7 +8,8 @@ import {
   initDB, 
   isOfflineDataAvailable as checkOfflineData,
   findRoadNearGps,
-  getSpeedZones
+  getSpeedZones,
+  type ParsedSpeedZone
 } from '@/lib/offline-db';
 
 interface GeoLocation {
@@ -27,12 +28,7 @@ interface RoadInfo {
   distance_m: number;
 }
 
-interface SpeedZone {
-  road_id: string;
-  start_slk: number;
-  end_slk: number;
-  speed_limit: number; // Parsed number (was "110km/h" string from MRWA)
-}
+// Use ParsedSpeedZone from offline-db (has numeric speed_limit)
 
 interface CalibrationSettings {
   [roadId: string]: number;
@@ -61,7 +57,7 @@ function DriveContent() {
   
   // Speed limit from MRWA data
   const [speedLimit, setSpeedLimit] = useState<number>(100);
-  const [speedZones, setSpeedZones] = useState<SpeedZone[]>([]);
+  const [speedZones, setSpeedZones] = useState<ParsedSpeedZone[]>([]);
   
   // Calibration state
   const [calibrations, setCalibrations] = useState<CalibrationSettings>(() => {

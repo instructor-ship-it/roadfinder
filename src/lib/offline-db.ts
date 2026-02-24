@@ -28,6 +28,16 @@ interface SpeedZoneData {
   carriageway: string;
 }
 
+// Parsed speed zone with numeric speed_limit
+export interface ParsedSpeedZone {
+  road_id: string;
+  road_name: string;
+  start_slk: number;
+  end_slk: number;
+  speed_limit: number;
+  carriageway: string;
+}
+
 let dbInstance: IDBDatabase | null = null;
 
 /**
@@ -105,7 +115,7 @@ function parseSpeedLimit(speedLimit: number | string): number {
 /**
  * Get speed zones for a road
  */
-export async function getSpeedZones(roadId: string): Promise<SpeedZoneData[]> {
+export async function getSpeedZones(roadId: string): Promise<ParsedSpeedZone[]> {
   try {
     const db = await initDB();
     return new Promise((resolve) => {
@@ -116,9 +126,13 @@ export async function getSpeedZones(roadId: string): Promise<SpeedZoneData[]> {
       request.onsuccess = () => {
         const zones = request.result?.zones || [];
         // Parse speed limits to numbers
-        const parsedZones = zones.map((zone: SpeedZoneData) => ({
-          ...zone,
-          speed_limit: parseSpeedLimit(zone.speed_limit)
+        const parsedZones: ParsedSpeedZone[] = zones.map((zone: SpeedZoneData) => ({
+          road_id: zone.road_id,
+          road_name: zone.road_name,
+          start_slk: zone.start_slk,
+          end_slk: zone.end_slk,
+          speed_limit: parseSpeedLimit(zone.speed_limit),
+          carriageway: zone.carriageway
         }));
         resolve(parsedZones);
       };
