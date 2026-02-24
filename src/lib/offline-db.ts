@@ -97,6 +97,62 @@ export async function isOfflineDataAvailable(): Promise<boolean> {
 }
 
 /**
+ * Get offline data metadata (download date, total roads)
+ */
+export async function getOfflineMetadata(): Promise<{
+  download_date: string;
+  total_roads: number;
+  regions: string[];
+} | null> {
+  try {
+    const db = await initDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction('metadata', 'readonly');
+      const store = tx.objectStore('metadata');
+
+      const dateRequest = store.get('download_date');
+      const roadsRequest = store.get('total_roads');
+      const regionsRequest = store.get('regions');
+
+      let download_date = '';
+      let total_roads = 0;
+      let regions: string[] = [];
+
+      let completed = 0;
+      const checkComplete = () => {
+        completed++;
+        if (completed === 3) {
+          if (download_date) {
+            resolve({ download_date, total_roads, regions });
+          } else {
+            resolve(null);
+          }
+        }
+      };
+
+      dateRequest.onsuccess = () => {
+        download_date = dateRequest.result?.value || '';
+        checkComplete();
+      };
+      roadsRequest.onsuccess = () => {
+        total_roads = roadsRequest.result?.value || 0;
+        checkComplete();
+      };
+      regionsRequest.onsuccess = () => {
+        regions = regionsRequest.result?.value || [];
+        checkComplete();
+      };
+
+      dateRequest.onerror = () => checkComplete();
+      roadsRequest.onerror = () => checkComplete();
+      regionsRequest.onerror = () => checkComplete();
+    });
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Parse speed limit from various formats (number or "110km/h" string)
  */
 function parseSpeedLimit(speedLimit: number | string): number {

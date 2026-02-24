@@ -13,6 +13,7 @@ import {
 import {
   initDB,
   isOfflineDataAvailable,
+  getOfflineMetadata,
   storeRegionData,
   storeSpeedZones,
   storeMetadata,
@@ -216,6 +217,17 @@ export default function Home() {
       await initDB()
       const hasData = await isOfflineDataAvailable()
       setOfflineReady(hasData)
+
+      // Load existing metadata if available
+      if (hasData) {
+        const metadata = await getOfflineMetadata()
+        if (metadata) {
+          setOfflineStats({
+            total_roads: metadata.total_roads,
+            download_date: metadata.download_date
+          })
+        }
+      }
     } catch (e) {
       console.error('Failed to check offline status:', e)
     }
@@ -618,7 +630,7 @@ export default function Home() {
           </button>
         </div>
         <p className="text-xs text-gray-400 text-center mb-4">
-          v2.7.1 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}
+          v2.7.2 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}
         </p>
 
         {/* Setup Dialog */}

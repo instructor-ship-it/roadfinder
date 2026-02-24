@@ -408,7 +408,7 @@ function DriveContent() {
       {/* Header */}
       <div className="text-center mb-4">
         <h1 className="text-xl font-bold text-blue-400">SLK Tracking</h1>
-        <p className="text-xs text-gray-400">v2.7.1 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}</p>
+        <p className="text-xs text-gray-400">v2.7.2 {offlineReady && <span className="text-green-400">• 69K Roads • 8 Regions</span>}</p>
         {offlineReady ? (
           <p className="text-xs text-green-400 mt-1">📦 Offline Mode Ready</p>
         ) : (
