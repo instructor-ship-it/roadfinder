@@ -266,24 +266,51 @@ export async function storeRegionData(region: string, roads: RoadData[]): Promis
 }
 
 /**
- * Store speed zones
+ * Store speed zones (merges with existing zones for multi-region roads)
  */
 export async function storeSpeedZones(zones: SpeedZoneData[]): Promise<void> {
   const db = await initDB();
+  
+  // Group new zones by road_id
+  const byRoad = new Map<string, SpeedZoneData[]>();
+  for (const zone of zones) {
+    if (!byRoad.has(zone.road_id)) {
+      byRoad.set(zone.road_id, []);
+    }
+    byRoad.get(zone.road_id)!.push(zone);
+  }
+
+  // Now merge with existing zones in IndexedDB
   return new Promise((resolve, reject) => {
     const tx = db.transaction('speedZones', 'readwrite');
     const store = tx.objectStore('speedZones');
 
-    const byRoad = new Map<string, SpeedZoneData[]>();
-    for (const zone of zones) {
-      if (!byRoad.has(zone.road_id)) {
-        byRoad.set(zone.road_id, []);
-      }
-      byRoad.get(zone.road_id)!.push(zone);
-    }
-
-    for (const [road_id, roadZones] of byRoad) {
-      store.put({ road_id, zones: roadZones });
+    for (const [road_id, newZones] of byRoad) {
+      // Get existing zones for this road
+      const getRequest = store.get(road_id);
+      
+      getRequest.onsuccess = () => {
+        const existing = getRequest.result?.zones || [];
+        
+        // Merge: create a map to dedupe by SLK range
+        const mergedMap = new Map<string, SpeedZoneData>();
+        
+        // Add existing zones
+        for (const z of existing) {
+          const key = `${z.start_slk}-${z.end_slk}-${z.carriageway}`;
+          mergedMap.set(key, z);
+        }
+        
+        // Add/overwrite with new zones
+        for (const z of newZones) {
+          const key = `${z.start_slk}-${z.end_slk}-${z.carriageway}`;
+          mergedMap.set(key, z);
+        }
+        
+        // Store merged result
+        const mergedZones = Array.from(mergedMap.values());
+        store.put({ road_id, zones: mergedZones });
+      };
     }
 
     tx.oncomplete = () => resolve();
