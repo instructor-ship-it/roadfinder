@@ -1188,7 +1188,7 @@ export default function Home() {
           </button>
         </div>
         <p className="text-xs text-gray-400 text-center mb-4">
-          v5.3.3 {offlineReady && <span className="text-green-400">• EKF GPS • Haversine • 69K Roads</span>}
+          v5.3.4 {offlineReady && <span className="text-green-400">• EKF GPS • Haversine • 69K Roads</span>}
         </p>
 
         {/* Setup Dialog */}
@@ -1361,7 +1361,7 @@ export default function Home() {
             {/* Version Display */}
             <div className="bg-gray-900/50 rounded-lg p-2 mb-4 text-center">
               <span className="text-xs text-gray-500">Version </span>
-              <span className="text-xs font-mono text-gray-400">5.3.3</span>
+              <span className="text-xs font-mono text-gray-400">5.3.4</span>
             </div>
             
             <h3 className="text-sm font-semibold text-blue-400 mb-3">📦 Offline Data</h3>
@@ -1602,7 +1602,7 @@ export default function Home() {
           <div className="mb-4">
             <Button 
               onClick={startSlkTracking}
-              className="w-full h-12 text-lg bg-orange-600 hover:bg-orange-700"
+              className="w-full h-12 text-lg bg-blue-800 hover:bg-blue-900"
             >
               📍 Start SLK Tracking
             </Button>
@@ -1865,9 +1865,44 @@ export default function Home() {
             
             {/* Work Zone Summary */}
             <div className="bg-gray-800 rounded-lg p-4">
-              <h3 className="text-sm font-semibold text-blue-400 border-b border-gray-700 pb-2 mb-3">
-                📍 Work Zone Summary
-              </h3>
+              <div className="flex items-center justify-between border-b border-gray-700 pb-2 mb-3">
+                <h3 className="text-sm font-semibold text-blue-400">
+                  📍 Work Zone Summary
+                </h3>
+                {isSinglePoint && result.work_zone.start && (
+                  <div className="flex gap-1">
+                    <Button 
+                      onClick={() => openGoogleMaps(result.google_maps.work_zone_start)}
+                      className="h-8 w-8 p-0 bg-green-600 hover:bg-green-700"
+                      title="Navigate"
+                    >
+                      🗺️
+                    </Button>
+                    <Button 
+                      onClick={() => openStreetView(result.work_zone.start!.lat, result.work_zone.start!.lon)}
+                      className="h-8 w-8 p-0 bg-blue-600 hover:bg-blue-700"
+                      title="Street View"
+                    >
+                      🏠
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        const params = new URLSearchParams({
+                          road_id: result.road_id,
+                          road_name: result.road_name,
+                          slk: result.work_zone.start_slk.toString(),
+                          autostart: 'true'
+                        })
+                        window.location.href = `/drive?${params.toString()}`
+                      }}
+                      className="h-8 w-8 p-0 bg-blue-800 hover:bg-blue-900"
+                      title="Track"
+                    >
+                      📍
+                    </Button>
+                  </div>
+                )}
+              </div>
               <p className="text-lg font-medium">{result.road_name}</p>
               <p className="text-sm text-gray-400">
                 Road ID: {result.road_id}
@@ -1895,39 +1930,6 @@ export default function Home() {
                   <p className="font-medium">{result.carriageway}</p>
                 </div>
               </div>
-              
-              {/* Navigate to SLK button for single point lookup */}
-              {isSinglePoint && result.work_zone.start && (
-                <div className="flex gap-2 mt-4">
-                  <Button 
-                    onClick={() => openGoogleMaps(result.google_maps.work_zone_start)}
-                    className="flex-1 h-12 text-base bg-green-600 hover:bg-green-700"
-                  >
-                    🗺️ Navigate
-                  </Button>
-                  <Button 
-                    onClick={() => openStreetView(result.work_zone.start!.lat, result.work_zone.start!.lon)}
-                    className="flex-1 h-12 text-base bg-blue-600 hover:bg-blue-700"
-                  >
-                    🏠 Street View
-                  </Button>
-                  <Button 
-                    onClick={() => {
-                      // Params already saved by handleSearch, just navigate
-                      const params = new URLSearchParams({
-                        road_id: result.road_id,
-                        road_name: result.road_name,
-                        slk: result.work_zone.start_slk.toString(),
-                        autostart: 'true'
-                      })
-                      window.location.href = `/drive?${params.toString()}`
-                    }}
-                    className="flex-1 h-12 text-base bg-orange-600 hover:bg-orange-700"
-                  >
-                    📍 Track
-                  </Button>
-                </div>
-              )}
             </div>
 
             {/* Traffic Volume */}
@@ -2160,54 +2162,52 @@ export default function Home() {
               </button>
               {showTcPositions && (
                 <div className="px-4 pb-4">
-                  <div className="space-y-3">
+                  <div className="space-y-2">
                     <div className="bg-gray-700/50 rounded p-3">
-                      <p className="text-sm font-medium">TC Start - SLK {result.tc_positions.start_slk.toFixed(2)}</p>
-                      {result.tc_positions.start && (
-                        <p className="text-xs text-gray-400 font-mono mt-1">
-                          {result.tc_positions.start.lat.toFixed(6)}, {result.tc_positions.start.lon.toFixed(6)}
-                        </p>
-                      )}
-                      <div className="flex gap-2 mt-2">
-                        <Button 
-                          onClick={() => openGoogleMaps(result.google_maps.tc_start)}
-                          className="flex-1 h-9 text-sm bg-green-600 hover:bg-green-700"
-                        >
-                          🗺️ Navigate
-                        </Button>
-                        {result.tc_positions.start && (
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium">TC Start - SLK {result.tc_positions.start_slk.toFixed(2)}</p>
+                        <div className="flex gap-1">
                           <Button 
-                            onClick={() => openStreetView(result.tc_positions.start!.lat, result.tc_positions.start!.lon)}
-                            className="flex-1 h-9 text-sm bg-blue-600 hover:bg-blue-700"
+                            onClick={() => openGoogleMaps(result.google_maps.tc_start)}
+                            className="h-7 w-7 p-0 bg-green-600 hover:bg-green-700"
+                            title="Navigate"
                           >
-                            🏠 Street View
+                            🗺️
                           </Button>
-                        )}
+                          {result.tc_positions.start && (
+                            <Button 
+                              onClick={() => openStreetView(result.tc_positions.start!.lat, result.tc_positions.start!.lon)}
+                              className="h-7 w-7 p-0 bg-blue-600 hover:bg-blue-700"
+                              title="Street View"
+                            >
+                              🏠
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
                     
                     <div className="bg-gray-700/50 rounded p-3">
-                      <p className="text-sm font-medium">TC End - SLK {result.tc_positions.end_slk.toFixed(2)}</p>
-                      {result.tc_positions.end && (
-                        <p className="text-xs text-gray-400 font-mono mt-1">
-                          {result.tc_positions.end.lat.toFixed(6)}, {result.tc_positions.end.lon.toFixed(6)}
-                        </p>
-                      )}
-                      <div className="flex gap-2 mt-2">
-                        <Button 
-                          onClick={() => openGoogleMaps(result.google_maps.tc_end)}
-                          className="flex-1 h-9 text-sm bg-green-600 hover:bg-green-700"
-                        >
-                          🗺️ Navigate
-                        </Button>
-                        {result.tc_positions.end && (
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium">TC End - SLK {result.tc_positions.end_slk.toFixed(2)}</p>
+                        <div className="flex gap-1">
                           <Button 
-                            onClick={() => openStreetView(result.tc_positions.end!.lat, result.tc_positions.end!.lon)}
-                            className="flex-1 h-9 text-sm bg-blue-600 hover:bg-blue-700"
+                            onClick={() => openGoogleMaps(result.google_maps.tc_end)}
+                            className="h-7 w-7 p-0 bg-green-600 hover:bg-green-700"
+                            title="Navigate"
                           >
-                            🏠 Street View
+                            🗺️
                           </Button>
-                        )}
+                          {result.tc_positions.end && (
+                            <Button 
+                              onClick={() => openStreetView(result.tc_positions.end!.lat, result.tc_positions.end!.lon)}
+                              className="h-7 w-7 p-0 bg-blue-600 hover:bg-blue-700"
+                              title="Street View"
+                            >
+                              🏠
+                            </Button>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

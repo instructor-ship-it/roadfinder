@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
 > **Last Updated:** 2026-03-01
-> **Current Version:** 5.3.3
+> **Current Version:** 5.3.4
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -181,6 +181,13 @@ src/
 ---
 
 ## Recent Changes (v5.x)
+
+### v5.3.4
+- **UI Cosmetic Updates**
+  - Changed "Start SLK Tracking" buttons from orange to dark blue
+  - Work Zone Summary: Moved large buttons to small icon buttons right-justified
+  - TC Positions: Moved large buttons to small icon buttons, removed coordinates
+  - Cleaner, more compact layout
 
 ### v5.3.3
 - **BOM Weather Warnings RSS Integration** (RESTORED)

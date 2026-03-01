@@ -12,7 +12,7 @@ import {
 import { useGpsTracking, useGpsSettings, type GpsTrackingConfig } from '@/hooks/useGpsTracking';
 
 // App version
-const APP_VERSION = '5.3.3';
+const APP_VERSION = '5.3.4';
 
 // GPS lag compensation from localStorage
 interface GpsLagSettings {
@@ -399,7 +399,7 @@ function DriveContent() {
         </div>
 
         {!isTracking ? (
-          <Button onClick={startTracking} className="w-full bg-orange-600 hover:bg-orange-700 h-12 text-base">
+          <Button onClick={startTracking} className="w-full bg-blue-800 hover:bg-blue-900 h-12 text-base">
             📍 Start SLK Tracking
           </Button>
         ) : (
