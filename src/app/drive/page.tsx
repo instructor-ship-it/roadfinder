@@ -12,7 +12,7 @@ import {
 import { useGpsTracking, useGpsSettings, type GpsTrackingConfig } from '@/hooks/useGpsTracking';
 
 // App version
-const APP_VERSION = '5.3.1';
+const APP_VERSION = '5.3.2';
 
 // GPS lag compensation from localStorage
 interface GpsLagSettings {
@@ -71,7 +71,28 @@ function DriveContent() {
     getEkfInfo,
   } = useGpsTracking(destRoadId, destSlk, settings as Partial<GpsTrackingConfig>);
 
-  // Calculate upcoming speed zone (runs on every render - lightweight computation)
+  // Track SLK direction (increasing or decreasing)
+  const prevSlkRef = useRef<number | null>(null);
+  const [slkDirection, setSlkDirection] = useState<'increasing' | 'decreasing' | null>(null);
+
+  // Update SLK direction when SLK changes
+  useEffect(() => {
+    if (roadInfo?.slk !== undefined && currentSpeed >= 5) {
+      const currentSlk = roadInfo.slk;
+      if (prevSlkRef.current !== null) {
+        const diff = currentSlk - prevSlkRef.current;
+        // Require minimum 0.001 km difference to determine direction (avoids GPS jitter)
+        if (Math.abs(diff) > 0.001) {
+          const newDirection = diff > 0 ? 'increasing' : 'decreasing';
+          // Use queueMicrotask to avoid synchronous setState in effect
+          queueMicrotask(() => setSlkDirection(newDirection));
+        }
+      }
+      prevSlkRef.current = currentSlk;
+    }
+  }, [roadInfo?.slk, currentSpeed]);
+
+  // Calculate upcoming speed zone with bidirectional support
   const upcomingZone = (() => {
     if (!roadInfo || speedZones.length === 0 || currentSpeed < 5) {
       return null;
@@ -83,22 +104,56 @@ function DriveContent() {
     const lagCompensation = lagSettings.gpsLagCompensation || 0;
     const effectiveLookahead = baseLookahead + lagCompensation;
     const lookaheadDistanceKm = (speedMs * effectiveLookahead) / 1000;
+
+    // slkDirection is now from state
     
-    for (const zone of speedZones) {
-      if (zone.start_slk > currentSlk && zone.start_slk <= currentSlk + lookaheadDistanceKm * 2) {
-        const distanceToZone = (zone.start_slk - currentSlk) * 1000;
-        const isDecrease = zone.speed_limit < speedLimit;
-        
-        if (isDecrease) {
-          return {
-            speedLimit: zone.speed_limit,
-            distance: distanceToZone,
-            isDecrease: true,
-          };
+    // Find current zone
+    const currentZone = speedZones.find(z => currentSlk >= z.start_slk && currentSlk <= z.end_slk);
+    const currentSpeedLimit = currentZone?.speed_limit || speedLimit;
+
+    if (slkDirection === 'increasing') {
+      // Traveling towards higher SLK values
+      // Look for zone boundaries ahead (zone.start_slk > currentSlk)
+      for (const zone of speedZones) {
+        if (zone.start_slk > currentSlk && zone.start_slk <= currentSlk + lookaheadDistanceKm * 2) {
+          const distanceToZone = (zone.start_slk - currentSlk) * 1000;
+          const isDecrease = zone.speed_limit < currentSpeedLimit;
+          
+          if (isDecrease) {
+            return {
+              speedLimit: zone.speed_limit,
+              distance: distanceToZone,
+              isDecrease: true,
+              direction: 'increasing' as const,
+            };
+          }
+        }
+      }
+    } else if (slkDirection === 'decreasing') {
+      // Traveling towards lower SLK values
+      // Look for zone boundaries ahead (zone.end_slk < currentSlk)
+      // When decreasing SLK, we're approaching the END of higher-SLK zones
+      // which is the START of lower-SLK zones
+      
+      for (const zone of speedZones) {
+        // We're looking for a zone that ENDS ahead of us (lower SLK)
+        // This means we're entering this zone from its end_slk side
+        if (zone.end_slk < currentSlk && zone.end_slk >= currentSlk - lookaheadDistanceKm * 2) {
+          const distanceToZone = (currentSlk - zone.end_slk) * 1000;
+          const isDecrease = zone.speed_limit < currentSpeedLimit;
+          
+          if (isDecrease) {
+            return {
+              speedLimit: zone.speed_limit,
+              distance: distanceToZone,
+              isDecrease: true,
+              direction: 'decreasing' as const,
+            };
+          }
         }
       }
     }
-    
+
     return null;
   })();
 
@@ -207,6 +262,7 @@ function DriveContent() {
     lines.push(`Road ID: ${roadInfo?.road_id}`);
     lines.push(`Road Name: ${roadInfo?.road_name}`);
     lines.push(`Current SLK: ${roadInfo?.slk}`);
+    lines.push(`SLK Direction: ${slkDirection || 'unknown'}`);
     lines.push(`Network Type: ${roadInfo?.network_type}`);
     lines.push(`Distance from road: ${roadInfo?.distance_m}m`);
     lines.push('');
@@ -214,6 +270,9 @@ function DriveContent() {
     lines.push(`Total zones loaded: ${speedZones.length}`);
     lines.push(`Current speed limit: ${speedLimit} km/h`);
     lines.push(`Is speeding: ${isSpeeding}`);
+    if (upcomingZone) {
+      lines.push(`Upcoming zone: ${upcomingZone.speedLimit} km/h in ${Math.round(upcomingZone.distance)}m (${upcomingZone.direction})`);
+    }
     lines.push('');
     lines.push('=== GPS Lag Compensation ===');
     lines.push(`Lag compensation: ${lagSettings.gpsLagCompensation || 0}s`);
@@ -459,6 +518,11 @@ function DriveContent() {
               {direction === 'towards' && '✓ Approaching target'}
               {direction === 'static' && '📍 Stationary'}
               {direction === null && 'Current SLK (km)'}
+              {slkDirection && (
+                <span className="text-blue-400 ml-2">
+                  ({slkDirection === 'increasing' ? '↑' : '↓'} SLK)
+                </span>
+              )}
               {isPredicted && (
                 <span className="text-purple-400 ml-2">◈ predicted</span>
               )}
@@ -543,6 +607,11 @@ function DriveContent() {
                 <span className="text-gray-400 text-sm">SLK</span>
                 <div className="text-right">
                   <span className="font-mono text-yellow-400 text-lg">{roadInfo?.slk?.toFixed(2)} km</span>
+                  {slkDirection && (
+                    <span className="text-xs text-blue-400 ml-2">
+                      ({slkDirection === 'increasing' ? '↑' : '↓'})
+                    </span>
+                  )}
                   {isPredicted && (
                     <span className="text-xs text-purple-400 ml-2">◈</span>
                   )}

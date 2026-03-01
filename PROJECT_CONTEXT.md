@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
 > **Last Updated:** 2026-03-01
-> **Current Version:** 5.3.1
+> **Current Version:** 5.3.2
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -181,6 +181,18 @@ src/
 ---
 
 ## Recent Changes (v5.x)
+
+### v5.3.2
+- **Bidirectional Speed Zone Detection**
+  - Fixed speed zone lookahead to work in both SLK directions
+  - Previously only detected speed decreases when traveling increasing SLK
+  - Now correctly warns of speed decreases when traveling decreasing SLK too
+  - Example: M031 SLK 67.64 has 60→90 (increasing) and 90→60 (decreasing) signs
+  - Drivers approaching from either direction now get proper advance warning
+- **SLK Direction Tracking**
+  - Added `slkDirection` state to track 'increasing' or 'decreasing' travel
+  - Display shows direction indicator (↑/↓) next to SLK value
+  - Lookahead calculation uses appropriate zone boundary based on direction
 
 ### v5.3.1
 - **Removed SLK Calibration Feature**

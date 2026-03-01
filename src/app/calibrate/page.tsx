@@ -47,7 +47,7 @@ const DEFAULT_SETTINGS: CalibrationSettings = {
 }
 
 // Version constant
-const APP_VERSION = '5.3.1'
+const APP_VERSION = '5.3.2'
 
 export default function CalibratePage() {
   const [isTracking, setIsTracking] = useState(false)
