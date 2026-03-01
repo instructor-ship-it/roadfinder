@@ -12,7 +12,7 @@ import {
 import { useGpsTracking, useGpsSettings, type GpsTrackingConfig } from '@/hooks/useGpsTracking';
 
 // App version
-const APP_VERSION = '5.3.4';
+const APP_VERSION = '5.3.6';
 
 // GPS lag compensation from localStorage
 interface GpsLagSettings {
@@ -403,7 +403,7 @@ function DriveContent() {
             📍 Start SLK Tracking
           </Button>
         ) : (
-          <a href="/" onClick={() => { stopTracking(); }} className="block w-full text-center bg-red-600 hover:bg-red-700 h-12 text-base rounded-lg leading-[48px] font-medium cursor-pointer">
+          <a href="/" onClick={() => { stopTracking(); }} className="block w-full text-center bg-blue-800 hover:bg-blue-900 h-12 text-base rounded-lg leading-[48px] font-medium cursor-pointer">
             ← Back to Work Zone Locator
           </a>
         )}

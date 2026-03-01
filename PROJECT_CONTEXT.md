@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
 > **Last Updated:** 2026-03-01
-> **Current Version:** 5.3.5
+> **Current Version:** 5.3.6
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -181,6 +181,11 @@ src/
 ---
 
 ## Recent Changes (v5.x)
+
+### v5.3.6
+- **UI Improvements**
+  - Changed "Back to Work Zone Locator" button from red to dark blue (consistency)
+  - Updated on both drive and calibrate pages
 
 ### v5.3.5
 - **UI Improvements**

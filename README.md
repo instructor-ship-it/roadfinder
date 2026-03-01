@@ -202,7 +202,12 @@ src/
 
 ## Version History
 
-### v5.3.5 (Current)
+### v5.3.6 (Current)
+- **UI Improvements**:
+  - Changed "Back to Work Zone Locator" button from red to dark blue (consistency)
+  - Updated on both drive and calibrate pages
+
+### v5.3.5
 - **UI Improvements**:
   - Amenities dialog: Navigate/Street View buttons converted to small icon buttons
   - Signage Corridor: Intersections now filtered to ±100m from work zone (previously ±700m)

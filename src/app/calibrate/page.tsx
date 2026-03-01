@@ -553,7 +553,7 @@ export default function CalibratePage() {
         {/* Back Button */}
         <Button
           onClick={() => window.location.href = '/'}
-          className="w-full h-12 bg-blue-500 hover:bg-blue-600"
+          className="w-full h-12 bg-blue-800 hover:bg-blue-900"
         >
           ← Back to Work Zone Locator
         </Button>
