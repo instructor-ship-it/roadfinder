@@ -1188,7 +1188,7 @@ export default function Home() {
           </button>
         </div>
         <p className="text-xs text-gray-400 text-center mb-4">
-          v5.3.6 {offlineReady && <span className="text-green-400">• EKF GPS • Haversine • 69K Roads</span>}
+          v5.3.7 {offlineReady && <span className="text-green-400">• EKF GPS • Haversine • 69K Roads</span>}
         </p>
 
         {/* Setup Dialog */}
@@ -1740,7 +1740,7 @@ export default function Home() {
 
         {/* Road Selection - different behavior for Local */}
         {selectedRegion === 'Local' ? (
-          // Local road - show GPS info or message
+          // Local road - allow manual entry
           <div className="mb-4">
             <label className="block text-sm text-gray-400 mb-1">Road ID</label>
             {gpsRoadInfo ? (
@@ -1751,13 +1751,17 @@ export default function Home() {
                 <p className="text-xs text-gray-500 mt-1">📍 Found via GPS lookup</p>
               </div>
             ) : (
-              // No GPS lookup yet
-              <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 text-center">
-                <p className="text-gray-400 text-sm">
-                  Use GPS lookup above to find a local road
-                </p>
-                <p className="text-gray-500 text-xs mt-1">
-                  Local roads cannot be browsed manually
+              // Manual entry for local road
+              <div>
+                <Input
+                  type="text"
+                  placeholder="Enter local road ID"
+                  value={selectedRoad}
+                  onChange={(e) => setSelectedRoad(e.target.value)}
+                  className="bg-gray-800 border-gray-700 text-white h-12 text-base font-mono"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Enter local road ID manually or use GPS lookup above
                 </p>
               </div>
             )}

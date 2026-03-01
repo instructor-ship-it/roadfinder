@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
 > **Last Updated:** 2026-03-01
-> **Current Version:** 5.3.6
+> **Current Version:** 5.3.7
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -181,6 +181,12 @@ src/
 ---
 
 ## Recent Changes (v5.x)
+
+### v5.3.7
+- **UI Improvements**
+  - Local roads: Added manual road ID entry (no longer requires GPS lookup)
+  - Drive page: Removed lookahead compensation message
+  - Drive page: Removed Accuracy display from Current Location dialog
 
 ### v5.3.6
 - **UI Improvements**

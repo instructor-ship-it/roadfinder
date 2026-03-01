@@ -12,7 +12,7 @@ import {
 import { useGpsTracking, useGpsSettings, type GpsTrackingConfig } from '@/hooks/useGpsTracking';
 
 // App version
-const APP_VERSION = '5.3.6';
+const APP_VERSION = '5.3.7';
 
 // GPS lag compensation from localStorage
 interface GpsLagSettings {
@@ -464,15 +464,6 @@ function DriveContent() {
             </div>
           </div>
 
-          {/* GPS Lag Compensation Indicator */}
-          {lagSettings.gpsLagCompensation && lagSettings.gpsLagCompensation > 0 && (
-            <div className="mt-3 pt-2 border-t border-gray-700 text-center">
-              <span className="text-xs text-amber-400">
-                🎯 +{lagSettings.gpsLagCompensation}s lookahead compensation active
-              </span>
-            </div>
-          )}
-
           {/* EKF Status Indicator */}
           {settings.ekfEnabled && settings.showUncertainty && (
             <div className="mt-4 pt-3 border-t border-gray-700">
@@ -623,14 +614,6 @@ function DriveContent() {
                   {roadInfo.network_type}
                 </span>
               </div>
-              {settings.showUncertainty && (
-                <div className="flex justify-between pt-2 border-t border-gray-700">
-                  <span className="text-gray-400 text-sm">Accuracy</span>
-                  <span className={`text-sm ${getConfidenceColor()}`}>
-                    {getConfidenceBadge()} ±{uncertainty.toFixed(2)}m
-                  </span>
-                </div>
-              )}
             </div>
           ) : (
             <p className="text-gray-400 text-sm">Looking up road info...</p>

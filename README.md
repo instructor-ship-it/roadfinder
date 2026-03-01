@@ -202,7 +202,13 @@ src/
 
 ## Version History
 
-### v5.3.6 (Current)
+### v5.3.7 (Current)
+- **UI Improvements**:
+  - Local roads: Added manual road ID entry (no longer requires GPS lookup)
+  - Drive page: Removed lookahead compensation message
+  - Drive page: Removed Accuracy display from Current Location dialog
+
+### v5.3.6
 - **UI Improvements**:
   - Changed "Back to Work Zone Locator" button from red to dark blue (consistency)
   - Updated on both drive and calibrate pages
