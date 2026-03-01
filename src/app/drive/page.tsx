@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,8 +12,17 @@ import {
 } from '@/lib/offline-db';
 import { useGpsTracking, useGpsSettings, type GpsTrackingConfig } from '@/hooks/useGpsTracking';
 
+// App version
+const APP_VERSION = '5.3.0';
+
 interface CalibrationSettings {
   [roadId: string]: number;
+}
+
+// GPS lag compensation from localStorage
+interface GpsLagSettings {
+  gpsLagCompensation?: number;
+  speedLookaheadTime?: number;
 }
 
 function DriveContent() {
@@ -27,6 +36,21 @@ function DriveContent() {
 
   // Get GPS settings from localStorage
   const { settings } = useGpsSettings();
+
+  // Get GPS lag compensation from main gpsSettings
+  const [lagSettings, setLagSettings] = useState<GpsLagSettings>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('gpsSettings');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          return {};
+        }
+      }
+    }
+    return {};
+  });
 
   // GPS tracking with EKF
   const {
@@ -51,6 +75,37 @@ function DriveContent() {
     stopTracking,
     getEkfInfo,
   } = useGpsTracking(destRoadId, destSlk, settings as Partial<GpsTrackingConfig>);
+
+  // Calculate upcoming speed zone (runs on every render - lightweight computation)
+  const upcomingZone = (() => {
+    if (!roadInfo || speedZones.length === 0 || currentSpeed < 5) {
+      return null;
+    }
+
+    const currentSlk = roadInfo.slk;
+    const speedMs = currentSpeed / 3.6;
+    const baseLookahead = lagSettings.speedLookaheadTime || 5;
+    const lagCompensation = lagSettings.gpsLagCompensation || 0;
+    const effectiveLookahead = baseLookahead + lagCompensation;
+    const lookaheadDistanceKm = (speedMs * effectiveLookahead) / 1000;
+    
+    for (const zone of speedZones) {
+      if (zone.start_slk > currentSlk && zone.start_slk <= currentSlk + lookaheadDistanceKm * 2) {
+        const distanceToZone = (zone.start_slk - currentSlk) * 1000;
+        const isDecrease = zone.speed_limit < speedLimit;
+        
+        if (isDecrease) {
+          return {
+            speedLimit: zone.speed_limit,
+            distance: distanceToZone,
+            isDecrease: true,
+          };
+        }
+      }
+    }
+    
+    return null;
+  })();
 
   // Offline data state
   const [offlineReady, setOfflineReady] = useState(false);
@@ -306,7 +361,7 @@ function DriveContent() {
         <div className="w-8"></div>
         <div className="text-center flex-1">
           <h1 className="text-xl font-bold text-blue-400">SLK Tracking</h1>
-          <p className="text-xs text-gray-400">v5.0 EKF {offlineReady && <span className="text-green-400">• Offline Ready</span>}</p>
+          <p className="text-xs text-gray-400">v{APP_VERSION} EKF {offlineReady && <span className="text-green-400">• Offline Ready</span>}</p>
           {settings.ekfEnabled && (
             <p className="text-xs text-purple-400 mt-1">📡 EKF Filtering Active</p>
           )}
@@ -398,17 +453,41 @@ function DriveContent() {
                 <div className={`rounded-full w-16 h-16 flex items-center justify-center ${
                   isSpeeding
                     ? 'bg-red-900 border-4 border-red-500 animate-pulse'
-                    : 'bg-black border-4 border-white'
+                    : upcomingZone && upcomingZone.isDecrease
+                      ? 'bg-black border-4 border-amber-400'  // Yellow/amber for approaching decrease
+                      : 'bg-black border-4 border-white'     // White for current
                 }`}>
-                  <span className={`font-bold text-xl ${isSpeeding ? 'text-red-400' : 'text-white'}`}>{speedLimit}</span>
+                  <span className={`font-bold text-xl ${
+                    isSpeeding 
+                      ? 'text-red-400' 
+                      : upcomingZone && upcomingZone.isDecrease
+                        ? 'text-amber-400'
+                        : 'text-white'
+                  }`}>
+                    {upcomingZone && upcomingZone.isDecrease ? upcomingZone.speedLimit : speedLimit}
+                  </span>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm mt-1">Posted Limit</p>
-              {speedZones.length > 0 && (
+              <p className="text-gray-400 text-sm mt-1">
+                {upcomingZone && upcomingZone.isDecrease ? '↓ ' + Math.round(upcomingZone.distance) + 'm' : 'Posted Limit'}
+              </p>
+              {upcomingZone && upcomingZone.isDecrease && (
+                <p className="text-xs text-amber-400">Slow down ahead</p>
+              )}
+              {speedZones.length > 0 && !upcomingZone && (
                 <p className="text-xs text-gray-500">From MRWA Data</p>
               )}
             </div>
           </div>
+
+          {/* GPS Lag Compensation Indicator */}
+          {lagSettings.gpsLagCompensation && lagSettings.gpsLagCompensation > 0 && (
+            <div className="mt-3 pt-2 border-t border-gray-700 text-center">
+              <span className="text-xs text-amber-400">
+                🎯 +{lagSettings.gpsLagCompensation}s lookahead compensation active
+              </span>
+            </div>
+          )}
 
           {/* EKF Status Indicator */}
           {settings.ekfEnabled && settings.showUncertainty && (

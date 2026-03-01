@@ -225,6 +225,8 @@ export default function Home() {
     maxPredictionTime: number;
     showUncertainty: boolean;
     earlyWarnings: boolean;
+    speedLookaheadTime: number;
+    gpsLagCompensation: number;
   }>(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('gpsSettings')
@@ -239,15 +241,25 @@ export default function Home() {
               maxPredictionTime: 30,
               showUncertainty: true,
               earlyWarnings: parsed.earlyWarnings ?? true,
+              speedLookaheadTime: 5,
+              gpsLagCompensation: 0,
             }
+          }
+          // Add speedLookaheadTime if missing (migration)
+          if (!('speedLookaheadTime' in parsed)) {
+            return { ...parsed, speedLookaheadTime: 5, gpsLagCompensation: parsed.gpsLagCompensation ?? 0 }
+          }
+          // Add gpsLagCompensation if missing (migration)
+          if (!('gpsLagCompensation' in parsed)) {
+            return { ...parsed, gpsLagCompensation: 0 }
           }
           return parsed
         } catch {
-          return { ekfEnabled: true, roadConstraint: true, maxPredictionTime: 30, showUncertainty: true, earlyWarnings: true }
+          return { ekfEnabled: true, roadConstraint: true, maxPredictionTime: 30, showUncertainty: true, earlyWarnings: true, speedLookaheadTime: 5, gpsLagCompensation: 0 }
         }
       }
     }
-    return { ekfEnabled: true, roadConstraint: true, maxPredictionTime: 30, showUncertainty: true, earlyWarnings: true }
+    return { ekfEnabled: true, roadConstraint: true, maxPredictionTime: 30, showUncertainty: true, earlyWarnings: true, speedLookaheadTime: 5, gpsLagCompensation: 0 }
   })
   
   const updateGpsSetting = (key: string, value: boolean | number) => {
@@ -1235,6 +1247,37 @@ export default function Home() {
                   />
                 </label>
               </div>
+            </div>
+            
+            {/* GPS Calibration Section */}
+            <div className="bg-gray-900 rounded-lg p-3 mb-4">
+              <h4 className="text-sm font-semibold text-amber-400 mb-3">🎯 GPS Calibration</h4>
+              
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">Lag Compensation</span>
+                  <span className="text-sm font-mono text-yellow-400">
+                    {gpsSettings.gpsLagCompensation > 0 ? `+${gpsSettings.gpsLagCompensation}s` : 'Not set'}
+                  </span>
+                </div>
+                
+                <p className="text-xs text-gray-500">
+                  Calibrate GPS lag to improve speed sign lookahead accuracy.
+                </p>
+                
+                <Button
+                  onClick={() => window.location.href = '/calibrate'}
+                  className="w-full bg-amber-600 hover:bg-amber-700 text-sm"
+                >
+                  🎯 Open Calibration Tool
+                </Button>
+              </div>
+            </div>
+            
+            {/* Version Display */}
+            <div className="bg-gray-900/50 rounded-lg p-2 mb-4 text-center">
+              <span className="text-xs text-gray-500">Version </span>
+              <span className="text-xs font-mono text-gray-400">5.3.0</span>
             </div>
             
             <h3 className="text-sm font-semibold text-blue-400 mb-3">📦 Offline Data</h3>
