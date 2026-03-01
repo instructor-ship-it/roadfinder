@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
-> **Last Updated:** 2026-02-28
-> **Current Version:** 5.3.0
+> **Last Updated:** 2026-03-01
+> **Current Version:** 5.3.1
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -181,6 +181,16 @@ src/
 ---
 
 ## Recent Changes (v5.x)
+
+### v5.3.1
+- **Removed SLK Calibration Feature**
+  - Removed per-road SLK offset calibration from drive page
+  - SLK now displays raw GPS values without manual offset
+  - Old `slkCalibrations` localStorage data cleared automatically
+  - Simplified Tools menu - only Debug Info option remains
+- **GPS Lag Calibration** (separate feature, kept)
+  - GPS lag compensation at `/calibrate` for speed sign lookahead
+  - This feature remains and is accessible from Settings menu
 
 ### v5.3.0
 - **GPS Calibration Tool**

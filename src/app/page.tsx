@@ -1136,7 +1136,7 @@ export default function Home() {
           </button>
         </div>
         <p className="text-xs text-gray-400 text-center mb-4">
-          v5.0.0 {offlineReady && <span className="text-green-400">• EKF GPS • Haversine • 69K Roads</span>}
+          v5.3.1 {offlineReady && <span className="text-green-400">• EKF GPS • Haversine • 69K Roads</span>}
         </p>
 
         {/* Setup Dialog */}
@@ -1277,7 +1277,7 @@ export default function Home() {
             {/* Version Display */}
             <div className="bg-gray-900/50 rounded-lg p-2 mb-4 text-center">
               <span className="text-xs text-gray-500">Version </span>
-              <span className="text-xs font-mono text-gray-400">5.3.0</span>
+              <span className="text-xs font-mono text-gray-400">5.3.1</span>
             </div>
             
             <h3 className="text-sm font-semibold text-blue-400 mb-3">📦 Offline Data</h3>

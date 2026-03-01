@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   initDB,
   isOfflineDataAvailable as checkOfflineData,
@@ -13,11 +12,7 @@ import {
 import { useGpsTracking, useGpsSettings, type GpsTrackingConfig } from '@/hooks/useGpsTracking';
 
 // App version
-const APP_VERSION = '5.3.0';
-
-interface CalibrationSettings {
-  [roadId: string]: number;
-}
+const APP_VERSION = '5.3.1';
 
 // GPS lag compensation from localStorage
 interface GpsLagSettings {
@@ -110,24 +105,6 @@ function DriveContent() {
   // Offline data state
   const [offlineReady, setOfflineReady] = useState(false);
 
-  // Calibration state
-  const [calibrations, setCalibrations] = useState<CalibrationSettings>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('slkCalibrations');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch {
-          return {};
-        }
-      }
-    }
-    return {};
-  });
-  const [showCalibrate, setShowCalibrate] = useState(false);
-  const [calibrateSlk, setCalibrateSlk] = useState('');
-  const [calibrateMessage, setCalibrateMessage] = useState('');
-
   // Debug state
   const [debugInfo, setDebugInfo] = useState<string>('');
   const [showDebug, setShowDebug] = useState(false);
@@ -158,19 +135,12 @@ function DriveContent() {
     return () => { mounted = false; };
   }, []);
 
-  // Apply calibration offset to SLK
-  const getCalibratedSlk = (roadId: string | undefined, rawSlk: number): number => {
-    if (!roadId) return rawSlk;
-    const offset = calibrations[roadId];
-    if (offset !== undefined) {
-      return rawSlk + offset;
+  // Clear old SLK calibration data from localStorage (deprecated feature)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('slkCalibrations');
     }
-    return rawSlk;
-  };
-
-  // Get current calibrated SLK
-  const calibratedSlk = roadInfo ? getCalibratedSlk(roadInfo.road_id, roadInfo.slk) : null;
-  const currentOffset = roadInfo ? calibrations[roadInfo.road_id] : undefined;
+  }, []);
 
   // Fetch destination coordinates when destination is set
   useEffect(() => {
@@ -193,41 +163,6 @@ function DriveContent() {
     fetchDestCoords();
   }, [destRoadId, destSlk]);
 
-  // Save calibration
-  const saveCalibration = () => {
-    if (!roadInfo || !calibrateSlk) return;
-
-    const knownSlk = parseFloat(calibrateSlk);
-    if (isNaN(knownSlk)) {
-      setCalibrateMessage('Invalid SLK value');
-      return;
-    }
-
-    const offset = knownSlk - roadInfo.slk;
-    const newCalibrations = { ...calibrations, [roadInfo.road_id]: offset };
-    setCalibrations(newCalibrations);
-    localStorage.setItem('slkCalibrations', JSON.stringify(newCalibrations));
-
-    setCalibrateMessage(`Offset saved: ${offset >= 0 ? '+' : ''}${offset.toFixed(3)} km`);
-    setTimeout(() => {
-      setShowCalibrate(false);
-      setCalibrateMessage('');
-      setCalibrateSlk('');
-    }, 1500);
-  };
-
-  // Clear calibration
-  const clearCalibration = () => {
-    if (!roadInfo) return;
-
-    const newCalibrations = { ...calibrations };
-    delete newCalibrations[roadInfo.road_id];
-    setCalibrations(newCalibrations);
-    localStorage.setItem('slkCalibrations', JSON.stringify(newCalibrations));
-    setCalibrateMessage('Calibration cleared');
-    setTimeout(() => setCalibrateMessage(''), 1500);
-  };
-
   // Auto-start if autostart=true
   useEffect(() => {
     const autostart = searchParams.get('autostart');
@@ -244,7 +179,7 @@ function DriveContent() {
     const lines: string[] = [];
     lines.push('=== SLK Tracking Debug Info ===');
     lines.push(`Generated: ${new Date().toISOString()}`);
-    lines.push(`Version: 5.0 (EKF GPS Filtering)`);
+    lines.push(`Version: ${APP_VERSION} (EKF GPS Filtering)`);
     lines.push('');
     lines.push('=== Destination ===');
     lines.push(`Road ID: ${destRoadId}`);
@@ -272,7 +207,6 @@ function DriveContent() {
     lines.push(`Road ID: ${roadInfo?.road_id}`);
     lines.push(`Road Name: ${roadInfo?.road_name}`);
     lines.push(`Current SLK: ${roadInfo?.slk}`);
-    lines.push(`Calibrated SLK: ${calibratedSlk}`);
     lines.push(`Network Type: ${roadInfo?.network_type}`);
     lines.push(`Distance from road: ${roadInfo?.distance_m}m`);
     lines.push('');
@@ -281,8 +215,8 @@ function DriveContent() {
     lines.push(`Current speed limit: ${speedLimit} km/h`);
     lines.push(`Is speeding: ${isSpeeding}`);
     lines.push('');
-    lines.push('=== Calibration ===');
-    lines.push(`Offset for ${roadInfo?.road_id}: ${calibrations[roadInfo?.road_id || ''] || 0} km`);
+    lines.push('=== GPS Lag Compensation ===');
+    lines.push(`Lag compensation: ${lagSettings.gpsLagCompensation || 0}s`);
     lines.push('');
     lines.push('=== Direction ===');
     lines.push(`Direction: ${direction}`);
@@ -382,18 +316,9 @@ function DriveContent() {
                   setShowTools(false);
                   generateDebugInfo();
                 }}
-                className="w-full text-left px-4 py-3 text-sm hover:bg-gray-700 rounded-t-lg flex items-center gap-2"
+                className="w-full text-left px-4 py-3 text-sm hover:bg-gray-700 rounded-lg flex items-center gap-2"
               >
                 📋 Generate Debug Info
-              </button>
-              <button
-                onClick={() => {
-                  setShowTools(false);
-                  setShowCalibrate(!showCalibrate);
-                }}
-                className="w-full text-left px-4 py-3 text-sm hover:bg-gray-700 rounded-b-lg flex items-center gap-2"
-              >
-                🎯 Calibrate SLK {currentOffset !== undefined ? `(${currentOffset >= 0 ? '+' : ''}${currentOffset.toFixed(3)})` : ''}
               </button>
             </div>
           )}
@@ -527,16 +452,13 @@ function DriveContent() {
                   ? 'text-green-400'
                   : 'text-yellow-400'
             }`}>
-              {calibratedSlk?.toFixed(2)}
+              {roadInfo?.slk?.toFixed(2)}
             </div>
             <p className="text-gray-400 text-sm mt-1">
               {direction === 'away' && '⚠️ Moving away from target'}
               {direction === 'towards' && '✓ Approaching target'}
               {direction === 'static' && '📍 Stationary'}
               {direction === null && 'Current SLK (km)'}
-              {currentOffset !== undefined && (
-                <span className="text-cyan-400 ml-2">(calibrated)</span>
-              )}
               {isPredicted && (
                 <span className="text-purple-400 ml-2">◈ predicted</span>
               )}
@@ -579,43 +501,6 @@ function DriveContent() {
             )}
           </div>
 
-          {/* Calibration Panel - shown when Calibrate clicked from Tools menu */}
-          {showCalibrate && (
-            <div className="bg-gray-700 rounded-lg p-3 mb-4">
-              <p className="text-xs text-gray-400 mb-2">
-                Raw: {roadInfo?.slk.toFixed(2) || '?.??'} km → Enter known SLK:
-              </p>
-              <div className="flex gap-2 mb-2">
-                <Input
-                  type="number"
-                  step="0.01"
-                  placeholder="e.g. 22.15"
-                  value={calibrateSlk}
-                  onChange={(e) => setCalibrateSlk(e.target.value)}
-                  className="bg-gray-800 border-gray-600 text-white h-10"
-                />
-                <Button
-                  onClick={saveCalibration}
-                  className="bg-green-600 hover:bg-green-700 h-10"
-                  disabled={!calibrateSlk}
-                >
-                  Save
-                </Button>
-              </div>
-              {currentOffset !== undefined && (
-                <Button
-                  onClick={clearCalibration}
-                  className="w-full bg-red-600/20 hover:bg-red-600/40 text-red-400 text-sm"
-                >
-                  Clear Calibration
-                </Button>
-              )}
-              {calibrateMessage && (
-                <p className="text-xs text-green-400 mt-2">{calibrateMessage}</p>
-              )}
-            </div>
-          )}
-
           {/* Distance & ETA */}
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-gray-700 rounded-lg p-3 text-center">
@@ -657,10 +542,7 @@ function DriveContent() {
               <div className="flex justify-between items-center">
                 <span className="text-gray-400 text-sm">SLK</span>
                 <div className="text-right">
-                  <span className="font-mono text-yellow-400 text-lg">{calibratedSlk?.toFixed(2)} km</span>
-                  {currentOffset !== undefined && (
-                    <span className="text-xs text-cyan-400 ml-2">({currentOffset >= 0 ? '+' : ''}{currentOffset.toFixed(3)})</span>
-                  )}
+                  <span className="font-mono text-yellow-400 text-lg">{roadInfo?.slk?.toFixed(2)} km</span>
                   {isPredicted && (
                     <span className="text-xs text-purple-400 ml-2">◈</span>
                   )}
