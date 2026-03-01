@@ -186,7 +186,9 @@ src/
 - **Official Release Candidate for production deployment**
 - All UI/UX finalized and documented
 - Complete feature set for Traffic Controller work zone operations
-- Documentation: TC_Work_Zone_Locator_RC1_Documentation.docx
+- Documentation: 
+  - TC_Work_Zone_Locator_RC1_Documentation.docx (Layout & Functionality)
+  - TC_Work_Zone_Locator_Data_Sources.docx (Data Query Sources)
 
 ### v5.3.7
 - **UI Improvements**
