@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
 > **Last Updated:** 2026-03-01
-> **Current Version:** 5.3.7
+> **Current Version:** RC 1.0
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -181,6 +181,12 @@ src/
 ---
 
 ## Recent Changes (v5.x)
+
+### RC 1.0 - Release Candidate
+- **Official Release Candidate for production deployment**
+- All UI/UX finalized and documented
+- Complete feature set for Traffic Controller work zone operations
+- Documentation: TC_Work_Zone_Locator_RC1_Documentation.docx
 
 ### v5.3.7
 - **UI Improvements**

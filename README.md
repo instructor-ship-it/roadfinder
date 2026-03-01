@@ -202,7 +202,12 @@ src/
 
 ## Version History
 
-### v5.3.7 (Current)
+### RC 1.0 (Current) - Release Candidate
+- **Official Release Candidate for production deployment**
+- All UI/UX finalized and documented
+- Complete feature set for Traffic Controller work zone operations
+
+### v5.3.7
 - **UI Improvements**:
   - Local roads: Added manual road ID entry (no longer requires GPS lookup)
   - Drive page: Removed lookahead compensation message
