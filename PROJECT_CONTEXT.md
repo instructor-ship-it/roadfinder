@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
 > **Last Updated:** 2026-03-01
-> **Current Version:** 5.3.4
+> **Current Version:** 5.3.5
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -181,6 +181,12 @@ src/
 ---
 
 ## Recent Changes (v5.x)
+
+### v5.3.5
+- **UI Improvements**
+  - Amenities dialog: Navigate/Street View buttons converted to small icon buttons
+  - Signage Corridor: Intersections now filtered to ±100m from work zone (previously ±700m)
+  - Signage Corridor: Removed Regulatory Signs section (clutter reduction)
 
 ### v5.3.4
 - **UI Cosmetic Updates**

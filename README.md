@@ -202,7 +202,13 @@ src/
 
 ## Version History
 
-### v5.0.0 (Current)
+### v5.3.5 (Current)
+- **UI Improvements**:
+  - Amenities dialog: Navigate/Street View buttons converted to small icon buttons
+  - Signage Corridor: Intersections now filtered to ±100m from work zone (previously ±700m)
+  - Signage Corridor: Removed Regulatory Signs section (clutter reduction)
+
+### v5.0.0
 - **NEW: Extended Kalman Filter (EKF) GPS** - Complete GPS filtering rewrite:
   - **EKF Filtering**: Optimal Kalman filter for 50-60% accuracy improvement
   - **Position Prediction**: Continues tracking during GPS outages (10-60 seconds)

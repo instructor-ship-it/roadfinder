@@ -1188,7 +1188,7 @@ export default function Home() {
           </button>
         </div>
         <p className="text-xs text-gray-400 text-center mb-4">
-          v5.3.4 {offlineReady && <span className="text-green-400">• EKF GPS • Haversine • 69K Roads</span>}
+          v5.3.5 {offlineReady && <span className="text-green-400">• EKF GPS • Haversine • 69K Roads</span>}
         </p>
 
         {/* Setup Dialog */}
@@ -2028,12 +2028,23 @@ export default function Home() {
                       Download offline data to see speed zones, rail crossings, and signs.</p>
                   ) : (
                     <div className="space-y-3">
-                      {/* Intersections */}
-                      {signageCorridor.filter(s => s.category === 'intersection').length > 0 && (
+                      {/* Intersections - Only within ±100m of work zone */}
+                      {signageCorridor.filter(s => {
+                        if (s.category !== 'intersection') return false;
+                        // Only show intersections within ±100m (0.1 km) of work zone
+                        const workZoneStart = result.work_zone.start_slk;
+                        const workZoneEnd = result.work_zone.end_slk || result.work_zone.start_slk;
+                        return s.slk >= (workZoneStart - 0.1) && s.slk <= (workZoneEnd + 0.1);
+                      }).length > 0 && (
                         <div>
-                          <h4 className="text-xs font-semibold text-purple-400 mb-2">🔀 INTERSECTIONS IN CORRIDOR</h4>
+                          <h4 className="text-xs font-semibold text-purple-400 mb-2">🔀 INTERSECTIONS NEAR WORK ZONE (±100m)</h4>
                           <div className="space-y-1">
-                            {signageCorridor.filter(s => s.category === 'intersection').map((sign, i) => (
+                            {signageCorridor.filter(s => {
+                              if (s.category !== 'intersection') return false;
+                              const workZoneStart = result.work_zone.start_slk;
+                              const workZoneEnd = result.work_zone.end_slk || result.work_zone.start_slk;
+                              return s.slk >= (workZoneStart - 0.1) && s.slk <= (workZoneEnd + 0.1);
+                            }).map((sign, i) => (
                               <div key={`int-${i}`} className="flex justify-between items-center text-sm bg-purple-900/20 px-2 py-1 rounded">
                                 <span className="font-mono text-yellow-400">SLK {sign.slk.toFixed(2)}</span>
                                 <span className="text-gray-300">{sign.description}</span>
@@ -2077,31 +2088,6 @@ export default function Home() {
                                 {sign.nearIntersection && (
                                   <div className="text-xs text-amber-300 mt-1 pl-2 border-l-2 border-amber-500">
                                     ⚠️ {sign.nearIntersection.distanceToIntersection.toFixed(0)}m from {sign.nearIntersection.roadName} intersection (SLK {sign.nearIntersection.intersectionSlk.toFixed(2)})
-                                  </div>
-                                )}
-                              </div>
-                            )})}
-                          </div>
-                        </div>
-                      )}
-                      
-                      {/* Regulatory Signs - Highlight those near intersections */}
-                      {signageCorridor.filter(s => s.category === 'regulatory').length > 0 && (
-                        <div>
-                          <h4 className="text-xs font-semibold text-orange-400 mb-2">🚦 REGULATORY SIGNS</h4>
-                          <div className="space-y-1">
-                            {signageCorridor.filter(s => s.category === 'regulatory').map((sign, i) => {
-                              const needsCover = sign.action === 'COVER REQUIRED';
-                              return (
-                              <div key={`reg-${i}`} className={`flex flex-col text-sm ${needsCover ? 'bg-red-900/30 border border-red-500/50' : 'bg-orange-900/20'} px-2 py-1 rounded`}>
-                                <div className="flex justify-between items-center">
-                                  <span className="font-mono text-yellow-400">SLK {sign.slk.toFixed(2)}</span>
-                                  <span className="text-gray-300 flex-1 mx-2 truncate" title={sign.description}>{sign.description}</span>
-                                  <span className={`text-xs ${needsCover ? 'text-red-400 font-bold' : 'text-gray-500'}`}>{sign.action}</span>
-                                </div>
-                                {sign.nearIntersection && (
-                                  <div className="text-xs text-amber-300 mt-1 pl-2 border-l-2 border-amber-500">
-                                    ⚠️ {sign.nearIntersection.distanceToIntersection.toFixed(0)}m from {sign.nearIntersection.roadName} intersection
                                   </div>
                                 )}
                               </div>
@@ -2411,30 +2397,34 @@ export default function Home() {
                     {/* Hospital */}
                     {places.hospital ? (
                       <div className="mb-4">
-                        <p className="font-medium text-red-400">
-                          🏥 {places.hospital.name}
-                          <span className="text-gray-500 text-sm ml-2">({places.hospital.distance} km)</span>
-                          {places.hospital.isEmergency && (
-                            <span className="text-xs bg-red-600 text-white px-1.5 py-0.5 rounded ml-1">Emergency</span>
-                          )}
-                        </p>
+                        <div className="flex items-center justify-between">
+                          <p className="font-medium text-red-400">
+                            🏥 {places.hospital.name}
+                            <span className="text-gray-500 text-sm ml-2">({places.hospital.distance} km)</span>
+                            {places.hospital.isEmergency && (
+                              <span className="text-xs bg-red-600 text-white px-1.5 py-0.5 rounded ml-1">Emergency</span>
+                            )}
+                          </p>
+                          <div className="flex gap-1">
+                            <Button 
+                              onClick={() => openGoogleMaps(places.hospital?.googleMapsUrl || null)}
+                              className="h-7 w-7 p-0 bg-green-600 hover:bg-green-700"
+                              title="Navigate"
+                            >
+                              🗺️
+                            </Button>
+                            <Button 
+                              onClick={() => openStreetView(places.hospital!.lat, places.hospital!.lon)}
+                              className="h-7 w-7 p-0 bg-blue-600 hover:bg-blue-700"
+                              title="Street View"
+                            >
+                              🏠
+                            </Button>
+                          </div>
+                        </div>
                         {places.hospital.phone && (
                           <p className="text-sm text-gray-400">📞 {places.hospital.phone}</p>
                         )}
-                        <div className="flex gap-2 mt-2">
-                          <Button 
-                            onClick={() => openGoogleMaps(places.hospital?.googleMapsUrl || null)}
-                            className="flex-1 h-9 text-sm bg-green-600 hover:bg-green-700"
-                          >
-                            🗺️ Navigate
-                          </Button>
-                          <Button 
-                            onClick={() => openStreetView(places.hospital!.lat, places.hospital!.lon)}
-                            className="flex-1 h-9 text-sm bg-blue-600 hover:bg-blue-700"
-                          >
-                            🏠 Street View
-                          </Button>
-                        </div>
                       </div>
                     ) : (
                       <p className="text-gray-500 text-sm mb-4">No hospital found nearby</p>
@@ -2443,23 +2433,27 @@ export default function Home() {
                     {/* Fuel Station */}
                     {places.fuelStation ? (
                       <div className="mb-4">
-                        <p className="font-medium text-yellow-400">
-                          ⛽ {places.fuelStation.name}
-                          <span className="text-gray-500 text-sm ml-2">({places.fuelStation.distance} km)</span>
-                        </p>
-                        <div className="flex gap-2 mt-2">
-                          <Button 
-                            onClick={() => openGoogleMaps(places.fuelStation?.googleMapsUrl || null)}
-                            className="flex-1 h-9 text-sm bg-green-600 hover:bg-green-700"
-                          >
-                            🗺️ Navigate
-                          </Button>
-                          <Button 
-                            onClick={() => openStreetView(places.fuelStation!.lat, places.fuelStation!.lon)}
-                            className="flex-1 h-9 text-sm bg-blue-600 hover:bg-blue-700"
-                          >
-                            🏠 Street View
-                          </Button>
+                        <div className="flex items-center justify-between">
+                          <p className="font-medium text-yellow-400">
+                            ⛽ {places.fuelStation.name}
+                            <span className="text-gray-500 text-sm ml-2">({places.fuelStation.distance} km)</span>
+                          </p>
+                          <div className="flex gap-1">
+                            <Button 
+                              onClick={() => openGoogleMaps(places.fuelStation?.googleMapsUrl || null)}
+                              className="h-7 w-7 p-0 bg-green-600 hover:bg-green-700"
+                              title="Navigate"
+                            >
+                              🗺️
+                            </Button>
+                            <Button 
+                              onClick={() => openStreetView(places.fuelStation!.lat, places.fuelStation!.lon)}
+                              className="h-7 w-7 p-0 bg-blue-600 hover:bg-blue-700"
+                              title="Street View"
+                            >
+                              🏠
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     ) : (
@@ -2469,23 +2463,27 @@ export default function Home() {
                     {/* Toilet */}
                     {places.toilet ? (
                       <div>
-                        <p className="font-medium text-blue-400">
-                          🚻 {places.toilet.name}
-                          <span className="text-gray-500 text-sm ml-2">({places.toilet.distance} km)</span>
-                        </p>
-                        <div className="flex gap-2 mt-2">
-                          <Button 
-                            onClick={() => openGoogleMaps(places.toilet?.googleMapsUrl || null)}
-                            className="flex-1 h-9 text-sm bg-green-600 hover:bg-green-700"
-                          >
-                            🗺️ Navigate
-                          </Button>
-                          <Button 
-                            onClick={() => openStreetView(places.toilet!.lat, places.toilet!.lon)}
-                            className="flex-1 h-9 text-sm bg-blue-600 hover:bg-blue-700"
-                          >
-                            🏠 Street View
-                          </Button>
+                        <div className="flex items-center justify-between">
+                          <p className="font-medium text-blue-400">
+                            🚻 {places.toilet.name}
+                            <span className="text-gray-500 text-sm ml-2">({places.toilet.distance} km)</span>
+                          </p>
+                          <div className="flex gap-1">
+                            <Button 
+                              onClick={() => openGoogleMaps(places.toilet?.googleMapsUrl || null)}
+                              className="h-7 w-7 p-0 bg-green-600 hover:bg-green-700"
+                              title="Navigate"
+                            >
+                              🗺️
+                            </Button>
+                            <Button 
+                              onClick={() => openStreetView(places.toilet!.lat, places.toilet!.lon)}
+                              className="h-7 w-7 p-0 bg-blue-600 hover:bg-blue-700"
+                              title="Street View"
+                            >
+                              🏠
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     ) : (
