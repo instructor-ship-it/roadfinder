@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
 > **Last Updated:** 2026-03-01
-> **Current Version:** 5.3.2
+> **Current Version:** 5.3.3
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -181,6 +181,25 @@ src/
 ---
 
 ## Recent Changes (v5.x)
+
+### v5.3.3
+- **BOM Weather Warnings RSS Integration** (RESTORED)
+  - Created `/api/warnings/route.ts` for BOM RSS feed fetching
+  - Real-time WA land warnings from BOM RSS feed (IDZ00067)
+  - Warnings displayed inline in Weather section with links
+  - Warning count badge in Weather section header
+  - 5-minute cache to avoid overloading BOM servers
+- **Wind Gust Alert Threshold**
+  - New setting to configure wind gust alert threshold (default 60 km/h)
+  - Alert displayed when gusts exceed threshold
+  - Important for traffic control device safety
+  - Configurable threshold buttons: 40, 50, 60, 80 km/h
+- **BOM Radar/Warnings Links**
+  - Added quick links to BOM Radar and BOM Warnings pages
+  - Links at bottom of Weather section for easy access
+- **Weather Section Enhancements**
+  - Wind gust value now highlighted amber when exceeding threshold
+  - Better visual feedback for hazardous wind conditions
 
 ### v5.3.2
 - **Bidirectional Speed Zone Detection**

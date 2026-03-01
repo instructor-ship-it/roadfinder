@@ -120,6 +120,23 @@ interface WeatherData {
   }>
 }
 
+interface WarningItem {
+  title: string
+  description: string
+  link: string
+  pubDate: string
+  category: string
+  urgency: string
+  severity: string
+}
+
+interface WarningData {
+  warnings: WarningItem[]
+  count: number
+  lastUpdated: string
+  source: string
+}
+
 interface TrafficData {
   road_id: string
   road_name?: string
@@ -178,6 +195,7 @@ export default function Home() {
   const [loadingRoads, setLoadingRoads] = useState<boolean>(false)
   const [result, setResult] = useState<WorkZoneResult | null>(null)
   const [weather, setWeather] = useState<WeatherData | null>(null)
+  const [warnings, setWarnings] = useState<WarningData | null>(null)
   const [traffic, setTraffic] = useState<TrafficData | null>(null)
   const [places, setPlaces] = useState<PlacesData | null>(null)
   const [crossRoads, setCrossRoads] = useState<CrossRoad[]>([])
@@ -266,6 +284,26 @@ export default function Home() {
     const newSettings = { ...gpsSettings, [key]: value }
     setGpsSettings(newSettings)
     localStorage.setItem('gpsSettings', JSON.stringify(newSettings))
+  }
+  
+  // Wind Gust Alert Settings
+  const [windGustThreshold, setWindGustThreshold] = useState<number>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('windGustThreshold')
+      if (saved) {
+        try {
+          return parseInt(saved, 10)
+        } catch {
+          return 60
+        }
+      }
+    }
+    return 60 // Default 60 km/h
+  })
+  
+  const updateWindGustThreshold = (value: number) => {
+    setWindGustThreshold(value)
+    localStorage.setItem('windGustThreshold', value.toString())
   }
   
   // Signage corridor data
@@ -711,6 +749,7 @@ export default function Home() {
     if (!isRestoring.current) {
       setResult(null)
       setWeather(null)
+      setWarnings(null)
       setTraffic(null)
       setPlaces(null)
       setCrossRoads([])
@@ -772,6 +811,7 @@ export default function Home() {
     setError('')
     setResult(null)
     setWeather(null)
+    setWarnings(null)
     setTraffic(null)
     setPlaces(null)
     setCrossRoads([])
@@ -810,6 +850,7 @@ export default function Home() {
         // Fetch additional data using midpoint
         if (data.midpoint) {
           fetchWeather(data.midpoint.lat, data.midpoint.lon)
+          fetchWarnings() // BOM weather warnings for WA
           fetchTraffic(roadId, data.midpoint.lat, data.midpoint.lon)
           fetchPlaces(data.midpoint.lat, data.midpoint.lon)
         }
@@ -837,6 +878,7 @@ export default function Home() {
     // Reset all state
     setResult(null)
     setWeather(null)
+    setWarnings(null)
     setTraffic(null)
     setPlaces(null)
     setCrossRoads([])
@@ -931,6 +973,16 @@ export default function Home() {
       const data = await response.json()
       if (response.ok) setPlaces(data)
     } catch (err) {}
+  }
+
+  const fetchWarnings = async () => {
+    try {
+      const response = await fetch('/api/warnings')
+      const data = await response.json()
+      if (response.ok) setWarnings(data)
+    } catch (err) {
+      // Graceful degradation - warnings not critical
+    }
   }
 
   const fetchCrossRoads = async (result: WorkZoneResult) => {
@@ -1136,7 +1188,7 @@ export default function Home() {
           </button>
         </div>
         <p className="text-xs text-gray-400 text-center mb-4">
-          v5.3.2 {offlineReady && <span className="text-green-400">• EKF GPS • Haversine • 69K Roads</span>}
+          v5.3.3 {offlineReady && <span className="text-green-400">• EKF GPS • Haversine • 69K Roads</span>}
         </p>
 
         {/* Setup Dialog */}
@@ -1274,10 +1326,42 @@ export default function Home() {
               </div>
             </div>
             
+            {/* Wind Gust Alert Section */}
+            <div className="bg-gray-900 rounded-lg p-3 mb-4">
+              <h4 className="text-sm font-semibold text-cyan-400 mb-3">💨 Wind Gust Alert</h4>
+              
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-400">Alert Threshold</span>
+                  <span className="text-sm font-mono text-cyan-400">{windGustThreshold} km/h</span>
+                </div>
+                
+                <p className="text-xs text-gray-500">
+                  Alert when wind gusts exceed this threshold. Important for traffic control safety.
+                </p>
+                
+                <div className="grid grid-cols-4 gap-2">
+                  {[40, 50, 60, 80].map((threshold) => (
+                    <button
+                      key={threshold}
+                      onClick={() => updateWindGustThreshold(threshold)}
+                      className={`py-2 rounded text-sm font-medium ${
+                        windGustThreshold === threshold
+                          ? 'bg-cyan-600 text-white'
+                          : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      }`}
+                    >
+                      {threshold}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
             {/* Version Display */}
             <div className="bg-gray-900/50 rounded-lg p-2 mb-4 text-center">
               <span className="text-xs text-gray-500">Version </span>
-              <span className="text-xs font-mono text-gray-400">5.3.2</span>
+              <span className="text-xs font-mono text-gray-400">5.3.3</span>
             </div>
             
             <h3 className="text-sm font-semibold text-blue-400 mb-3">📦 Offline Data</h3>
@@ -2180,11 +2264,52 @@ export default function Home() {
                 >
                   <h3 className="text-sm font-semibold text-blue-400">
                     🌤️ Weather - {weather.location}
+                    {warnings && warnings.count > 0 && (
+                      <span className="ml-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+                        {warnings.count} warning{warnings.count !== 1 ? 's' : ''}
+                      </span>
+                    )}
                   </h3>
                   <span className="text-gray-400 text-lg">{showWeather ? '−' : '+'}</span>
                 </button>
                 {showWeather && (
                   <div className="px-4 pb-4">
+                    {/* Weather Warnings */}
+                    {warnings && warnings.warnings.length > 0 && (
+                      <div className="bg-red-900/30 border border-red-500/50 rounded p-3 mb-4">
+                        <h4 className="text-sm font-semibold text-red-400 mb-2">⚠️ Weather Warnings</h4>
+                        <div className="space-y-2">
+                          {warnings.warnings.map((warning, i) => (
+                            <div key={i} className="text-sm">
+                              <a 
+                                href={warning.link} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-red-300 hover:text-red-200 underline"
+                              >
+                                {warning.title}
+                              </a>
+                              {warning.description && (
+                                <p className="text-xs text-gray-400 mt-0.5 line-clamp-2">{warning.description}</p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Wind Gust Alert */}
+                    {weather.current.windGust >= windGustThreshold && (
+                      <div className="bg-amber-900/30 border border-amber-500/50 rounded p-3 mb-4">
+                        <p className="text-sm font-semibold text-amber-400">
+                          💨 High Wind Gust Alert: {weather.current.windGust} km/h
+                        </p>
+                        <p className="text-xs text-gray-400 mt-1">
+                          Threshold: {windGustThreshold} km/h - Exercise caution with traffic control devices
+                        </p>
+                      </div>
+                    )}
+                    
                     {/* Sun Data - First */}
                     <div className="bg-gray-700/30 rounded p-3 mb-4">
                       <div className="grid grid-cols-3 gap-2 text-center text-sm">
@@ -2222,7 +2347,10 @@ export default function Home() {
                       <div>
                         <p className="text-gray-400">Wind</p>
                         <p className="font-medium">{weather.current.windSpeed} km/h {weather.current.windDir}</p>
-                        <p className="text-xs text-gray-500">Gusts: {weather.current.windGust} km/h</p>
+                        <p className={`text-xs ${weather.current.windGust >= windGustThreshold ? 'text-amber-400 font-semibold' : 'text-gray-500'}`}>
+                          Gusts: {weather.current.windGust} km/h
+                          {weather.current.windGust >= windGustThreshold && ' ⚠️'}
+                        </p>
                       </div>
                       <div>
                         <p className="text-gray-400">Humidity</p>
@@ -2240,6 +2368,26 @@ export default function Home() {
                           <span className="w-20 text-right text-gray-500">{hour.windSpeed} km/h</span>
                         </p>
                       ))}
+                    </div>
+                    
+                    {/* BOM Links */}
+                    <div className="mt-4 pt-3 border-t border-gray-700 flex gap-2">
+                      <a 
+                        href="https://www.bom.gov.au/products/IDR703.shtml" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex-1 text-center text-xs bg-gray-700 hover:bg-gray-600 text-blue-400 py-2 rounded"
+                      >
+                        📡 BOM Radar
+                      </a>
+                      <a 
+                        href="https://www.bom.gov.au/wa/warnings/" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex-1 text-center text-xs bg-gray-700 hover:bg-gray-600 text-blue-400 py-2 rounded"
+                      >
+                        ⚠️ BOM Warnings
+                      </a>
                     </div>
                   </div>
                 )}
