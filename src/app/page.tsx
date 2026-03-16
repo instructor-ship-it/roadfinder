@@ -2812,21 +2812,22 @@ export default function Home() {
           const gpsResponse = await fetch(`/api/gps?lat=${lat}&lon=${lon}&radius=1000`)
           const gpsData = await gpsResponse.json()
           
-          // Find nearest town using OSM
+          // Find nearest town using OSM - geocode the locality name we already have
           let nearestTown: { name: string; distance: string; direction: string } | null = null
           try {
-            const osmResponse = await fetch(
-              `https://nominatim.openstreetmap.org/search?viewbox=${lon - 0.5},${lat - 0.5},${lon + 0.5},${lat + 0.5}&bounded=0&q=town OR city IN Western Australia&format=json&limit=10&accept-language=en`
-            )
-            const osmData = await osmResponse.json()
-            
-            if (osmData && osmData.length > 0) {
-              // Find closest town by distance
-              let minDist = Infinity
-              let closest: any = null
-              for (const place of osmData) {
+            // Use the locality from MRWA data (e.g., "Moora") to get town center
+            const localityName = gpsData.locality || gpsData.region
+            if (localityName) {
+              const osmResponse = await fetch(
+                `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(localityName + ', Western Australia, Australia')}&format=json&limit=1`
+              )
+              const osmData = await osmResponse.json()
+              
+              if (osmData && osmData.length > 0) {
+                const place = osmData[0]
                 const townLat = parseFloat(place.lat)
                 const townLon = parseFloat(place.lon)
+                
                 // Haversine distance
                 const R = 6371
                 const dLat = (townLat - lat) * Math.PI / 180
@@ -2836,35 +2837,29 @@ export default function Home() {
                           Math.sin(dLon/2) * Math.sin(dLon/2)
                 const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
                 const dist = R * c
-                if (dist < minDist) {
-                  minDist = dist
-                  closest = place
-                }
-              }
-              if (closest && minDist < 100) { // Within 100km
-                const townLat = parseFloat(closest.lat)
-                const townLon = parseFloat(closest.lon)
-                // Calculate direction FROM town TO current location (where user is relative to town)
-                // bearing formula: atan2(sin(dLon)*cos(lat2), cos(lat1)*sin(lat2) - sin(lat1)*cos(lat2)*cos(dLon))
-                const dLon = (lon - townLon) * Math.PI / 180
-                const lat1Rad = townLat * Math.PI / 180
-                const lat2Rad = lat * Math.PI / 180
-                const y = Math.sin(dLon) * Math.cos(lat2Rad)
-                const x = Math.cos(lat1Rad) * Math.sin(lat2Rad) - Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(dLon)
-                const bearing = Math.atan2(y, x) * 180 / Math.PI
-                const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
-                const dirIndex = Math.round(((bearing + 360) % 360) / 45) % 8
-                const dirName = directions[dirIndex].toLowerCase()
-                // Format distance
-                const distStr = minDist < 1 
-                  ? `${Math.round(minDist * 1000)}m`
-                  : `${minDist.toFixed(1).replace(/\.0$/, '')}km`
-                // Extract town name from display_name
-                const townName = closest.display_name.split(',')[0]
-                nearestTown = {
-                  name: townName,
-                  distance: distStr,
-                  direction: dirName
+                
+                if (dist < 100) { // Within 100km
+                  // Calculate direction FROM town TO current location (where user is relative to town)
+                  const dLonRad = (lon - townLon) * Math.PI / 180
+                  const lat1Rad = townLat * Math.PI / 180
+                  const lat2Rad = lat * Math.PI / 180
+                  const y = Math.sin(dLonRad) * Math.cos(lat2Rad)
+                  const x = Math.cos(lat1Rad) * Math.sin(lat2Rad) - Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(dLonRad)
+                  const bearing = Math.atan2(y, x) * 180 / Math.PI
+                  const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+                  const dirIndex = Math.round(((bearing + 360) % 360) / 45) % 8
+                  const dirName = directions[dirIndex].toLowerCase()
+                  
+                  // Format distance
+                  const distStr = dist < 1 
+                    ? `${Math.round(dist * 1000)}m`
+                    : `${dist.toFixed(1).replace(/\.0$/, '')}km`
+                  
+                  nearestTown = {
+                    name: localityName,
+                    distance: distStr,
+                    direction: dirName
+                  }
                 }
               }
             }
