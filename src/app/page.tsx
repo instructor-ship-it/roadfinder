@@ -483,6 +483,7 @@ export default function Home() {
     roadName: string;
     slk: number;
     region: string;
+    locality: string | null;
     lat: number;
     lon: number;
     crossRoad: { name: string; distance: string; direction: string } | null;
@@ -2838,6 +2839,7 @@ export default function Home() {
               roadName: gpsData.road_name || gpsData.road_id,
               slk: gpsData.slk,
               region: gpsData.region || 'Western Australia',
+              locality: gpsData.locality || null,
               lat,
               lon,
               crossRoad,
@@ -2849,6 +2851,7 @@ export default function Home() {
               roadName: 'Unknown Road',
               slk: 0,
               region: 'Western Australia',
+              locality: null,
               lat,
               lon,
               crossRoad: null,
@@ -2862,6 +2865,7 @@ export default function Home() {
             roadName: 'Unknown Road',
             slk: 0,
             region: 'Western Australia',
+            locality: null,
             lat,
             lon,
             crossRoad: null,
@@ -5264,7 +5268,7 @@ export default function Home() {
                       "Emergency on <span className="font-bold text-yellow-400">{emergencyData.roadName}</span>
                       {emergencyData.crossRoad && (
                         <>, approximately <span className="font-bold text-yellow-400">{emergencyData.crossRoad.distance}</span> <span className="font-bold text-yellow-400">{emergencyData.crossRoad.direction}</span> of <span className="font-bold text-yellow-400">{emergencyData.crossRoad.name}</span></>
-                      )}, <span className="font-bold text-yellow-400">{emergencyData.region}</span>.
+                      )}, <span className="font-bold text-yellow-400">{emergencyData.locality || emergencyData.region}</span>.
                       GPS coordinates: <span className="font-bold text-green-400">{emergencyData.lat.toFixed(6)}, {emergencyData.lon.toFixed(6)}</span>."
                     </p>
                   </div>
@@ -5279,6 +5283,12 @@ export default function Home() {
                       <span className="text-gray-400">SLK:</span>
                       <span className="text-white font-mono">{emergencyData.slk.toFixed(2)}</span>
                     </div>
+                    {emergencyData.locality && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Locality:</span>
+                        <span className="text-white">{emergencyData.locality}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span className="text-gray-400">Region:</span>
                       <span className="text-white">{emergencyData.region}</span>
@@ -5303,7 +5313,7 @@ export default function Home() {
                   <div className="flex gap-2">
                     <Button
                       onClick={() => {
-                        const text = `Emergency on ${emergencyData.roadName}${emergencyData.crossRoad ? `, approximately ${emergencyData.crossRoad.distance} ${emergencyData.crossRoad.direction} of ${emergencyData.crossRoad.name}` : ''}, ${emergencyData.region}. GPS coordinates: ${emergencyData.lat.toFixed(6)}, ${emergencyData.lon.toFixed(6)}.`
+                        const text = `Emergency on ${emergencyData.roadName}${emergencyData.crossRoad ? `, approximately ${emergencyData.crossRoad.distance} ${emergencyData.crossRoad.direction} of ${emergencyData.crossRoad.name}` : ''}, ${emergencyData.locality || emergencyData.region}. GPS coordinates: ${emergencyData.lat.toFixed(6)}, ${emergencyData.lon.toFixed(6)}.`
                         navigator.clipboard.writeText(text)
                         alert('Location copied to clipboard!')
                       }}
@@ -5317,7 +5327,7 @@ export default function Home() {
                     >
                       📍 Open Maps
                     </Button>
-                  </div>
+                    </div>
                 </div>
               ) : (
                 <p className="text-gray-400 text-center py-8">No location data available</p>

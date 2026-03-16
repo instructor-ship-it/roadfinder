@@ -16,6 +16,7 @@ interface RoadResult {
   slk: number;
   distance_m: number;
   region: string | null;
+  locality: string | null;
   carriageway: string | null;
   network_type: string | null;
 }
@@ -95,6 +96,7 @@ function calculateSlkForPoint(
         slk: Math.round(bestSlk * 100) / 100,
         distance_m: Math.round(minDist * 10) / 10,
         region: attrs.RA_NAME || null,
+        locality: attrs.LG_NAME || null,
         carriageway: attrs.CWY || null,
         network_type: attrs.NETWORK_TYPE || null
       });
@@ -134,7 +136,7 @@ export async function GET(request: Request) {
       geometry: bbox,
       geometryType: 'esriGeometryEnvelope',
       spatialRel: 'esriSpatialRelIntersects',
-      outFields: 'ROAD,ROAD_NAME,START_SLK,END_SLK,RA_NAME,CWY,NETWORK_TYPE',
+      outFields: 'ROAD,ROAD_NAME,START_SLK,END_SLK,RA_NAME,LG_NAME,CWY,NETWORK_TYPE',
       returnGeometry: 'true',
       f: 'json',
       resultRecordCount: '50'
@@ -173,19 +175,20 @@ export async function GET(request: Request) {
       carriageway: closest.carriageway,
       network_type: closest.network_type,
       region: closest.region,
-      
+      locality: closest.locality,
+
       // Location
       lat,
       lon,
-      
+
       // Other nearby roads (within 100m)
       nearby_roads: roads
         .filter(r => r.road_id !== closest.road_id && r.distance_m < 100)
         .slice(0, 5),
-      
+
       // All roads within search radius
       all_roads: roads.slice(0, 10),
-      
+
       // Google Maps link
       google_maps: `https://www.google.com/maps?q=${lat},${lon}`
     });
