@@ -62,6 +62,22 @@ import {
   checkStaticData,
 } from '@/lib/download-roads'
 
+// Helper function to format distance for emergency messages
+// Rounds to nearest 100m when under 1km for easier communication
+function formatEmergencyDistance(distanceStr: string): string {
+  // Parse the distance string (e.g., "60m", "1.5km", "394m")
+  if (distanceStr.endsWith('km')) {
+    return distanceStr // Keep km distances as-is
+  }
+  
+  const meters = parseInt(distanceStr)
+  if (isNaN(meters)) return distanceStr
+  
+  // Round to nearest 100m for distances under 1km
+  const rounded = Math.round(meters / 100) * 100
+  return `${rounded}m`
+}
+
 interface Road {
   road_id: string
   road_name: string
@@ -2852,7 +2868,7 @@ export default function Home() {
                   const dirIndex = Math.round(((bearing + 360) % 360) / 45) % 8
                   const dirName = directions[dirIndex]
                   
-                  // Format distance
+                  // Format distance: use km if >= 1000m
                   const distStr = dist < 1 
                     ? `${Math.round(dist * 1000)}m`
                     : `${dist.toFixed(1).replace(/\.0$/, '')}km`
@@ -2873,31 +2889,87 @@ export default function Home() {
           }
           
           if (gpsData.road_id) {
-            // Get intersections near current SLK
-            const intResponse = await fetch(`/api/intersections?road_id=${gpsData.road_id}&slk_start=${Math.max(0, gpsData.slk - 5)}&slk_end=${gpsData.slk + 5}`)
-            const intData = await intResponse.json()
-            
-            // Find nearest cross road
+            // Use Intersections Layer (Layer 6) for accurate cross road names
+            // This provides better results than road network nodes
             let crossRoad: { name: string; distance: string; direction: string } | null = null
-            if (intData.crossRoads && intData.crossRoads.length > 0) {
-              // Sort by distance from current SLK and take nearest
-              const sorted = [...intData.crossRoads].sort((a: any, b: any) => {
-                const distA = Math.abs(parseFloat(a.distance) - gpsData.slk)
-                const distB = Math.abs(parseFloat(b.distance) - gpsData.slk)
-                return distA - distB
-              })
-              const nearest = sorted[0]
-              const distanceM = Math.abs(parseFloat(nearest.distance) - gpsData.slk) * 1000
-              const direction = parseFloat(nearest.distance) < gpsData.slk ? 'west' : 'east'
-              // Format distance: use km if >= 1000m
-              const distanceStr = distanceM >= 1000 
-                ? `${(distanceM / 1000).toFixed(1).replace(/\.0$/, '')}km`
-                : `${Math.round(distanceM)}m`
-              crossRoad = {
-                name: nearest.name,
-                distance: distanceStr,
-                direction
+            
+            try {
+              const intResponse = await fetch(`/api/nearest-intersections?lat=${lat}&lon=${lon}&radius=2`)
+              const intData = await intResponse.json()
+              
+              if (intData.intersections && intData.intersections.length > 0) {
+                // Find the nearest intersection that is NOT just our current road
+                // We want a cross road (intersection with another road)
+                const currentRoadName = (gpsData.road_name || gpsData.road_id).toLowerCase()
+                
+                // Find intersection that contains our road name AND another road
+                for (const intersection of intData.intersections) {
+                  const nodeName = intersection.nodeName.toLowerCase()
+                  
+                  // Check if this intersection involves our road
+                  if (nodeName.includes(currentRoadName.split(' ')[0])) {
+                    // Extract the cross road name (other roads in the intersection)
+                    const parts = intersection.nodeName.split(' & ')
+                    const crossParts = parts.filter((p: string) => 
+                      !p.toLowerCase().includes(currentRoadName.split(' ')[0].toLowerCase()) &&
+                      !p.toLowerCase().includes('end road') &&
+                      !p.toLowerCase().includes('start road')
+                    )
+                    
+                    if (crossParts.length > 0) {
+                      const distanceM = intersection.distanceM
+                      const distanceStr = distanceM >= 1000 
+                        ? `${(distanceM / 1000).toFixed(1).replace(/\.0$/, '')}km`
+                        : `${Math.round(distanceM / 100) * 100}m`
+                      
+                      // Determine direction from intersection to current location
+                      const bearing = Math.atan2(lat - intersection.lat, lon - intersection.lon) * 180 / Math.PI
+                      const directions = ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest']
+                      const dirIndex = Math.round(((bearing + 360) % 360) / 45) % 8
+                      const direction = directions[dirIndex]
+                      
+                      crossRoad = {
+                        name: crossParts[0].trim(),
+                        distance: distanceStr,
+                        direction
+                      }
+                      break
+                    }
+                  }
+                }
+                
+                // If no cross road found with road name matching, use the nearest intersection
+                if (!crossRoad && intData.intersections.length > 0) {
+                  const nearest = intData.intersections[0]
+                  // Parse the intersection name to get cross roads
+                  const parts = nearest.nodeName.split(' & ')
+                  const crossParts = parts.filter((p: string) => 
+                    !p.toLowerCase().includes(currentRoadName.split(' ')[0].toLowerCase()) &&
+                    !p.toLowerCase().includes('end road') &&
+                    !p.toLowerCase().includes('start road')
+                  )
+                  
+                  if (crossParts.length > 0) {
+                    const distanceM = nearest.distanceM
+                    const distanceStr = distanceM >= 1000 
+                      ? `${(distanceM / 1000).toFixed(1).replace(/\.0$/, '')}km`
+                      : `${Math.round(distanceM / 100) * 100}m`
+                    
+                    const bearing = Math.atan2(lat - nearest.lat, lon - nearest.lon) * 180 / Math.PI
+                    const directions = ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest']
+                    const dirIndex = Math.round(((bearing + 360) % 360) / 45) % 8
+                    const direction = directions[dirIndex]
+                    
+                    crossRoad = {
+                      name: crossParts[0].trim(),
+                      distance: distanceStr,
+                      direction
+                    }
+                  }
+                }
               }
+            } catch (e) {
+              console.error('Failed to get intersections:', e)
             }
             
             setEmergencyData({
@@ -5335,9 +5407,9 @@ export default function Home() {
                     <p className="text-white text-lg leading-relaxed">
                       "Emergency on <span className="font-bold text-yellow-400">{emergencyData.roadName}</span>
                       {emergencyData.crossRoad && (
-                        <>, approximately <span className="font-bold text-yellow-400">{emergencyData.crossRoad.distance}</span> <span className="font-bold text-yellow-400">{emergencyData.crossRoad.direction}</span> of <span className="font-bold text-yellow-400">{emergencyData.crossRoad.name}</span></>
+                        <>, approximately <span className="font-bold text-yellow-400">{formatEmergencyDistance(emergencyData.crossRoad.distance)}</span> <span className="font-bold text-yellow-400">{emergencyData.crossRoad.direction}</span> of <span className="font-bold text-yellow-400">{emergencyData.crossRoad.name}</span></>
                       )}{emergencyData.nearestTown && (
-                        <>, about <span className="font-bold text-yellow-400">{emergencyData.nearestTown.distance}</span> <span className="font-bold text-yellow-400">{emergencyData.nearestTown.direction}</span> of <span className="font-bold text-yellow-400">{emergencyData.nearestTown.name}</span></>
+                        <>, about <span className="font-bold text-yellow-400">{formatEmergencyDistance(emergencyData.nearestTown.distance)}</span> <span className="font-bold text-yellow-400">{emergencyData.nearestTown.direction}</span> of <span className="font-bold text-yellow-400">{emergencyData.nearestTown.name}</span></>
                       )}.
                       GPS coordinates: <span className="font-bold text-green-400">{emergencyData.lat.toFixed(6)}, {emergencyData.lon.toFixed(6)}</span>."
                     </p>
@@ -5389,7 +5461,7 @@ export default function Home() {
                   <div className="flex gap-2">
                     <Button
                       onClick={() => {
-                        const text = `Emergency on ${emergencyData.roadName}${emergencyData.crossRoad ? `, approximately ${emergencyData.crossRoad.distance} ${emergencyData.crossRoad.direction} of ${emergencyData.crossRoad.name}` : ''}${emergencyData.nearestTown ? `, about ${emergencyData.nearestTown.distance} ${emergencyData.nearestTown.direction} of ${emergencyData.nearestTown.name}` : ''}. GPS coordinates: ${emergencyData.lat.toFixed(6)}, ${emergencyData.lon.toFixed(6)}.`
+                        const text = `Emergency on ${emergencyData.roadName}${emergencyData.crossRoad ? `, approximately ${formatEmergencyDistance(emergencyData.crossRoad.distance)} ${emergencyData.crossRoad.direction} of ${emergencyData.crossRoad.name}` : ''}${emergencyData.nearestTown ? `, about ${formatEmergencyDistance(emergencyData.nearestTown.distance)} ${emergencyData.nearestTown.direction} of ${emergencyData.nearestTown.name}` : ''}. GPS coordinates: ${emergencyData.lat.toFixed(6)}, ${emergencyData.lon.toFixed(6)}.`
                         navigator.clipboard.writeText(text)
                         alert('Location copied to clipboard!')
                       }}

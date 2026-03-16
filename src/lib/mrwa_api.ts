@@ -592,3 +592,97 @@ export async function listRoads(): Promise<{ roadId: string; roadName: string }[
   
   return roads.sort((a, b) => a.roadId.localeCompare(b.roadId, undefined, { numeric: true }));
 }
+
+// ============================================================
+// INTERSECTIONS LAYER (Layer 6) - For accurate cross road names
+// ============================================================
+
+const INTERSECTIONS_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/6/query";
+
+export interface IntersectionResult {
+  nodeName: string;
+  lat: number;
+  lon: number;
+  nodeType: string;
+  distanceM: number;
+}
+
+/**
+ * Find nearest intersections to a GPS point using the Intersections layer (Layer 6)
+ * This gives accurate intersection names instead of confusing road network node names
+ */
+export async function findNearestIntersections(
+  lat: number,
+  lon: number,
+  radiusKm: number = 2
+): Promise<IntersectionResult[]> {
+  
+  // Convert radius to degrees (approximate)
+  const radiusDeg = radiusKm / 111; // ~111km per degree
+  
+  // Build bounding box
+  const minLat = lat - radiusDeg;
+  const maxLat = lat + radiusDeg;
+  const minLon = lon - radiusDeg;
+  const maxLon = lon + radiusDeg;
+  
+  const query = {
+    geometry: `${minLon},${minLat},${maxLon},${maxLat}`,
+    geometryType: "esriGeometryEnvelope",
+    inSR: "4326",
+    spatialRel: "esriSpatialRelIntersects",
+    outFields: "NODE_DESCR,NODE_TYPE",
+    returnGeometry: "true",
+    f: "json",
+    resultRecordCount: "50"
+  };
+  
+  const result = await fetchArcGIS(INTERSECTIONS_URL, query);
+  
+  if (!result.features || result.features.length === 0) {
+    return [];
+  }
+  
+  // Calculate distance to each intersection and sort
+  const intersections: IntersectionResult[] = [];
+  
+  for (const f of result.features) {
+    const attrs = f.attributes;
+    const geom = f.geometry;
+    
+    if (!geom || !attrs.NODE_DESCR) continue;
+    
+    const intLat = geom.y;
+    const intLon = geom.x;
+    
+    // Calculate distance using Haversine formula
+    const distanceM = haversineDistance(lat, lon, intLat, intLon) * 1000;
+    
+    intersections.push({
+      nodeName: attrs.NODE_DESCR,
+      lat: intLat,
+      lon: intLon,
+      nodeType: attrs.NODE_TYPE || 'Unknown',
+      distanceM: Math.round(distanceM)
+    });
+  }
+  
+  // Sort by distance
+  intersections.sort((a, b) => a.distanceM - b.distanceM);
+  
+  return intersections;
+}
+
+/**
+ * Haversine distance calculation (returns km)
+ */
+function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371; // Earth's radius in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
