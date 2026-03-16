@@ -2845,7 +2845,13 @@ export default function Home() {
                 const townLat = parseFloat(closest.lat)
                 const townLon = parseFloat(closest.lon)
                 // Calculate direction FROM town TO current location (where user is relative to town)
-                const bearing = Math.atan2(lon - townLon, lat - townLat) * 180 / Math.PI
+                // bearing formula: atan2(sin(dLon)*cos(lat2), cos(lat1)*sin(lat2) - sin(lat1)*cos(lat2)*cos(dLon))
+                const dLon = (lon - townLon) * Math.PI / 180
+                const lat1Rad = townLat * Math.PI / 180
+                const lat2Rad = lat * Math.PI / 180
+                const y = Math.sin(dLon) * Math.cos(lat2Rad)
+                const x = Math.cos(lat1Rad) * Math.sin(lat2Rad) - Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(dLon)
+                const bearing = Math.atan2(y, x) * 180 / Math.PI
                 const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
                 const dirIndex = Math.round(((bearing + 360) % 360) / 45) % 8
                 const dirName = directions[dirIndex].toLowerCase()
