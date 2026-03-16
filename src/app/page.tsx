@@ -487,6 +487,7 @@ export default function Home() {
     lat: number;
     lon: number;
     crossRoad: { name: string; distance: string; direction: string } | null;
+    nearestTown: { name: string; distance: string; direction: string } | null;
     nearbyRoads: Array<{ road_name: string; distance_m: number }>;
   } | null>(null)
 
@@ -2811,6 +2812,60 @@ export default function Home() {
           const gpsResponse = await fetch(`/api/gps?lat=${lat}&lon=${lon}&radius=1000`)
           const gpsData = await gpsResponse.json()
           
+          // Find nearest town using OSM
+          let nearestTown: { name: string; distance: string; direction: string } | null = null
+          try {
+            const osmResponse = await fetch(
+              `https://nominatim.openstreetmap.org/search?viewbox=${lon - 0.5},${lat - 0.5},${lon + 0.5},${lat + 0.5}&bounded=0&q=town OR city IN Western Australia&format=json&limit=10&accept-language=en`
+            )
+            const osmData = await osmResponse.json()
+            
+            if (osmData && osmData.length > 0) {
+              // Find closest town by distance
+              let minDist = Infinity
+              let closest: any = null
+              for (const place of osmData) {
+                const townLat = parseFloat(place.lat)
+                const townLon = parseFloat(place.lon)
+                // Haversine distance
+                const R = 6371
+                const dLat = (townLat - lat) * Math.PI / 180
+                const dLon = (townLon - lon) * Math.PI / 180
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                          Math.cos(lat * Math.PI / 180) * Math.cos(townLat * Math.PI / 180) *
+                          Math.sin(dLon/2) * Math.sin(dLon/2)
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+                const dist = R * c
+                if (dist < minDist) {
+                  minDist = dist
+                  closest = place
+                }
+              }
+              if (closest && minDist < 100) { // Within 100km
+                const townLat = parseFloat(closest.lat)
+                const townLon = parseFloat(closest.lon)
+                // Calculate direction
+                const bearing = Math.atan2(townLon - lon, townLat - lat) * 180 / Math.PI
+                const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+                const dirIndex = Math.round(((bearing + 360) % 360) / 45) % 8
+                const dirName = directions[dirIndex].toLowerCase()
+                // Format distance
+                const distStr = minDist < 1 
+                  ? `${Math.round(minDist * 1000)}m`
+                  : `${minDist.toFixed(1).replace(/\.0$/, '')}km`
+                // Extract town name from display_name
+                const townName = closest.display_name.split(',')[0]
+                nearestTown = {
+                  name: townName,
+                  distance: distStr,
+                  direction: dirName
+                }
+              }
+            }
+          } catch (e) {
+            console.error('Failed to get nearest town:', e)
+          }
+          
           if (gpsData.road_id) {
             // Get intersections near current SLK
             const intResponse = await fetch(`/api/intersections?road_id=${gpsData.road_id}&slk_start=${Math.max(0, gpsData.slk - 5)}&slk_end=${gpsData.slk + 5}`)
@@ -2847,6 +2902,7 @@ export default function Home() {
               lat,
               lon,
               crossRoad,
+              nearestTown,
               nearbyRoads: gpsData.nearby_roads || []
             })
           } else {
@@ -2859,6 +2915,7 @@ export default function Home() {
               lat,
               lon,
               crossRoad: null,
+              nearestTown,
               nearbyRoads: []
             })
           }
@@ -2873,6 +2930,7 @@ export default function Home() {
             lat,
             lon,
             crossRoad: null,
+            nearestTown: null,
             nearbyRoads: []
           })
         }
@@ -5272,7 +5330,9 @@ export default function Home() {
                       "Emergency on <span className="font-bold text-yellow-400">{emergencyData.roadName}</span>
                       {emergencyData.crossRoad && (
                         <>, approximately <span className="font-bold text-yellow-400">{emergencyData.crossRoad.distance}</span> <span className="font-bold text-yellow-400">{emergencyData.crossRoad.direction}</span> of <span className="font-bold text-yellow-400">{emergencyData.crossRoad.name}</span></>
-                      )}, <span className="font-bold text-yellow-400">{emergencyData.locality || emergencyData.region}</span>.
+                      )}{emergencyData.nearestTown && (
+                        <>, about <span className="font-bold text-yellow-400">{emergencyData.nearestTown.distance}</span> <span className="font-bold text-yellow-400">{emergencyData.nearestTown.direction}</span> of <span className="font-bold text-yellow-400">{emergencyData.nearestTown.name}</span></>
+                      )}.
                       GPS coordinates: <span className="font-bold text-green-400">{emergencyData.lat.toFixed(6)}, {emergencyData.lon.toFixed(6)}</span>."
                     </p>
                   </div>
@@ -5287,6 +5347,12 @@ export default function Home() {
                       <span className="text-gray-400">SLK:</span>
                       <span className="text-white font-mono">{emergencyData.slk.toFixed(2)}</span>
                     </div>
+                    {emergencyData.nearestTown && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Nearest Town:</span>
+                        <span className="text-white">{emergencyData.nearestTown.name} ({emergencyData.nearestTown.distance} {emergencyData.nearestTown.direction})</span>
+                      </div>
+                    )}
                     {emergencyData.locality && (
                       <div className="flex justify-between">
                         <span className="text-gray-400">Locality:</span>
@@ -5317,7 +5383,7 @@ export default function Home() {
                   <div className="flex gap-2">
                     <Button
                       onClick={() => {
-                        const text = `Emergency on ${emergencyData.roadName}${emergencyData.crossRoad ? `, approximately ${emergencyData.crossRoad.distance} ${emergencyData.crossRoad.direction} of ${emergencyData.crossRoad.name}` : ''}, ${emergencyData.locality || emergencyData.region}. GPS coordinates: ${emergencyData.lat.toFixed(6)}, ${emergencyData.lon.toFixed(6)}.`
+                        const text = `Emergency on ${emergencyData.roadName}${emergencyData.crossRoad ? `, approximately ${emergencyData.crossRoad.distance} ${emergencyData.crossRoad.direction} of ${emergencyData.crossRoad.name}` : ''}${emergencyData.nearestTown ? `, about ${emergencyData.nearestTown.distance} ${emergencyData.nearestTown.direction} of ${emergencyData.nearestTown.name}` : ''}. GPS coordinates: ${emergencyData.lat.toFixed(6)}, ${emergencyData.lon.toFixed(6)}.`
                         navigator.clipboard.writeText(text)
                         alert('Location copied to clipboard!')
                       }}
