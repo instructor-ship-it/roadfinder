@@ -678,18 +678,40 @@ export function getSpeedLimitForDirection(
       : (rightZones[0] || leftZones[0] || singleZones[0]);
     
     if (zone) {
-      speedLimit = zone.speed_limit;
+      // Use sign face values for double-sided signs based on travel direction
+      // Double-sided signs have different speeds visible to each direction
+      if (slkDirection === 'increasing' && zone.sign_face_increasing !== undefined) {
+        speedLimit = zone.sign_face_increasing;
+      } else if (slkDirection === 'decreasing' && zone.sign_face_decreasing !== undefined) {
+        speedLimit = zone.sign_face_decreasing;
+      } else {
+        speedLimit = zone.speed_limit;
+      }
     } else {
       speedLimit = 100;
     }
   } else if (singleZones.length > 0) {
     // Fall back to Single carriageway zone
     zone = singleZones[0];
-    speedLimit = zone.speed_limit;
+    // Check for sign face values even on single zones
+    if (slkDirection === 'increasing' && zone.sign_face_increasing !== undefined) {
+      speedLimit = zone.sign_face_increasing;
+    } else if (slkDirection === 'decreasing' && zone.sign_face_decreasing !== undefined) {
+      speedLimit = zone.sign_face_decreasing;
+    } else {
+      speedLimit = zone.speed_limit;
+    }
   } else {
     // Last resort: use first matching zone
     zone = matchingZones[0];
-    speedLimit = zone.speed_limit;
+    // Check for sign face values
+    if (slkDirection === 'increasing' && zone.sign_face_increasing !== undefined) {
+      speedLimit = zone.sign_face_increasing;
+    } else if (slkDirection === 'decreasing' && zone.sign_face_decreasing !== undefined) {
+      speedLimit = zone.sign_face_decreasing;
+    } else {
+      speedLimit = zone.speed_limit;
+    }
   }
   
   // Apply manual corrections if roadId is provided
