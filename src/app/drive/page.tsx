@@ -29,7 +29,7 @@ import { IncidentWarningBanner } from '@/components/IncidentWarningBanner'
 import { WeatherWarningBanner } from '@/components/WeatherWarningBanner'
 
 // App version
-const APP_VERSION = 'RC 1.7.13';
+const APP_VERSION = 'RC 1.7.14';
 
 // GPS lag compensation from localStorage
 interface GpsLagSettings {

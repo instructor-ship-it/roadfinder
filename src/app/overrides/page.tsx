@@ -665,7 +665,7 @@ export default function OverridesPage() {
         }
 
         // Normalize sign data (trim IDs and road_ids to prevent matching issues)
-        // Also ensure start_slk defaults to slk if not provided (RC 1.7.12)
+        // Also ensure start_slk defaults to slk if not provided (RC 1.7.14)
         const normalizedSigns = parsed.signs.map((sign: SpeedSignOverride) => ({
           ...sign,
           id: sign.id.trim(),
@@ -725,7 +725,7 @@ export default function OverridesPage() {
       }
 
       // Normalize sign data (trim IDs and road_ids to prevent matching issues)
-      // Also ensure start_slk defaults to slk if not provided (RC 1.7.12)
+      // Also ensure start_slk defaults to slk if not provided (RC 1.7.14)
       const normalizedSigns = parsed.signs.map((sign: SpeedSignOverride) => ({
         ...sign,
         id: sign.id.trim(),
@@ -962,7 +962,7 @@ This data should be verified against MRWA records before making database updates
           <h1 className="text-xl font-bold">Speed Sign Overrides</h1>
         </div>
         <div className="text-xs text-gray-500">
-          vRC 1.7.13 | Local Storage
+          vRC 1.7.14 | Local Storage
         </div>
       </div>
 

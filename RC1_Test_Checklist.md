@@ -1,4 +1,4 @@
-# TC Work Zone Locator - RC 1.6.0 Test Checklist
+# TC Work Zone Locator - RC 1.7.14 Test Checklist
 
 ## Pre-Test Setup
 
@@ -164,7 +164,7 @@
 ## SLK Tracking Tests (/drive)
 
 ### Page Load
-- [ ] Version shows "RC 1.6.0"
+- [ ] Version shows "RC 1.7.14"
 - [ ] "EKF Filtering Active" shows in purple
 - [ ] "Offline Ready" shows in green if data downloaded
 
@@ -238,7 +238,7 @@
 ## Speed Sign Override Tests (/overrides)
 
 ### Page Load
-- [ ] Version shows "RC 1.6.0"
+- [ ] Version shows "RC 1.7.14"
 - [ ] Storage mode shows "Local Storage"
 - [ ] Existing overrides displayed in table
 
@@ -273,7 +273,7 @@
 ## AfterCare Tests (/aftercare)
 
 ### Page Load
-- [ ] Version shows "RC 1.6.0"
+- [ ] Version shows "RC 1.7.14"
 - [ ] Job list shows grouped by status (Due, TBA, Active, Archived)
 - [ ] Empty state shows "No jobs yet" message
 
@@ -418,7 +418,7 @@
 
 ## Final Checks
 
-- [ ] Version displays "RC 1.6.0" on all pages
+- [ ] Version displays "RC 1.7.14" on all pages
 - [ ] No console errors in browser dev tools
 - [ ] No TypeScript build errors
 - [ ] All features documented in Word docs

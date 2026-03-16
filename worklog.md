@@ -1,13 +1,56 @@
 # TC Work Zone Locator - Work Log
 
-> **Last Updated:** 2026-03-12
-> **Current Version:** RC 1.6.0
+> **Last Updated:** 2026-03-14
+> **Current Version:** RC 1.7.14
+
+---
+
+## Task ID: 2026-03-14-001
+**Agent:** Main Agent
+**Task:** RC 1.7.14 - Emergency Location Enhancement
+
+### Work Log:
+- **Added locality (town) name to emergency location**
+  - GPS API now returns LG_NAME field from MRWA Layer 17
+  - Shows town name (e.g., "Moora") instead of just region ("Wheatbelt")
+  - Updated emergencyData state to include locality field
+
+- **Added nearest town distance to emergency message**
+  - Queries OpenStreetMap for nearby towns/cities
+  - Calculates distance and cardinal direction to nearest town
+  - Uses Haversine formula for accurate distance calculation
+  - Shows direction FROM town TO user (e.g., "southeast of Moora")
+
+- **Distance formatting improvements**
+  - Shows km for distances ≥1000m (e.g., "1.5km" instead of "1500m")
+  - Removes unnecessary .0 for whole kilometers
+  - Both cross road distance and nearest town distance use same format
+
+- **Fixed cardinal direction calculation**
+  - Initially calculated direction TO town (wrong)
+  - Fixed to calculate direction FROM town TO user
+  - `Math.atan2(lon - townLon, lat - townLat)` instead of opposite
+
+### Files Changed:
+- `src/app/api/gps/route.ts` (added LG_NAME field, locality in response)
+- `src/app/page.tsx` (locality state, nearest town lookup, UI updates)
+
+### Key Learnings:
+- **MRWA LG_NAME field**: Contains Local Government Area name (town name)
+- **OSM Nominatim API**: Free geocoding for finding nearby towns
+- **Bearing direction**: `atan2(deltaLon, deltaLat)` gives bearing in degrees
+- **Direction wording**: "X km southeast of Y" = user is southeast of town Y
+
+### Stage Summary:
+- Version: RC 1.7.14
+- Emergency location now shows locality and nearest town distance
+- Ready for push to GitHub
 
 ---
 
 ## Task ID: 2026-03-12-001
 **Agent:** Main Agent
-**Task:** RC 1.6.0 - AfterCare Map View
+**Task:** RC 1.7.14 - AfterCare Map View
 
 ### Work Log:
 - **New Feature**: AfterCare Map Page (`/aftercare/map`)
@@ -51,7 +94,7 @@
 - **Absolute wrapper**: Wrap MapContainer in `absolute inset-0` div for proper containment
 
 ### Stage Summary:
-- Version: RC 1.6.0
+- Version: RC 1.7.14
 - AfterCare now has a full-screen map view for all signs
 - Map works on both mobile and desktop
 - Ready for push to GitHub

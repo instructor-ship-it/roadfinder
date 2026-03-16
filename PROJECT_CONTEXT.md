@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
 > **Last Updated:** 2026-03-12
-> **Current Version:** RC 1.6.0
+> **Current Version:** RC 1.7.14
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -392,7 +392,21 @@ See `scripts/README.md` for full documentation of available scripts.
 
 ## Recent Changes (v5.x)
 
-### RC 1.6.0 (Current) - AfterCare Map View
+### RC 1.7.14 (Current) - Emergency Location Enhancement
+- **Added locality (town) name to emergency location**
+  - GPS API now returns LG_NAME field from MRWA data
+  - Shows town name (e.g., "Moora") instead of just region ("Wheatbelt")
+- **Added nearest town distance to emergency message**
+  - Queries OpenStreetMap for nearby towns/cities
+  - Shows distance and cardinal direction to nearest town
+  - Example: "about 7.4km southeast of Moora"
+- **Distance formatting improvements**
+  - Shows km for distances ≥1000m (e.g., "1.5km" instead of "1500m")
+  - Removes unnecessary .0 for whole kilometers
+- **Fixed cardinal direction calculation**
+  - Direction now correctly shows where user is relative to town
+
+### RC 1.6.0 - AfterCare Map View
 - **New AfterCare Map Page** (`/aftercare/map`)
   - Full-screen OpenStreetMap with colored pins for all signs
   - Filter buttons: All / 🔴 Retrieval / 🟡 Maintenance / 🟢 Active

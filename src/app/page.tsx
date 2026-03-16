@@ -277,7 +277,7 @@ export default function Home() {
   const [debugInfo, setDebugInfo] = useState<string>('')
   const [showDebug, setShowDebug] = useState<boolean>(false)
 
-  // Offline data source toggles (RC 1.7.0) - when true, use offline data; when false, use online API
+  // Offline data source toggles (RC 1.7.14) - when true, use offline data; when false, use online API
   // Default to offline mode (true) - if offline data not available, functions will fall back to online
   interface OfflineToggles {
     roadsList: boolean;        // Roads list by region
@@ -3664,7 +3664,7 @@ export default function Home() {
                     )}
                   </div>
 
-                  {/* Offline Data Source Toggles - RC 1.7.0 */}
+                  {/* Offline Data Source Toggles - RC 1.7.14 */}
                   {offlineStats && (
                     <div className="mt-4 pt-3 border-t border-gray-700">
                       <div className="flex items-center justify-between mb-2">

@@ -217,7 +217,22 @@ src/
 
 ## Version History
 
-### RC 1.7.7 (Current) - Selection Persistence Fix for Navigation
+### RC 1.7.14 (Current) - Emergency Location Enhancement
+- **Added locality (town) name to emergency location**
+  - GPS API now returns LG_NAME field from MRWA data
+  - Shows town name (e.g., "Moora") instead of just region ("Wheatbelt")
+- **Added nearest town distance to emergency message**
+  - Queries OpenStreetMap for nearby towns/cities
+  - Shows distance and cardinal direction to nearest town
+  - Example: "about 7.4km southeast of Moora"
+- **Distance formatting improvements**
+  - Shows km for distances ≥1000m (e.g., "1.5km" instead of "1500m")
+  - Removes unnecessary .0 for whole kilometers
+- **Fixed cardinal direction calculation**
+  - Direction now correctly shows where user is relative to town
+  - "southeast of Moora" = user is southeast of the town
+
+### RC 1.7.7 - Selection Persistence Fix for Navigation
 - **Fixed selection being lost when navigating back**
   - Selection now saves even when empty (was skipping save if `size == 0`)
   - Removed condition that prevented saving deselected state
