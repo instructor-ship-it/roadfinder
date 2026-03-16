@@ -2844,8 +2844,8 @@ export default function Home() {
               if (closest && minDist < 100) { // Within 100km
                 const townLat = parseFloat(closest.lat)
                 const townLon = parseFloat(closest.lon)
-                // Calculate direction
-                const bearing = Math.atan2(townLon - lon, townLat - lat) * 180 / Math.PI
+                // Calculate direction FROM town TO current location (where user is relative to town)
+                const bearing = Math.atan2(lon - townLon, lat - townLat) * 180 / Math.PI
                 const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
                 const dirIndex = Math.round(((bearing + 360) % 360) / 45) % 8
                 const dirName = directions[dirIndex].toLowerCase()
