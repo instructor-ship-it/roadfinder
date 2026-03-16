@@ -2828,9 +2828,13 @@ export default function Home() {
               const nearest = sorted[0]
               const distanceM = Math.abs(parseFloat(nearest.distance) - gpsData.slk) * 1000
               const direction = parseFloat(nearest.distance) < gpsData.slk ? 'west' : 'east'
+              // Format distance: use km if >= 1000m
+              const distanceStr = distanceM >= 1000 
+                ? `${(distanceM / 1000).toFixed(1).replace(/\.0$/, '')}km`
+                : `${Math.round(distanceM)}m`
               crossRoad = {
                 name: nearest.name,
-                distance: `${Math.round(distanceM)}m`,
+                distance: distanceStr,
                 direction
               }
             }
