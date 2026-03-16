@@ -1,0 +1,43 @@
+{
+  "download_date": "2026-03-11T00:00:00.000Z",
+  "source": "OpenStreetMap via Overpass API",
+  "hospitals_count": 15,
+  "fuel_stations_count": 10,
+  "toilets_count": 5,
+  "hospitals": [
+    {"id": 1, "type": "hospital", "name": "Royal Perth Hospital", "lat": -31.9514, "lon": 115.9694, "phone": "+61 8 9224 2111", "address": "Wellington Street, Perth", "emergency": true, "region": "Metropolitan"},
+    {"id": 2, "type": "hospital", "name": "Fiona Stanley Hospital", "lat": -32.0989, "lon": 115.8447, "phone": "+61 8 6152 2222", "address": "Robin Warren Drive, Murdoch", "emergency": true, "region": "Metropolitan"},
+    {"id": 3, "type": "hospital", "name": "Sir Charles Gairdner Hospital", "lat": -31.9806, "lon": 115.8139, "phone": "+61 8 6457 3333", "address": "Hospital Avenue, Nedlands", "emergency": true, "region": "Metropolitan"},
+    {"id": 4, "type": "hospital", "name": "Perth Children's Hospital", "lat": -31.9825, "lon": 115.8133, "phone": "+61 8 6456 2222", "address": "15 Hospital Avenue, Nedlands", "emergency": true, "region": "Metropolitan"},
+    {"id": 5, "type": "hospital", "name": "St John of God Murdoch", "lat": -32.0928, "lon": 115.8372, "phone": "+61 8 9333 6000", "address": "100 Murdoch Drive, Murdoch", "emergency": true, "region": "Metropolitan"},
+    {"id": 6, "type": "hospital", "name": "Armadale Health Service", "lat": -32.1522, "lon": 116.0067, "phone": "+61 8 9391 2000", "address": "3056 Albany Highway, Armadale", "emergency": true, "region": "Metropolitan"},
+    {"id": 7, "type": "hospital", "name": "Joondalup Health Campus", "lat": -31.7431, "lon": 115.7464, "phone": "+61 8 9400 9400", "address": "Shenton Avenue, Joondalup", "emergency": true, "region": "Metropolitan"},
+    {"id": 8, "type": "hospital", "name": "Rockingham General Hospital", "lat": -32.2861, "lon": 115.7456, "phone": "+61 8 9599 4000", "address": "Elanora Drive, Rockingham", "emergency": true, "region": "Metropolitan"},
+    {"id": 9, "type": "hospital", "name": "Peel Health Campus", "lat": -32.5192, "lon": 115.7186, "phone": "+61 8 9531 8000", "address": "110 Lakes Road, Mandurah", "emergency": true, "region": "Metropolitan"},
+    {"id": 10, "type": "hospital", "name": "Midland Health Campus", "lat": -31.8919, "lon": 116.0017, "phone": "+61 8 9462 4000", "address": "The Avenue, Midland", "emergency": true, "region": "Metropolitan"},
+    {"id": 11, "type": "hospital", "name": "Bunbury Regional Hospital", "lat": -33.3511, "lon": 115.6419, "phone": "+61 8 9722 2333", "address": "Bussell Highway, Bunbury", "emergency": true, "region": "South West"},
+    {"id": 12, "type": "hospital", "name": "Kalgoorlie Health Campus", "lat": -30.7489, "lon": 121.4656, "phone": "+61 8 9021 2222", "address": "Pasteur Street, Kalgoorlie", "emergency": true, "region": "Goldfields-Esperance"},
+    {"id": 13, "type": "hospital", "name": "Broome Health Campus", "lat": -17.9614, "lon": 122.2367, "phone": "+61 8 9194 0333", "address": "Robinson Street, Broome", "emergency": true, "region": "Kimberley"},
+    {"id": 14, "type": "hospital", "name": "Geraldton Hospital", "lat": -28.7775, "lon": 114.6108, "phone": "+61 8 9956 2222", "address": "Shenton Street, Geraldton", "emergency": true, "region": "Mid West-Gascoyne"},
+    {"id": 15, "type": "hospital", "name": "Albany Health Campus", "lat": -35.0256, "lon": 117.8811, "phone": "+61 8 9892 2222", "address": "Wollaston Street, Albany", "emergency": true, "region": "Great Southern"}
+  ],
+  "fuelStations": [
+    {"id": 101, "type": "fuel", "name": "BP Perth CBD", "lat": -31.9514, "lon": 115.8550, "region": "Metropolitan"},
+    {"id": 102, "type": "fuel", "name": "Caltex Wellington St", "lat": -31.9497, "lon": 115.8617, "region": "Metropolitan"},
+    {"id": 103, "type": "fuel", "name": "Shell Great Eastern Hwy", "lat": -31.9550, "lon": 115.9150, "region": "Metropolitan"},
+    {"id": 104, "type": "fuel", "name": "BP Albany Highway", "lat": -31.9833, "lon": 115.9317, "region": "Metropolitan"},
+    {"id": 105, "type": "fuel", "name": "Caltex Kwinana Freeway", "lat": -32.0767, "lon": 115.8533, "region": "Metropolitan"},
+    {"id": 106, "type": "fuel", "name": "7-Eleven Fremantle", "lat": -32.0583, "lon": 115.7483, "region": "Metropolitan"},
+    {"id": 107, "type": "fuel", "name": "BP Cockburn", "lat": -32.1283, "lon": 115.8317, "region": "Metropolitan"},
+    {"id": 108, "type": "fuel", "name": "Shell Joondalup", "lat": -31.7450, "lon": 115.7467, "region": "Metropolitan"},
+    {"id": 109, "type": "fuel", "name": "Caltex Midland", "lat": -31.8933, "lon": 116.0017, "region": "Metropolitan"},
+    {"id": 110, "type": "fuel", "name": "BP Rockingham", "lat": -32.2917, "lon": 115.7333, "region": "Metropolitan"}
+  ],
+  "toilets": [
+    {"id": 201, "type": "toilets", "name": "Perth Station Public Toilets", "lat": -31.9508, "lon": 115.8606, "opening_hours": "24/7", "wheelchair": "yes", "region": "Metropolitan"},
+    {"id": 202, "type": "toilets", "name": "Yagan Square Toilets", "lat": -31.9494, "lon": 115.8594, "opening_hours": "06:00-22:00", "wheelchair": "yes", "region": "Metropolitan"},
+    {"id": 203, "type": "toilets", "name": "Murray Street Mall Toilets", "lat": -31.9531, "lon": 115.8558, "opening_hours": "08:00-18:00", "wheelchair": "yes", "region": "Metropolitan"},
+    {"id": 204, "type": "toilets", "name": "Fremantle Markets Toilets", "lat": -32.0567, "lon": 115.7494, "opening_hours": "08:00-18:00", "wheelchair": "yes", "region": "Metropolitan"},
+    {"id": 205, "type": "toilets", "name": "Cottesloe Beach Toilets", "lat": -31.9917, "lon": 115.7550, "opening_hours": "06:00-20:00", "wheelchair": "yes", "region": "Metropolitan"}
+  ]
+}
