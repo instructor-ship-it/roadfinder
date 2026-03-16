@@ -2819,14 +2819,16 @@ export default function Home() {
             const localityName = gpsData.locality || gpsData.region
             if (localityName) {
               const osmResponse = await fetch(
-                `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(localityName + ', Western Australia, Australia')}&format=json&limit=1`
+                `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(localityName + ', Western Australia, Australia')}&format=json&limit=5&addressdetails=1`
               )
               const osmData = await osmResponse.json()
               
               if (osmData && osmData.length > 0) {
-                const place = osmData[0]
-                const townLat = parseFloat(place.lat)
-                const townLon = parseFloat(place.lon)
+                // Find the actual town (has address.town), not the shire boundary
+                let townPlace = osmData.find((p: any) => p.address?.town) || osmData[0]
+                
+                const townLat = parseFloat(townPlace.lat)
+                const townLon = parseFloat(townPlace.lon)
                 
                 // Haversine distance
                 const R = 6371
@@ -2855,8 +2857,11 @@ export default function Home() {
                     ? `${Math.round(dist * 1000)}m`
                     : `${dist.toFixed(1).replace(/\.0$/, '')}km`
                   
+                  // Use town name from address if available, otherwise locality name
+                  const townName = townPlace.address?.town || localityName
+                  
                   nearestTown = {
-                    name: localityName,
+                    name: townName,
                     distance: distStr,
                     direction: dirName
                   }
