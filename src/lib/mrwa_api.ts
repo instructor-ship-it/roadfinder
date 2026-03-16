@@ -8,12 +8,17 @@
  * TC Zone Definition:
  * - If only slk_start provided: TC Zone = slk_start - 0.1 to slk_start + 0.1
  * - If slk_start and slk_end provided: TC Zone = slk_start - 0.1 to slk_end + 0.1
+ * 
+ * IMPORTANT: Cross road names are sourced from the Intersections Layer (Layer 6)
+ * which provides accurate, verified intersection names like "Dawson St & Vincent St"
+ * instead of potentially outdated Road Network node names.
  */
 
 // API endpoints
 const STATE_ROAD_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/24/query";
 const LOCAL_ROAD_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/25/query";
 const ALL_ROADS_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/17/query"; // Layer 17 has RA_NAME for all roads
+const INTERSECTIONS_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/6/query"; // Layer 6 has accurate intersection names (NODE_DESCR)
 
 // ============================================================
 // TYPES
@@ -169,6 +174,46 @@ function getGpsForFeatureSlk(features: any[], targetSlk: number): { lat: number;
       return interpolateGpsFromGeometry(f.geometry, f.attributes.START_SLK, f.attributes.END_SLK, targetSlk);
     }
   }
+  return null;
+}
+
+/**
+ * Get accurate intersection name from Intersections Layer (Layer 6)
+ * This provides verified names like "Dawson St & Vincent St" instead of
+ * potentially outdated Road Network node names.
+ */
+async function getAccurateIntersectionName(lat: number, lon: number, radiusM: number = 100): Promise<string | null> {
+  // Convert radius to degrees (approximate)
+  const radiusDeg = radiusM / 111000; // ~111km per degree
+  
+  // Build bounding box
+  const minLat = lat - radiusDeg;
+  const maxLat = lat + radiusDeg;
+  const minLon = lon - radiusDeg;
+  const maxLon = lon + radiusDeg;
+  
+  const params = {
+    geometry: `${minLon},${minLat},${maxLon},${maxLat}`,
+    geometryType: "esriGeometryEnvelope",
+    inSR: "4326",
+    spatialRel: "esriSpatialRelIntersects",
+    outFields: "NODE_DESCR",
+    returnGeometry: "false",
+    f: "json",
+    resultRecordCount: "5"
+  };
+  
+  try {
+    const result = await fetchArcGIS(INTERSECTIONS_URL, params);
+    
+    if (result.features && result.features.length > 0) {
+      // Return the first intersection name found
+      return result.features[0].attributes.NODE_DESCR || null;
+    }
+  } catch (e) {
+    console.error('Failed to get accurate intersection name:', e);
+  }
+  
   return null;
 }
 
@@ -340,6 +385,15 @@ export async function findIntersectingRoads(
           // Get GPS for intersection
           const gps = getGpsForFeatureSlk(refResult.features, nodeInfo.slk);
           
+          // Get accurate intersection name from Layer 6 (Intersections Layer)
+          let accurateNodeName = nodeInfo.name; // fallback to road network name
+          if (gps) {
+            const layer6Name = await getAccurateIntersectionName(gps.lat, gps.lon, 100);
+            if (layer6Name) {
+              accurateNodeName = layer6Name;
+            }
+          }
+          
           intersectingRoads.push({
             roadId: attrs.ROAD,
             roadName: attrs.ROAD_NAME,
@@ -347,7 +401,7 @@ export async function findIntersectingRoads(
             slkEnd: attrs.END_SLK,
             region: attrs.RA_NAME,
             source: 'State Road Network',
-            intersectionNode: nodeInfo.name,
+            intersectionNode: accurateNodeName,
             intersectionSlk: nodeInfo.slk,
             lat: gps?.lat || 0,
             lon: gps?.lon || 0
@@ -372,8 +426,18 @@ export async function findIntersectingRoads(
       // Get GPS for this intersection
       const gps = getGpsForFeatureSlk(refResult.features, info.slk);
       
+      // Get accurate intersection name from Layer 6 (Intersections Layer)
+      let accurateNodeName = nodeName; // fallback to road network name
+      if (gps) {
+        const layer6Name = await getAccurateIntersectionName(gps.lat, gps.lon, 100);
+        if (layer6Name) {
+          accurateNodeName = layer6Name;
+        }
+      }
+      
       // Search for local roads matching this node name
-      const cleanName = nodeName.replace(' Slip Rd', '').replace(' Link Rd', '').split(' & ')[0].trim();
+      // Use the accurate name from Layer 6 for better matching
+      const cleanName = accurateNodeName.replace(' Slip Rd', '').replace(' Link Rd', '').split(' & ')[0].trim();
       
       // Try multiple search patterns
       const searchPatterns = [
@@ -411,7 +475,7 @@ export async function findIntersectingRoads(
                   slkEnd: f.attributes.END_SLK,
                   region: f.attributes.RA_NAME,
                   source: 'Local Road Network',
-                  intersectionNode: nodeName,
+                  intersectionNode: accurateNodeName,
                   intersectionSlk: info.slk,
                   lat: gps?.lat || 0,
                   lon: gps?.lon || 0
@@ -430,7 +494,7 @@ export async function findIntersectingRoads(
       // Add intersection node (even if no road found)
       intersectionNodes.push({
         nodeNo,
-        nodeName,
+        nodeName: accurateNodeName,
         slkOnRefRoad: info.slk,
         hasConnectedRoad: nodesWithRoads.has(nodeNo),
         connectedRoadId: nodesWithRoads.get(nodeNo),
@@ -596,8 +660,6 @@ export async function listRoads(): Promise<{ roadId: string; roadName: string }[
 // ============================================================
 // INTERSECTIONS LAYER (Layer 6) - For accurate cross road names
 // ============================================================
-
-const INTERSECTIONS_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/6/query";
 
 export interface IntersectionResult {
   nodeName: string;
