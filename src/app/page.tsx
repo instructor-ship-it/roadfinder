@@ -2848,9 +2848,9 @@ export default function Home() {
                   const y = Math.sin(dLonRad) * Math.cos(lat2Rad)
                   const x = Math.cos(lat1Rad) * Math.sin(lat2Rad) - Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(dLonRad)
                   const bearing = Math.atan2(y, x) * 180 / Math.PI
-                  const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+                  const directions = ['north', 'northeast', 'east', 'southeast', 'south', 'southwest', 'west', 'northwest']
                   const dirIndex = Math.round(((bearing + 360) % 360) / 45) % 8
-                  const dirName = directions[dirIndex].toLowerCase()
+                  const dirName = directions[dirIndex]
                   
                   // Format distance
                   const distStr = dist < 1 
