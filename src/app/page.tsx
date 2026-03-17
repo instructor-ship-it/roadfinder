@@ -2985,19 +2985,43 @@ export default function Home() {
             let nearestHospital: { name: string; address: string; suburb: string; phone: string | null; hasED: boolean; distanceM: number; type: string } | null = null
             
             try {
-              const hospitalResponse = await fetch(`/api/nearest-hospital?lat=${lat}&lon=${lon}&radius=150`)
+              const hospitalResponse = await fetch(`/api/hospitals?lat=${lat}&lon=${lon}&radius=150&edOnly=true`)
               const hospitalData = await hospitalResponse.json()
               
-              if (hospitalData.nearestHospital) {
-                const h = hospitalData.nearestHospital
+              if (hospitalData.nearest?.hospitalWithED) {
+                const h = hospitalData.nearest.hospitalWithED
                 nearestHospital = {
                   name: h.name,
                   address: h.address,
                   suburb: h.suburb,
-                  phone: h.phone,
-                  hasED: h.hasED,
+                  phone: h.telephone || null,
+                  hasED: h.hasEmergency,
                   distanceM: h.distanceM,
                   type: h.type
+                }
+              } else if (hospitalData.nearest?.hospital) {
+                // Fallback to nearest hospital even without ED
+                const h = hospitalData.nearest.hospital
+                nearestHospital = {
+                  name: h.name,
+                  address: h.address,
+                  suburb: h.suburb,
+                  phone: h.telephone || null,
+                  hasED: h.hasEmergency,
+                  distanceM: h.distanceM,
+                  type: h.type
+                }
+              } else if (hospitalData.nearest?.nursingPost) {
+                // For very remote areas, show nursing post
+                const n = hospitalData.nearest.nursingPost
+                nearestHospital = {
+                  name: n.name,
+                  address: n.address,
+                  suburb: n.suburb,
+                  phone: n.telephone || null,
+                  hasED: false,
+                  distanceM: n.distanceM,
+                  type: 'Nursing Post'
                 }
               }
             } catch (e) {
@@ -3022,19 +3046,41 @@ export default function Home() {
             let nearestHospital: { name: string; address: string; suburb: string; phone: string | null; hasED: boolean; distanceM: number; type: string } | null = null
             
             try {
-              const hospitalResponse = await fetch(`/api/nearest-hospital?lat=${lat}&lon=${lon}&radius=150`)
+              const hospitalResponse = await fetch(`/api/hospitals?lat=${lat}&lon=${lon}&radius=150&edOnly=true`)
               const hospitalData = await hospitalResponse.json()
               
-              if (hospitalData.nearestHospital) {
-                const h = hospitalData.nearestHospital
+              if (hospitalData.nearest?.hospitalWithED) {
+                const h = hospitalData.nearest.hospitalWithED
                 nearestHospital = {
                   name: h.name,
                   address: h.address,
                   suburb: h.suburb,
-                  phone: h.phone,
-                  hasED: h.hasED,
+                  phone: h.telephone || null,
+                  hasED: h.hasEmergency,
                   distanceM: h.distanceM,
                   type: h.type
+                }
+              } else if (hospitalData.nearest?.hospital) {
+                const h = hospitalData.nearest.hospital
+                nearestHospital = {
+                  name: h.name,
+                  address: h.address,
+                  suburb: h.suburb,
+                  phone: h.telephone || null,
+                  hasED: h.hasEmergency,
+                  distanceM: h.distanceM,
+                  type: h.type
+                }
+              } else if (hospitalData.nearest?.nursingPost) {
+                const n = hospitalData.nearest.nursingPost
+                nearestHospital = {
+                  name: n.name,
+                  address: n.address,
+                  suburb: n.suburb,
+                  phone: n.telephone || null,
+                  hasED: false,
+                  distanceM: n.distanceM,
+                  type: 'Nursing Post'
                 }
               }
             } catch (e) {
@@ -5519,10 +5565,12 @@ export default function Home() {
                       <div className="bg-green-900/30 rounded-lg p-3 border border-green-600">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-green-400">🏥</span>
-                          <span className="text-green-400 font-semibold">Nearest Hospital with Emergency Dept</span>
+                          <span className="text-green-400 font-semibold">
+                            {emergencyData.nearestHospital.type === 'Nursing Post' ? 'Nearest Medical Facility' : 'Nearest Hospital with Emergency Dept'}
+                          </span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-400">Hospital:</span>
+                          <span className="text-gray-400">Name:</span>
                           <span className="text-white font-semibold">{emergencyData.nearestHospital.name}</span>
                         </div>
                         <div className="flex justify-between">
@@ -5542,9 +5590,14 @@ export default function Home() {
                           <span className="text-white">{emergencyData.nearestHospital.type} {emergencyData.nearestHospital.hasED && <span className="text-green-400">(has ED)</span>}</span>
                         </div>
                         {emergencyData.nearestHospital.phone && (
-                          <div className="flex justify-between">
+                          <div className="flex justify-between items-center">
                             <span className="text-gray-400">Phone:</span>
-                            <span className="text-white font-mono">{emergencyData.nearestHospital.phone}</span>
+                            <a 
+                              href={`tel:${emergencyData.nearestHospital.phone.replace(/[^0-9+]/g, '')}`}
+                              className="text-blue-400 hover:text-blue-300 font-mono font-bold"
+                            >
+                              📞 {emergencyData.nearestHospital.phone}
+                            </a>
                           </div>
                         )}
                         {emergencyData.nearestHospital.address && (
@@ -5553,16 +5606,26 @@ export default function Home() {
                             <span className="text-white text-sm">{emergencyData.nearestHospital.address}{emergencyData.nearestHospital.suburb && `, ${emergencyData.nearestHospital.suburb}`}</span>
                           </div>
                         )}
-                        <div className="mt-2">
+                        <div className="mt-2 flex gap-2">
+                          {emergencyData.nearestHospital.phone && (
+                            <Button
+                              onClick={() => {
+                                window.location.href = `tel:${emergencyData.nearestHospital!.phone?.replace(/[^0-9+]/g, '')}`
+                              }}
+                              className="flex-1 bg-blue-700 hover:bg-blue-600 text-sm py-1"
+                            >
+                              📞 Call Hospital
+                            </Button>
+                          )}
                           <Button
                             onClick={() => {
                               if (emergencyData.nearestHospital) {
-                                window.open(`https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestHospital.name)}+hospital`, '_blank')
+                                window.open(`https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestHospital.name + ' hospital ' + emergencyData.nearestHospital.suburb)}`, '_blank')
                               }
                             }}
-                            className="w-full bg-green-700 hover:bg-green-600 text-sm py-1"
+                            className="flex-1 bg-green-700 hover:bg-green-600 text-sm py-1"
                           >
-                            📍 Directions to Hospital
+                            📍 Directions
                           </Button>
                         </div>
                       </div>
