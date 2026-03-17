@@ -289,6 +289,38 @@ function DriveContent() {
   // Destination coordinates state
   const [destCoords, setDestCoords] = useState<{ lat: number; lon: number } | null>(null);
 
+  // Emergency modal state
+  const [showEmergencyModal, setShowEmergencyModal] = useState(false);
+  const [emergencyLoading, setEmergencyLoading] = useState(false);
+  const [emergencyData, setEmergencyData] = useState<{
+    roadName: string;
+    crossRoad: { name: string; distance: string; direction: string } | null;
+    nearestTown: { name: string; distance: string; direction: string } | null;
+    lat: number;
+    lon: number;
+    nearestHospital?: {
+      name: string;
+      distanceM: number;
+      type: string;
+      hasED: boolean;
+      phone?: string;
+      address?: string;
+      suburb?: string;
+    };
+    nearestFireStation?: {
+      name: string;
+      distanceM: number;
+      type: string;
+      typeDescription: string;
+    };
+    nearestPoliceStation?: {
+      name: string;
+      distanceM: number;
+      address: string;
+      suburb: string;
+    };
+  } | null>(null);
+
   // Initialize offline database
   useEffect(() => {
     let mounted = true;
@@ -451,6 +483,169 @@ function DriveContent() {
     }
   }
 
+  // Format emergency distance
+  const formatEmergencyDistance = (distanceStr: string): string => {
+    if (distanceStr.endsWith('km')) {
+      return distanceStr
+    }
+    const meters = parseInt(distanceStr)
+    if (isNaN(meters)) return distanceStr
+    const rounded = Math.round(meters / 100) * 100
+    return `${rounded}m`
+  }
+
+  // Get emergency location
+  const getEmergencyLocation = async () => {
+    setEmergencyLoading(true)
+    setShowEmergencyModal(true)
+
+    // Use current GPS position if available, otherwise get new position
+    const getPosition = (): Promise<GeolocationPosition> => {
+      return new Promise((resolve, reject) => {
+        if (position && currentPosition) {
+          resolve({
+            coords: {
+              latitude: currentPosition.lat,
+              longitude: currentPosition.lon,
+              accuracy: position.accuracy
+            }
+          } as GeolocationPosition)
+        } else {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 10000
+          })
+        }
+      })
+    }
+
+    try {
+      const pos = await getPosition()
+      const lat = pos.coords.latitude
+      const lon = pos.coords.longitude
+
+      // Get road info from GPS
+      const gpsResponse = await fetch(`/api/gps?lat=${lat}&lon=${lon}&radius=1000`)
+      const gpsData = await gpsResponse.json()
+
+      // Find nearest town
+      let nearestTown: { name: string; distance: string; direction: string } | null = null
+      try {
+        const localityName = gpsData.locality || gpsData.region
+        if (localityName) {
+          const osmResponse = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(localityName + ', Western Australia, Australia')}&format=json&limit=5&addressdetails=1`
+          )
+          const osmData = await osmResponse.json()
+
+          if (osmData && osmData.length > 0) {
+            let townPlace = osmData.find((p: any) => p.address?.town) || osmData[0]
+            const townLat = parseFloat(townPlace.lat)
+            const townLon = parseFloat(townPlace.lon)
+            const townDistance = Math.round(haversineDistance(lat, lon, townLat, townLon) * 1000)
+            const townBearing = getBearing(lat, lon, townLat, townLon)
+            const townDirection = getDirectionFromBearing(townBearing)
+            nearestTown = {
+              name: townPlace.address?.town || townPlace.address?.suburb || localityName,
+              distance: townDistance >= 1000 ? `${(townDistance / 1000).toFixed(1)}km` : `${townDistance}m`,
+              direction: townDirection
+            }
+          }
+        }
+      } catch (e) {
+        console.error('Error finding nearest town:', e)
+      }
+
+      // Get cross road
+      let crossRoad: { name: string; distance: string; direction: string } | null = null
+      if (gpsData.cross_road) {
+        const crossDistance = Math.round(gpsData.cross_road_distance_m || 0)
+        crossRoad = {
+          name: gpsData.cross_road,
+          distance: crossDistance >= 1000 ? `${(crossDistance / 1000).toFixed(1)}km` : `${crossDistance}m`,
+          direction: gpsData.cross_road_direction || 'near'
+        }
+      }
+
+      // Get nearest hospital
+      const hospitalResponse = await fetch(`/api/hospitals?lat=${lat}&lon=${lon}`)
+      const hospitalData = await hospitalResponse.json()
+      const nearestHospital = hospitalData.nearest
+
+      // Get nearest fire station
+      const fireResponse = await fetch(`/api/emergency-stations?lat=${lat}&lon=${lon}`)
+      const fireData = await fireResponse.json()
+      const nearestFireStation = fireData.nearest
+
+      // Get nearest police station
+      const policeResponse = await fetch(`/api/police-stations?lat=${lat}&lon=${lon}`)
+      const policeData = await policeResponse.json()
+      const nearestPoliceStation = policeData.nearest
+
+      setEmergencyData({
+        roadName: gpsData.road_name || 'Unknown Road',
+        crossRoad,
+        nearestTown,
+        lat,
+        lon,
+        nearestHospital: nearestHospital ? {
+          name: nearestHospital.name,
+          distanceM: nearestHospital.distance_m,
+          type: nearestHospital.type,
+          hasED: nearestHospital.has_ed,
+          phone: nearestHospital.phone,
+          address: nearestHospital.address,
+          suburb: nearestHospital.suburb
+        } : undefined,
+        nearestFireStation: nearestFireStation ? {
+          name: nearestFireStation.name,
+          distanceM: nearestFireStation.distance_m,
+          type: nearestFireStation.type,
+          typeDescription: nearestFireStation.type_description
+        } : undefined,
+        nearestPoliceStation: nearestPoliceStation ? {
+          name: nearestPoliceStation.name,
+          distanceM: nearestPoliceStation.distance_m,
+          address: nearestPoliceStation.address,
+          suburb: nearestPoliceStation.suburb
+        } : undefined
+      })
+    } catch (error) {
+      console.error('Error getting emergency location:', error)
+    } finally {
+      setEmergencyLoading(false)
+    }
+  }
+
+  // Haversine distance calculation
+  const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371
+    const dLat = (lat2 - lat1) * Math.PI / 180
+    const dLon = (lon2 - lon1) * Math.PI / 180
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return R * c
+  }
+
+  // Get bearing between two points
+  const getBearing = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const dLon = (lon2 - lon1) * Math.PI / 180
+    const y = Math.sin(dLon) * Math.cos(lat2 * Math.PI / 180)
+    const x = Math.cos(lat1 * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180) -
+      Math.sin(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.cos(dLon)
+    const bearing = Math.atan2(y, x) * 180 / Math.PI
+    return (bearing + 360) % 360
+  }
+
+  // Get direction from bearing
+  const getDirectionFromBearing = (bearing: number): string => {
+    const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+    const index = Math.round(bearing / 45) % 8
+    return directions[index]
+  }
+
   // Get confidence color
   const getConfidenceColor = (): string => {
     switch (confidence) {
@@ -569,6 +764,14 @@ function DriveContent() {
           </div>
           <div className="flex items-center gap-3">
             {offlineReady && <span className="text-xs text-green-400">Offline Ready</span>}
+            {/* Emergency Button */}
+            <button
+              onClick={getEmergencyLocation}
+              className="w-7 h-7 flex items-center justify-center rounded-full text-sm bg-red-600 hover:bg-red-700"
+              title="Emergency Location (000)"
+            >
+              🆘
+            </button>
             {/* GPS Signal */}
             <div className="flex items-center gap-1" title={`GPS Accuracy: ±${uncertainty.toFixed(1)}m`}>
               {[1, 2, 3, 4, 5].map((bar) => {
@@ -956,12 +1159,22 @@ function DriveContent() {
       )}
 
       {/* Header */}
-      <div className="text-center mb-4">
-        <h1 className="text-xl font-bold text-blue-400">SLK Tracking</h1>
-        <p className="text-xs text-gray-400">v{APP_VERSION} EKF {offlineReady ? <span className="text-green-400">• Offline Ready</span> : <span className="text-gray-500">• Offline Not Ready</span>}</p>
-        {settings.ekfEnabled && (
-          <p className="text-xs text-purple-400 mt-1">📡 EKF Filtering Active</p>
-        )}
+      <div className="flex items-center justify-between mb-1">
+        <button
+          onClick={getEmergencyLocation}
+          className="w-8 h-8 flex items-center justify-center rounded-full text-lg bg-red-600 hover:bg-red-700"
+          title="Emergency Location (000)"
+        >
+          🆘
+        </button>
+        <div className="text-center flex-1">
+          <h1 className="text-xl font-bold text-blue-400">SLK Tracking</h1>
+          <p className="text-xs text-gray-400">v{APP_VERSION} EKF {offlineReady ? <span className="text-green-400">• Offline Ready</span> : <span className="text-gray-500">• Offline Not Ready</span>}</p>
+          {settings.ekfEnabled && (
+            <p className="text-xs text-purple-400">📡 EKF Filtering Active</p>
+          )}
+        </div>
+        <div className="w-8"></div>
       </div>
 
       {/* GPS Controls */}
@@ -1541,6 +1754,181 @@ function DriveContent() {
               <Button
                 onClick={() => setShowCorrections(false)}
                 className="flex-1 bg-gray-600 hover:bg-gray-500"
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Emergency Location Modal */}
+      {showEmergencyModal && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-900 rounded-lg w-full max-w-lg max-h-[90vh] flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-700 bg-red-900/20">
+              <h2 className="text-lg font-bold text-red-400">🆘 EMERGENCY LOCATION - READ TO 000</h2>
+              <button
+                onClick={() => {
+                  setShowEmergencyModal(false)
+                  setEmergencyData(null)
+                }}
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-600 hover:bg-gray-500 text-white font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 overflow-auto p-4">
+              {emergencyLoading ? (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-500 mb-4"></div>
+                  <p className="text-gray-400">Getting your location...</p>
+                </div>
+              ) : emergencyData ? (
+                <div className="space-y-4">
+                  {/* Main message to read */}
+                  <div className="bg-gray-800 rounded-lg p-4 border border-red-600">
+                    <p className="text-white text-lg leading-relaxed">
+                      "Emergency on <span className="font-bold text-yellow-400">{emergencyData.roadName}</span>
+                      {emergencyData.crossRoad && (
+                        <>, approximately <span className="font-bold text-yellow-400">{formatEmergencyDistance(emergencyData.crossRoad.distance)}</span> <span className="font-bold text-yellow-400">{emergencyData.crossRoad.direction}</span> of <span className="font-bold text-yellow-400">{emergencyData.crossRoad.name}</span></>
+                      )}{emergencyData.nearestTown && (
+                        <>, about <span className="font-bold text-yellow-400">{formatEmergencyDistance(emergencyData.nearestTown.distance)}</span> <span className="font-bold text-yellow-400">{emergencyData.nearestTown.direction}</span> of <span className="font-bold text-yellow-400">{emergencyData.nearestTown.name}</span></>
+                      )}.
+                      GPS coordinates: <span className="font-bold text-green-400">{emergencyData.lat.toFixed(6)}, {emergencyData.lon.toFixed(6)}</span>."
+                    </p>
+                  </div>
+
+                  {/* Emergency Services */}
+                  <div className="bg-gray-800/50 rounded-lg p-3 space-y-3">
+                    {/* Nearest Hospital with ED */}
+                    {emergencyData.nearestHospital && (
+                      <div className="bg-green-900/30 rounded-lg p-3 border border-green-600">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-green-400">🏥</span>
+                          <span className="text-green-400 font-semibold">
+                            {emergencyData.nearestHospital.type === 'Nursing Post' ? 'Nearest Medical Facility' : 'Nearest Hospital with Emergency Dept'}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Name:</span>
+                          <span className="text-white font-semibold">{emergencyData.nearestHospital.name}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Distance:</span>
+                          <span className="text-white">
+                            {(() => {
+                              const d = emergencyData.nearestHospital.distanceM
+                              if (d >= 1000) {
+                                return `${(d / 1000).toFixed(1)} km`
+                              }
+                              return `${Math.round(d / 100) * 100} m`
+                            })()}
+                          </span>
+                        </div>
+                        {emergencyData.nearestHospital.phone && (
+                          <div className="flex justify-between items-center">
+                            <span className="text-gray-400">Phone:</span>
+                            <a
+                              href={`tel:${emergencyData.nearestHospital.phone.replace(/[^0-9+]/g, '')}`}
+                              className="text-blue-400 hover:text-blue-300 font-mono font-bold"
+                            >
+                              📞 {emergencyData.nearestHospital.phone}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Nearest Fire/Emergency Station */}
+                    {emergencyData.nearestFireStation && (
+                      <div className="bg-orange-900/30 rounded-lg p-3 border border-orange-600">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-orange-400">🚒</span>
+                          <span className="text-orange-400 font-semibold">Nearest Fire/Emergency Station</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Name:</span>
+                          <span className="text-white font-semibold">{emergencyData.nearestFireStation.name}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Distance:</span>
+                          <span className="text-white">
+                            {(() => {
+                              const d = emergencyData.nearestFireStation.distanceM
+                              if (d >= 1000) {
+                                return `${(d / 1000).toFixed(1)} km`
+                              }
+                              return `${Math.round(d / 100) * 100} m`
+                            })()}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Nearest Police Station */}
+                    {emergencyData.nearestPoliceStation && (
+                      <div className="bg-blue-900/30 rounded-lg p-3 border border-blue-600">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-blue-400">🚔</span>
+                          <span className="text-blue-400 font-semibold">Nearest Police Station</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Name:</span>
+                          <span className="text-white font-semibold">{emergencyData.nearestPoliceStation.name}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Distance:</span>
+                          <span className="text-white">
+                            {(() => {
+                              const d = emergencyData.nearestPoliceStation.distanceM
+                              if (d >= 1000) {
+                                return `${(d / 1000).toFixed(1)} km`
+                              }
+                              return `${Math.round(d / 100) * 100} m`
+                            })()}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Action buttons */}
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => {
+                        const text = `Emergency on ${emergencyData.roadName}${emergencyData.crossRoad ? `, approximately ${formatEmergencyDistance(emergencyData.crossRoad.distance)} ${emergencyData.crossRoad.direction} of ${emergencyData.crossRoad.name}` : ''}${emergencyData.nearestTown ? `, about ${formatEmergencyDistance(emergencyData.nearestTown.distance)} ${emergencyData.nearestTown.direction} of ${emergencyData.nearestTown.name}` : ''}. GPS coordinates: ${emergencyData.lat.toFixed(6)}, ${emergencyData.lon.toFixed(6)}.`
+                        navigator.clipboard.writeText(text)
+                        alert('Location copied to clipboard!')
+                      }}
+                      className="flex-1 bg-blue-600 hover:bg-blue-500"
+                    >
+                      📋 Copy Text
+                    </Button>
+                    <Button
+                      onClick={() => window.open(`https://www.google.com/maps?q=${emergencyData.lat},${emergencyData.lon}`, '_blank')}
+                      className="flex-1 bg-green-600 hover:bg-green-500"
+                    >
+                      📍 Open Maps
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-gray-400 text-center py-8">No location data available</p>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="p-4 border-t border-gray-700">
+              <Button
+                onClick={() => {
+                  setShowEmergencyModal(false)
+                  setEmergencyData(null)
+                }}
+                className="w-full bg-gray-600 hover:bg-gray-500 text-white font-semibold"
               >
                 Close
               </Button>

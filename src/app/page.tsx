@@ -3517,7 +3517,13 @@ export default function Home() {
       <div className="max-w-md mx-auto px-4 py-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-1">
-          <div className="w-8"></div>
+          <button
+            onClick={getEmergencyLocation}
+            className="w-8 h-8 flex items-center justify-center rounded-full text-lg bg-red-600 hover:bg-red-700"
+            title="Emergency Location (000)"
+          >
+            🆘
+          </button>
           <div className="text-center flex-1">
             <h1 className="text-xl font-bold">
               TC Work Zone Locator
@@ -5444,19 +5450,6 @@ export default function Home() {
                     ) : (
                       <p className="text-gray-500 text-sm">No public toilet found nearby</p>
                     )}
-                    
-                    {/* Emergency Location Button */}
-                    <div className="mt-4 pt-4 border-t border-gray-700">
-                      <Button
-                        onClick={getEmergencyLocation}
-                        className="w-full bg-red-600 hover:bg-red-700 h-12 text-base font-medium"
-                      >
-                        🆘 Emergency Location (000)
-                      </Button>
-                      <p className="text-xs text-gray-500 mt-1 text-center">
-                        Get your current location to read to emergency services
-                      </p>
-                    </div>
                   </div>
                 )}
               </div>
