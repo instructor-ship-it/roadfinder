@@ -502,11 +502,11 @@ function DriveContent() {
     // Use current GPS position if available, otherwise get new position
     const getPosition = (): Promise<GeolocationPosition> => {
       return new Promise((resolve, reject) => {
-        if (position && currentPosition) {
+        if (position) {
           resolve({
             coords: {
-              latitude: currentPosition.lat,
-              longitude: currentPosition.lon,
+              latitude: position.lat,
+              longitude: position.lon,
               accuracy: position.accuracy
             }
           } as GeolocationPosition)
