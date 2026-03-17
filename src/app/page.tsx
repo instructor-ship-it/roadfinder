@@ -520,6 +520,12 @@ export default function Home() {
       typeDescription: string;
       distanceM: number;
     } | null;
+    nearestPoliceStation: {
+      name: string;
+      address: string;
+      suburb: string;
+      distanceM: number;
+    } | null;
   } | null>(null)
 
   // Settings collapsible sections state (all minimized by default, Offline Data expanded if no data)
@@ -3073,6 +3079,26 @@ export default function Home() {
               console.error('Failed to get nearest fire station:', e)
             }
             
+            // Get nearest WA Police station
+            let nearestPoliceStation: { name: string; address: string; suburb: string; distanceM: number } | null = null
+            
+            try {
+              const policeResponse = await fetch(`/api/police-stations?lat=${lat}&lon=${lon}&radius=150`)
+              const policeData = await policeResponse.json()
+              
+              if (policeData.nearest) {
+                const p = policeData.nearest
+                nearestPoliceStation = {
+                  name: p.name,
+                  address: p.address,
+                  suburb: p.suburb,
+                  distanceM: p.distanceM
+                }
+              }
+            } catch (e) {
+              console.error('Failed to get nearest police station:', e)
+            }
+            
             setEmergencyData({
               roadName: gpsData.road_name || gpsData.road_id,
               slk: gpsData.slk,
@@ -3084,7 +3110,8 @@ export default function Home() {
               nearestTown,
               nearbyRoads: gpsData.nearby_roads || [],
               nearestHospital,
-              nearestFireStation
+              nearestFireStation,
+              nearestPoliceStation
             })
           } else {
             // No road found, use GPS coordinates only
@@ -3169,6 +3196,26 @@ export default function Home() {
               console.error('Failed to get nearest fire station:', e)
             }
             
+            // Get nearest WA Police station
+            let nearestPoliceStation: { name: string; address: string; suburb: string; distanceM: number } | null = null
+            
+            try {
+              const policeResponse = await fetch(`/api/police-stations?lat=${lat}&lon=${lon}&radius=150`)
+              const policeData = await policeResponse.json()
+              
+              if (policeData.nearest) {
+                const p = policeData.nearest
+                nearestPoliceStation = {
+                  name: p.name,
+                  address: p.address,
+                  suburb: p.suburb,
+                  distanceM: p.distanceM
+                }
+              }
+            } catch (e) {
+              console.error('Failed to get nearest police station:', e)
+            }
+            
             setEmergencyData({
               roadName: 'Unknown Road',
               slk: 0,
@@ -3180,7 +3227,8 @@ export default function Home() {
               nearestTown,
               nearbyRoads: [],
               nearestHospital,
-              nearestFireStation
+              nearestFireStation,
+              nearestPoliceStation
             })
           }
         } catch (error) {
@@ -3197,7 +3245,8 @@ export default function Home() {
             nearestTown: null,
             nearbyRoads: [],
             nearestHospital: null,
-            nearestFireStation: null
+            nearestFireStation: null,
+            nearestPoliceStation: null
           })
         }
         setEmergencyLoading(false)
@@ -5750,6 +5799,48 @@ export default function Home() {
                               }
                             }}
                             className="w-full bg-orange-700 hover:bg-orange-600 text-sm py-1"
+                          >
+                            📍 Directions to Station
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Nearest Police Station */}
+                    {emergencyData.nearestPoliceStation && (
+                      <div className="bg-blue-900/30 rounded-lg p-3 border border-blue-600">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-blue-400">🚔</span>
+                          <span className="text-blue-400 font-semibold">Nearest Police Station</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Name:</span>
+                          <span className="text-white font-semibold">{emergencyData.nearestPoliceStation.name}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Distance:</span>
+                          <span className="text-white">
+                            {(() => {
+                              const d = emergencyData.nearestPoliceStation.distanceM
+                              if (d >= 1000) {
+                                return `${(d / 1000).toFixed(1)} km`
+                              }
+                              return `${Math.round(d / 100) * 100} m`
+                            })()}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Address:</span>
+                          <span className="text-white text-sm">{emergencyData.nearestPoliceStation.address}, {emergencyData.nearestPoliceStation.suburb}</span>
+                        </div>
+                        <div className="mt-2">
+                          <Button
+                            onClick={() => {
+                              if (emergencyData.nearestPoliceStation) {
+                                window.open(`https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestPoliceStation.name + ' police station ' + emergencyData.nearestPoliceStation.suburb + ' Western Australia')}`, '_blank')
+                              }
+                            }}
+                            className="w-full bg-blue-700 hover:bg-blue-600 text-sm py-1"
                           >
                             📍 Directions to Station
                           </Button>
