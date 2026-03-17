@@ -505,6 +505,15 @@ export default function Home() {
     crossRoad: { name: string; distance: string; direction: string } | null;
     nearestTown: { name: string; distance: string; direction: string } | null;
     nearbyRoads: Array<{ road_name: string; distance_m: number }>;
+    nearestHospital: {
+      name: string;
+      address: string;
+      suburb: string;
+      phone: string | null;
+      hasED: boolean;
+      distanceM: number;
+      type: string;
+    } | null;
   } | null>(null)
 
   // Settings collapsible sections state (all minimized by default, Offline Data expanded if no data)
@@ -2972,6 +2981,29 @@ export default function Home() {
               console.error('Failed to get intersections:', e)
             }
             
+            // Get nearest hospital with Emergency Department from WA Health data
+            let nearestHospital: { name: string; address: string; suburb: string; phone: string | null; hasED: boolean; distanceM: number; type: string } | null = null
+            
+            try {
+              const hospitalResponse = await fetch(`/api/nearest-hospital?lat=${lat}&lon=${lon}&radius=150`)
+              const hospitalData = await hospitalResponse.json()
+              
+              if (hospitalData.nearestHospital) {
+                const h = hospitalData.nearestHospital
+                nearestHospital = {
+                  name: h.name,
+                  address: h.address,
+                  suburb: h.suburb,
+                  phone: h.phone,
+                  hasED: h.hasED,
+                  distanceM: h.distanceM,
+                  type: h.type
+                }
+              }
+            } catch (e) {
+              console.error('Failed to get nearest hospital:', e)
+            }
+            
             setEmergencyData({
               roadName: gpsData.road_name || gpsData.road_id,
               slk: gpsData.slk,
@@ -2981,10 +3013,34 @@ export default function Home() {
               lon,
               crossRoad,
               nearestTown,
-              nearbyRoads: gpsData.nearby_roads || []
+              nearbyRoads: gpsData.nearby_roads || [],
+              nearestHospital
             })
           } else {
             // No road found, use GPS coordinates only
+            // Still try to get nearest hospital
+            let nearestHospital: { name: string; address: string; suburb: string; phone: string | null; hasED: boolean; distanceM: number; type: string } | null = null
+            
+            try {
+              const hospitalResponse = await fetch(`/api/nearest-hospital?lat=${lat}&lon=${lon}&radius=150`)
+              const hospitalData = await hospitalResponse.json()
+              
+              if (hospitalData.nearestHospital) {
+                const h = hospitalData.nearestHospital
+                nearestHospital = {
+                  name: h.name,
+                  address: h.address,
+                  suburb: h.suburb,
+                  phone: h.phone,
+                  hasED: h.hasED,
+                  distanceM: h.distanceM,
+                  type: h.type
+                }
+              }
+            } catch (e) {
+              console.error('Failed to get nearest hospital:', e)
+            }
+            
             setEmergencyData({
               roadName: 'Unknown Road',
               slk: 0,
@@ -2994,7 +3050,8 @@ export default function Home() {
               lon,
               crossRoad: null,
               nearestTown,
-              nearbyRoads: []
+              nearbyRoads: [],
+              nearestHospital
             })
           }
         } catch (error) {
@@ -3009,7 +3066,8 @@ export default function Home() {
             lon,
             crossRoad: null,
             nearestTown: null,
-            nearbyRoads: []
+            nearbyRoads: [],
+            nearestHospital: null
           })
         }
         setEmergencyLoading(false)
@@ -5453,6 +5511,60 @@ export default function Home() {
                       <div className="flex justify-between">
                         <span className="text-gray-400">Nearest Cross Road:</span>
                         <span className="text-white">{emergencyData.crossRoad.name} ({emergencyData.crossRoad.distance} {emergencyData.crossRoad.direction})</span>
+                      </div>
+                    )}
+                    
+                    {/* Nearest Hospital with ED */}
+                    {emergencyData.nearestHospital && (
+                      <div className="bg-green-900/30 rounded-lg p-3 border border-green-600">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-green-400">🏥</span>
+                          <span className="text-green-400 font-semibold">Nearest Hospital with Emergency Dept</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Hospital:</span>
+                          <span className="text-white font-semibold">{emergencyData.nearestHospital.name}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Distance:</span>
+                          <span className="text-white">
+                            {(() => {
+                              const d = emergencyData.nearestHospital.distanceM
+                              if (d >= 1000) {
+                                return `${(d / 1000).toFixed(1)} km`
+                              }
+                              return `${Math.round(d / 100) * 100} m`
+                            })()}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Type:</span>
+                          <span className="text-white">{emergencyData.nearestHospital.type} {emergencyData.nearestHospital.hasED && <span className="text-green-400">(has ED)</span>}</span>
+                        </div>
+                        {emergencyData.nearestHospital.phone && (
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Phone:</span>
+                            <span className="text-white font-mono">{emergencyData.nearestHospital.phone}</span>
+                          </div>
+                        )}
+                        {emergencyData.nearestHospital.address && (
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Address:</span>
+                            <span className="text-white text-sm">{emergencyData.nearestHospital.address}{emergencyData.nearestHospital.suburb && `, ${emergencyData.nearestHospital.suburb}`}</span>
+                          </div>
+                        )}
+                        <div className="mt-2">
+                          <Button
+                            onClick={() => {
+                              if (emergencyData.nearestHospital) {
+                                window.open(`https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestHospital.name)}+hospital`, '_blank')
+                              }
+                            }}
+                            className="w-full bg-green-700 hover:bg-green-600 text-sm py-1"
+                          >
+                            📍 Directions to Hospital
+                          </Button>
+                        </div>
                       </div>
                     )}
                   </div>
