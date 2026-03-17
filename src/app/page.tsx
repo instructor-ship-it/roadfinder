@@ -5624,7 +5624,7 @@ export default function Home() {
                   setShowEmergencyModal(false)
                   setEmergencyData(null)
                 }}
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-700 hover:bg-gray-600"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-600 hover:bg-gray-500 text-white font-bold"
               >
                 ✕
               </button>
