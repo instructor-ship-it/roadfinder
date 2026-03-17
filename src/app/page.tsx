@@ -5652,47 +5652,8 @@ export default function Home() {
                     </p>
                   </div>
                   
-                  {/* Location details */}
-                  <div className="bg-gray-800/50 rounded-lg p-3 text-sm space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Road:</span>
-                      <span className="text-white font-mono">{emergencyData.roadName}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">SLK:</span>
-                      <span className="text-white font-mono">{emergencyData.slk.toFixed(2)}</span>
-                    </div>
-                    {emergencyData.nearestTown && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Nearest Town:</span>
-                        <span className="text-white">{emergencyData.nearestTown.name} ({emergencyData.nearestTown.distance} {emergencyData.nearestTown.direction})</span>
-                      </div>
-                    )}
-                    {emergencyData.locality && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Locality:</span>
-                        <span className="text-white">{emergencyData.locality}</span>
-                      </div>
-                    )}
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Region:</span>
-                      <span className="text-white">{emergencyData.region}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Latitude:</span>
-                      <span className="text-white font-mono">{emergencyData.lat.toFixed(6)}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Longitude:</span>
-                      <span className="text-white font-mono">{emergencyData.lon.toFixed(6)}</span>
-                    </div>
-                    {emergencyData.crossRoad && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-400">Nearest Cross Road:</span>
-                        <span className="text-white">{emergencyData.crossRoad.name} ({emergencyData.crossRoad.distance} {emergencyData.crossRoad.direction})</span>
-                      </div>
-                    )}
-                    
+                  {/* Emergency Services */}
+                  <div className="bg-gray-800/50 rounded-lg p-3 space-y-3">
                     {/* Nearest Hospital with ED */}
                     {emergencyData.nearestHospital && (
                       <div className="bg-green-900/30 rounded-lg p-3 border border-green-600">
