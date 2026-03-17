@@ -4878,18 +4878,30 @@ export default function Home() {
               
             </div>
 
-            {/* Road Incidents - Live from WebEOC */}
-            <IncidentsSection 
-              roadId={result.road_id} 
-              roadName={result.road_name} 
-              enabled={true} 
-            />
-            
-            {/* Weather Warnings - Live from Bureau of Meteorology */}
-            <WarningsSection 
-              state="WA"
-              enabled={true} 
-            />
+            {/* Speed Zone Layout Diagram */}
+            <div className="bg-gray-800 rounded-lg">
+              <button
+                onClick={() => setShowSpeedZoneLayout(!showSpeedZoneLayout)}
+                className="w-full p-4 flex items-center justify-between text-left"
+              >
+                <h3 className="text-sm font-semibold text-blue-400">
+                  📊 Speed Zone Layout (±850m)
+                </h3>
+                <span className="text-gray-400 text-lg">{showSpeedZoneLayout ? '−' : '+'}</span>
+              </button>
+              {showSpeedZoneLayout && (
+                <div className="px-4 pb-4">
+                  <SpeedZoneLayout
+                    workZoneStart={result.work_zone.start_slk}
+                    workZoneEnd={result.work_zone.end_slk || result.work_zone.start_slk}
+                    signageCorridor={signageCorridor}
+                    speedZones={corridorSpeedZones}
+                    corridorMargin={0.85}
+                  />
+                </div>
+              )}
+            </div>
+
             {/* Traffic Volume */}
             {traffic && (
               <div className="bg-gray-800 rounded-lg">
@@ -5084,30 +5096,6 @@ export default function Home() {
               )}
             </div>
 
-            {/* Speed Zone Layout Diagram */}
-            <div className="bg-gray-800 rounded-lg">
-              <button
-                onClick={() => setShowSpeedZoneLayout(!showSpeedZoneLayout)}
-                className="w-full p-4 flex items-center justify-between text-left"
-              >
-                <h3 className="text-sm font-semibold text-blue-400">
-                  📊 Speed Zone Layout (±850m)
-                </h3>
-                <span className="text-gray-400 text-lg">{showSpeedZoneLayout ? '−' : '+'}</span>
-              </button>
-              {showSpeedZoneLayout && (
-                <div className="px-4 pb-4">
-                  <SpeedZoneLayout
-                    workZoneStart={result.work_zone.start_slk}
-                    workZoneEnd={result.work_zone.end_slk || result.work_zone.start_slk}
-                    signageCorridor={signageCorridor}
-                    speedZones={corridorSpeedZones}
-                    corridorMargin={0.85}
-                  />
-                </div>
-              )}
-            </div>
-
             {/* TC Positions */}
             <div className="bg-gray-800 rounded-lg">
               <button
@@ -5257,6 +5245,11 @@ export default function Home() {
                         </p>
                       </div>
                     )}
+                    {/* Weather Warnings - Live from Bureau of Meteorology */}
+                    <WarningsSection
+                      state="WA"
+                      enabled={true}
+                    />
                     {/* Weather Warnings */}
                     {warnings && warnings.warnings.length > 0 && (
                       <div className="bg-red-900/30 border border-red-500/50 rounded p-3 mb-4">
@@ -5376,6 +5369,13 @@ export default function Home() {
                 )}
               </div>
             )}
+
+            {/* Road Incidents - Live from WebEOC */}
+            <IncidentsSection
+              roadId={result.road_id}
+              roadName={result.road_name}
+              enabled={true}
+            />
 
             {/* Nearby Amenities */}
             {places && (
