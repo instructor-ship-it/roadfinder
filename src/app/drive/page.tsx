@@ -507,7 +507,7 @@ function DriveContent() {
             coords: {
               latitude: position.lat,
               longitude: position.lon,
-              accuracy: position.accuracy
+              accuracy: uncertainty
             }
           } as GeolocationPosition)
         } else {
