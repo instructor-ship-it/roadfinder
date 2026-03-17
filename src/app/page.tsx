@@ -5842,8 +5842,7 @@ export default function Home() {
                   setShowEmergencyModal(false)
                   setEmergencyData(null)
                 }}
-                variant="outline"
-                className="w-full border-gray-600 text-gray-300 hover:bg-gray-800"
+                className="w-full bg-blue-500 hover:bg-blue-400 text-white font-semibold"
               >
                 Close
               </Button>
