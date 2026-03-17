@@ -514,6 +514,12 @@ export default function Home() {
       distanceM: number;
       type: string;
     } | null;
+    nearestFireStation: {
+      name: string;
+      type: string;
+      typeDescription: string;
+      distanceM: number;
+    } | null;
   } | null>(null)
 
   // Settings collapsible sections state (all minimized by default, Offline Data expanded if no data)
@@ -3028,6 +3034,45 @@ export default function Home() {
               console.error('Failed to get nearest hospital:', e)
             }
             
+            // Get nearest fire/emergency station from DFES data
+            let nearestFireStation: { name: string; type: string; typeDescription: string; distanceM: number } | null = null
+            
+            try {
+              const stationResponse = await fetch(`/api/emergency-stations?lat=${lat}&lon=${lon}&radius=100`)
+              const stationData = await stationResponse.json()
+              
+              if (stationData.nearest?.professional) {
+                // Prefer professional (24/7 staffed) stations
+                const s = stationData.nearest.professional
+                nearestFireStation = {
+                  name: s.name,
+                  type: s.type,
+                  typeDescription: s.typeDescription,
+                  distanceM: s.distanceM
+                }
+              } else if (stationData.nearest?.volunteer) {
+                // Fallback to volunteer fire rescue
+                const s = stationData.nearest.volunteer
+                nearestFireStation = {
+                  name: s.name,
+                  type: s.type,
+                  typeDescription: s.typeDescription,
+                  distanceM: s.distanceM
+                }
+              } else if (stationData.nearest?.any) {
+                // Any available station
+                const s = stationData.nearest.any
+                nearestFireStation = {
+                  name: s.name,
+                  type: s.type,
+                  typeDescription: s.typeDescription,
+                  distanceM: s.distanceM
+                }
+              }
+            } catch (e) {
+              console.error('Failed to get nearest fire station:', e)
+            }
+            
             setEmergencyData({
               roadName: gpsData.road_name || gpsData.road_id,
               slk: gpsData.slk,
@@ -3038,7 +3083,8 @@ export default function Home() {
               crossRoad,
               nearestTown,
               nearbyRoads: gpsData.nearby_roads || [],
-              nearestHospital
+              nearestHospital,
+              nearestFireStation
             })
           } else {
             // No road found, use GPS coordinates only
@@ -3087,6 +3133,42 @@ export default function Home() {
               console.error('Failed to get nearest hospital:', e)
             }
             
+            // Get nearest fire/emergency station from DFES data
+            let nearestFireStation: { name: string; type: string; typeDescription: string; distanceM: number } | null = null
+            
+            try {
+              const stationResponse = await fetch(`/api/emergency-stations?lat=${lat}&lon=${lon}&radius=100`)
+              const stationData = await stationResponse.json()
+              
+              if (stationData.nearest?.professional) {
+                const s = stationData.nearest.professional
+                nearestFireStation = {
+                  name: s.name,
+                  type: s.type,
+                  typeDescription: s.typeDescription,
+                  distanceM: s.distanceM
+                }
+              } else if (stationData.nearest?.volunteer) {
+                const s = stationData.nearest.volunteer
+                nearestFireStation = {
+                  name: s.name,
+                  type: s.type,
+                  typeDescription: s.typeDescription,
+                  distanceM: s.distanceM
+                }
+              } else if (stationData.nearest?.any) {
+                const s = stationData.nearest.any
+                nearestFireStation = {
+                  name: s.name,
+                  type: s.type,
+                  typeDescription: s.typeDescription,
+                  distanceM: s.distanceM
+                }
+              }
+            } catch (e) {
+              console.error('Failed to get nearest fire station:', e)
+            }
+            
             setEmergencyData({
               roadName: 'Unknown Road',
               slk: 0,
@@ -3097,7 +3179,8 @@ export default function Home() {
               crossRoad: null,
               nearestTown,
               nearbyRoads: [],
-              nearestHospital
+              nearestHospital,
+              nearestFireStation
             })
           }
         } catch (error) {
@@ -3113,7 +3196,8 @@ export default function Home() {
             crossRoad: null,
             nearestTown: null,
             nearbyRoads: [],
-            nearestHospital: null
+            nearestHospital: null,
+            nearestFireStation: null
           })
         }
         setEmergencyLoading(false)
@@ -5626,6 +5710,48 @@ export default function Home() {
                             className="flex-1 bg-green-700 hover:bg-green-600 text-sm py-1"
                           >
                             📍 Directions
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Nearest Fire/Emergency Station */}
+                    {emergencyData.nearestFireStation && (
+                      <div className="bg-orange-900/30 rounded-lg p-3 border border-orange-600">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-orange-400">🚒</span>
+                          <span className="text-orange-400 font-semibold">Nearest Fire/Emergency Station</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Name:</span>
+                          <span className="text-white font-semibold">{emergencyData.nearestFireStation.name}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Distance:</span>
+                          <span className="text-white">
+                            {(() => {
+                              const d = emergencyData.nearestFireStation.distanceM
+                              if (d >= 1000) {
+                                return `${(d / 1000).toFixed(1)} km`
+                              }
+                              return `${Math.round(d / 100) * 100} m`
+                            })()}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Type:</span>
+                          <span className="text-white">{emergencyData.nearestFireStation.typeDescription} <span className="text-orange-400">({emergencyData.nearestFireStation.type})</span></span>
+                        </div>
+                        <div className="mt-2">
+                          <Button
+                            onClick={() => {
+                              if (emergencyData.nearestFireStation) {
+                                window.open(`https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestFireStation.name + ' fire station Western Australia')}`, '_blank')
+                              }
+                            }}
+                            className="w-full bg-orange-700 hover:bg-orange-600 text-sm py-1"
+                          >
+                            📍 Directions to Station
                           </Button>
                         </div>
                       </div>
