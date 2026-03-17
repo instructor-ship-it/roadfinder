@@ -567,20 +567,106 @@ function DriveContent() {
         }
       }
 
-      // Get nearest hospital
-      const hospitalResponse = await fetch(`/api/hospitals?lat=${lat}&lon=${lon}`)
-      const hospitalData = await hospitalResponse.json()
-      const nearestHospital = hospitalData.nearest
+      // Get nearest hospital with Emergency Department from WA Health data
+      let nearestHospital: { name: string; address: string; suburb: string; phone: string | null; hasED: boolean; distanceM: number; type: string } | null = null
 
-      // Get nearest fire station
-      const fireResponse = await fetch(`/api/emergency-stations?lat=${lat}&lon=${lon}`)
-      const fireData = await fireResponse.json()
-      const nearestFireStation = fireData.nearest
+      try {
+        const hospitalResponse = await fetch(`/api/hospitals?lat=${lat}&lon=${lon}&radius=150&edOnly=true`)
+        const hospitalData = await hospitalResponse.json()
 
-      // Get nearest police station
-      const policeResponse = await fetch(`/api/police-stations?lat=${lat}&lon=${lon}`)
-      const policeData = await policeResponse.json()
-      const nearestPoliceStation = policeData.nearest
+        if (hospitalData.nearest?.hospitalWithED) {
+          const h = hospitalData.nearest.hospitalWithED
+          nearestHospital = {
+            name: h.name,
+            address: h.address,
+            suburb: h.suburb,
+            phone: h.telephone || null,
+            hasED: h.hasEmergency,
+            distanceM: h.distanceM,
+            type: h.type
+          }
+        } else if (hospitalData.nearest?.hospital) {
+          const h = hospitalData.nearest.hospital
+          nearestHospital = {
+            name: h.name,
+            address: h.address,
+            suburb: h.suburb,
+            phone: h.telephone || null,
+            hasED: h.hasEmergency,
+            distanceM: h.distanceM,
+            type: h.type
+          }
+        } else if (hospitalData.nearest?.nursingPost) {
+          const n = hospitalData.nearest.nursingPost
+          nearestHospital = {
+            name: n.name,
+            address: n.address,
+            suburb: n.suburb,
+            phone: n.telephone || null,
+            hasED: false,
+            distanceM: n.distanceM,
+            type: 'Nursing Post'
+          }
+        }
+      } catch (e) {
+        console.error('Failed to get nearest hospital:', e)
+      }
+
+      // Get nearest fire/emergency station from DFES data
+      let nearestFireStation: { name: string; type: string; typeDescription: string; distanceM: number } | null = null
+
+      try {
+        const stationResponse = await fetch(`/api/emergency-stations?lat=${lat}&lon=${lon}&radius=100`)
+        const stationData = await stationResponse.json()
+
+        if (stationData.nearest?.professional) {
+          const s = stationData.nearest.professional
+          nearestFireStation = {
+            name: s.name,
+            type: s.type,
+            typeDescription: s.typeDescription,
+            distanceM: s.distanceM
+          }
+        } else if (stationData.nearest?.volunteer) {
+          const s = stationData.nearest.volunteer
+          nearestFireStation = {
+            name: s.name,
+            type: s.type,
+            typeDescription: s.typeDescription,
+            distanceM: s.distanceM
+          }
+        } else if (stationData.nearest?.any) {
+          const s = stationData.nearest.any
+          nearestFireStation = {
+            name: s.name,
+            type: s.type,
+            typeDescription: s.typeDescription,
+            distanceM: s.distanceM
+          }
+        }
+      } catch (e) {
+        console.error('Failed to get nearest fire station:', e)
+      }
+
+      // Get nearest WA Police station
+      let nearestPoliceStation: { name: string; address: string; suburb: string; distanceM: number } | null = null
+
+      try {
+        const policeResponse = await fetch(`/api/police-stations?lat=${lat}&lon=${lon}&radius=150`)
+        const policeData = await policeResponse.json()
+
+        if (policeData.nearest) {
+          const p = policeData.nearest
+          nearestPoliceStation = {
+            name: p.name,
+            address: p.address,
+            suburb: p.suburb,
+            distanceM: p.distanceM
+          }
+        }
+      } catch (e) {
+        console.error('Failed to get nearest police station:', e)
+      }
 
       setEmergencyData({
         roadName: gpsData.road_name || 'Unknown Road',
@@ -590,22 +676,22 @@ function DriveContent() {
         lon,
         nearestHospital: nearestHospital ? {
           name: nearestHospital.name,
-          distanceM: nearestHospital.distance_m,
+          distanceM: nearestHospital.distanceM,
           type: nearestHospital.type,
-          hasED: nearestHospital.has_ed,
-          phone: nearestHospital.phone,
+          hasED: nearestHospital.hasED,
+          phone: nearestHospital.phone || undefined,
           address: nearestHospital.address,
           suburb: nearestHospital.suburb
         } : undefined,
         nearestFireStation: nearestFireStation ? {
           name: nearestFireStation.name,
-          distanceM: nearestFireStation.distance_m,
+          distanceM: nearestFireStation.distanceM,
           type: nearestFireStation.type,
-          typeDescription: nearestFireStation.type_description
+          typeDescription: nearestFireStation.typeDescription
         } : undefined,
         nearestPoliceStation: nearestPoliceStation ? {
           name: nearestPoliceStation.name,
-          distanceM: nearestPoliceStation.distance_m,
+          distanceM: nearestPoliceStation.distanceM,
           address: nearestPoliceStation.address,
           suburb: nearestPoliceStation.suburb
         } : undefined
