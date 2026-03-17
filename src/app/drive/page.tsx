@@ -1291,7 +1291,7 @@ function DriveContent() {
               </DrawerHeader>
               <div className="overflow-y-auto px-4 py-4 flex-1">
 
-                {/* ABOUT Section - MINIMIZED BY DEFAULT */}
+                {/* ABOUT Section */}
                 <div className="mb-3">
                   <button
                     onClick={() => setShowAbout(!showAbout)}
@@ -1304,40 +1304,41 @@ function DriveContent() {
                   {showAbout && (
                     <div className="space-y-3 mt-2 pl-3 border-l-4 border-cyan-500/60">
                       <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
-                      <h4 className="text-white font-semibold mb-2">SLK Tracking</h4>
-                      <p className="text-gray-400 text-xs mb-3">
-                        GPS-based SLK tracking for Traffic Controllers in Western Australia
-                      </p>
-                      <div className="text-xs mb-1">
-                        <span className="text-gray-400">Version {APP_VERSION}</span>
+                        <h4 className="text-white font-semibold mb-2">SLK Tracking</h4>
+                        <p className="text-gray-400 text-xs mb-3">
+                          GPS-based SLK tracking for Traffic Controllers in Western Australia
+                        </p>
+                        <div className="text-xs mb-1">
+                          <span className="text-gray-400">Version {APP_VERSION}</span>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
+                        <h4 className="text-amber-400 font-semibold mb-2">📧 Contact</h4>
+                        <p className="text-gray-400 text-xs">
+                          Developer: <a href="mailto:dev@jaytec.net" className="text-blue-400 hover:underline">dev@jaytec.net</a>
+                        </p>
+                      </div>
+
+                      <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
+                        <h4 className="text-purple-400 font-semibold mb-2">🤝 Contributors</h4>
+                        <p className="text-gray-400 text-xs">• Jaytec (Developer)</p>
+                      </div>
+
+                      <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
+                        <h4 className="text-green-400 font-semibold mb-2">🛠️ Built With</h4>
+                        <div className="text-gray-400 text-xs space-y-1">
+                          <p>• Next.js 16 / React</p>
+                          <p>• Tailwind CSS</p>
+                          <p>• IndexedDB for Offline Storage</p>
+                          <p>• Extended Kalman Filter for GPS smoothing</p>
+                        </div>
                       </div>
                     </div>
+                  )}
+                </div>
 
-                    <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
-                      <h4 className="text-amber-400 font-semibold mb-2">📧 Contact</h4>
-                      <p className="text-gray-400 text-xs">
-                        Developer: <a href="mailto:dev@jaytec.net" className="text-blue-400 hover:underline">dev@jaytec.net</a>
-                      </p>
-                    </div>
-
-                    <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
-                      <h4 className="text-purple-400 font-semibold mb-2">🤝 Contributors</h4>
-                      <p className="text-gray-400 text-xs">• Jaytec (Developer)</p>
-                    </div>
-
-                    <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
-                      <h4 className="text-green-400 font-semibold mb-2">🛠️ Built With</h4>
-                      <div className="text-gray-400 text-xs space-y-1">
-                        <p>• Next.js 16 / React</p>
-                        <p>• Tailwind CSS</p>
-                        <p>• IndexedDB for Offline Storage</p>
-                        <p>• Extended Kalman Filter for GPS smoothing</p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* PREFERENCES Section - MINIMIZED BY DEFAULT */}
+                {/* PREFERENCES Section */}
                 <div className="mb-3">
                   <button
                     onClick={() => setShowPreferences(!showPreferences)}
@@ -1349,35 +1350,13 @@ function DriveContent() {
 
                   {showPreferences && (
                     <div className="space-y-4 mt-2 pl-3 border-l-4 border-gray-400/60">
-                      {/* Wind Gust Alert Threshold */}
-                      <div>
-                        <label className="block text-sm text-gray-400 mb-1">Wind Gust Alert Threshold</label>
-                        <div className="flex gap-2">
-                          {[40, 50, 60, 80].map((threshold) => (
-                            <Button
-                              key={threshold}
-                              onClick={() => {
-                                const newSettings = { ...settings, windGustThreshold: threshold };
-                                localStorage.setItem('gpsSettings', JSON.stringify(newSettings));
-                                // Update state via settings reload
-                                window.dispatchEvent(new StorageEvent('storage'));
-                              }}
-                              className={`flex-1 h-8 text-xs ${settings.windGustThreshold === threshold ? 'bg-amber-600' : 'bg-gray-600 hover:bg-gray-500'}`}
-                            >
-                              {threshold}
-                            </Button>
-                          ))}
-                        </div>
-                        <p className="text-xs text-gray-500 mt-1">Alert when gusts exceed this (km/h)</p>
-                      </div>
-
                       {/* EKF Filtering Toggle */}
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-400">EKF Filtering</span>
                         <button
                           onClick={() => {
                             const newSettings = { ...settings, ekfEnabled: !settings.ekfEnabled };
-                            localStorage.setItem('gpsSettings', JSON.stringify(newSettings));
+                            localStorage.setItem('gpsTrackingConfig', JSON.stringify(newSettings));
                             window.dispatchEvent(new StorageEvent('storage'));
                           }}
                           className={`w-12 h-6 rounded-full transition-colors ${settings.ekfEnabled ? 'bg-purple-600' : 'bg-gray-600'}`}
@@ -1442,7 +1421,7 @@ function DriveContent() {
                   )}
                 </div>
 
-                {/* SPEED ZONE OVERRIDES Section - MINIMIZED BY DEFAULT */}
+                {/* SPEED ZONE OVERRIDES Section */}
                 <div className="mb-3">
                   <button
                     onClick={() => setShowSpeedOverrides(!showSpeedOverrides)}
@@ -1480,7 +1459,7 @@ function DriveContent() {
                   )}
                 </div>
 
-                {/* TC TOOLS Section - MINIMIZED BY DEFAULT */}
+                {/* TC TOOLS Section */}
                 <div className="mb-3">
                   <button
                     onClick={() => setShowTcTools(!showTcTools)}
