@@ -5624,7 +5624,7 @@ export default function Home() {
                   setShowEmergencyModal(false)
                   setEmergencyData(null)
                 }}
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-500 hover:bg-blue-400 text-white font-bold"
+                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-600 hover:bg-gray-500 text-white font-bold"
               >
                 ✕
               </button>
@@ -5842,7 +5842,7 @@ export default function Home() {
                   setShowEmergencyModal(false)
                   setEmergencyData(null)
                 }}
-                className="w-full bg-blue-500 hover:bg-blue-400 text-white font-semibold"
+                className="w-full bg-gray-600 hover:bg-gray-500 text-white font-semibold"
               >
                 Close
               </Button>
