@@ -1915,6 +1915,10 @@ function DriveContent() {
                             })()}
                           </span>
                         </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Type:</span>
+                          <span className="text-white">{emergencyData.nearestHospital.type} {emergencyData.nearestHospital.hasED && <span className="text-green-400">(has ED)</span>}</span>
+                        </div>
                         {emergencyData.nearestHospital.phone && (
                           <div className="flex justify-between items-center">
                             <span className="text-gray-400">Phone:</span>
@@ -1926,6 +1930,34 @@ function DriveContent() {
                             </a>
                           </div>
                         )}
+                        {emergencyData.nearestHospital.address && (
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Address:</span>
+                            <span className="text-white text-sm">{emergencyData.nearestHospital.address}{emergencyData.nearestHospital.suburb && `, ${emergencyData.nearestHospital.suburb}`}</span>
+                          </div>
+                        )}
+                        <div className="mt-2 flex gap-2">
+                          {emergencyData.nearestHospital.phone && (
+                            <Button
+                              onClick={() => {
+                                window.location.href = `tel:${emergencyData.nearestHospital!.phone?.replace(/[^0-9+]/g, '')}`
+                              }}
+                              className="flex-1 bg-blue-700 hover:bg-blue-600 text-sm py-1"
+                            >
+                              📞 Call Hospital
+                            </Button>
+                          )}
+                          <Button
+                            onClick={() => {
+                              if (emergencyData.nearestHospital) {
+                                window.open(`https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestHospital.name + ' hospital ' + emergencyData.nearestHospital.suburb)}`, '_blank')
+                              }
+                            }}
+                            className="flex-1 bg-green-700 hover:bg-green-600 text-sm py-1"
+                          >
+                            📍 Directions
+                          </Button>
+                        </div>
                       </div>
                     )}
 
@@ -1952,6 +1984,22 @@ function DriveContent() {
                             })()}
                           </span>
                         </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Type:</span>
+                          <span className="text-white">{emergencyData.nearestFireStation.typeDescription} <span className="text-orange-400">({emergencyData.nearestFireStation.type})</span></span>
+                        </div>
+                        <div className="mt-2">
+                          <Button
+                            onClick={() => {
+                              if (emergencyData.nearestFireStation) {
+                                window.open(`https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestFireStation.name + ' fire station Western Australia')}`, '_blank')
+                              }
+                            }}
+                            className="w-full bg-orange-700 hover:bg-orange-600 text-sm py-1"
+                          >
+                            📍 Directions to Station
+                          </Button>
+                        </div>
                       </div>
                     )}
 
@@ -1977,6 +2025,22 @@ function DriveContent() {
                               return `${Math.round(d / 100) * 100} m`
                             })()}
                           </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Address:</span>
+                          <span className="text-white text-sm">{emergencyData.nearestPoliceStation.address}, {emergencyData.nearestPoliceStation.suburb}</span>
+                        </div>
+                        <div className="mt-2">
+                          <Button
+                            onClick={() => {
+                              if (emergencyData.nearestPoliceStation) {
+                                window.open(`https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestPoliceStation.name + ' police station ' + emergencyData.nearestPoliceStation.suburb + ' Western Australia')}`, '_blank')
+                              }
+                            }}
+                            className="w-full bg-blue-700 hover:bg-blue-600 text-sm py-1"
+                          >
+                            📍 Directions to Station
+                          </Button>
                         </div>
                       </div>
                     )}
