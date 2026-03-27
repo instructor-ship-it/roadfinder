@@ -11,14 +11,7 @@ import {
   findNearestFireStation,
   findNearestPoliceStation,
 } from '@/lib/emergency';
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer';
+import SettingsDrawer, { APP_VERSION } from '@/components/SettingsDrawer';
 import {
   initDB,
   isOfflineDataAvailable as checkOfflineData,
@@ -43,9 +36,6 @@ import { useGpsTracking, useGpsSettings, type GpsTrackingConfig } from '@/hooks/
 import { useOrientation } from '@/hooks/useOrientation';
 import { IncidentWarningBanner } from '@/components/IncidentWarningBanner'
 import { WeatherWarningBanner } from '@/components/WeatherWarningBanner'
-
-// App version
-const APP_VERSION = 'RC 1.9.1';
 
 // GPS lag compensation from localStorage
 interface GpsLagSettings {
@@ -283,12 +273,6 @@ function DriveContent() {
   // Debug state
   const [debugInfo, setDebugInfo] = useState<string>('');
   const [showDebug, setShowDebug] = useState(false);
-
-  // Settings drawer state
-  const [showAbout, setShowAbout] = useState<boolean>(false);
-  const [showPreferences, setShowPreferences] = useState<boolean>(false);
-  const [showSpeedOverrides, setShowSpeedOverrides] = useState<boolean>(false);
-  const [showTcTools, setShowTcTools] = useState<boolean>(false);
 
   // Speed zone corrections state
   const [showCorrections, setShowCorrections] = useState(false);
@@ -1243,254 +1227,31 @@ function DriveContent() {
           )}
         </div>
         <div className="flex items-center gap-1">
-          <Drawer>
-            <DrawerTrigger asChild>
-              <button
-                className="w-8 h-8 flex items-center justify-center rounded-full text-xl font-bold bg-gray-700 hover:bg-gray-600"
-                title="Settings"
-              >
-                ☰
-              </button>
-            </DrawerTrigger>
-            <DrawerContent className="bg-gray-900 border-gray-700 max-h-[85vh]">
-              <DrawerHeader className="border-b border-gray-700 pb-3">
-                <DrawerTitle className="text-blue-400 text-lg">Settings</DrawerTitle>
-              </DrawerHeader>
-              <div className="overflow-y-auto px-4 py-4 flex-1">
-
-                {/* ABOUT Section */}
-                <div className="mb-3">
-                  <button
-                    onClick={() => setShowAbout(!showAbout)}
-                    className="w-full text-left text-sm font-semibold text-cyan-400 py-2 flex items-center gap-2 border-b border-gray-700/50"
-                  >
-                    <span className={`transition-transform duration-200 ${showAbout ? 'rotate-90' : ''}`}>›</span>
-                    ℹ️ About
-                  </button>
-
-                  {showAbout && (
-                    <div className="space-y-3 mt-2 pl-3 border-l-4 border-cyan-500/60">
-                      <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
-                        <h4 className="text-white font-semibold mb-2">SLK Tracking</h4>
-                        <p className="text-gray-400 text-xs mb-3">
-                          GPS-based SLK tracking for Traffic Controllers in Western Australia
-                        </p>
-                        <div className="text-xs mb-1">
-                          <span className="text-gray-400">Version {APP_VERSION}</span>
-                        </div>
-                      </div>
-
-                      <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
-                        <h4 className="text-amber-400 font-semibold mb-2">📧 Contact</h4>
-                        <p className="text-gray-400 text-xs">
-                          Developer: <a href="mailto:dev@jaytec.net" className="text-blue-400 hover:underline">dev@jaytec.net</a>
-                        </p>
-                      </div>
-
-                      <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
-                        <h4 className="text-purple-400 font-semibold mb-2">🤝 Contributors</h4>
-                        <p className="text-gray-400 text-xs">• Jaytec (Developer)</p>
-                      </div>
-
-                      <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
-                        <h4 className="text-green-400 font-semibold mb-2">🛠️ Built With</h4>
-                        <div className="text-gray-400 text-xs space-y-1">
-                          <p>• Next.js 16 / React</p>
-                          <p>• Tailwind CSS</p>
-                          <p>• IndexedDB for Offline Storage</p>
-                          <p>• Extended Kalman Filter for GPS smoothing</p>
-                        </div>
-                      </div>
-
-                      {/* Documents Link */}
-                      <Link 
-                        href="/library"
-                        className="block bg-blue-900/40 hover:bg-blue-900/60 border border-blue-700/50 rounded-lg p-3 text-sm transition-colors"
-                      >
-                        <h4 className="text-blue-400 font-semibold mb-1">📚 Documents Library</h4>
-                        <p className="text-gray-400 text-xs">
-                          View traffic control documents, standards, and reference materials
-                        </p>
-                      </Link>
-                    </div>
-                  )}
-                </div>
-
-                {/* PREFERENCES Section */}
-                <div className="mb-3">
-                  <button
-                    onClick={() => setShowPreferences(!showPreferences)}
-                    className="w-full text-left text-sm font-semibold text-gray-300 py-2 flex items-center gap-2 border-b border-gray-700/50"
-                  >
-                    <span className={`transition-transform duration-200 ${showPreferences ? 'rotate-90' : ''}`}>›</span>
-                    ⚙️ Preferences
-                  </button>
-
-                  {showPreferences && (
-                    <div className="space-y-4 mt-2 pl-3 border-l-4 border-gray-400/60">
-                      {/* EKF Filtering Toggle */}
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-400">EKF Filtering</span>
-                        <button
-                          onClick={() => {
-                            const newSettings = { ...settings, ekfEnabled: !settings.ekfEnabled };
-                            localStorage.setItem('gpsTrackingConfig', JSON.stringify(newSettings));
-                            window.dispatchEvent(new StorageEvent('storage'));
-                          }}
-                          className={`w-12 h-6 rounded-full transition-colors ${settings.ekfEnabled ? 'bg-purple-600' : 'bg-gray-600'}`}
-                        >
-                          <span className={`block w-4 h-4 rounded-full bg-white transition-transform ${settings.ekfEnabled ? 'translate-x-6' : 'translate-x-0'}`}></span>
-                        </button>
-                      </div>
-                      <p className="text-xs text-gray-500">Kalman filter for smoother, accurate GPS tracking</p>
-
-                      {/* Speed Display Toggle */}
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-400">Speed Display</span>
-                        <button
-                          onClick={() => {
-                            const newValue = !showSpeedDisplay;
-                            setShowSpeedDisplay(newValue);
-                            localStorage.setItem('showSpeedDisplay', String(newValue));
-                          }}
-                          className={`w-12 h-6 rounded-full transition-colors ${showSpeedDisplay ? 'bg-cyan-600' : 'bg-gray-600'}`}
-                        >
-                          <span className={`block w-4 h-4 rounded-full bg-white transition-transform ${showSpeedDisplay ? 'translate-x-6' : 'translate-x-0'}`}></span>
-                        </button>
-                      </div>
-                      <p className="text-xs text-gray-500">Display current speed and posted speed</p>
-
-                      {/* AfterCare Alerts Toggle */}
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-400">AfterCare Alerts</span>
-                        <button
-                          onClick={() => {
-                            const newValue = !showAfterCareOnDrive;
-                            setShowAfterCareOnDrive(newValue);
-                            localStorage.setItem('showAfterCareOnDrive', String(newValue));
-                          }}
-                          className={`w-12 h-6 rounded-full transition-colors ${showAfterCareOnDrive ? 'bg-green-600' : 'bg-gray-600'}`}
-                        >
-                          <span className={`block w-4 h-4 rounded-full bg-white transition-transform ${showAfterCareOnDrive ? 'translate-x-6' : 'translate-x-0'}`}></span>
-                        </button>
-                      </div>
-                      <p className="text-xs text-gray-500">Display nearby AfterCare signage alerts</p>
-
-                      {/* AfterCare Lookahead Distance */}
-                      <div>
-                        <label className="block text-sm text-gray-400 mb-1">AfterCare Lookahead (km)</label>
-                        <div className="flex gap-2">
-                          {[2, 5, 10, 20].map((km) => (
-                            <Button
-                              key={km}
-                              onClick={() => {
-                                setAfterCareLookaheadKm(km);
-                                localStorage.setItem('afterCareLookaheadKm', String(km));
-                              }}
-                              className={`flex-1 h-8 text-xs ${afterCareLookaheadKm === km ? 'bg-green-600' : 'bg-gray-600 hover:bg-gray-500'}`}
-                            >
-                              {km}
-                            </Button>
-                          ))}
-                        </div>
-                        <p className="text-xs text-gray-500 mt-1">How far ahead to look for signs</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* SPEED ZONE OVERRIDES Section */}
-                <div className="mb-3">
-                  <button
-                    onClick={() => setShowSpeedOverrides(!showSpeedOverrides)}
-                    className="w-full text-left text-sm font-semibold text-orange-400 py-2 flex items-center gap-2 border-b border-gray-700/50"
-                  >
-                    <span className={`transition-transform duration-200 ${showSpeedOverrides ? 'rotate-90' : ''}`}>›</span>
-                    🔧 Speed Zone Overrides
-                  </button>
-
-                  {showSpeedOverrides && (
-                    <div className="space-y-3 mt-2 pl-3 border-l-4 border-orange-500/60">
-                      <div className="bg-gray-900/50 rounded-lg p-3">
-                        <p className="text-xs text-gray-400 mb-2">
-                          Community-verified corrections for MRWA speed zone data.
-                          Overrides are applied automatically when tracking on affected roads.
-                        </p>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-400">Status:</span>
-                          <span className="text-green-400">✓ Active (M031 corrections loaded)</span>
-                        </div>
-                        <div className="flex items-center justify-between text-xs mt-1">
-                          <span className="text-gray-500">Version:</span>
-                          <span className="text-gray-400">1.0 • Updated: 2025-03-02</span>
-                        </div>
-                        <div className="flex items-center justify-between text-xs mt-1">
-                          <span className="text-gray-500">Affected Roads:</span>
-                          <span className="text-orange-400">M031 (4 zone corrections)</span>
-                        </div>
-                      </div>
-                      <p className="text-xs text-gray-500">
-                        Override data is bundled with the app and loaded automatically.
-                        Corrections are field-verified where MRWA data is outdated after road works.
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {/* TC TOOLS Section */}
-                <div className="mb-3">
-                  <button
-                    onClick={() => setShowTcTools(!showTcTools)}
-                    className="w-full text-left text-sm font-semibold text-cyan-400 py-2 flex items-center gap-2 border-b border-gray-700/50"
-                  >
-                    <span className={`transition-transform duration-200 ${showTcTools ? 'rotate-90' : ''}`}>›</span>
-                    🛠️ TC Tools
-                  </button>
-
-                  {showTcTools && (
-                    <div className="space-y-3 mt-2 pl-3 border-l-4 border-cyan-500/60">
-                      {/* Back to Work Zone Locator */}
-                      <div className="pt-2">
-                        <DrawerClose asChild>
-                          <Link
-                            href="/"
-                            className="text-cyan-400 hover:text-cyan-300 text-sm pl-2 block"
-                          >
-                            ← Back to Work Zone Locator
-                          </Link>
-                        </DrawerClose>
-                      </div>
-
-                      {/* AfterCare Signs */}
-                      <div className="pt-1">
-                        <DrawerClose asChild>
-                          <Link
-                            href="/aftercare"
-                            className="text-cyan-400 hover:text-cyan-300 text-sm pl-2 block"
-                          >
-                            🚧 AfterCare Signs
-                          </Link>
-                        </DrawerClose>
-                      </div>
-
-                      {/* Traffic Counter */}
-                      <div className="pt-1">
-                        <DrawerClose asChild>
-                          <Link
-                            href="/traffic-counter"
-                            className="text-cyan-400 hover:text-cyan-300 text-sm pl-2 block"
-                          >
-                            📊 Traffic Counter
-                          </Link>
-                        </DrawerClose>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-              </div>
-            </DrawerContent>
-          </Drawer>
+          <SettingsDrawer
+            variant="drive"
+            offlineReady={offlineReady}
+            gpsSettings={settings}
+            onUpdateGpsSetting={(key, value) => {
+              const newSettings = { ...settings, [key]: value };
+              localStorage.setItem('gpsTrackingConfig', JSON.stringify(newSettings));
+              window.dispatchEvent(new StorageEvent('storage'));
+            }}
+            showSpeedDisplay={showSpeedDisplay}
+            onToggleSpeedDisplay={(value) => {
+              setShowSpeedDisplay(value);
+              localStorage.setItem('showSpeedDisplay', String(value));
+            }}
+            showAfterCareOnDrive={showAfterCareOnDrive}
+            onToggleAfterCare={(value) => {
+              setShowAfterCareOnDrive(value);
+              localStorage.setItem('showAfterCareOnDrive', String(value));
+            }}
+            afterCareLookaheadKm={afterCareLookaheadKm}
+            onUpdateAfterCareLookahead={(km) => {
+              setAfterCareLookaheadKm(km);
+              localStorage.setItem('afterCareLookaheadKm', String(km));
+            }}
+          />
         </div>
       </div>
 
