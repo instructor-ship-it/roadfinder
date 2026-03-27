@@ -1301,6 +1301,17 @@ function DriveContent() {
                           <p>• Extended Kalman Filter for GPS smoothing</p>
                         </div>
                       </div>
+
+                      {/* Documents Link */}
+                      <Link 
+                        href="/library"
+                        className="block bg-blue-900/40 hover:bg-blue-900/60 border border-blue-700/50 rounded-lg p-3 text-sm transition-colors"
+                      >
+                        <h4 className="text-blue-400 font-semibold mb-1">📚 Documents Library</h4>
+                        <p className="text-gray-400 text-xs">
+                          View traffic control documents, standards, and reference materials
+                        </p>
+                      </Link>
                     </div>
                   )}
                 </div>
