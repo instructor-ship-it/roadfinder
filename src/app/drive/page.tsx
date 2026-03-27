@@ -572,6 +572,31 @@ function DriveContent() {
     return mins > 0 ? `${hours}h ${mins}m / 10km` : `${hours}h / 10km`;
   };
 
+  // WA Speeding Fines Data (current as of 2025)
+  // Based on: https://www.wa.gov.au/organisation/road-safety-commission/speeding
+  const WA_SPEEDING_FINES = [
+    { maxOver: 9, fine: 100, demerits: 0, label: '0-9 km/h over' },
+    { maxOver: 19, fine: 200, demerits: 2, label: '10-19 km/h over' },
+    { maxOver: 29, fine: 400, demerits: 3, label: '20-29 km/h over' },
+    { maxOver: 40, fine: 800, demerits: 6, label: '30-40 km/h over' },
+    { maxOver: 999, fine: 1200, demerits: 7, label: '40+ km/h over (Reckless)' },
+  ];
+
+  // Get speeding fine info based on current speed and limit
+  const getSpeedingFine = (speedKph: number, limitKph: number): { fine: number; demerits: number; label: string; kmOver: number } | null => {
+    if (limitKph <= 0) return null;
+    const kmOver = Math.round(speedKph - limitKph);
+    if (kmOver <= 0) return null;
+    
+    const fineInfo = WA_SPEEDING_FINES.find(tier => kmOver <= tier.maxOver);
+    return {
+      fine: fineInfo?.fine ?? 1200,
+      demerits: fineInfo?.demerits ?? 7,
+      label: fineInfo?.label ?? '40+ km/h over',
+      kmOver: kmOver,
+    };
+  };
+
   // Open Google Maps navigation to destination
   const openGoogleMaps = () => {
     if (destCoords) {
@@ -908,9 +933,21 @@ function DriveContent() {
                   <p className="text-gray-400 text-lg">km/h</p>
                   <p className="text-blue-300 text-base font-medium">{getMinutesPerKm(currentSpeed)}</p>
                   <p className="text-cyan-300 text-sm">{getTimeFor10km(currentSpeed)}</p>
-                  {isSpeeding && (
-                    <p className="text-red-400 text-sm">⚠️ Over limit</p>
-                  )}
+                  {isSpeeding && (() => {
+                    const fineInfo = getSpeedingFine(currentSpeed, speedLimit);
+                    return fineInfo && (
+                      <div className="mt-2 bg-red-900/60 border border-red-500 rounded-lg px-3 py-2 animate-pulse" style={{ animationDuration: '2s' }}>
+                        <p className="text-red-300 text-sm font-bold">⚠️ {fineInfo.kmOver} km/h OVER LIMIT</p>
+                        <p className="text-red-200 text-lg font-bold">${fineInfo.fine} FINE</p>
+                        {fineInfo.demerits > 0 && (
+                          <p className="text-red-300 text-xs">{fineInfo.demerits} demerit points</p>
+                        )}
+                        {fineInfo.demerits === 0 && (
+                          <p className="text-red-300 text-xs">No demerit points</p>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
 
                 {/* Divider */}
@@ -1525,9 +1562,16 @@ function DriveContent() {
               <p className="text-gray-400 text-sm">km/h</p>
               <p className="text-blue-300 text-xs font-medium">{getMinutesPerKm(currentSpeed)}</p>
               <p className="text-cyan-300 text-[10px]">{getTimeFor10km(currentSpeed)}</p>
-              {isSpeeding && (
-                <p className="text-red-400 text-xs mt-1">⚠️ Over limit</p>
-              )}
+              {isSpeeding && (() => {
+                const fineInfo = getSpeedingFine(currentSpeed, speedLimit);
+                return fineInfo && (
+                  <div className="mt-1 bg-red-900/60 border border-red-500 rounded px-2 py-1 animate-pulse" style={{ animationDuration: '2s' }}>
+                    <p className="text-red-300 text-[10px] font-bold">⚠️ {fineInfo.kmOver} km/h OVER</p>
+                    <p className="text-red-200 text-xs font-bold">${fineInfo.fine}</p>
+                    <p className="text-red-300 text-[9px]">{fineInfo.demerits > 0 ? `${fineInfo.demerits} pts` : '0 pts'}</p>
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Divider */}
