@@ -215,7 +215,7 @@ export default function TrafficCounterSetupPage() {
                 <Button
                   key={mins}
                   onClick={() => setDuration(mins)}
-                  className={`flex-1 min-w-12 h-9 text-sm ${
+                  className={`flex-1 min-w-12 h-9 text-sm text-white ${
                     duration === mins
                       ? 'bg-blue-600 hover:bg-blue-700'
                       : 'bg-gray-700 hover:bg-gray-600'
@@ -232,12 +232,12 @@ export default function TrafficCounterSetupPage() {
                   placeholder="Custom"
                   value={customDuration}
                   onChange={(e) => setCustomDuration(e.target.value)}
-                  className="w-16 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-center text-sm h-9"
+                  className="w-16 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-center text-sm h-9 text-white"
                 />
                 <Button
                   onClick={handleCustomDuration}
                   disabled={!customDuration}
-                  className="bg-gray-700 hover:bg-gray-600 h-9 px-2 text-sm"
+                  className="bg-gray-700 hover:bg-gray-600 h-9 px-2 text-sm text-white disabled:text-gray-400"
                 >
                   Set
                 </Button>
@@ -258,7 +258,7 @@ export default function TrafficCounterSetupPage() {
             <div className="flex gap-2">
               <Button
                 onClick={() => setDirectionMode('one-way')}
-                className={`flex-1 h-9 text-sm ${
+                className={`flex-1 h-9 text-sm text-white ${
                   directionMode === 'one-way'
                     ? 'bg-blue-600 hover:bg-blue-700'
                     : 'bg-gray-700 hover:bg-gray-600'
@@ -268,7 +268,7 @@ export default function TrafficCounterSetupPage() {
               </Button>
               <Button
                 onClick={() => setDirectionMode('both-ways')}
-                className={`flex-1 h-9 text-sm ${
+                className={`flex-1 h-9 text-sm text-white ${
                   directionMode === 'both-ways'
                     ? 'bg-blue-600 hover:bg-blue-700'
                     : 'bg-gray-700 hover:bg-gray-600'
