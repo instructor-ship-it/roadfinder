@@ -18,6 +18,7 @@ export default function OfflinePage() {
   const [isOnline, setIsOnline] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional for client-side initialization
     setOfflineDocs(getOfflineDocuments());
     getStorageEstimate().then(setStorageInfo);
     setIsOnline(navigator.onLine);
@@ -68,8 +69,12 @@ export default function OfflinePage() {
               </Link>
               <h1 className="text-xl font-bold text-white">💾 Offline Documents</h1>
             </div>
-            <div className={`flex items-center gap-2 text-sm ${isOnline ? 'text-green-400' : 'text-red-400'}`}>
-              <span className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-400' : 'bg-red-400'}`}></span>
+            <div
+              className={`flex items-center gap-2 text-sm ${isOnline ? 'text-green-400' : 'text-red-400'}`}
+            >
+              <span
+                className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-400' : 'bg-red-400'}`}
+              ></span>
               {isOnline ? 'Online' : 'Offline'}
             </div>
           </div>
@@ -89,9 +94,11 @@ export default function OfflinePage() {
                   </p>
                 </div>
                 <div className="w-32 h-2 bg-gray-700 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-green-500 rounded-full"
-                    style={{ width: `${Math.min((storageInfo.used / storageInfo.quota) * 100, 100)}%` }}
+                    style={{
+                      width: `${Math.min((storageInfo.used / storageInfo.quota) * 100, 100)}%`,
+                    }}
                   />
                 </div>
               </div>
@@ -118,18 +125,18 @@ export default function OfflinePage() {
               Save documents from the library to access them offline.
             </p>
             <Link href="/library">
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                Go to Library
-              </Button>
+              <Button className="bg-blue-600 hover:bg-blue-700">Go to Library</Button>
             </Link>
           </div>
         ) : (
           <>
             <div className="flex justify-between items-center mb-4">
-              <p className="text-gray-400">{offlineDocs.length} document{offlineDocs.length !== 1 ? 's' : ''} saved</p>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <p className="text-gray-400">
+                {offlineDocs.length} document{offlineDocs.length !== 1 ? 's' : ''} saved
+              </p>
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={handleClearAll}
                 className="bg-red-900/30 border-red-700 text-red-400 hover:bg-red-900/50"
               >
@@ -156,8 +163,8 @@ export default function OfflinePage() {
                             Open
                           </Button>
                         </Link>
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => handleRemoveDoc(doc.id)}
                           className="bg-red-900/30 border-red-700 text-red-400 hover:bg-red-900/50"
@@ -177,10 +184,22 @@ export default function OfflinePage() {
         <div className="mt-8 p-4 bg-gray-800 rounded-lg border border-gray-700">
           <h3 className="font-bold text-lg mb-3 text-white">📖 How Offline Works</h3>
           <div className="space-y-2 text-sm text-gray-400">
-            <p>📥 <strong className="text-gray-300">Save:</strong> Click the download button (📥) on any document to save it for offline access.</p>
-            <p>💾 <strong className="text-gray-300">Access:</strong> Saved documents are marked with 💾 and available even when you&apos;re offline.</p>
-            <p>✕ <strong className="text-gray-300">Remove:</strong> Click the X button to remove a document from offline storage.</p>
-            <p className="text-amber-400 mt-4">⚠️ Offline storage is managed by your browser. Clearing browser data may remove saved documents.</p>
+            <p>
+              📥 <strong className="text-gray-300">Save:</strong> Click the download button (📥) on
+              any document to save it for offline access.
+            </p>
+            <p>
+              💾 <strong className="text-gray-300">Access:</strong> Saved documents are marked with
+              💾 and available even when you&apos;re offline.
+            </p>
+            <p>
+              ✕ <strong className="text-gray-300">Remove:</strong> Click the X button to remove a
+              document from offline storage.
+            </p>
+            <p className="text-amber-400 mt-4">
+              ⚠️ Offline storage is managed by your browser. Clearing browser data may remove saved
+              documents.
+            </p>
           </div>
         </div>
       </div>

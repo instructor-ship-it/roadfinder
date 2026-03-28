@@ -84,7 +84,7 @@ export default function PageViewer() {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
-  
+
   // Touch state refs
   const touchState = useRef({
     initialDistance: 0,
@@ -155,15 +155,15 @@ export default function PageViewer() {
   // Constrain position to keep image visible
   const constrainPosition = useCallback((newScale: number, x: number, y: number) => {
     if (!containerRef.current || !imageRef.current) return { x, y };
-    
+
     const container = containerRef.current.getBoundingClientRect();
     const imgRect = imageRef.current.getBoundingClientRect();
-    
+
     const scaledWidth = imgRect.width * newScale;
     const scaledHeight = imgRect.height * newScale;
     const maxOffsetX = Math.max(0, (scaledWidth - container.width) / 2);
     const maxOffsetY = Math.max(0, (scaledHeight - container.height) / 2);
-    
+
     return {
       x: Math.max(-maxOffsetX, Math.min(maxOffsetX, x)),
       y: Math.max(-maxOffsetY, Math.min(maxOffsetY, y)),
@@ -179,43 +179,50 @@ export default function PageViewer() {
   };
 
   // Handle touch start
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    if (e.touches.length === 2) {
-      touchState.current.initialDistance = getTouchDistance(e.touches);
-      touchState.current.initialScale = scale;
-      touchState.current.isPanning = false;
-    } else if (e.touches.length === 1 && scale > 1) {
-      touchState.current.isPanning = true;
-      touchState.current.lastX = e.touches[0].clientX;
-      touchState.current.lastY = e.touches[0].clientY;
-    }
-  }, [scale]);
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent) => {
+      if (e.touches.length === 2) {
+        touchState.current.initialDistance = getTouchDistance(e.touches);
+        touchState.current.initialScale = scale;
+        touchState.current.isPanning = false;
+      } else if (e.touches.length === 1 && scale > 1) {
+        touchState.current.isPanning = true;
+        touchState.current.lastX = e.touches[0].clientX;
+        touchState.current.lastY = e.touches[0].clientY;
+      }
+    },
+    [scale]
+  );
 
   // Handle touch move
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    e.preventDefault();
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      e.preventDefault();
 
-    if (e.touches.length === 2) {
-      const currentDistance = getTouchDistance(e.touches);
-      const initialDistance = touchState.current.initialDistance;
-      
-      if (initialDistance > 0) {
-        const newScale = Math.max(0.5, Math.min(5, 
-          touchState.current.initialScale * (currentDistance / initialDistance)
-        ));
-        
-        setScale(newScale);
+      if (e.touches.length === 2) {
+        const currentDistance = getTouchDistance(e.touches);
+        const initialDistance = touchState.current.initialDistance;
+
+        if (initialDistance > 0) {
+          const newScale = Math.max(
+            0.5,
+            Math.min(5, touchState.current.initialScale * (currentDistance / initialDistance))
+          );
+
+          setScale(newScale);
+        }
+      } else if (e.touches.length === 1 && touchState.current.isPanning && scale > 1) {
+        const dx = e.touches[0].clientX - touchState.current.lastX;
+        const dy = e.touches[0].clientY - touchState.current.lastY;
+
+        setPosition((prev) => constrainPosition(scale, prev.x + dx, prev.y + dy));
+
+        touchState.current.lastX = e.touches[0].clientX;
+        touchState.current.lastY = e.touches[0].clientY;
       }
-    } else if (e.touches.length === 1 && touchState.current.isPanning && scale > 1) {
-      const dx = e.touches[0].clientX - touchState.current.lastX;
-      const dy = e.touches[0].clientY - touchState.current.lastY;
-      
-      setPosition(prev => constrainPosition(scale, prev.x + dx, prev.y + dy));
-      
-      touchState.current.lastX = e.touches[0].clientX;
-      touchState.current.lastY = e.touches[0].clientY;
-    }
-  }, [scale, constrainPosition]);
+    },
+    [scale, constrainPosition]
+  );
 
   // Handle touch end
   const handleTouchEnd = useCallback(() => {
@@ -263,23 +270,26 @@ export default function PageViewer() {
 
   // Double tap to zoom
   const lastTap = useRef<number>(0);
-  const handleDoubleTap = useCallback((e: React.TouchEvent) => {
-    const now = Date.now();
-    if (now - lastTap.current < 300) {
-      if (scale > 1) {
-        resetZoom();
-      } else {
-        setScale(2);
-        const container = containerRef.current?.getBoundingClientRect();
-        if (container) {
-          const tapX = e.touches[0].clientX - container.left - container.width / 2;
-          const tapY = e.touches[0].clientY - container.top - container.height / 2;
-          setPosition({ x: -tapX * 0.5, y: -tapY * 0.5 });
+  const handleDoubleTap = useCallback(
+    (e: React.TouchEvent) => {
+      const now = Date.now();
+      if (now - lastTap.current < 300) {
+        if (scale > 1) {
+          resetZoom();
+        } else {
+          setScale(2);
+          const container = containerRef.current?.getBoundingClientRect();
+          if (container) {
+            const tapX = e.touches[0].clientX - container.left - container.width / 2;
+            const tapY = e.touches[0].clientY - container.top - container.height / 2;
+            setPosition({ x: -tapX * 0.5, y: -tapY * 0.5 });
+          }
         }
       }
-    }
-    lastTap.current = now;
-  }, [scale, resetZoom]);
+      lastTap.current = now;
+    },
+    [scale, resetZoom]
+  );
 
   // Toggle section expansion
   const toggleSection = (section: string) => {
@@ -301,34 +311,41 @@ export default function PageViewer() {
     const titleMatch = entry.title.toLowerCase().includes(query);
     const sectionMatch = entry.section.toLowerCase().includes(query);
     const pageMatch = entry.page.toString().includes(query);
-    const childMatch = entry.children?.some((c) => 
-      c.title.toLowerCase().includes(query) || 
-      c.section.toLowerCase().includes(query)
+    const childMatch = entry.children?.some(
+      (c) => c.title.toLowerCase().includes(query) || c.section.toLowerCase().includes(query)
     );
     return titleMatch || sectionMatch || pageMatch || childMatch;
   });
 
   // Get unique implementations for filter
-  const implementations = ['all', ...new Set(tgsIndex.flatMap(cat => cat.entries.map(e => e.implementation)))];
-  
+  const implementations = [
+    'all',
+    ...new Set(tgsIndex.flatMap((cat) => cat.entries.map((e) => e.implementation))),
+  ];
+
   // Filter TGS entries
-  const filteredTgsCategories = tgsIndex.map(category => ({
-    ...category,
-    entries: category.entries.filter(entry => {
-      const matchesSearch = !tgsSearch.trim() || 
-        entry.id.toLowerCase().includes(tgsSearch.toLowerCase()) ||
-        entry.title.toLowerCase().includes(tgsSearch.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || category.category === selectedCategory;
-      const matchesImpl = selectedImplementation === 'all' || entry.implementation === selectedImplementation;
-      return matchesSearch && matchesCategory && matchesImpl;
-    })
-  })).filter(category => category.entries.length > 0);
+  const filteredTgsCategories = tgsIndex
+    .map((category) => ({
+      ...category,
+      entries: category.entries.filter((entry) => {
+        const matchesSearch =
+          !tgsSearch.trim() ||
+          entry.id.toLowerCase().includes(tgsSearch.toLowerCase()) ||
+          entry.title.toLowerCase().includes(tgsSearch.toLowerCase());
+        const matchesCategory =
+          selectedCategory === 'all' || category.category === selectedCategory;
+        const matchesImpl =
+          selectedImplementation === 'all' || entry.implementation === selectedImplementation;
+        return matchesSearch && matchesCategory && matchesImpl;
+      }),
+    }))
+    .filter((category) => category.entries.length > 0);
 
   // Render TOC entry
   const renderTocEntry = (entry: TocEntry, depth = 0) => {
     const hasChildren = entry.children && entry.children.length > 0;
     const isExpanded = expandedSections.has(entry.section);
-    
+
     return (
       <div key={entry.section}>
         <div
@@ -344,18 +361,20 @@ export default function PageViewer() {
             </button>
           )}
           {!hasChildren && <span className="w-5" />}
-          
+
           <Link
             href={`/library/${docId}/${entry.page}`}
             className="flex-1 flex items-center gap-2 min-w-0"
             onClick={() => setIsDrawerOpen(false)}
           >
-            <span className={`font-medium text-xs ${entry.isTgs ? 'text-green-400' : entry.isAppendix ? 'text-purple-400' : 'text-blue-400'}`}>
+            <span
+              className={`font-medium text-xs ${entry.isTgs ? 'text-green-400' : entry.isAppendix ? 'text-purple-400' : 'text-blue-400'}`}
+            >
               {entry.section}
             </span>
             <span className="text-gray-300 truncate text-xs">{entry.title}</span>
           </Link>
-          
+
           <Link
             href={`/library/${docId}/${entry.page}`}
             className="text-gray-500 text-xs hover:text-white group-hover:text-gray-300"
@@ -364,11 +383,9 @@ export default function PageViewer() {
             p.{entry.page}
           </Link>
         </div>
-        
+
         {hasChildren && isExpanded && (
-          <div>
-            {entry.children!.map((child) => renderTocEntry(child, depth + 1))}
-          </div>
+          <div>{entry.children!.map((child) => renderTocEntry(child, depth + 1))}</div>
         )}
       </div>
     );
@@ -376,14 +393,15 @@ export default function PageViewer() {
 
   // Render TGS entry
   const renderTgsEntry = (entry: TgsEntry) => {
-    const implColor = {
-      'Independent Works Crew': 'text-green-400',
-      'TMI with BWTM': 'text-blue-400',
-      'TMI with 3 Months Experience': 'text-yellow-400',
-      'Additional Planning & Approvals': 'text-red-400',
-      'Emergency Only': 'text-orange-400',
-      'Guide': 'text-gray-400',
-    }[entry.implementation] || 'text-gray-400';
+    const implColor =
+      {
+        'Independent Works Crew': 'text-green-400',
+        'TMI with BWTM': 'text-blue-400',
+        'TMI with 3 Months Experience': 'text-yellow-400',
+        'Additional Planning & Approvals': 'text-red-400',
+        'Emergency Only': 'text-orange-400',
+        Guide: 'text-gray-400',
+      }[entry.implementation] || 'text-gray-400';
 
     return (
       <Link
@@ -436,11 +454,15 @@ export default function PageViewer() {
                 ←
               </Button>
             </Link>
-            
+
             {/* TOC/TGS Drawer */}
             <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
               <DrawerTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white h-9 px-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-400 hover:text-white h-9 px-2"
+                >
                   📑
                 </Button>
               </DrawerTrigger>
@@ -452,8 +474,8 @@ export default function PageViewer() {
                       <button
                         onClick={() => setActiveTab('toc')}
                         className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-                          activeTab === 'toc' 
-                            ? 'bg-blue-600 text-white' 
+                          activeTab === 'toc'
+                            ? 'bg-blue-600 text-white'
                             : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`}
                       >
@@ -462,8 +484,8 @@ export default function PageViewer() {
                       <button
                         onClick={() => setActiveTab('tgs')}
                         className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
-                          activeTab === 'tgs' 
-                            ? 'bg-cyan-600 text-white' 
+                          activeTab === 'tgs'
+                            ? 'bg-cyan-600 text-white'
                             : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                         }`}
                       >
@@ -472,7 +494,7 @@ export default function PageViewer() {
                     </div>
                   </DrawerTitle>
                 </DrawerHeader>
-                
+
                 {/* TOC Tab Content */}
                 {activeTab === 'toc' && (
                   <div className="p-3 overflow-y-auto flex-1">
@@ -494,37 +516,49 @@ export default function PageViewer() {
                         </button>
                       )}
                     </div>
-                    
+
                     {/* Quick Links */}
                     <div className="flex flex-wrap gap-1 mb-3">
                       <Link href={`/library/${docId}/1`} onClick={() => setIsDrawerOpen(false)}>
-                        <Button size="sm" variant="outline" className="text-xs h-7 border-gray-600 bg-gray-700">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-7 border-gray-600 bg-gray-700"
+                        >
                           Cover
                         </Button>
                       </Link>
                       <Link href={`/library/${docId}/8`} onClick={() => setIsDrawerOpen(false)}>
-                        <Button size="sm" variant="outline" className="text-xs h-7 border-gray-600 bg-gray-700">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-7 border-gray-600 bg-gray-700"
+                        >
                           Section 1
                         </Button>
                       </Link>
                       <Link href={`/library/${docId}/139`} onClick={() => setIsDrawerOpen(false)}>
-                        <Button size="sm" variant="outline" className="text-xs h-7 border-green-700 bg-green-900/30 text-green-400">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-7 border-green-700 bg-green-900/30 text-green-400"
+                        >
                           TGS Diagrams
                         </Button>
                       </Link>
                     </div>
-                    
+
                     {/* TOC Entries */}
                     <div className="space-y-0.5 max-h-[50vh] overflow-y-auto">
                       {filteredToc.map((entry) => renderTocEntry(entry))}
                     </div>
-                    
+
                     {filteredToc.length === 0 && tocSearch && (
                       <p className="text-gray-400 text-center py-4 text-sm">No matching sections</p>
                     )}
                   </div>
                 )}
-                
+
                 {/* TGS Tab Content */}
                 {activeTab === 'tgs' && (
                   <div className="p-3 overflow-y-auto flex-1">
@@ -546,7 +580,7 @@ export default function PageViewer() {
                         </button>
                       )}
                     </div>
-                    
+
                     {/* Filters */}
                     <div className="flex gap-2 mb-3 flex-wrap">
                       <select
@@ -555,116 +589,131 @@ export default function PageViewer() {
                         className="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-xs text-white"
                       >
                         <option value="all">All Categories</option>
-                        {tgsIndex.map(cat => (
-                          <option key={cat.category} value={cat.category}>{cat.categoryName}</option>
+                        {tgsIndex.map((cat) => (
+                          <option key={cat.category} value={cat.category}>
+                            {cat.categoryName}
+                          </option>
                         ))}
                       </select>
-                      
+
                       <select
                         value={selectedImplementation}
                         onChange={(e) => setSelectedImplementation(e.target.value)}
                         className="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-xs text-white"
                       >
                         <option value="all">All Implementations</option>
-                        {implementations.filter(i => i !== 'all').map(impl => (
-                          <option key={impl} value={impl}>{impl}</option>
-                        ))}
+                        {implementations
+                          .filter((i) => i !== 'all')
+                          .map((impl) => (
+                            <option key={impl} value={impl}>
+                              {impl}
+                            </option>
+                          ))}
                       </select>
                     </div>
-                    
+
                     {/* Quick Category Links */}
                     <div className="flex flex-wrap gap-1 mb-3">
                       <Link href={`/library/${docId}/139`} onClick={() => setIsDrawerOpen(false)}>
-                        <Button size="sm" variant="outline" className="text-xs h-7 border-cyan-700 bg-cyan-900/30 text-cyan-400">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-7 border-cyan-700 bg-cyan-900/30 text-cyan-400"
+                        >
                           📋 TGS Index
                         </Button>
                       </Link>
                       <Link href={`/library/${docId}/182`} onClick={() => setIsDrawerOpen(false)}>
-                        <Button size="sm" variant="outline" className="text-xs h-7 border-gray-600 bg-gray-700">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-7 border-gray-600 bg-gray-700"
+                        >
                           AC
                         </Button>
                       </Link>
                       <Link href={`/library/${docId}/196`} onClick={() => setIsDrawerOpen(false)}>
-                        <Button size="sm" variant="outline" className="text-xs h-7 border-gray-600 bg-gray-700">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-7 border-gray-600 bg-gray-700"
+                        >
                           LC
                         </Button>
                       </Link>
                       <Link href={`/library/${docId}/215`} onClick={() => setIsDrawerOpen(false)}>
-                        <Button size="sm" variant="outline" className="text-xs h-7 border-gray-600 bg-gray-700">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-7 border-gray-600 bg-gray-700"
+                        >
                           LS
                         </Button>
                       </Link>
                       <Link href={`/library/${docId}/272`} onClick={() => setIsDrawerOpen(false)}>
-                        <Button size="sm" variant="outline" className="text-xs h-7 border-gray-600 bg-gray-700">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-7 border-gray-600 bg-gray-700"
+                        >
                           RF
                         </Button>
                       </Link>
                     </div>
-                    
+
                     {/* TGS Entries by Category */}
                     <div className="space-y-3 max-h-[45vh] overflow-y-auto">
-                      {filteredTgsCategories.map(category => (
+                      {filteredTgsCategories.map((category) => (
                         <div key={category.category}>
                           <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 px-2">
                             {category.categoryName} ({category.entries.length})
                           </div>
-                          <div className="space-y-0.5">
-                            {category.entries.map(renderTgsEntry)}
-                          </div>
+                          <div className="space-y-0.5">{category.entries.map(renderTgsEntry)}</div>
                         </div>
                       ))}
-                      
+
                       {filteredTgsCategories.length === 0 && (
-                        <p className="text-gray-400 text-center py-4 text-sm">No matching TGS entries</p>
+                        <p className="text-gray-400 text-center py-4 text-sm">
+                          No matching TGS entries
+                        </p>
                       )}
                     </div>
                   </div>
                 )}
-                
+
                 <div className="border-t border-gray-700 p-3">
                   <DrawerClose asChild>
-                    <Button variant="outline" size="sm" className="w-full bg-gray-700 border-gray-600 h-9">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full bg-gray-700 border-gray-600 h-9"
+                    >
                       Close
                     </Button>
                   </DrawerClose>
                 </div>
               </DrawerContent>
             </Drawer>
-            
+
             <div className="flex items-center gap-2">
               <span className="font-bold text-sm">{pageNum}</span>
               <span className="text-gray-400 text-sm">/ {totalPages}</span>
-              {hasTgs && (
-                <Badge className="bg-green-600 text-xs h-5">TGS</Badge>
-              )}
+              {hasTgs && <Badge className="bg-green-600 text-xs h-5">TGS</Badge>}
             </div>
           </div>
           <div className="flex items-center gap-1">
             {/* Zoom controls */}
             <div className="flex items-center gap-0.5 bg-gray-700 rounded-lg px-1.5 py-0.5">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={zoomOut}
-                className="h-7 w-7 p-0 text-lg"
-              >
+              <Button variant="ghost" size="sm" onClick={zoomOut} className="h-7 w-7 p-0 text-lg">
                 −
               </Button>
-              <span className="text-xs w-9 text-center tabular-nums">{Math.round(scale * 100)}%</span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={zoomIn}
-                className="h-7 w-7 p-0 text-lg"
-              >
+              <span className="text-xs w-9 text-center tabular-nums">
+                {Math.round(scale * 100)}%
+              </span>
+              <Button variant="ghost" size="sm" onClick={zoomIn} className="h-7 w-7 p-0 text-lg">
                 +
               </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={resetZoom}
-                className="h-7 px-1.5 text-xs"
-              >
+              <Button variant="ghost" size="sm" onClick={resetZoom} className="h-7 px-1.5 text-xs">
                 Reset
               </Button>
             </div>
@@ -705,7 +754,6 @@ export default function PageViewer() {
             transition: 'transform 0.1s ease-out',
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`/library/mrwa/tmp/${currentPage.preview}`}
             alt={`Page ${pageNum}`}
@@ -727,7 +775,7 @@ export default function PageViewer() {
           >
             ← Prev
           </Button>
-          
+
           {/* Page input */}
           <div className="flex items-center gap-1">
             <input
@@ -756,7 +804,7 @@ export default function PageViewer() {
             Next →
           </Button>
         </div>
-        
+
         {/* Hints */}
         <div className="text-center text-xs text-gray-500 mt-1">
           Pinch to zoom • Double-tap to fit • 📑 TOC/TGS

@@ -14,7 +14,7 @@ export function ServiceWorkerRegistration() {
         .then((registration) => {
           console.log('Service Worker registered:', registration.scope);
           setStatus('registered');
-          
+
           // Check for updates
           registration.addEventListener('updatefound', () => {
             const newWorker = registration.installing;
@@ -33,6 +33,7 @@ export function ServiceWorkerRegistration() {
           setStatus('error');
         });
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Service worker not supported, set error state
       setStatus('error');
     }
   }, []);
@@ -44,9 +45,11 @@ export function ServiceWorkerRegistration() {
     const handleMessage = (event: MessageEvent) => {
       if (event.data.type === 'DOCUMENT_CACHED') {
         // Dispatch custom event for components to listen to
-        window.dispatchEvent(new CustomEvent('offline-document-updated', {
-          detail: event.data
-        }));
+        window.dispatchEvent(
+          new CustomEvent('offline-document-updated', {
+            detail: event.data,
+          })
+        );
       }
     };
 
@@ -65,7 +68,8 @@ export function useOnlineStatus() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional for client-side initialization
     setIsOnline(navigator.onLine);
 
     const handleOnline = () => setIsOnline(true);
