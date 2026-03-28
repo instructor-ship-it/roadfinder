@@ -5,6 +5,53 @@
 
 ---
 
+## Task ID: 2026-03-28-005
+
+**Agent:** Main Agent
+**Task:** Traffic Counter Early Stop Duration Bug Fix
+
+### Work Log:
+
+- **Issue Reported**: History entry not showing correct sampling time when timer stopped early
+  - User stops timer before completion
+  - History shows wrong duration (possibly planned duration instead of actual)
+
+- **Root Cause Analysis**:
+  - `elapsedSeconds` was used directly in both display and save
+  - If user delayed clicking "Save" after stopping, timing could be inconsistent
+  - No explicit capture of the duration at the moment user confirms stop
+
+- **Fix Implemented**:
+  - Added `capturedDuration` state variable
+  - When user confirms stop (`confirmStop`), current `elapsedSeconds` is captured
+  - Both `CompletionOverlay` and `handleSave` use `capturedDuration ?? elapsedSeconds`
+  - `insufficientData` check also uses captured value
+
+- **Code Changes**:
+  - Added state: `const [capturedDuration, setCapturedDuration] = useState<number | null>(null)`
+  - Updated `confirmStop()`: `setCapturedDuration(elapsedSeconds)` before setting complete
+  - Updated `handleSave()`: `const actualElapsedSeconds = capturedDuration ?? elapsedSeconds`
+  - Updated `CompletionOverlay` props to use captured value
+  - Updated `insufficientData` prop to use captured value
+
+### Files Changed:
+
+- `src/app/traffic-counter/count/page.tsx` (duration capture logic)
+
+### Key Learnings:
+
+- **State timing matters**: When user actions trigger multiple state updates, capture important values immediately
+- **Freeze data on user action**: Don't rely on continuous state when the logical "event" has ended
+
+### Stage Summary:
+
+- Version: RC 1.9.6 (no version bump - bug fix)
+- Duration now correctly captured when user stops early
+- History shows accurate sampling time
+- Pushed to both main and master branches
+
+---
+
 ## Task ID: 2026-03-28-004
 
 **Agent:** Main Agent
