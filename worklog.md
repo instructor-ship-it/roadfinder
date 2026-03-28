@@ -5,6 +5,46 @@
 
 ---
 
+## Task ID: 2026-03-28-004
+
+**Agent:** Main Agent
+**Task:** Traffic Counter Custom Duration Limit Increase
+
+### Work Log:
+
+- **Increased Custom Duration Limit**
+  - User asked: "Why won't the custom duration allow me to set 160 minutes"
+  - Root cause: Validation was limited to max 60 minutes
+  - Code: `if (mins > 0 && mins <= 60)`
+
+- **Changes Made:**
+  - Increased max duration from 60 to 480 minutes (8 hours)
+  - Updated input `max` attribute from `60` to `480`
+  - Updated placeholder from `Custom` to `1-480m` for clarity
+  - Added user-friendly alert when exceeding 480 minutes
+
+- **Rationale:**
+  - Traffic controllers may need longer monitoring periods
+  - Extended counts useful for peak/off-peak comparisons
+  - 8 hours covers most shift durations
+
+### Files Changed:
+
+- `src/app/traffic-counter/page.tsx` (validation logic, input attributes)
+
+### Key Learnings:
+
+- **Consider real-world use cases**: Traffic counting may need longer durations than typical surveys
+- **User feedback is valuable**: This limitation wasn't initially apparent
+
+### Stage Summary:
+
+- Version: RC 1.9.6 (no version bump - feature enhancement)
+- Custom duration now supports 1-480 minutes
+- Pushed to both main and master branches
+
+---
+
 ## Task ID: 2026-03-28-003
 
 **Agent:** Main Agent
