@@ -1,7 +1,7 @@
 # TC Work Zone Locator
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-RC%201.9.1-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
+[![Version](https://img.shields.io/badge/version-RC%201.9.6-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
@@ -241,7 +241,35 @@ src/
 
 ## Version History
 
-### RC 1.9.1 (Current) - AI Q&A Assistant
+### RC 1.9.6 (Current) - Version Synchronization
+
+- **Version Synchronization**: All version numbers now consistent across codebase
+- **Documentation**: Added missing changelog entries for 1.9.2-1.9.5
+- **Files Updated**: package.json, SettingsDrawer.tsx, traffic-counter/page.tsx, qa/page.tsx, aftercare/page.tsx
+
+### RC 1.9.5 - Testing & CI/CD
+
+- **Testing Framework**: Vitest with React Testing Library (45 tests)
+- **CI/CD Pipeline**: GitHub Actions workflow
+- **Git Hooks**: Husky + lint-staged
+
+### RC 1.9.4 - Component Extraction
+
+- **Code Organization**: Extracted WeatherSection, TrafficSection, AmenitiesSection, WorkZoneSummary components
+- Reduced page.tsx from 5150 to 4608 lines
+
+### RC 1.9.3 - Prettier & CONTRIBUTING
+
+- **Prettier Config**: Added .prettierrc
+- **CONTRIBUTING.md**: Development guidelines
+- **SavedLocations Component**: Extracted from page.tsx
+
+### RC 1.9.2 - License & Env
+
+- **MIT LICENSE**: Open source license
+- **.env.example**: Environment variables template
+
+### RC 1.9.1 - AI Q&A Assistant
 
 - **New AI Q&A Assistant** (`/qa`)
   - Ask questions about traffic management, WHS, and road work documents

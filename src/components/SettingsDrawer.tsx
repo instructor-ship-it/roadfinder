@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 
 // App version constant - single source of truth
-export const APP_VERSION = 'RC 1.9.5';
+export const APP_VERSION = 'RC 1.9.6';
 
 // Offline toggles type - shared with page.tsx
 export interface OfflineToggles {
@@ -37,7 +37,7 @@ export interface OfflineToggles {
 interface SettingsDrawerProps {
   // Page context
   variant?: 'home' | 'drive';
-  
+
   // Offline data props (home page)
   offlineStats?: {
     total_roads: number;
@@ -49,7 +49,7 @@ interface SettingsDrawerProps {
   downloadProgress?: string;
   onDownloadData?: () => void;
   onClearData?: () => void;
-  
+
   // GPS settings props
   gpsSettings?: {
     ekfEnabled: boolean;
@@ -59,14 +59,14 @@ interface SettingsDrawerProps {
     speedLookaheadTime?: number;
   };
   onUpdateGpsSetting?: (key: string, value: boolean | number) => void;
-  
+
   // Preferences props
   defaultRegion?: string;
   regions?: string[];
   onUpdateRegion?: (region: string) => void;
   windGustThreshold?: number;
   onUpdateWindGustThreshold?: (threshold: number) => void;
-  
+
   // Drive page specific
   showSpeedDisplay?: boolean;
   onToggleSpeedDisplay?: (value: boolean) => void;
@@ -74,14 +74,14 @@ interface SettingsDrawerProps {
   onToggleAfterCare?: (value: boolean) => void;
   afterCareLookaheadKm?: number;
   onUpdateAfterCareLookahead?: (km: number) => void;
-  
+
   // TC Tools props
   result?: unknown;
   setDistanceActive?: boolean;
   onStartSetDistance?: () => void;
   onExportReport?: () => void;
   exporting?: boolean;
-  
+
   // Admin sync props (home page)
   mrwaStatus?: {
     _meta?: {
@@ -106,7 +106,7 @@ interface SettingsDrawerProps {
   onSyncAll?: () => void;
   onSyncDataset?: (dataset: string) => void;
   onGenerateDebug?: () => void;
-  
+
   // Offline toggles
   offlineToggles?: {
     roadsList: boolean;
@@ -119,7 +119,7 @@ interface SettingsDrawerProps {
   };
   onUpdateOfflineToggle?: (key: keyof OfflineToggles, value: boolean) => void;
   onResetOfflineToggles?: () => void;
-  
+
   // Offline ready indicator
   offlineReady?: boolean;
 }
@@ -173,9 +173,10 @@ export function SettingsDrawer({
 
   // Page-specific info
   const pageName = variant === 'home' ? 'TC Work Zone Locator' : 'SLK Tracking';
-  const pageDescription = variant === 'home'
-    ? 'Mobile-first PWA for Traffic Controllers in Western Australia'
-    : 'GPS-based SLK tracking for Traffic Controllers in Western Australia';
+  const pageDescription =
+    variant === 'home'
+      ? 'Mobile-first PWA for Traffic Controllers in Western Australia'
+      : 'GPS-based SLK tracking for Traffic Controllers in Western Australia';
 
   return (
     <Drawer>
@@ -192,14 +193,15 @@ export function SettingsDrawer({
           <DrawerTitle className="text-blue-400 text-lg">Settings</DrawerTitle>
         </DrawerHeader>
         <div className="overflow-y-auto px-4 py-4 flex-1">
-
           {/* ABOUT Section */}
           <div className="mb-3">
             <button
               onClick={() => setShowAbout(!showAbout)}
               className="w-full text-left text-sm font-semibold text-cyan-400 py-2 flex items-center gap-2 border-b border-gray-700/50"
             >
-              <span className={`transition-transform duration-200 ${showAbout ? 'rotate-90' : ''}`}>›</span>
+              <span className={`transition-transform duration-200 ${showAbout ? 'rotate-90' : ''}`}>
+                ›
+              </span>
               ℹ️ About
             </button>
 
@@ -216,7 +218,10 @@ export function SettingsDrawer({
                 <div className="bg-gray-900/50 rounded-lg p-3 text-sm">
                   <h4 className="text-amber-400 font-semibold mb-2">📧 Contact</h4>
                   <p className="text-gray-400 text-xs">
-                    Developer: <a href="mailto:dev@jaytec.net" className="text-blue-400 hover:underline">dev@jaytec.net</a>
+                    Developer:{' '}
+                    <a href="mailto:dev@jaytec.net" className="text-blue-400 hover:underline">
+                      dev@jaytec.net
+                    </a>
                   </p>
                 </div>
 
@@ -262,7 +267,11 @@ export function SettingsDrawer({
               onClick={() => setShowLibrary(!showLibrary)}
               className="w-full text-left text-sm font-semibold text-purple-400 py-2 flex items-center gap-2 border-b border-gray-700/50 hover:text-purple-300 transition-colors"
             >
-              <span className={`transition-transform duration-200 ${showLibrary ? 'rotate-90' : ''}`}>›</span>
+              <span
+                className={`transition-transform duration-200 ${showLibrary ? 'rotate-90' : ''}`}
+              >
+                ›
+              </span>
               <span>📚</span>
               Library
             </button>
@@ -280,7 +289,9 @@ export function SettingsDrawer({
                   <button className="w-full text-left text-sm text-purple-300 py-1.5 px-2 flex items-center gap-2 hover:bg-purple-700/30 rounded transition-colors">
                     <span>🤖</span>
                     AI Q&A Assistant
-                    <span className="text-xs text-purple-400 bg-purple-900/50 px-1.5 py-0.5 rounded">NEW</span>
+                    <span className="text-xs text-purple-400 bg-purple-900/50 px-1.5 py-0.5 rounded">
+                      NEW
+                    </span>
                   </button>
                 </Link>
 
@@ -319,7 +330,11 @@ export function SettingsDrawer({
               onClick={() => setShowPreferences(!showPreferences)}
               className="w-full text-left text-sm font-semibold text-gray-300 py-2 flex items-center gap-2 border-b border-gray-700/50"
             >
-              <span className={`transition-transform duration-200 ${showPreferences ? 'rotate-90' : ''}`}>›</span>
+              <span
+                className={`transition-transform duration-200 ${showPreferences ? 'rotate-90' : ''}`}
+              >
+                ›
+              </span>
               ⚙️ Preferences
             </button>
 
@@ -334,10 +349,14 @@ export function SettingsDrawer({
                         onClick={() => onUpdateGpsSetting('ekfEnabled', !gpsSettings.ekfEnabled)}
                         className={`w-12 h-6 rounded-full transition-colors ${gpsSettings.ekfEnabled ? 'bg-purple-600' : 'bg-gray-600'}`}
                       >
-                        <span className={`block w-4 h-4 rounded-full bg-white transition-transform ${gpsSettings.ekfEnabled ? 'translate-x-6' : 'translate-x-0'}`}></span>
+                        <span
+                          className={`block w-4 h-4 rounded-full bg-white transition-transform ${gpsSettings.ekfEnabled ? 'translate-x-6' : 'translate-x-0'}`}
+                        ></span>
                       </button>
                     </div>
-                    <p className="text-xs text-gray-500">Kalman filter for smoother, accurate GPS tracking</p>
+                    <p className="text-xs text-gray-500">
+                      Kalman filter for smoother, accurate GPS tracking
+                    </p>
                   </>
                 )}
 
@@ -350,7 +369,9 @@ export function SettingsDrawer({
                         onClick={() => onToggleSpeedDisplay(!showSpeedDisplay)}
                         className={`w-12 h-6 rounded-full transition-colors ${showSpeedDisplay ? 'bg-cyan-600' : 'bg-gray-600'}`}
                       >
-                        <span className={`block w-4 h-4 rounded-full bg-white transition-transform ${showSpeedDisplay ? 'translate-x-6' : 'translate-x-0'}`}></span>
+                        <span
+                          className={`block w-4 h-4 rounded-full bg-white transition-transform ${showSpeedDisplay ? 'translate-x-6' : 'translate-x-0'}`}
+                        ></span>
                       </button>
                     </div>
                     <p className="text-xs text-gray-500">Display current speed and posted speed</p>
@@ -366,7 +387,9 @@ export function SettingsDrawer({
                         onClick={() => onToggleAfterCare(!showAfterCareOnDrive)}
                         className={`w-12 h-6 rounded-full transition-colors ${showAfterCareOnDrive ? 'bg-green-600' : 'bg-gray-600'}`}
                       >
-                        <span className={`block w-4 h-4 rounded-full bg-white transition-transform ${showAfterCareOnDrive ? 'translate-x-6' : 'translate-x-0'}`}></span>
+                        <span
+                          className={`block w-4 h-4 rounded-full bg-white transition-transform ${showAfterCareOnDrive ? 'translate-x-6' : 'translate-x-0'}`}
+                        ></span>
                       </button>
                     </div>
                     <p className="text-xs text-gray-500">Display nearby AfterCare signage alerts</p>
@@ -376,7 +399,9 @@ export function SettingsDrawer({
                 {/* AfterCare Lookahead Distance (drive page) */}
                 {onUpdateAfterCareLookahead && (
                   <div>
-                    <label className="block text-sm text-gray-400 mb-1">AfterCare Lookahead (km)</label>
+                    <label className="block text-sm text-gray-400 mb-1">
+                      AfterCare Lookahead (km)
+                    </label>
                     <div className="flex gap-2">
                       {[2, 5, 10, 20].map((km) => (
                         <Button
@@ -397,14 +422,16 @@ export function SettingsDrawer({
                   <div>
                     <label className="block text-sm text-gray-400 mb-1">Default Region</label>
                     <Select
-                      value={defaultRegion || "__none__"}
-                      onValueChange={(value) => onUpdateRegion(value === "__none__" ? "" : value)}
+                      value={defaultRegion || '__none__'}
+                      onValueChange={(value) => onUpdateRegion(value === '__none__' ? '' : value)}
                     >
                       <SelectTrigger className="bg-gray-700 border-gray-600 text-white h-10">
                         <SelectValue placeholder="Select default region" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-700 border-gray-600">
-                        <SelectItem value="__none__" className="text-gray-400">None</SelectItem>
+                        <SelectItem value="__none__" className="text-gray-400">
+                          None
+                        </SelectItem>
                         {regions.map((region) => (
                           <SelectItem key={region} value={region} className="text-white">
                             {region}
@@ -419,7 +446,9 @@ export function SettingsDrawer({
                 {/* Wind Gust Alert Threshold (home page) */}
                 {onUpdateWindGustThreshold && (
                   <div>
-                    <label className="block text-sm text-gray-400 mb-1">Wind Gust Alert Threshold</label>
+                    <label className="block text-sm text-gray-400 mb-1">
+                      Wind Gust Alert Threshold
+                    </label>
                     <div className="flex gap-2">
                       {[40, 50, 60, 80].map((threshold) => (
                         <Button
@@ -431,7 +460,9 @@ export function SettingsDrawer({
                         </Button>
                       ))}
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">Alert when gusts exceed this (km/h)</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Alert when gusts exceed this (km/h)
+                    </p>
                   </div>
                 )}
 
@@ -457,7 +488,9 @@ export function SettingsDrawer({
                   <label className="flex items-center justify-between cursor-pointer">
                     <div>
                       <span className="text-sm text-white">Early Warnings</span>
-                      <p className="text-xs text-gray-500">Alert earlier at higher speeds (3 sec travel time)</p>
+                      <p className="text-xs text-gray-500">
+                        Alert earlier at higher speeds (3 sec travel time)
+                      </p>
                     </div>
                     <input
                       type="checkbox"
@@ -477,7 +510,11 @@ export function SettingsDrawer({
               onClick={() => setShowSpeedOverrides(!showSpeedOverrides)}
               className="w-full text-left text-sm font-semibold text-orange-400 py-2 flex items-center gap-2 border-b border-gray-700/50"
             >
-              <span className={`transition-transform duration-200 ${showSpeedOverrides ? 'rotate-90' : ''}`}>›</span>
+              <span
+                className={`transition-transform duration-200 ${showSpeedOverrides ? 'rotate-90' : ''}`}
+              >
+                ›
+              </span>
               🔧 Speed Zone Overrides
             </button>
 
@@ -485,8 +522,8 @@ export function SettingsDrawer({
               <div className="space-y-3 mt-2 pl-3 border-l-4 border-orange-500/60">
                 <div className="bg-gray-900/50 rounded-lg p-3">
                   <p className="text-xs text-gray-400 mb-2">
-                    Community-verified corrections for MRWA speed zone data.
-                    Overrides are applied automatically when you search or track on affected roads.
+                    Community-verified corrections for MRWA speed zone data. Overrides are applied
+                    automatically when you search or track on affected roads.
                   </p>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-400">Status:</span>
@@ -502,8 +539,8 @@ export function SettingsDrawer({
                   </div>
                 </div>
                 <p className="text-xs text-gray-500">
-                  Override data is bundled with the app and loaded automatically.
-                  Corrections are field-verified where MRWA data is outdated after road works.
+                  Override data is bundled with the app and loaded automatically. Corrections are
+                  field-verified where MRWA data is outdated after road works.
                 </p>
                 <Link href="/overrides">
                   <Button className="w-full bg-orange-600 hover:bg-orange-700 text-sm">
@@ -520,7 +557,11 @@ export function SettingsDrawer({
               onClick={() => setShowTcTools(!showTcTools)}
               className="w-full text-left text-sm font-semibold text-cyan-400 py-2 flex items-center gap-2 border-b border-gray-700/50"
             >
-              <span className={`transition-transform duration-200 ${showTcTools ? 'rotate-90' : ''}`}>›</span>
+              <span
+                className={`transition-transform duration-200 ${showTcTools ? 'rotate-90' : ''}`}
+              >
+                ›
+              </span>
               🛠️ TC Tools
             </button>
 
@@ -596,7 +637,11 @@ export function SettingsDrawer({
                 onClick={() => setShowGpsTracking(!showGpsTracking)}
                 className="w-full text-left text-sm font-semibold text-purple-400 py-2 flex items-center gap-2 border-b border-gray-700/50"
               >
-                <span className={`transition-transform duration-200 ${showGpsTracking ? 'rotate-90' : ''}`}>›</span>
+                <span
+                  className={`transition-transform duration-200 ${showGpsTracking ? 'rotate-90' : ''}`}
+                >
+                  ›
+                </span>
                 📍 GPS & Tracking
               </button>
 
@@ -604,13 +649,17 @@ export function SettingsDrawer({
                 <div className="space-y-3 mt-2 pl-3 border-l-4 border-purple-500/60">
                   {/* GPS Calibration */}
                   <div className="bg-gray-900 rounded-lg p-3">
-                    <h4 className="text-sm font-semibold text-amber-400 mb-3">🎯 GPS Calibration</h4>
+                    <h4 className="text-sm font-semibold text-amber-400 mb-3">
+                      🎯 GPS Calibration
+                    </h4>
 
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-400">Lag Compensation</span>
                         <span className="text-sm font-mono text-yellow-400">
-                          {gpsSettings.gpsLagCompensation && gpsSettings.gpsLagCompensation > 0 ? `+${gpsSettings.gpsLagCompensation}s` : 'Not set'}
+                          {gpsSettings.gpsLagCompensation && gpsSettings.gpsLagCompensation > 0
+                            ? `+${gpsSettings.gpsLagCompensation}s`
+                            : 'Not set'}
                         </span>
                       </div>
 
@@ -619,7 +668,7 @@ export function SettingsDrawer({
                       </p>
 
                       <Button
-                        onClick={() => window.location.href = '/calibrate'}
+                        onClick={() => (window.location.href = '/calibrate')}
                         className="w-full bg-amber-600 hover:bg-amber-700 text-sm"
                       >
                         🎯 Open Calibration Tool
@@ -638,7 +687,11 @@ export function SettingsDrawer({
                 onClick={() => setShowOfflineData(!showOfflineData)}
                 className="w-full text-left text-sm font-semibold text-blue-400 py-2 flex items-center gap-2 border-b border-gray-700/50"
               >
-                <span className={`transition-transform duration-200 ${showOfflineData ? 'rotate-90' : ''}`}>›</span>
+                <span
+                  className={`transition-transform duration-200 ${showOfflineData ? 'rotate-90' : ''}`}
+                >
+                  ›
+                </span>
                 📦 Offline Data
               </button>
 
@@ -647,14 +700,22 @@ export function SettingsDrawer({
                   {offlineStats ? (
                     <div className="text-sm">
                       <p className="text-green-400">✓ Offline data downloaded</p>
-                      <p className="text-gray-400">{offlineStats.total_roads.toLocaleString()} roads</p>
+                      <p className="text-gray-400">
+                        {offlineStats.total_roads.toLocaleString()} roads
+                      </p>
                       {offlineStats.pavement_roads && (
-                        <p className="text-gray-400">{offlineStats.pavement_roads.toLocaleString()} roads with pavement data</p>
+                        <p className="text-gray-400">
+                          {offlineStats.pavement_roads.toLocaleString()} roads with pavement data
+                        </p>
                       )}
                       {offlineStats.traffic_roads && (
-                        <p className="text-gray-400">{offlineStats.traffic_roads.toLocaleString()} roads with traffic data</p>
+                        <p className="text-gray-400">
+                          {offlineStats.traffic_roads.toLocaleString()} roads with traffic data
+                        </p>
                       )}
-                      <p className="text-gray-500 text-xs">Downloaded: {new Date(offlineStats.download_date).toLocaleDateString()}</p>
+                      <p className="text-gray-500 text-xs">
+                        Downloaded: {new Date(offlineStats.download_date).toLocaleDateString()}
+                      </p>
                     </div>
                   ) : (
                     <p className="text-gray-400 text-sm">
@@ -663,7 +724,9 @@ export function SettingsDrawer({
                   )}
 
                   {downloadProgress && (
-                    <p className={`text-sm ${downloadProgress.startsWith('✓') ? 'text-green-400' : downloadProgress.startsWith('Error') ? 'text-red-400' : 'text-blue-400'}`}>
+                    <p
+                      className={`text-sm ${downloadProgress.startsWith('✓') ? 'text-green-400' : downloadProgress.startsWith('Error') ? 'text-red-400' : 'text-blue-400'}`}
+                    >
                       {downloadProgress}
                     </p>
                   )}
@@ -674,7 +737,11 @@ export function SettingsDrawer({
                       disabled={downloading}
                       className="flex-1 bg-green-600 hover:bg-green-700"
                     >
-                      {downloading ? 'Downloading...' : offlineStats ? 'Update Data' : 'Download Data'}
+                      {downloading
+                        ? 'Downloading...'
+                        : offlineStats
+                          ? 'Update Data'
+                          : 'Download Data'}
                     </Button>
                     {offlineStats && onClearData && (
                       <Button
@@ -691,7 +758,9 @@ export function SettingsDrawer({
                   {offlineStats && offlineToggles && onUpdateOfflineToggle && (
                     <div className="mt-4 pt-3 border-t border-gray-700">
                       <div className="flex items-center justify-between mb-2">
-                        <p className="text-sm font-semibold text-amber-400">⚡ Data Source Toggles</p>
+                        <p className="text-sm font-semibold text-amber-400">
+                          ⚡ Data Source Toggles
+                        </p>
                         {onResetOfflineToggles && (
                           <Button
                             onClick={onResetOfflineToggles}
@@ -704,20 +773,26 @@ export function SettingsDrawer({
                         )}
                       </div>
                       <p className="text-xs text-gray-500 mb-3">
-                        Default: OFFLINE mode (uses local data first, falls back to online if unavailable).
+                        Default: OFFLINE mode (uses local data first, falls back to online if
+                        unavailable).
                       </p>
 
                       <div className="space-y-2">
-                        {([
-                          { key: 'roadsList', label: 'Roads List' },
-                          { key: 'workZoneLookup', label: 'Work Zone Lookup' },
-                          { key: 'speedZones', label: 'Speed Zones' },
-                          { key: 'railCrossings', label: 'Rail Crossings' },
-                          { key: 'regulatorySigns', label: 'Regulatory Signs' },
-                          { key: 'warningSigns', label: 'Warning Signs' },
-                          { key: 'amenities', label: 'Amenities (Hospital, Fuel, Toilet)' },
-                        ] as const).map(({ key, label }) => (
-                          <label key={key} className="flex items-center justify-between p-2 bg-gray-800 rounded cursor-pointer hover:bg-gray-750">
+                        {(
+                          [
+                            { key: 'roadsList', label: 'Roads List' },
+                            { key: 'workZoneLookup', label: 'Work Zone Lookup' },
+                            { key: 'speedZones', label: 'Speed Zones' },
+                            { key: 'railCrossings', label: 'Rail Crossings' },
+                            { key: 'regulatorySigns', label: 'Regulatory Signs' },
+                            { key: 'warningSigns', label: 'Warning Signs' },
+                            { key: 'amenities', label: 'Amenities (Hospital, Fuel, Toilet)' },
+                          ] as const
+                        ).map(({ key, label }) => (
+                          <label
+                            key={key}
+                            className="flex items-center justify-between p-2 bg-gray-800 rounded cursor-pointer hover:bg-gray-750"
+                          >
                             <div className="flex items-center gap-2">
                               <input
                                 type="checkbox"
@@ -727,7 +802,9 @@ export function SettingsDrawer({
                               />
                               <span className="text-sm text-gray-300">{label}</span>
                             </div>
-                            <span className={`text-xs px-2 py-0.5 rounded ${offlineToggles[key] ? 'bg-amber-600 text-white' : 'bg-green-600/30 text-green-300'}`}>
+                            <span
+                              className={`text-xs px-2 py-0.5 rounded ${offlineToggles[key] ? 'bg-amber-600 text-white' : 'bg-green-600/30 text-green-300'}`}
+                            >
                               {offlineToggles[key] ? 'OFFLINE' : 'ONLINE'}
                             </span>
                           </label>
@@ -747,21 +824,29 @@ export function SettingsDrawer({
                 onClick={() => setShowAdminSync(!showAdminSync)}
                 className="w-full text-left text-sm font-semibold text-amber-400 py-2 flex items-center gap-2 border-b border-gray-700/50"
               >
-                <span className={`transition-transform duration-200 ${showAdminSync ? 'rotate-90' : ''}`}>›</span>
+                <span
+                  className={`transition-transform duration-200 ${showAdminSync ? 'rotate-90' : ''}`}
+                >
+                  ›
+                </span>
                 🔧 Admin Data Sync
               </button>
 
               {showAdminSync && (
                 <div className="space-y-3 mt-2 pl-3 border-l-4 border-amber-500/60">
                   <p className="text-xs text-gray-500">
-                    Sync data directly from MRWA servers. Downloads in chunks to avoid memory issues.
-                    Signage data is filtered to speed/railway signs only.
+                    Sync data directly from MRWA servers. Downloads in chunks to avoid memory
+                    issues. Signage data is filtered to speed/railway signs only.
                   </p>
 
                   {/* MRWA Connection Status */}
                   {mrwaStatus?._meta && (
-                    <div className={`rounded p-2 text-xs ${mrwaStatus._meta.mrwaReachable ? 'bg-green-900/30' : 'bg-amber-900/30'}`}>
-                      <p className={`font-semibold mb-1 ${mrwaStatus._meta.mrwaReachable ? 'text-green-400' : 'text-amber-400'}`}>
+                    <div
+                      className={`rounded p-2 text-xs ${mrwaStatus._meta.mrwaReachable ? 'bg-green-900/30' : 'bg-amber-900/30'}`}
+                    >
+                      <p
+                        className={`font-semibold mb-1 ${mrwaStatus._meta.mrwaReachable ? 'text-green-400' : 'text-amber-400'}`}
+                      >
                         {mrwaStatus._meta.mrwaReachable ? '✓ MRWA Connected' : '⚠ MRWA Unreachable'}
                       </p>
                       <p className="text-gray-400">{mrwaStatus._meta.message}</p>
@@ -774,15 +859,25 @@ export function SettingsDrawer({
                       <p className="text-gray-400 font-semibold mb-1">MRWA Server Status:</p>
                       <div className="grid grid-cols-2 gap-1">
                         <span className="text-gray-500">Roads:</span>
-                        <span className="text-gray-300">{mrwaStatus.roads?.total?.toLocaleString() || '?'}</span>
+                        <span className="text-gray-300">
+                          {mrwaStatus.roads?.total?.toLocaleString() || '?'}
+                        </span>
                         <span className="text-gray-500">Speed Zones:</span>
-                        <span className="text-gray-300">{mrwaStatus.speedZones?.total?.toLocaleString() || '?'}</span>
+                        <span className="text-gray-300">
+                          {mrwaStatus.speedZones?.total?.toLocaleString() || '?'}
+                        </span>
                         <span className="text-gray-500">Rail Crossings:</span>
-                        <span className="text-gray-300">{mrwaStatus.railCrossings?.total?.toLocaleString() || '?'}</span>
+                        <span className="text-gray-300">
+                          {mrwaStatus.railCrossings?.total?.toLocaleString() || '?'}
+                        </span>
                         <span className="text-gray-500">Reg Signs:</span>
-                        <span className="text-gray-300">{mrwaStatus.regulatorySigns?.total?.toLocaleString() || '?'}</span>
+                        <span className="text-gray-300">
+                          {mrwaStatus.regulatorySigns?.total?.toLocaleString() || '?'}
+                        </span>
                         <span className="text-gray-500">Warn Signs:</span>
-                        <span className="text-gray-300">{mrwaStatus.warningSigns?.total?.toLocaleString() || '?'}</span>
+                        <span className="text-gray-300">
+                          {mrwaStatus.warningSigns?.total?.toLocaleString() || '?'}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -798,23 +893,43 @@ export function SettingsDrawer({
 
                         <span className="text-gray-300">Roads</span>
                         <span className="text-gray-300">{datasetStats.roads.count}</span>
-                        <span className="text-gray-400">{datasetStats.roads.lastSync ? new Date(datasetStats.roads.lastSync).toLocaleDateString() : '-'}</span>
+                        <span className="text-gray-400">
+                          {datasetStats.roads.lastSync
+                            ? new Date(datasetStats.roads.lastSync).toLocaleDateString()
+                            : '-'}
+                        </span>
 
                         <span className="text-gray-300">Speed Zones</span>
                         <span className="text-gray-300">{datasetStats.speedZones.count}</span>
-                        <span className="text-gray-400">{datasetStats.speedZones.lastSync ? new Date(datasetStats.speedZones.lastSync).toLocaleDateString() : '-'}</span>
+                        <span className="text-gray-400">
+                          {datasetStats.speedZones.lastSync
+                            ? new Date(datasetStats.speedZones.lastSync).toLocaleDateString()
+                            : '-'}
+                        </span>
 
                         <span className="text-gray-300">Rail Crossings</span>
                         <span className="text-gray-300">{datasetStats.railCrossings.count}</span>
-                        <span className="text-gray-400">{datasetStats.railCrossings.lastSync ? new Date(datasetStats.railCrossings.lastSync).toLocaleDateString() : '-'}</span>
+                        <span className="text-gray-400">
+                          {datasetStats.railCrossings.lastSync
+                            ? new Date(datasetStats.railCrossings.lastSync).toLocaleDateString()
+                            : '-'}
+                        </span>
 
                         <span className="text-gray-300">Reg Signs</span>
                         <span className="text-gray-300">{datasetStats.regulatorySigns.count}</span>
-                        <span className="text-gray-400">{datasetStats.regulatorySigns.lastSync ? new Date(datasetStats.regulatorySigns.lastSync).toLocaleDateString() : '-'}</span>
+                        <span className="text-gray-400">
+                          {datasetStats.regulatorySigns.lastSync
+                            ? new Date(datasetStats.regulatorySigns.lastSync).toLocaleDateString()
+                            : '-'}
+                        </span>
 
                         <span className="text-gray-300">Warn Signs</span>
                         <span className="text-gray-300">{datasetStats.warningSigns.count}</span>
-                        <span className="text-gray-400">{datasetStats.warningSigns.lastSync ? new Date(datasetStats.warningSigns.lastSync).toLocaleDateString() : '-'}</span>
+                        <span className="text-gray-400">
+                          {datasetStats.warningSigns.lastSync
+                            ? new Date(datasetStats.warningSigns.lastSync).toLocaleDateString()
+                            : '-'}
+                        </span>
                       </div>
                     </div>
                   )}
@@ -826,14 +941,27 @@ export function SettingsDrawer({
                       {Object.entries(syncProgress).map(([dataset, progress]) => (
                         <div key={dataset} className="mb-1">
                           <div className="flex justify-between">
-                            <span className="text-gray-300 capitalize">{dataset.replace(/([A-Z])/g, ' $1')}</span>
-                            <span className={progress.status === 'complete' ? 'text-green-400' : progress.status === 'error' ? 'text-red-400' : 'text-blue-400'}>
+                            <span className="text-gray-300 capitalize">
+                              {dataset.replace(/([A-Z])/g, ' $1')}
+                            </span>
+                            <span
+                              className={
+                                progress.status === 'complete'
+                                  ? 'text-green-400'
+                                  : progress.status === 'error'
+                                    ? 'text-red-400'
+                                    : 'text-blue-400'
+                              }
+                            >
                               {progress.message}
                             </span>
                           </div>
                           {progress.status === 'syncing' && (
                             <div className="w-full bg-gray-700 h-1 rounded mt-1">
-                              <div className="bg-blue-500 h-1 rounded" style={{ width: `${progress.percent}%` }}></div>
+                              <div
+                                className="bg-blue-500 h-1 rounded"
+                                style={{ width: `${progress.percent}%` }}
+                              ></div>
                             </div>
                           )}
                         </div>
@@ -848,19 +976,29 @@ export function SettingsDrawer({
                       disabled={syncingDatasets.size > 0}
                       className="w-full bg-amber-600 hover:bg-amber-700 text-sm"
                     >
-                      {syncingDatasets.size > 0 ? `Syncing ${syncingDatasets.size} dataset(s)...` : '🔄 Sync All from MRWA'}
+                      {syncingDatasets.size > 0
+                        ? `Syncing ${syncingDatasets.size} dataset(s)...`
+                        : '🔄 Sync All from MRWA'}
                     </Button>
 
                     {onSyncDataset && (
                       <div className="grid grid-cols-2 gap-2">
-                        {['roads', 'speedZones', 'railCrossings', 'regulatorySigns', 'warningSigns'].map(dataset => (
+                        {[
+                          'roads',
+                          'speedZones',
+                          'railCrossings',
+                          'regulatorySigns',
+                          'warningSigns',
+                        ].map((dataset) => (
                           <Button
                             key={dataset}
                             onClick={() => onSyncDataset(dataset)}
                             disabled={syncingDatasets.has(dataset)}
                             className="bg-gray-600 hover:bg-gray-500 text-xs py-1 h-8"
                           >
-                            {syncingDatasets.has(dataset) ? '...' : `Sync ${dataset.replace(/([A-Z])/g, ' $1')}`}
+                            {syncingDatasets.has(dataset)
+                              ? '...'
+                              : `Sync ${dataset.replace(/([A-Z])/g, ' $1')}`}
                           </Button>
                         ))}
                       </div>
@@ -880,7 +1018,6 @@ export function SettingsDrawer({
               )}
             </div>
           )}
-
         </div>
       </DrawerContent>
     </Drawer>

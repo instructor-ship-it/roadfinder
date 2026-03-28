@@ -24,7 +24,7 @@ import {
   TrafficCountRecord as TCountRecord,
 } from '@/lib/traffic-counter-storage';
 
-const APP_VERSION = 'RC 1.9.1';
+const APP_VERSION = 'RC 1.9.6';
 
 // ============================================
 // TYPES
@@ -59,7 +59,7 @@ export default function TrafficCounterPage() {
   const [timeRemaining, setTimeRemaining] = useState<number>(5 * 60); // seconds
   const [timerStatus, setTimerStatus] = useState<TimerStatus>('idle');
   const [startTime, setStartTime] = useState<Date | null>(null);
-  
+
   // Counter state
   const [directionMode, setDirectionMode] = useState<CountDirection>('both-ways');
   const [counts, setCounts] = useState<CounterState>({
@@ -68,7 +68,7 @@ export default function TrafficCounterPage() {
     trueRightLight: 0,
     trueRightHeavy: 0,
   });
-  
+
   // Location state
   const [location, setLocation] = useState<LocationData>({
     road_id: '',
@@ -79,26 +79,26 @@ export default function TrafficCounterPage() {
     region: '',
   });
   const [loadingLocation, setLoadingLocation] = useState(false);
-  
+
   // History state
   const [history, setHistory] = useState<TrafficCountRecord[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [showReference, setShowReference] = useState(false);
   const [notes, setNotes] = useState('');
-  
+
   // Refs
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  
+
   // Load history on mount
   useEffect(() => {
     setHistory(getTrafficCountHistory());
   }, []);
-  
+
   // Timer logic
   useEffect(() => {
     if (timerStatus === 'running' && timeRemaining > 0) {
       timerRef.current = setTimeout(() => {
-        setTimeRemaining(prev => {
+        setTimeRemaining((prev) => {
           if (prev <= 1) {
             setTimerStatus('complete');
             // Vibrate to signal completion
@@ -111,18 +111,18 @@ export default function TrafficCounterPage() {
         });
       }, 1000);
     }
-    
+
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
     };
   }, [timerStatus, timeRemaining]);
-  
+
   // Wake lock to keep screen on
   useEffect(() => {
     let wakeLock: WakeLockSentinel | null = null;
-    
+
     const requestWakeLock = async () => {
       if (timerStatus === 'running' && 'wakeLock' in navigator) {
         try {
@@ -132,27 +132,27 @@ export default function TrafficCounterPage() {
         }
       }
     };
-    
+
     requestWakeLock();
-    
+
     return () => {
       if (wakeLock) {
         wakeLock.release();
       }
     };
   }, [timerStatus]);
-  
+
   // ============================================
   // HANDLERS
   // ============================================
-  
+
   const handleDurationSelect = (mins: number) => {
     if (timerStatus === 'idle') {
       setDuration(mins);
       setTimeRemaining(mins * 60);
     }
   };
-  
+
   const handleCustomDuration = () => {
     if (timerStatus === 'idle' && customDuration) {
       const mins = parseInt(customDuration, 10);
@@ -163,18 +163,18 @@ export default function TrafficCounterPage() {
       }
     }
   };
-  
+
   const startTimer = () => {
     if (timerStatus === 'idle') {
       setStartTime(new Date());
     }
     setTimerStatus('running');
   };
-  
+
   const pauseTimer = () => {
     setTimerStatus('paused');
   };
-  
+
   const resetCounter = () => {
     setTimerStatus('idle');
     setTimeRemaining(duration * 60);
@@ -187,39 +187,39 @@ export default function TrafficCounterPage() {
     setStartTime(null);
     setNotes('');
   };
-  
+
   const incrementCount = (key: keyof CounterState) => {
     // Haptic feedback
     if (navigator.vibrate) {
       navigator.vibrate(10);
     }
-    
-    setCounts(prev => ({
+
+    setCounts((prev) => ({
       ...prev,
       [key]: prev[key] + 1,
     }));
   };
-  
+
   const decrementCount = (key: keyof CounterState) => {
     // Haptic feedback
     if (navigator.vibrate) {
       navigator.vibrate(30);
     }
-    
-    setCounts(prev => ({
+
+    setCounts((prev) => ({
       ...prev,
       [key]: Math.max(0, prev[key] - 1),
     }));
   };
-  
+
   const fetchLocation = useCallback(async () => {
     if (!navigator.geolocation) {
       alert('GPS not available');
       return;
     }
-    
+
     setLoadingLocation(true);
-    
+
     try {
       // Get GPS position
       const position = await new Promise<GeolocationPosition>((resolve, reject) => {
@@ -228,14 +228,12 @@ export default function TrafficCounterPage() {
           timeout: 10000,
         });
       });
-      
+
       const { latitude, longitude } = position.coords;
-      
+
       // Fetch road info from API
-      const response = await fetch(
-        `/api/gps?lat=${latitude}&lon=${longitude}`
-      );
-      
+      const response = await fetch(`/api/gps?lat=${latitude}&lon=${longitude}`);
+
       if (response.ok) {
         const data = await response.json();
         setLocation({
@@ -248,7 +246,7 @@ export default function TrafficCounterPage() {
         });
       } else {
         // Still save coordinates even if road not found
-        setLocation(prev => ({
+        setLocation((prev) => ({
           ...prev,
           lat: latitude,
           lon: longitude,
@@ -261,20 +259,22 @@ export default function TrafficCounterPage() {
       setLoadingLocation(false);
     }
   }, []);
-  
+
   const saveCount = async () => {
     const endTime = new Date();
-    
-    const totalLight = directionMode === 'both-ways'
-      ? counts.trueLeftLight + counts.trueRightLight
-      : counts.trueLeftLight;
-    
-    const totalHeavy = directionMode === 'both-ways'
-      ? counts.trueLeftHeavy + counts.trueRightHeavy
-      : counts.trueLeftHeavy;
-    
+
+    const totalLight =
+      directionMode === 'both-ways'
+        ? counts.trueLeftLight + counts.trueRightLight
+        : counts.trueLeftLight;
+
+    const totalHeavy =
+      directionMode === 'both-ways'
+        ? counts.trueLeftHeavy + counts.trueRightHeavy
+        : counts.trueLeftHeavy;
+
     const totalVehicles = totalLight + totalHeavy;
-    
+
     const record = createTrafficCountRecord({
       road_id: location.road_id || 'UNKNOWN',
       road_name: location.road_name || 'Unknown Road',
@@ -302,28 +302,32 @@ export default function TrafficCounterPage() {
         ),
         duration
       ),
-      date: startTime ? startTime.toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
-      start_time: startTime ? `${startTime.getHours().toString().padStart(2, '0')}:${startTime.getMinutes().toString().padStart(2, '0')}` : '00:00',
+      date: startTime
+        ? startTime.toISOString().split('T')[0]
+        : new Date().toISOString().split('T')[0],
+      start_time: startTime
+        ? `${startTime.getHours().toString().padStart(2, '0')}:${startTime.getMinutes().toString().padStart(2, '0')}`
+        : '00:00',
       end_time: `${endTime.getHours().toString().padStart(2, '0')}:${endTime.getMinutes().toString().padStart(2, '0')}`,
       notes: notes,
     });
-    
+
     // Refresh history
     setHistory(getTrafficCountHistory());
-    
+
     // Reset
     resetCounter();
-    
+
     alert('Count saved successfully!');
   };
-  
+
   const deleteRecord = (id: string) => {
     if (confirm('Delete this record?')) {
       deleteTrafficCountRecord(id);
       setHistory(getTrafficCountHistory());
     }
   };
-  
+
   const copyRecordText = (record: TrafficCountRecord) => {
     const text = generateShareText(record);
     navigator.clipboard.writeText(text);
@@ -332,39 +336,40 @@ export default function TrafficCounterPage() {
     }
     alert('Copied to clipboard!');
   };
-  
+
   // ============================================
   // COMPUTED VALUES
   // ============================================
-  
-  const totalLight = directionMode === 'both-ways'
-    ? counts.trueLeftLight + counts.trueRightLight
-    : counts.trueLeftLight;
-  
-  const totalHeavy = directionMode === 'both-ways'
-    ? counts.trueLeftHeavy + counts.trueRightHeavy
-    : counts.trueLeftHeavy;
-  
+
+  const totalLight =
+    directionMode === 'both-ways'
+      ? counts.trueLeftLight + counts.trueRightLight
+      : counts.trueLeftLight;
+
+  const totalHeavy =
+    directionMode === 'both-ways'
+      ? counts.trueLeftHeavy + counts.trueRightHeavy
+      : counts.trueLeftHeavy;
+
   const totalVehicles = totalLight + totalHeavy;
-  
-  const elapsedMinutes = duration - (timeRemaining / 60);
-  const currentVph = elapsedMinutes > 0 
-    ? calculateVPH(totalVehicles, Math.min(elapsedMinutes, duration))
-    : 0;
-  
+
+  const elapsedMinutes = duration - timeRemaining / 60;
+  const currentVph =
+    elapsedMinutes > 0 ? calculateVPH(totalVehicles, Math.min(elapsedMinutes, duration)) : 0;
+
   const heavyPercent = calculateHeavyPercentage(totalLight, totalHeavy);
-  
+
   // Format time display
   const formatTimeDisplay = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
-  
+
   // ============================================
   // RENDER
   // ============================================
-  
+
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Header */}
@@ -403,7 +408,7 @@ export default function TrafficCounterPage() {
           </div>
         </div>
       </div>
-      
+
       <div className="max-w-4xl mx-auto px-4 py-4 space-y-4">
         {/* Reference Tables Modal */}
         {showReference && (
@@ -436,10 +441,12 @@ export default function TrafficCounterPage() {
                   </table>
                 </div>
               </div>
-              
+
               {/* Shuttle Flow */}
               <div>
-                <h4 className="font-semibold text-green-400 mb-1">Shuttle Flow Length (Both Directions)</h4>
+                <h4 className="font-semibold text-green-400 mb-1">
+                  Shuttle Flow Length (Both Directions)
+                </h4>
                 <div className="text-xs overflow-x-auto">
                   <table className="w-full text-left">
                     <thead className="text-gray-400">
@@ -460,7 +467,7 @@ export default function TrafficCounterPage() {
                   <p className="text-gray-500 mt-1">* Requires risk assessment</p>
                 </div>
               </div>
-              
+
               {/* Reduction Factors */}
               <div>
                 <h4 className="font-semibold text-amber-400 mb-1">Volume Reduction Factors</h4>
@@ -473,10 +480,12 @@ export default function TrafficCounterPage() {
                   ))}
                 </div>
               </div>
-              
+
               {/* Queue Multipliers */}
               <div>
-                <h4 className="font-semibold text-purple-400 mb-1">Queue Length Multipliers (5 min count)</h4>
+                <h4 className="font-semibold text-purple-400 mb-1">
+                  Queue Length Multipliers (5 min count)
+                </h4>
                 <div className="text-xs overflow-x-auto">
                   <table className="w-full text-left">
                     <thead className="text-gray-400">
@@ -498,7 +507,7 @@ export default function TrafficCounterPage() {
                   </table>
                 </div>
               </div>
-              
+
               <Button
                 onClick={() => setShowReference(false)}
                 className="w-full bg-gray-700 hover:bg-gray-600"
@@ -508,7 +517,7 @@ export default function TrafficCounterPage() {
             </CardContent>
           </Card>
         )}
-        
+
         {/* History Modal */}
         {showHistory && (
           <Card className="bg-gray-800 border-gray-700">
@@ -521,10 +530,7 @@ export default function TrafficCounterPage() {
               ) : (
                 <div className="space-y-2 max-h-96 overflow-y-auto">
                   {history.map((record) => (
-                    <div
-                      key={record.id}
-                      className="bg-gray-900 rounded-lg p-3 text-sm"
-                    >
+                    <div key={record.id} className="bg-gray-900 rounded-lg p-3 text-sm">
                       <div className="flex justify-between items-start mb-1">
                         <div>
                           <span className="font-semibold text-white">{record.road_id}</span>
@@ -533,7 +539,8 @@ export default function TrafficCounterPage() {
                         <span className="text-gray-500 text-xs">{formatAusDate(record.date)}</span>
                       </div>
                       <div className="text-gray-400 text-xs mb-1">
-                        SLK {record.slk?.toFixed(2) || 'N/A'} | {record.duration_minutes}min | {record.direction_mode === 'both-ways' ? 'Both ways' : 'One way'}
+                        SLK {record.slk?.toFixed(2) || 'N/A'} | {record.duration_minutes}min |{' '}
+                        {record.direction_mode === 'both-ways' ? 'Both ways' : 'One way'}
                       </div>
                       <div className="flex justify-between items-center">
                         <div className="text-sm">
@@ -566,7 +573,7 @@ export default function TrafficCounterPage() {
                   ))}
                 </div>
               )}
-              
+
               <div className="flex gap-2 mt-3">
                 <Button
                   onClick={() => {
@@ -594,7 +601,7 @@ export default function TrafficCounterPage() {
                   🗑️ Clear All
                 </Button>
               </div>
-              
+
               <Button
                 onClick={() => setShowHistory(false)}
                 className="w-full mt-2 bg-gray-700 hover:bg-gray-600"
@@ -604,7 +611,7 @@ export default function TrafficCounterPage() {
             </CardContent>
           </Card>
         )}
-        
+
         {/* Timer Section */}
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-4">
@@ -647,16 +654,18 @@ export default function TrafficCounterPage() {
                 </div>
               </div>
             </div>
-            
+
             {/* Timer Display */}
             <div className="text-center mb-4">
-              <div className={`text-6xl font-mono font-bold ${
-                timerStatus === 'complete' 
-                  ? 'text-green-400' 
-                  : timeRemaining <= 60 
-                    ? 'text-red-400 animate-pulse' 
-                    : 'text-white'
-              }`}>
+              <div
+                className={`text-6xl font-mono font-bold ${
+                  timerStatus === 'complete'
+                    ? 'text-green-400'
+                    : timeRemaining <= 60
+                      ? 'text-red-400 animate-pulse'
+                      : 'text-white'
+                }`}
+              >
                 {formatTimeDisplay(timeRemaining)}
               </div>
               <div className="text-sm text-gray-400 mt-1">
@@ -666,7 +675,7 @@ export default function TrafficCounterPage() {
                 {timerStatus === 'complete' && '✓ Complete!'}
               </div>
             </div>
-            
+
             {/* Timer Controls */}
             <div className="flex gap-2">
               {timerStatus === 'idle' && (
@@ -704,7 +713,7 @@ export default function TrafficCounterPage() {
             </div>
           </CardContent>
         </Card>
-        
+
         {/* Direction Mode */}
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-4">
@@ -734,13 +743,13 @@ export default function TrafficCounterPage() {
               </Button>
             </div>
             <p className="text-xs text-gray-500 mt-2">
-              {directionMode === 'one-way' 
+              {directionMode === 'one-way'
                 ? 'Counting traffic in one direction (lane capacity planning)'
                 : 'Counting both directions (shuttle flow operations)'}
             </p>
           </CardContent>
         </Card>
-        
+
         {/* Location */}
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-4">
@@ -768,12 +777,14 @@ export default function TrafficCounterPage() {
               </div>
             ) : (
               <p className="text-gray-500 text-sm">
-                {location.lat ? 'Location captured (road not identified)' : 'Click to capture location'}
+                {location.lat
+                  ? 'Location captured (road not identified)'
+                  : 'Click to capture location'}
               </p>
             )}
           </CardContent>
         </Card>
-        
+
         {/* Counters */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* True Left */}
@@ -802,13 +813,17 @@ export default function TrafficCounterPage() {
                   <Button
                     onClick={() => incrementCount('trueLeftLight')}
                     className="flex-1 bg-green-600 hover:bg-green-700 h-14 text-2xl font-bold"
-                    disabled={timerStatus !== 'running' && timerStatus !== 'paused' && timerStatus !== 'complete'}
+                    disabled={
+                      timerStatus !== 'running' &&
+                      timerStatus !== 'paused' &&
+                      timerStatus !== 'complete'
+                    }
                   >
                     +1
                   </Button>
                 </div>
               </div>
-              
+
               {/* Heavy Vehicles */}
               <div className="bg-gray-900 rounded-lg p-3">
                 <div className="flex items-center justify-between mb-2">
@@ -826,24 +841,35 @@ export default function TrafficCounterPage() {
                   <Button
                     onClick={() => incrementCount('trueLeftHeavy')}
                     className="flex-1 bg-amber-600 hover:bg-amber-700 h-14 text-2xl font-bold"
-                    disabled={timerStatus !== 'running' && timerStatus !== 'paused' && timerStatus !== 'complete'}
+                    disabled={
+                      timerStatus !== 'running' &&
+                      timerStatus !== 'paused' &&
+                      timerStatus !== 'complete'
+                    }
                   >
                     +1
                   </Button>
                 </div>
               </div>
-              
+
               {/* True Left Stats */}
               <div className="text-center text-sm text-gray-400">
-                Total: <span className="text-white font-semibold">{counts.trueLeftLight + counts.trueLeftHeavy}</span>
+                Total:{' '}
+                <span className="text-white font-semibold">
+                  {counts.trueLeftLight + counts.trueLeftHeavy}
+                </span>
                 {' | '}
-                VPH: <span className="text-blue-400 font-semibold">
-                  {calculateVPH(counts.trueLeftLight + counts.trueLeftHeavy, elapsedMinutes > 0 ? Math.min(elapsedMinutes, duration) : duration)}
+                VPH:{' '}
+                <span className="text-blue-400 font-semibold">
+                  {calculateVPH(
+                    counts.trueLeftLight + counts.trueLeftHeavy,
+                    elapsedMinutes > 0 ? Math.min(elapsedMinutes, duration) : duration
+                  )}
                 </span>
               </div>
             </CardContent>
           </Card>
-          
+
           {/* True Right - only show if both-ways mode */}
           {directionMode === 'both-ways' && (
             <Card className="bg-gray-800 border-gray-700">
@@ -871,18 +897,24 @@ export default function TrafficCounterPage() {
                     <Button
                       onClick={() => incrementCount('trueRightLight')}
                       className="flex-1 bg-green-600 hover:bg-green-700 h-14 text-2xl font-bold"
-                      disabled={timerStatus !== 'running' && timerStatus !== 'paused' && timerStatus !== 'complete'}
+                      disabled={
+                        timerStatus !== 'running' &&
+                        timerStatus !== 'paused' &&
+                        timerStatus !== 'complete'
+                      }
                     >
                       +1
                     </Button>
                   </div>
                 </div>
-                
+
                 {/* Heavy Vehicles */}
                 <div className="bg-gray-900 rounded-lg p-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-gray-400 text-sm">🚛 Heavy</span>
-                    <span className="text-2xl font-bold text-amber-400">{counts.trueRightHeavy}</span>
+                    <span className="text-2xl font-bold text-amber-400">
+                      {counts.trueRightHeavy}
+                    </span>
                   </div>
                   <div className="flex gap-2">
                     <Button
@@ -895,26 +927,37 @@ export default function TrafficCounterPage() {
                     <Button
                       onClick={() => incrementCount('trueRightHeavy')}
                       className="flex-1 bg-amber-600 hover:bg-amber-700 h-14 text-2xl font-bold"
-                      disabled={timerStatus !== 'running' && timerStatus !== 'paused' && timerStatus !== 'complete'}
+                      disabled={
+                        timerStatus !== 'running' &&
+                        timerStatus !== 'paused' &&
+                        timerStatus !== 'complete'
+                      }
                     >
                       +1
                     </Button>
                   </div>
                 </div>
-                
+
                 {/* True Right Stats */}
                 <div className="text-center text-sm text-gray-400">
-                  Total: <span className="text-white font-semibold">{counts.trueRightLight + counts.trueRightHeavy}</span>
+                  Total:{' '}
+                  <span className="text-white font-semibold">
+                    {counts.trueRightLight + counts.trueRightHeavy}
+                  </span>
                   {' | '}
-                  VPH: <span className="text-blue-400 font-semibold">
-                    {calculateVPH(counts.trueRightLight + counts.trueRightHeavy, elapsedMinutes > 0 ? Math.min(elapsedMinutes, duration) : duration)}
+                  VPH:{' '}
+                  <span className="text-blue-400 font-semibold">
+                    {calculateVPH(
+                      counts.trueRightLight + counts.trueRightHeavy,
+                      elapsedMinutes > 0 ? Math.min(elapsedMinutes, duration) : duration
+                    )}
                   </span>
                 </div>
               </CardContent>
             </Card>
           )}
         </div>
-        
+
         {/* Live Stats */}
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-4">
@@ -937,36 +980,52 @@ export default function TrafficCounterPage() {
                 <div className="text-xs text-gray-500">Minutes Elapsed</div>
               </div>
             </div>
-            
+
             {/* Quick Reference */}
             {(timerStatus === 'complete' || totalVehicles > 0) && (
               <div className="mt-4 pt-4 border-t border-gray-700">
-                <h4 className="text-xs font-medium text-gray-500 mb-2">Quick Reference (Based on Current Count)</h4>
+                <h4 className="text-xs font-medium text-gray-500 mb-2">
+                  Quick Reference (Based on Current Count)
+                </h4>
                 <div className="text-xs space-y-1 text-gray-400">
                   <div className="flex justify-between">
                     <span>Lane Capacity (one dir):</span>
                     <span className="text-white">
-                      {currentVph <= 1000 ? '1 lane sufficient' : 
-                       currentVph <= 2000 ? '2 lanes needed' :
-                       currentVph <= 3000 ? '3 lanes needed' : '4+ lanes needed'}
+                      {currentVph <= 1000
+                        ? '1 lane sufficient'
+                        : currentVph <= 2000
+                          ? '2 lanes needed'
+                          : currentVph <= 3000
+                            ? '3 lanes needed'
+                            : '4+ lanes needed'}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Shuttle Flow Max Length:</span>
                     <span className="text-white">
-                      {currentVph >= 701 ? '70m' :
-                       currentVph >= 601 ? '100m' :
-                       currentVph >= 501 ? '150m' :
-                       currentVph >= 401 ? '250m' :
-                       currentVph >= 351 ? '400m' :
-                       currentVph >= 301 ? '600m' :
-                       currentVph >= 251 ? '800m*' :
-                       currentVph >= 201 ? '1200m*' : '2200m*'}
+                      {currentVph >= 701
+                        ? '70m'
+                        : currentVph >= 601
+                          ? '100m'
+                          : currentVph >= 501
+                            ? '150m'
+                            : currentVph >= 401
+                              ? '250m'
+                              : currentVph >= 351
+                                ? '400m'
+                                : currentVph >= 301
+                                  ? '600m'
+                                  : currentVph >= 251
+                                    ? '800m*'
+                                    : currentVph >= 201
+                                      ? '1200m*'
+                                      : '2200m*'}
                     </span>
                   </div>
                   {heavyPercent > 10 && (
                     <div className="text-amber-400 mt-2">
-                      ⚠️ Heavy vehicles &gt;10%: Apply 20% volume reduction for capacity calculations
+                      ⚠️ Heavy vehicles &gt;10%: Apply 20% volume reduction for capacity
+                      calculations
                     </div>
                   )}
                 </div>
@@ -974,13 +1033,15 @@ export default function TrafficCounterPage() {
             )}
           </CardContent>
         </Card>
-        
+
         {/* Notes & Save */}
         {timerStatus === 'complete' && (
           <Card className="bg-gray-800 border-gray-700 border-green-600">
             <CardContent className="pt-4">
-              <h3 className="text-sm font-medium text-green-400 mb-3">✓ Count Complete - Save Results</h3>
-              
+              <h3 className="text-sm font-medium text-green-400 mb-3">
+                ✓ Count Complete - Save Results
+              </h3>
+
               <div className="mb-3">
                 <label className="block text-xs text-gray-500 mb-1">Notes (optional)</label>
                 <input
@@ -991,12 +1052,9 @@ export default function TrafficCounterPage() {
                   className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm"
                 />
               </div>
-              
+
               <div className="flex gap-2">
-                <Button
-                  onClick={saveCount}
-                  className="flex-1 bg-green-600 hover:bg-green-700 h-12"
-                >
+                <Button onClick={saveCount} className="flex-1 bg-green-600 hover:bg-green-700 h-12">
                   💾 Save Count
                 </Button>
                 <Button
@@ -1010,17 +1068,27 @@ export default function TrafficCounterPage() {
             </CardContent>
           </Card>
         )}
-        
+
         {/* Tips */}
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-4">
             <h3 className="text-sm font-medium text-gray-400 mb-2">💡 Tips</h3>
             <ul className="text-xs text-gray-500 space-y-1">
-              <li>• <strong>3 min</strong> count × 20 = VPH (quick estimate)</li>
-              <li>• <strong>5 min</strong> count × 12 = VPH (queue estimation)</li>
-              <li>• <strong>15 min</strong> for busy/arterial roads</li>
-              <li>• Count <strong>one direction</strong> for lane capacity</li>
-              <li>• Count <strong>both directions</strong> for shuttle flow</li>
+              <li>
+                • <strong>3 min</strong> count × 20 = VPH (quick estimate)
+              </li>
+              <li>
+                • <strong>5 min</strong> count × 12 = VPH (queue estimation)
+              </li>
+              <li>
+                • <strong>15 min</strong> for busy/arterial roads
+              </li>
+              <li>
+                • Count <strong>one direction</strong> for lane capacity
+              </li>
+              <li>
+                • Count <strong>both directions</strong> for shuttle flow
+              </li>
               <li>• Heavy vehicles = trucks, buses, RVs (large vehicles)</li>
             </ul>
           </CardContent>
