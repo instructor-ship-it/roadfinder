@@ -5,6 +5,41 @@
 
 ---
 
+## Task ID: 2026-03-28-003
+
+**Agent:** Main Agent
+**Task:** Traffic Counter Button Text Visibility Fix
+
+### Work Log:
+
+- **Fixed Button Text Visibility on Traffic Counter Setup Page**
+  - User reported: Duration button text difficult to read
+  - Root cause: Gray background buttons (non-selected state) lacked explicit white text color
+  - Buttons were using `bg-gray-700` but missing `text-white` class
+
+- **Buttons Fixed:**
+  - Duration preset buttons (3m, 5m, 15m) - added `text-white`
+  - Direction Mode buttons (One Direction, Both Ways) - added `text-white`
+  - Custom duration input field - added `text-white`
+  - Set button - added `text-white` with `disabled:text-gray-400` for disabled state
+
+### Files Changed:
+
+- `src/app/traffic-counter/page.tsx` (button text styling)
+
+### Key Learnings:
+
+- **Explicit text colors**: Always add `text-white` on dark background buttons in dark theme
+- **Disabled state styling**: Use `disabled:text-gray-400` to show disabled buttons differently
+
+### Stage Summary:
+
+- Version: RC 1.9.6 (no version bump - UI fix)
+- All buttons now have readable white text on traffic counter setup page
+- Pushed to both main and master branches
+
+---
+
 ## Task ID: 2026-03-28-002
 
 **Agent:** Main Agent
