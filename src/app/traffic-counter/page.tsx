@@ -125,9 +125,12 @@ export default function TrafficCounterSetupPage() {
   const handleCustomDuration = () => {
     if (customDuration) {
       const mins = parseInt(customDuration, 10);
-      if (mins > 0 && mins <= 60) {
+      if (mins > 0 && mins <= 480) {
+        // Allow up to 8 hours
         setDuration(mins);
         setCustomDuration('');
+      } else if (mins > 480) {
+        alert('Maximum duration is 480 minutes (8 hours)');
       }
     }
   };
@@ -228,8 +231,8 @@ export default function TrafficCounterSetupPage() {
                 <input
                   type="number"
                   min="1"
-                  max="60"
-                  placeholder="Custom"
+                  max="480"
+                  placeholder="1-480m"
                   value={customDuration}
                   onChange={(e) => setCustomDuration(e.target.value)}
                   className="w-16 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-center text-sm h-9 text-white"
