@@ -3,6 +3,8 @@
 ## Overview
 This document explains how the Work Zone Report Generator feature was implemented in the TC Work Zone Locator app. The feature allows users to generate a comprehensive text report of all work zone information with a visual ASCII graphic for road width breakdown.
 
+**Version: RC 1.9.1**
+
 ---
 
 ## File Location
@@ -28,15 +30,15 @@ const generateWorkZoneReport = () => {
   setReportGenerating(true)
   
   const lines: string[] = []
-  const timestamp = new Date().toLocaleString('en-AU', { 
+  const timestamp = new Date().toLocaleDateString('en-AU', { 
     dateStyle: 'full', 
     timeStyle: 'short' 
   })
   
   // Header
-  lines.push('╔════════════════════════════════════════════════════════════════╗')
-  lines.push('║         TC WORK ZONE LOCATOR - WORK ZONE REPORT                ║')
-  lines.push('╚════════════════════════════════════════════════════════════════╝')
+  lines.push('╔══════════════════════════════════════════════════════════════════════════════════╗')
+  lines.push('║     TC WORK ZONE LOCATOR - WORK ZONE REPORT                                        ║')
+  lines.push('╚══════════════════════════════════════════════════════════════════════════════════╝')
   lines.push('')
   lines.push(`Generated: ${timestamp}`)
   lines.push(`Report Version: 1.0`)
@@ -57,17 +59,17 @@ const generateWorkZoneReport = () => {
 
 ### Section 1: Work Zone Summary
 ```typescript
-lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-lines.push('📍 WORK ZONE SUMMARY')
-lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+lines.push('🗺️ WORK ZONE SUMMARY')
+lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 if (result) {
-  lines.push(`Road ID:          ${result.road_id}`)
-  lines.push(`Road Name:        ${result.road_name}`)
-  lines.push(`Network Type:     ${result.network_type}`)
-  lines.push(`Carriageway:      ${result.carriageway}`)
-  lines.push(`Start SLK:        ${result.work_zone.start_slk.toFixed(3)} km`)
-  lines.push(`End SLK:          ${result.work_zone.end_slk.toFixed(3)} km`)
-  lines.push(`Zone Length:      ${result.work_zone.length_m} m`)
+  lines.push(`Road ID:           ${result.road_id}`)
+  lines.push(`Road Name:         ${result.road_name}`)
+  lines.push(`Network Type:      ${result.network_type}`)
+  lines.push(`Carriageway:       ${result.carriageway}`)
+  lines.push(`Start SLK:         ${result.work_zone.start_slk.toFixed(3)} km`)
+  lines.push(`End SLK:           ${result.work_zone.end_slk.toFixed(3)} km`)
+  lines.push(`Zone Length:       ${result.work_zone.length_m} m`)
 }
 ```
 
@@ -77,7 +79,7 @@ This is the key feature - the ASCII visual bar:
 
 ```typescript
 if (result.pavement) {
-  lines.push(`Lanes:            ${result.pavement.lanes || 'Unknown'}`)
+  lines.push(`Lanes:             ${result.pavement.lanes || 'Unknown'}`)
   lines.push('')
   
   // Get pavement measurements
@@ -121,17 +123,17 @@ if (result.pavement) {
   lines.push('')
   
   // Legend
-  lines.push('  Legend: ░ = Unsealed  ▒ = Kerb  ▓ = Sealed Shoulder  █ = Trafficable')
+  lines.push(' Legend: ░ = Unsealed  ▒ = Kerb  ▓ = Sealed Shoulder  █ = Trafficable')
   lines.push('')
   
   // Numeric values
-  if (kerbL > 0) lines.push(`  Kerb (Left):           ${kerbL.toFixed(1)} m`)
+  if (kerbL > 0) lines.push(`  Kerb (Left):             ${kerbL.toFixed(1)} m`)
   if (unsealedL > 0) lines.push(`  Unsealed Shoulder (L): ${unsealedL.toFixed(1)} m`)
   if (sealedL > 0) lines.push(`  Sealed Shoulder (L):   ${sealedL.toFixed(1)} m`)
-  lines.push(`  Trafficable Width:     ${trafficable.toFixed(1)} m`)
+  lines.push(`  Trafficable Width:      ${trafficable.toFixed(1)} m`)
   if (sealedR > 0) lines.push(`  Sealed Shoulder (R):   ${sealedR.toFixed(1)} m`)
   if (unsealedR > 0) lines.push(`  Unsealed Shoulder (R): ${unsealedR.toFixed(1)} m`)
-  if (kerbR > 0) lines.push(`  Kerb (Right):          ${kerbR.toFixed(1)} m`)
+  if (kerbR > 0) lines.push(`  Kerb (Right):            ${kerbR.toFixed(1)} m`)
   
   // Totals
   if (p.total_pave_width) lines.push(`  Total Pave Width: ${p.total_pave_width.toFixed(1)} m`)
@@ -142,32 +144,32 @@ if (result.pavement) {
 ### Visual Bar Characters Explained
 
 | Character | Name | Usage |
-|-----------|------|-------|
+| --------- | ---- | ----- |
 | `░` | Light shade | Unsealed shoulder |
 | `▒` | Medium shade | Kerb |
 | `▓` | Dark shade | Sealed shoulder |
 | `█` | Full block | Trafficable road width |
 | `│` | Vertical bar | End caps |
-| `─` | Horizontal bar | Bottom line |
 | `└` | Corner | Bottom left corner |
 | `┘` | Corner | Bottom right corner |
+| `─` | Horizontal bar | Bottom line |
 
 ### Example Output:
 ```
 Road Width Breakdown:
 
-  │░░░▓▓██████████████████████████████████▓▓░░░│
-  └──────────────────────────────────────────────┘
+  │░░▓▓████████████████████████████████████████████████▓▓░░│
+  └────────────────────────────────────────────────────────┘
 
-  Legend: ░ = Unsealed  ▒ = Kerb  ▓ = Sealed Shoulder  █ = Trafficable
+ Legend: ░ = Unsealed  ▒ = Kerb  ▓ = Sealed Shoulder  █ = Trafficable
 
-  Unsealed Shoulder (L): 1.5 m
-  Sealed Shoulder (L):   1.0 m
-  Trafficable Width:     7.2 m
-  Sealed Shoulder (R):   1.0 m
-  Unsealed Shoulder (R): 1.5 m
+ Unsealed Shoulder (L): 1.5 m
+ Sealed Shoulder (L):   1.0 m
+ Trafficable Width:      7.2 m
+ Sealed Shoulder (R):   1.0 m
+ Unsealed Shoulder (R): 1.5 m
 
-  Total Pave Width: 12.2 m
+ Total Pave Width: 12.2 m
 ```
 
 ---
@@ -176,45 +178,45 @@ Road Width Breakdown:
 
 ### Speed Zones
 ```typescript
-lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-lines.push('🚦 SPEED ZONES')
+lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+lines.push('🚗 SPEED ZONES')
 if (result?.speed_zones) {
-  lines.push(`Approach Start:   ${result.speed_zones.approach_start}`)
-  lines.push(`TC Start:         ${result.speed_zones.tc_start}`)
-  lines.push(`Work Zone Start:  ${result.speed_zones.work_zone_start}`)
-  lines.push(`Work Zone End:    ${result.speed_zones.work_zone_end}`)
-  lines.push(`TC End:           ${result.speed_zones.tc_end}`)
-  lines.push(`Approach End:     ${result.speed_zones.approach_end}`)
+  lines.push(`Approach Start:    ${result.speed_zones.approach_start}`)
+  lines.push(`TC Start:             ${result.speed_zones.tc_start}`)
+  lines.push(`Work Zone Start:   ${result.speed_zones.work_zone_start}`)
+  lines.push(`Work Zone End:     ${result.speed_zones.work_zone_end}`)
+  lines.push(`TC End:                ${result.speed_zones.tc_end}`)
+  lines.push(`Approach End:       ${result.speed_zones.approach_end}`)
 }
 ```
 
 ### TC Positions
 ```typescript
-lines.push('👷 TC POSITIONS (±100m from work zone)')
+lines.push('🗺️ TC POSITIONS (±100m from work zone)')
 if (result?.tc_positions) {
   lines.push('TC START:')
-  lines.push(`  SLK:            ${result.tc_positions.start_slk.toFixed(3)} km`)
+  lines.push(`  SLK:                 ${result.tc_positions.start_slk.toFixed(3)} km`)
   lines.push(`  Coordinates:    ${result.tc_positions.start.lat.toFixed(6)}, ${result.tc_positions.start.lon.toFixed(6)}`)
-  lines.push(`  Speed:          ${result.tc_positions.start.speed}`)
+  lines.push(`  Speed:             ${result.tc_positions.start.speed}`)
   lines.push(`  Google Maps:    ${result.google_maps.tc_start}`)
   
   lines.push('TC END:')
-  lines.push(`  SLK:            ${result.tc_positions.end_slk.toFixed(3)} km`)
+  lines.push(`  SLK:                 ${result.tc_positions.end_slk.toFixed(3)} km`)
   lines.push(`  Coordinates:    ${result.tc_positions.end.lat.toFixed(6)}, ${result.tc_positions.end.lon.toFixed(6)}`)
-  lines.push(`  Speed:          ${result.tc_positions.end.speed}`)
+  lines.push(`  Speed:             ${result.tc_positions.end.speed}`)
   lines.push(`  Google Maps:    ${result.google_maps.tc_end}`)
 }
 ```
 
 ### Signage Corridor
 ```typescript
-lines.push('🚸 SIGNAGE CORRIDOR')
+lines.push('🚧 SIGNAGE CORRIDOR')
 if (result?.signage) {
   // Speed signs
   if (result.signage.speed_signs?.length > 0) {
     lines.push('Speed Signs:')
     result.signage.speed_signs.forEach((sign, i) => {
-      lines.push(`  ${i + 1}. SLK ${sign.slk.toFixed(3)} - ${sign.speed} km/h (${sign.direction})`)
+      lines.push(`   ${i + 1}. SLK ${sign.slk.toFixed(3)} - ${sign.speed} km/h (${sign.direction})`)
     })
   }
   // Warning signs, rail crossings, intersections...
@@ -223,16 +225,16 @@ if (result?.signage) {
 
 ### Weather
 ```typescript
-lines.push('🌤️ WEATHER')
+lines.push('🌦️ WEATHER')
 if (weather) {
-  lines.push(`Temperature:     ${weather.temperature}°C`)
-  lines.push(`Condition:       ${weather.condition}`)
-  lines.push(`Humidity:        ${weather.humidity}%`)
-  lines.push(`Wind:            ${weather.wind_speed} km/h ${weather.wind_direction}`)
-  lines.push(`Gusts:           ${weather.gusts} km/h`)
-  lines.push(`Sunrise:         ${weather.sunrise}`)
-  lines.push(`Sunset:          ${weather.sunset}`)
-  lines.push(`UV Index:        ${weather.uv_index}`)
+  lines.push(`Temperature:       ${weather.temperature}°C`)
+  lines.push(`Condition:          ${weather.condition}`)
+  lines.push(`Humidity:          ${weather.humidity}%`)
+  lines.push(`Wind:                 ${weather.wind_speed} km/h ${weather.wind_direction}`)
+  lines.push(`Gusts:               ${weather.gusts} km/h`)
+  lines.push(`Sunrise:            ${weather.sunrise}`)
+  lines.push(`Sunset:               ${weather.sunset}`)
+  lines.push(`UV Index:           ${weather.uv_index}`)
 }
 ```
 
@@ -241,32 +243,32 @@ if (weather) {
 lines.push('⚠️ WEATHER WARNINGS')
 if (weather?.warnings && weather.warnings.length > 0) {
   weather.warnings.forEach((warning, i) => {
-    lines.push(`  ${i + 1}. ${warning.title}`)
-    lines.push(`     ${warning.description}`)
+    lines.push(`   ${i + 1}. ${warning.title}`)
+    lines.push(`       ${warning.description}`)
   })
 }
 ```
 
 ### Traffic Volume
 ```typescript
-lines.push('🚗 TRAFFIC VOLUME')
+lines.push('📊 TRAFFIC VOLUME')
 if (traffic) {
-  lines.push(`AADT:            ${traffic.aadt?.toLocaleString() || 'N/A'}`)
-  lines.push(`Peak Hour:       ${traffic.peak_hour?.toLocaleString() || 'N/A'}`)
+  lines.push(`AADT:                  ${traffic.aadt?.toLocaleString() || 'N/A'}`)
+  lines.push(`Peak Hour:          ${traffic.peak_hour?.toLocaleString() || 'N/A'}`)
   lines.push(`Heavy Vehicles:  ${traffic.heavy_vehicles}%`)
-  lines.push(`Data Year:       ${traffic.data_year || 'N/A'}`)
+  lines.push(`Data Year:          ${traffic.data_year || 'N/A'}`)
 }
 ```
 
 ### Nearby Amenities
 ```typescript
-lines.push('🏥 NEARBY AMENITIES')
+lines.push('📍 NEARBY AMENITIES')
 if (places) {
   if (places.hospital) {
     lines.push('Hospital:')
     lines.push(`  Name:           ${places.hospital.name}`)
     lines.push(`  Distance:       ${places.hospital.distance} km`)
-    if (places.hospital.phone) lines.push(`  Phone:          ${places.hospital.phone}`)
+    if (places.hospital.phone) lines.push(`  Phone:           ${places.hospital.phone}`)
     if (places.hospital.isEmergency) lines.push(`  Emergency:      Yes`)
   }
   if (places.fuelStation) {
@@ -287,7 +289,7 @@ if (places) {
 lines.push('🔀 INTERSECTING ROADS IN TC ZONE')
 if (result?.intersecting_roads && result.intersecting_roads.length > 0) {
   result.intersecting_roads.forEach((road, i) => {
-    lines.push(`  ${i + 1}. ${road.name} - ${road.distance} from work zone`)
+    lines.push(`   ${i + 1}. ${road.name} - ${road.distance} from work zone`)
   })
 }
 ```
@@ -298,8 +300,8 @@ lines.push('🗺️ GOOGLE MAPS LINKS')
 if (result?.google_maps) {
   lines.push(`Work Zone Start: ${result.google_maps.work_zone_start}`)
   lines.push(`Work Zone End:   ${result.google_maps.work_zone_end}`)
-  lines.push(`TC Start:        ${result.google_maps.tc_start}`)
-  lines.push(`TC End:          ${result.google_maps.tc_end}`)
+  lines.push(`TC Start:            ${result.google_maps.tc_start}`)
+  lines.push(`TC End:              ${result.google_maps.tc_end}`)
 }
 ```
 
@@ -318,9 +320,9 @@ if (result?.google_maps) {
       className="w-full bg-purple-700 hover:bg-purple-600 h-12 text-base font-medium"
     >
       {reportGenerating ? (
-        <>⏳ Generating Report...</>
+        <><⏳ Generating Report...</>
       ) : (
-        <>📋 Generate Work Zone Report</>
+        <><📋 Generate Work Zone Report</>
       )}
     </Button>
     <p className="text-xs text-gray-500 mt-2 text-center">
@@ -338,7 +340,7 @@ if (result?.google_maps) {
     <div className="bg-gray-900 rounded-lg w-full max-w-2xl max-h-[90vh] flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-700">
-        <h2 className="text-lg font-bold text-purple-400">📋 Work Zone Report</h2>
+        <h2 className="text-lg font-bold text-purple-400"><📋 Work Zone Report</h2>
         <button onClick={() => setShowReportModal(false)} className="...">
           ✕
         </button>
@@ -355,10 +357,10 @@ if (result?.google_maps) {
       <div className="p-4 border-t border-gray-700 space-y-2">
         <div className="flex gap-2">
           <Button onClick={copyReportToClipboard} className="flex-1">
-            📋 Copy to Clipboard
+            <📋 Copy to Clipboard
           </Button>
           <Button onClick={downloadReport} className="flex-1">
-            📥 Download
+            <⬇️ Download
           </Button>
         </div>
       </div>
@@ -400,7 +402,7 @@ const downloadReport = () => {
 The report uses data from these state variables:
 
 | Variable | Source | Content |
-|----------|--------|---------|
+| --------- | ------ | ------- |
 | `result` | `/api/roads` | Work zone info, pavement, TC positions, speed zones |
 | `weather` | `/api/weather` | Temperature, conditions, UV, wind, warnings |
 | `traffic` | `/api/traffic` | AADT, peak hour, heavy vehicles |
@@ -410,32 +412,11 @@ The report uses data from these state variables:
 
 ---
 
-## Pavement Interface
-
-The pavement data comes from MRWA Layer 12 (Pavement and Surfacing State):
-
-```typescript
-interface PavementData {
-  lanes: number | null
-  width_m: number | null           // Trafficable width
-  cwy: string | null               // Carriageway type
-  total_pave_width: number | null  // Full road width
-  total_seal_width: number | null  // Sealed width
-  sealed_shoulder_l: number | null
-  sealed_shoulder_r: number | null
-  unsealed_shoulder_l: number | null
-  unsealed_shoulder_r: number | null
-  kerb_l: number | null
-  kerb_r: number | null
-}
-```
-
----
-
 ## Version History
 
 | Version | Date | Changes |
-|---------|------|---------|
+| --------- | ------ | -------- |
+| RC 1.9.1 | 2025-06 | Updated for new features, added warning banners |
 | RC 1.5.3 | 2026-03-09 | Added work zone report generator with visual road width bar |
 | Build Fix | 2026-03-09 | Fixed `emergency` → `isEmergency` property name |
 
