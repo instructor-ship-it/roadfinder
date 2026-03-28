@@ -2,7 +2,7 @@
 
 ## Program Logic Documentation
 
-**Version RC 1.7.18**
+**Version RC 1.9.1**
 
 **Western Australia Traffic Controllers**
 
@@ -16,18 +16,20 @@
 4. Data Storage Architecture
 5. API Route Architecture
 6. GPS Tracking System
-7. AfterCare Signage Tracking
-8. User Interface Components
-9. Configuration Settings
-10. Error Handling and Edge Cases
-11. Performance Considerations
-12. Technical Debt and Future Improvements
+7. Emergency Location Module
+8. AfterCare Signage Tracking
+9. Traffic Counter Module
+10. User Interface Components
+11. Configuration Settings
+12. Error Handling and Edge Cases
+13. Performance Considerations
+14. Technical Debt and Future Improvements
 
 ---
 
 ## 1. Application Overview
 
-The TC Work Zone Locator is a Progressive Web Application (PWA) designed specifically for Western Australian Traffic Controllers to locate, plan, and navigate work zones on state and local roads. The application operates in multiple primary modes: a static work zone planning mode, a real-time GPS tracking mode for active traffic control operations, and an AfterCare signage tracking system for managing signs awaiting retrieval.
+The TC Work Zone Locator is a Progressive Web Application (PWA) designed specifically for Western Australian Traffic Controllers to locate, plan, and navigate work zones on state and local roads. The application operates in multiple primary modes: a static work zone planning mode, a real-time GPS tracking mode for active traffic control operations, an AfterCare signage tracking system for managing signs awaiting retrieval, a traffic counter for manual vehicle counts, and a documents library for accessing MRWA documentation.
 
 The core value proposition centers on providing accurate SLK (Straight Line Kilometre) based location information, which is the standard reference system used by Main Roads Western Australia (MRWA) for all road positioning. The application architecture follows a modern Next.js 15 implementation with App Router, utilizing client-side IndexedDB for offline data storage and real-time GPS tracking capabilities.
 
@@ -56,15 +58,21 @@ The application is built on Next.js 15 with the App Router architecture, which p
 The application consists of multiple main pages:
 
 - **Home page** (`src/app/page.tsx`): Work zone planning interface
-- **Drive page** (`src/app/drive/page.tsx`): Real-time GPS tracking
+- **Drive page** (`src/app/drive/page.tsx`): Real-time GPS tracking with speed alerts
 - **Nearby Signs** (`src/app/drive/nearby-signs/page.tsx`): Signs requiring action
 - **AfterCare** (`src/app/aftercare/page.tsx`): Signage tracking management
 - **AfterCare Map** (`src/app/aftercare/map/page.tsx`): Full-screen map view
+- **Library** (`src/app/library/page.tsx`): Documents library browser
 - **Overrides** (`src/app/overrides/page.tsx`): Speed sign override management
+- **Overrides Layout** (`src/app/overrides/layout/page.tsx`): Override visualization
+- **Overrides Map** (`src/app/overrides/map/page.tsx`): Override map view
+- **Traffic Counter** (`src/app/traffic-counter/page.tsx`): Manual vehicle counting
+- **QA** (`src/app/qa/page.tsx`): Quality assurance testing
+- **Offline** (`src/app/offline/page.tsx`): Offline data management
 - **Calibrate** (`src/app/calibrate/page.tsx`): GPS calibration tool
 - **Manual** (`src/app/manual/page.tsx`): User manual page
 
-The home page allows users to select roads by region, specify work zone SLK ranges, and retrieve comprehensive location information including speed zones, nearby amenities, intersections, and weather data. The drive page is designed for active traffic control operations, providing real-time speed monitoring, destination tracking, and navigation assistance. The AfterCare pages manage signage tracking for signs placed on roads awaiting retrieval.
+The home page allows users to select roads by region, specify work zone SLK ranges, and retrieve comprehensive location information including speed zones, nearby amenities, intersections, and weather data. The drive page is designed for active traffic control operations, providing real-time speed monitoring with WA speeding fine alerts, destination tracking, and navigation assistance. The AfterCare pages manage signage tracking for signs placed on roads awaiting retrieval. The Traffic Counter provides manual vehicle counting with VPH calculations. The Library provides access to MRWA documentation.
 
 ---
 
@@ -137,6 +145,69 @@ The AfterCare system implements a sophisticated sign status calculation that det
 
 The algorithm respects manually set statuses and never changes retrieved signs. Job status is aggregated from all sign statuses using `calculateJobStatus()`.
 
+### 3.5 Speeding Fine Calculation Algorithm
+
+The drive page implements a speeding fine calculation based on Western Australian Road Traffic Code penalties. The `getSpeedingFine()` function determines the applicable fine and demerit points based on how many km/h over the speed limit the vehicle is traveling.
+
+**WA Speeding Fine Tiers:**
+
+| km/h Over | Fine (AUD) | Demerit Points |
+|-----------|------------|----------------|
+| 0-9 | $100 | 0 |
+| 10-19 | $200 | 2 |
+| 20-29 | $400 | 3 |
+| 30-40 | $800 | 6 |
+| 40+ | $1,200 | 7 |
+
+**Implementation (src/app/drive/page.tsx):**
+
+```typescript
+const WA_SPEEDING_FINES = [
+  { maxOver: 9, fine: 100, demerits: 0, label: '0-9 km/h over' },
+  { maxOver: 19, fine: 200, demerits: 2, label: '10-19 km/h over' },
+  { maxOver: 29, fine: 400, demerits: 3, label: '20-29 km/h over' },
+  { maxOver: 40, fine: 800, demerits: 6, label: '30-40 km/h over' },
+  { maxOver: 999, fine: 1200, demerits: 7, label: '40+ km/h over (Reckless)' },
+];
+
+const getSpeedingFine = (speedKph: number, limitKph: number) => {
+  const kmOver = speedKph - limitKph;
+  if (kmOver < 1) return null;
+  return WA_SPEEDING_FINES.find(tier => kmOver <= tier.maxOver);
+};
+```
+
+### 3.6 Time/Distance Calculations
+
+The drive page calculates and displays time-based metrics for driver awareness:
+
+**Minutes per Kilometer (`getMinutesPerKm`):**
+```typescript
+const getMinutesPerKm = (speedKph: number): string => {
+  if (speedKph < 1) return '--';
+  const minutesPerKm = 60 / speedKph;
+  if (minutesPerKm < 1) {
+    const seconds = Math.round(minutesPerKm * 60);
+    return `${seconds}s/km`;
+  }
+  return `${minutesPerKm.toFixed(1)} min/km`;
+};
+```
+
+**Time for 10km (`getTimeFor10km`):**
+```typescript
+const getTimeFor10km = (speedKph: number): string => {
+  if (speedKph < 1) return '--';
+  const totalMinutes = (10 / speedKph) * 60;
+  const hours = Math.floor(totalMinutes / 60);
+  const mins = Math.round(totalMinutes % 60);
+  if (hours > 0) {
+    return `${hours}h ${mins}m for 10km`;
+  }
+  return `${mins} min for 10km`;
+};
+```
+
 ---
 
 ## 4. Data Storage Architecture
@@ -154,6 +225,7 @@ The application uses IndexedDB for client-side storage of all road-related data,
 | regulatorySigns | 'road_id' (string) | Regulatory sign positions |
 | warningSigns | 'road_id' (string) | Warning sign positions |
 | datasetMeta | 'dataset' (string) | Sync status per dataset |
+| amenities | 'region' (string) | Amenities cached by region |
 
 ### 4.2 Data Persistence Strategy
 
@@ -165,6 +237,8 @@ The application employs a dual-persistence strategy using both localStorage and 
 - Wind gust alert threshold
 - Speed sign overrides
 - AfterCare jobs and presets
+- Traffic count history
+- QA test results
 
 **sessionStorage (cleared when browser session ends):**
 - Current work zone selection (region, road ID, start/end SLK)
@@ -175,31 +249,60 @@ The application employs a dual-persistence strategy using both localStorage and 
 
 The application implements several API routes using Next.js App Router conventions. These routes handle communication with external data sources (MRWA ArcGIS, Open-Meteo, BOM, Overpass) and provide a clean separation between client-side logic and server-side data fetching. All API routes are implemented in TypeScript with proper error handling and response typing.
 
-### 5.1 Roads API (/api/roads)
+### 5.1 Core Routes
 
-The Roads API is the primary interface for road-related data from MRWA ArcGIS services. It supports multiple actions through query parameters:
-- 'regions': Returns a list of available MRWA regions
-- 'list': Returns roads filtered by region with aggregated SLK ranges
-- 'detail': Returns detailed segment information for a specific road
-- 'locate': Converts a road ID and SLK to GPS coordinates using geometry interpolation
+| Route | Method | Purpose |
+|-------|--------|---------|
+| /api/roads | GET/POST | Region list, road search, SLK coordinate lookup |
+| /api/gps | GET | Convert GPS coordinates to road/SLK |
+| /api/weather | GET | Weather conditions from Open-Meteo |
+| /api/warnings | GET | BOM weather warnings RSS feed |
+| /api/weather/warnings | GET | Combined weather with warnings |
+| /api/traffic | GET | AADT data from MRWA Layer 27 |
+| /api/places | GET | Nearby amenities from Overpass API |
+| /api/intersections | GET | Cross road detection using MRWA nodes |
+| /api/nearest-intersections | GET | Find nearest intersections |
 
-The POST method handles work zone queries, calculating TC positions, approach zones, and speed zone information for a given road and SLK range.
+### 5.2 Emergency Routes
 
-### 5.2 Weather API (/api/weather)
+| Route | Method | Purpose |
+|-------|--------|---------|
+| /api/emergency-stations | GET | All emergency facility locations |
+| /api/hospitals | GET | Hospital locations from OSM |
+| /api/nearest-hospital | GET | Find nearest hospital |
+| /api/police-stations | GET | Police station locations |
 
-The Weather API fetches current weather conditions and forecasts from Open-Meteo. The endpoint accepts latitude and longitude parameters and returns current temperature, humidity, wind speed/direction/gust, weather conditions, and UV index. It also provides an hourly forecast for the next 24 hours.
+### 5.3 Speed Zone Routes
 
-### 5.3 Warnings API (/api/warnings)
+| Route | Method | Purpose |
+|-------|--------|---------|
+| /api/overrides | GET/POST | Override storage pass-through |
+| /api/speed-compare | GET | MRWA vs OSM speed limit comparison |
+| /api/osm-speed | GET | OpenStreetMap speed limit data |
+| /api/speed-verify | GET | Speed verification |
+| /api/speedlimit | GET | Speed limit lookup |
 
-The Warnings API retrieves severe weather warnings from the Bureau of Meteorology (BOM) RSS feed for Western Australia. The implementation parses the RSS XML response, extracts warning titles, descriptions, publication dates, and urgency/severity levels.
+### 5.4 Data Management Routes
 
-### 5.4 Places API (/api/places)
+| Route | Method | Purpose |
+|-------|--------|---------|
+| /api/admin-sync | GET/POST | Direct sync from MRWA servers |
+| /api/download-signs | GET | Sign data download |
+| /api/export-pdf | POST | Work zone report export |
+| /api/sync-data | POST | Offline data sync |
 
-The Places API uses the Overpass API (OpenStreetMap) to find nearby amenities relevant to traffic controllers. It searches for hospitals, toilets, and fuel stations within a defined radius of the work zone midpoint.
+### 5.5 QA Routes
 
-### 5.5 Intersections API (/api/intersections)
+| Route | Method | Purpose |
+|-------|--------|---------|
+| /api/qa | GET | QA test data and validation |
+| /api/qa-saved | GET/POST | Saved QA test results |
 
-The Intersections API identifies cross roads within a work zone corridor. The current implementation searches for intersecting roads within approximately 100 meters of the work zone boundaries.
+### 5.6 Incidents Route
+
+| Route | Method | Purpose |
+|-------|--------|---------|
+| /api/incidents | GET | Live road incidents |
 
 ---
 
@@ -216,6 +319,7 @@ The useGpsTracking hook (`src/hooks/useGpsTracking.ts`) encapsulates all GPS tra
 - `currentSpeed`: Vehicle speed in km/h (EKF filtered)
 - `speedLimit`: Posted speed limit for current position
 - `isSpeeding`: Boolean flag when exceeding speed limit
+- `speedingFine`: Fine amount and demerit points if speeding
 - `distanceToDest`: Distance in km to destination SLK
 - `eta`: Estimated time of arrival in seconds
 - `uncertainty`: Position uncertainty in meters
@@ -228,6 +332,17 @@ The drive page implements SLK direction detection to determine whether the vehic
 ### 6.3 Upcoming Speed Zone Detection
 
 The application provides advance warning of speed zone changes by analyzing the road's speed zone data in the direction of travel. The algorithm calculates a lookahead distance based on current speed and configurable lookahead time (default 5 seconds) plus optional GPS lag compensation. It then searches for speed zone boundaries within this lookahead distance and alerts the driver if a speed limit decrease is approaching.
+
+### 6.4 Speeding Alert System
+
+When the vehicle speed exceeds the posted limit, the drive page displays a prominent alert showing:
+- Current speed in red with pulsing animation
+- Speed limit in a bordered circle
+- km/h over the limit
+- WA fine amount (e.g., "$200 Fine")
+- Demerit points (e.g., "2 Demerits")
+
+The alert uses a pulsing red background animation to draw attention and encourage speed compliance.
 
 ---
 
@@ -274,11 +389,11 @@ The emergency module uses shared utilities from `src/lib/utils.ts`:
 
 ## 8. AfterCare Signage Tracking
 
-### 12.1 Overview
+### 8.1 Overview
 
 The AfterCare system provides comprehensive signage tracking for Traffic Controllers who place signs on roads and need to track them for later retrieval. The system supports multiple retrieval schedules, automatic status calculation, and navigation assistance.
 
-### 12.2 Data Structures
+### 8.2 Data Structures
 
 **AfterCareJob:**
 ```typescript
@@ -288,11 +403,9 @@ interface AfterCareJob {
   road_id: string;
   road_name: string;
   notes: string;
-  date_created: string;
-  status: JobStatus;
-  work_area_slk_start?: number;
-  work_area_slk_end?: number;
   signs: AfterCareSign[];
+  created_at: string;
+  updated_at: string;
 }
 ```
 
@@ -307,19 +420,14 @@ interface AfterCareSign {
   sign_type: string;
   description: string;
   direction: SignDirection;
-  placed_date: string;
-  placed_time?: string;
   retrieval_type: RetrievalType;
   retrieval_date?: string;
-  last_maintained_date?: string;
-  retrieved_date?: string;
   status: SignStatus;
-  status_manually_set?: boolean;
-  notes: string;
+  status_override?: boolean;
 }
 ```
 
-### 12.3 Status Types
+### 8.3 Status Types
 
 **RetrievalType:**
 - `standard`: Due 2 days after placement
@@ -336,7 +444,7 @@ interface AfterCareSign {
 - `maintained`: Recently maintained
 - `retrieved`: Sign has been retrieved
 
-### 12.4 Route Optimization
+### 8.4 Route Optimization
 
 The route optimizer (`src/lib/route-optimizer.ts`) helps plan efficient routes for retrieving multiple signs:
 - `optimizeRoute()`: Optimizes visit order using nearest-neighbor algorithm
@@ -344,7 +452,7 @@ The route optimizer (`src/lib/route-optimizer.ts`) helps plan efficient routes f
 - `getAllSignsDueForMaintenance()`: Aggregates all signs needing maintenance
 - Generates Google Maps URLs with waypoints for navigation
 
-### 12.5 Map Integration
+### 8.5 Map Integration
 
 The AfterCare Map (`/aftercare/map`) uses Leaflet with OpenStreetMap tiles:
 - Colored markers indicate sign status (red=retrieval, yellow=maintenance, green=active)
@@ -354,17 +462,73 @@ The AfterCare Map (`/aftercare/map`) uses Leaflet with OpenStreetMap tiles:
 
 ---
 
-## 9. User Interface Components
+## 9. Traffic Counter Module
 
-### 12.1 Home Page Layout
+### 9.1 Overview
+
+The Traffic Counter module (`src/app/traffic-counter/page.tsx`) provides manual vehicle counting capability for Traffic Controllers who need to conduct traffic surveys.
+
+### 9.2 Features
+
+- Count vehicles by direction (True Left / True Right)
+- Count by type (Light / Heavy vehicles)
+- Configurable count duration
+- Real-time VPH (Vehicles Per Hour) calculation
+- Automatic heavy vehicle percentage calculation
+- Historical count records with statistics
+- Export capability
+
+### 9.3 Data Structure
+
+```typescript
+interface TrafficCountRecord {
+  id: string;
+  road_id: string;
+  road_name: string;
+  slk: number | null;
+  lat: number | null;
+  lon: number | null;
+  region: string;
+  duration_minutes: number;
+  direction_mode: 'one-way' | 'both-ways';
+  true_left_light: number;
+  true_left_heavy: number;
+  true_right_light: number;
+  true_right_heavy: number;
+  total_light: number;
+  total_heavy: number;
+  total_vehicles: number;
+  heavy_percentage: number;
+  vph_true_left: number;
+  vph_true_right: number;
+  vph_combined: number;
+  date: string;
+  start_time: string;
+  end_time: string;
+}
+```
+
+### 9.4 VPH Calculation
+
+VPH is calculated by extrapolating the count over the duration to an hourly rate:
+
+```typescript
+const vph = (count / duration_minutes) * 60;
+```
+
+---
+
+## 10. User Interface Components
+
+### 10.1 Home Page Layout
 
 The home page follows a mobile-first responsive design optimized for 400px maximum width, suitable for smartphone use. The header displays the application title and a settings icon. The main input section contains region selector, road selector with manual ID entry option, and SLK input fields. The results section uses collapsible panels for Traffic, Signage Corridor, TC Positions, Intersections, Weather, and Amenities data.
 
-### 12.2 Drive Page Layout
+### 10.2 Drive Page Layout
 
-The drive page is designed for in-vehicle use with large, high-contrast displays. The speed display uses a 5xl font size with color coding (green for compliant, red for speeding). The speed limit indicator uses a circular badge with border styling that changes color based on status: white for normal, amber for approaching speed decrease, green for verified override zone. Trip progress shows current SLK with direction indicator and destination information when on the same road as the target.
+The drive page is designed for in-vehicle use with large, high-contrast displays. The speed display uses a 5xl font size with color coding (green for compliant, red for speeding with pulsing alert). The speed limit indicator uses a circular badge with border styling that changes color based on status: white for normal, amber for approaching speed decrease, green for verified override zone. Trip progress shows current SLK with direction indicator and destination information when on the same road as the target. Additional displays include minutes per km and 10km travel time.
 
-### 12.3 AfterCare Page Layout
+### 10.3 AfterCare Page Layout
 
 The AfterCare page displays jobs grouped by status:
 - Due for Retrieval (red, expanded by default)
@@ -381,15 +545,32 @@ Each job card shows:
 - Map buttons for navigation
 - Action buttons (Edit, Retrieve, Maintain, Share, Archive, Delete)
 
-### 12.4 Collapsible Sections
+### 10.4 Traffic Counter Layout
 
-Result data is organized into collapsible sections to manage information density on mobile screens. Each section has a header with a chevron icon indicating expand/collapse state.
+The Traffic Counter page provides:
+- Location selection (road, SLK, GPS)
+- Duration configuration
+- Direction mode selection (one-way / both-ways)
+- Large count buttons for each category
+- Real-time VPH display
+- Historical records list with statistics
+
+### 10.5 Settings Drawer
+
+A unified Settings Drawer component (`src/components/SettingsDrawer.tsx`) provides consistent navigation and settings across all pages:
+- About section with Documents Library link
+- Library access
+- Preferences
+- Speed Zone Overrides
+- TC Tools
+- GPS & Tracking settings
+- Admin Data Sync (collapsed by default)
 
 ---
 
-## 10. Configuration Settings
+## 11. Configuration Settings
 
-### 12.1 GPS Enhancement Settings
+### 11.1 GPS Enhancement Settings
 
 The GPS settings panel provides control over EKF behavior and warning preferences:
 - **EKF Enable**: Toggles Extended Kalman Filter for position smoothing
@@ -400,11 +581,11 @@ The GPS settings panel provides control over EKF behavior and warning preference
 - **Speed Lookahead Time**: Seconds to look ahead for speed zone changes
 - **GPS Lag Compensation**: Additional seconds to compensate for GPS latency
 
-### 12.2 Wind Gust Alert Threshold
+### 11.2 Wind Gust Alert Threshold
 
 The wind gust threshold setting allows traffic controllers to set a maximum wind gust speed (in km/h) above which alerts are displayed. The default threshold is 60 km/h. When the current weather data indicates gusts exceeding this threshold, a warning is prominently displayed.
 
-### 12.3 Offline Data Toggles
+### 11.3 Offline Data Toggles
 
 Six toggles allow switching between online API and offline IndexedDB data:
 - Roads List
@@ -416,7 +597,7 @@ Six toggles allow switching between online API and offline IndexedDB data:
 
 ---
 
-## 11. Error Handling and Edge Cases
+## 12. Error Handling and Edge Cases
 
 ### 12.1 GPS Error Handling
 
@@ -435,17 +616,17 @@ Work zone SLK inputs are validated before submission. Start SLK is required; end
 
 ---
 
-## 12. Performance Considerations
+## 13. Performance Considerations
 
-### 12.1 IndexedDB Query Optimization
+### 13.1 IndexedDB Query Optimization
 
 Road finding queries are optimized by using key-path lookups where possible. The speed zones, rail crossings, and signs stores use road_id as the key path, allowing O(1) lookups. The regions store groups roads by region, reducing the search space when the user has selected a specific region.
 
-### 12.2 State Update Throttling
+### 13.2 State Update Throttling
 
 GPS position updates are throttled to prevent excessive road finding queries. The update interval (default 500ms) is configurable through GPS settings. This throttling ensures that road finding operations do not block the UI thread and that battery consumption is minimized during extended tracking sessions.
 
-### 12.3 Component Rendering Optimization
+### 13.3 Component Rendering Optimization
 
 React best practices are followed to prevent unnecessary re-renders:
 - `isRestoring` ref prevents clearing selected road during state restoration
@@ -455,7 +636,7 @@ React best practices are followed to prevent unnecessary re-renders:
 
 ---
 
-## 13. Technical Debt and Future Improvements
+## 14. Technical Debt and Future Improvements
 
 The current implementation has several areas identified for future improvement:
 
@@ -471,6 +652,10 @@ The current implementation has several areas identified for future improvement:
 
 6. **Push Notifications**: Could add reminders for due retrieval/maintenance signs.
 
+7. **Live Traffic Integration**: Could integrate real-time traffic incident data from MRWA WebEOC.
+
+8. **BOM Warnings Integration**: Could integrate live BOM weather warnings into the drive page.
+
 ---
 
-*This document is part of the TC Work Zone Locator documentation suite, Version RC 1.7.18.*
+*This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.1.*
