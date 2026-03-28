@@ -1,6 +1,6 @@
 # Direction-Aware Speed Zones
 
-## Technical Addendum for RC 1.7.18
+## Technical Addendum for RC 1.9.1
 
 ### Bidirectional Speed Zone Detection and Manual Corrections
 
@@ -21,7 +21,7 @@ MRWA's speed zone data structure uses a 'carriageway' field to differentiate bet
 ### Example: M031 Speed Zone Data
 
 | SLK Range | MRWA Speed | Carriageway | Reality |
-|-----------|------------|-------------|---------|
+| -------------- | -------------- | --------------- | --------- |
 | 67.340 - 69.180 | 90 km/h | Single | 60 Right / 90 Left |
 
 ---
@@ -37,7 +37,7 @@ The system tracks SLK movement to determine travel direction. When SLK values in
 **Direction Mapping:**
 
 | SLK Movement | Direction Terminology |
-|--------------|----------------------|
+| ----------------- | ------------------------ |
 | Increasing (SLK values go up) | True Right |
 | Decreasing (SLK values go down) | True Left |
 
@@ -58,7 +58,7 @@ When GPS tracking is active, the system must determine which road the user is tr
 The fix implements a priority-based matching system that prefers State Roads over Local Roads:
 
 | Priority | Road Type | Examples |
-|----------|-----------|----------|
+| -------------- | -------------- | -------------- |
 | 1 (Highest) | State Roads | M031, H005, M010, M026 |
 | 2 | Regional Roads | R-roads |
 | 3 | Local Roads | Local streets |
@@ -74,7 +74,7 @@ The fix implements a priority-based matching system that prefers State Roads ove
 **Priority as Tiebreaker (RC 1.0.2 Fix):**
 
 Priority only applies as a tiebreaker when distances are within 50m:
-- If State Road is 103m away and Local Road is 20m away → Local Road selected (correct)
+- If State Road is 100m away and Local Road is 20m away → Local Road selected (correct)
 - If State Road is 50m away and Local Road is 45m away → State Road selected (correct)
 
 ---
@@ -84,7 +84,7 @@ Priority only applies as a tiebreaker when distances are within 50m:
 ### 5.1 Speed Zone Functions (src/lib/offline-db.ts)
 
 | Function | Description |
-|----------|-------------|
+| -------------- | --------------- |
 | `getSpeedLimitForDirection()` | Get speed limit for current SLK considering travel direction |
 | `getSpeedZoneCorrections()` | Get all stored speed zone corrections from localStorage |
 | `addSpeedZoneCorrection()` | Add a new speed zone correction for a road/direction |
@@ -100,7 +100,7 @@ Priority only applies as a tiebreaker when distances are within 50m:
 ### 6.1 SpeedZoneCorrection Interface
 
 | Field | Type | Description |
-|-------|------|-------------|
+| ------- | ------- | --------------- |
 | `road_id` | string | Road identifier (e.g., 'M031') |
 | `start_slk` | number | Start SLK of correction zone |
 | `end_slk` | number | End SLK of correction zone |
@@ -123,7 +123,7 @@ Users can add speed zone corrections through the Drive page UI. Navigate to Tool
 The correction form supports manual entry for any road, without requiring active GPS tracking:
 
 | Field | Description |
-|-------|-------------|
+| -------- | --------------- |
 | Road ID | Manual entry field (e.g., M031). Auto-converts to uppercase. |
 | Direction | Two buttons: 'True Right' or 'True Left'. No technical terms shown. |
 | Start SLK | Start of correction zone (lower SLK value) |
@@ -137,7 +137,7 @@ The correction form supports manual entry for any road, without requiring active
 For the M031 bidirectional zone issue at SLK 67.34-67.62:
 
 | Field | Value |
-|-------|-------|
+| -------- | ------- |
 | Road ID | M031 |
 | Direction | True Right (button selection) |
 | Start SLK | 67.340 |
@@ -154,7 +154,7 @@ The Signage Corridor dialog has been simplified with neutral colors and reduced 
 
 **Changes Made:**
 
-- Removed intersection warning messages (e.g., '100m from Malabaine Rd intersection')
+- Removed intersection warning messages (e.g., '100m from Malabain Rd intersection')
 - Changed row backgrounds from red/amber to neutral gray
 - Removed 'COVER REQUIRED' action text
 - Removed 'Signs requiring cover' count
@@ -171,14 +171,14 @@ The speed zone lookahead feature was enhanced to work in both SLK directions. Pr
 ### 9.2 Implementation
 
 - Added `slkDirection` state to track 'increasing' or 'decreasing' travel
-- Display shows direction indicator (↑/↓) next to SLK value
-- Lookahead calculation uses appropriate zone boundary based on direction
-- Example: M031 SLK 67.64 has 60→90 (increasing) and 90→60 (decreasing) signs
+- Display shows direction indicator (⇒/⇐) next to SLK value
+- Lookahead calculation uses appropriate zone boundaries based on direction
+- Example: M031 SLK 67.64 has 60⇒90 (increasing) and 90⇒60 (decreasing) signs
 
 ### 9.3 Visual Indicators
 
 | Border Color | Meaning |
-|--------------|---------|
+| ---------------- | --------- |
 | White | Current speed zone, no change ahead |
 | Yellow/Amber | Speed DECREASE approaching |
 | Green | Community-verified override zone |
@@ -210,15 +210,7 @@ The drive page computes `currentOverrideZone` using `useMemo`:
 
 ---
 
-## 11. Technical Notes
-
-Corrections are stored in localStorage under the key `speedZoneCorrections`. This means corrections persist across browser sessions but are specific to each device. Corrections are applied in the `getSpeedLimitForDirection()` function after checking MRWA carriageway data but before returning the final speed limit.
-
-The direction detection algorithm requires a minimum speed of 5 km/h and a minimum SLK change of 0.001 km (1 meter) to determine direction. This prevents GPS jitter from causing false direction changes when stationary or moving slowly.
-
----
-
-## 12. AfterCare Integration (RC 1.4.0+)
+## 11. AfterCare Integration (RC 1.4.0+)
 
 The direction-aware zone system integrates with the AfterCare signage tracking system:
 
@@ -229,4 +221,36 @@ The direction-aware zone system integrates with the AfterCare signage tracking s
 
 ---
 
-*This document is part of the TC Work Zone Locator documentation suite, Version RC 1.7.18.*
+## 12. Technical Notes
+
+Corrections are stored in localStorage under the key `speedZoneCorrections`. This means corrections persist across browser sessions but are specific to each device. Corrections are applied in the `getSpeedLimitForDirection()` function after checking MRWA carriageway data but before returning the final speed limit.
+
+The direction detection algorithm requires a minimum speed of 5 km/h and a minimum SLK change of 0.001 km (1 meter) to determine direction. This prevents GPS jitter from causing false direction changes when stationary or moving slowly.
+
+---
+
+## 13. Version History
+
+### RC 1.9.1 (Current)
+- Updated documentation for new features
+- Added warning banner documentation
+- Added speeding alert documentation
+
+### RC 1.7.18
+- Fixed Signage Corridor showing incorrect intersections in work zone reports
+- Added Direction-Aware Speed Zone documentation
+
+### RC 1.7.17
+- Created shared emergency module
+- Fixed cross road detection using Layer 6
+
+### RC 1.2.1
+- Added Override Zone Visual Indicator
+
+### RC 1.2.0
+- Fixed double-sided sign interpretation
+- Added direction-aware speed zone lookahead
+
+---
+
+*This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.1.*
