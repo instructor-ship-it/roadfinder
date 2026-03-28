@@ -1,10 +1,9 @@
 # TC Work Zone Locator - Work Log
 
-> **Last Updated:** 2026-03-26
-> **Current Version:** RC 1.9.2
+> **Last Updated:** 2026-03-28
+> **Current Version:** RC 1.9.1
 
 ---
-
 ## Task ID: 2026-03-26-002
 **Agent:** Main Agent
 **Task:** Bug Fixes - Q&A Delete & Version Numbers

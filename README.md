@@ -4,7 +4,7 @@ A mobile-friendly web application for Traffic Controller (TC) work zone planning
 
 ## Features
 
-### 🔧 Speed Zone Overrides (RC 1.2.0+)
+### 🔧 Speed Zone Overrides (RC 1.9.1+)
 - **Community-verified corrections** for MRWA speed zone data
 - **Override management page** at `/overrides`
 - **MRWA Exception Report generator** for reporting discrepancies
@@ -217,7 +217,7 @@ src/
 
 ## Version History
 
-### RC 1.9.0 (Current) - AI Q&A Assistant
+### RC 1.9.1 (Current) - AI Q&A Assistant
 - **New AI Q&A Assistant** (`/qa`)
   - Ask questions about traffic management, WHS, and road work documents
   - AI searches document abstracts and provides contextual answers
