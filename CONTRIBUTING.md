@@ -157,13 +157,15 @@ See `docs/RC1_Test_Checklist.md` for comprehensive testing guide.
 | `docs/TC_Work_Zone_Locator_RC1_Documentation.md` | Full application documentation |
 | `docs/TC_Work_Zone_Locator_Data_Dictionary.md` | Data structures reference |
 | `docs/RC1_Test_Checklist.md` | Testing checklist |
+| `CHANGELOG.md` | Version history and changes |
 
 ### Updating Version
 
 When making changes, update version in:
 1. `package.json` - `version` field
-2. `PROJECT_CONTEXT.md` - `Current Version` field
-3. Page headers (if displaying version)
+2. `README.md` - Version badge
+3. `CHANGELOG.md` - Add entry for new version
+4. Page headers (if displaying version)
 
 ## 🐛 Bug Reports
 
@@ -193,6 +195,76 @@ roadfinder/
 ## 🙏 Recognition
 
 Contributors will be recognized in the project documentation.
+
+---
+
+## 📋 Version Policy
+
+### When to Increment Version
+
+| Change Type | Increment | Example |
+|-------------|-----------|---------|
+| Bug fix (no new features) | Patch | 1.9.1 → 1.9.2 |
+| New feature (backward compatible) | Minor | 1.9.1 → 1.10.0 |
+| Breaking change | Major | 1.9.1 → 2.0.0 |
+| Documentation only | No increment | Keep current version |
+
+**Important**: Increment version only when preparing a release/deployment, not on every commit.
+
+### Version Update Checklist
+
+When incrementing version, update ALL of these:
+
+- [ ] `package.json` - version field
+- [ ] `README.md` - version badge URL
+- [ ] `CHANGELOG.md` - add new version section
+- [ ] Create git tag (e.g., `v1.9.2`)
+
+---
+
+## ✅ Best Practice Check Schedule
+
+### Automated Checks (No Action Required)
+
+| Check | When | How |
+|-------|------|-----|
+| Lint | Every commit | Pre-commit hook + CI |
+| Tests | Every push | GitHub Actions CI |
+| Build | Every push | GitHub Actions CI |
+| TypeCheck | Every push | GitHub Actions CI |
+| Dependencies | Weekly | Dependabot auto-PR |
+
+### Manual Checks (Request via AI Session)
+
+| Check | When | Prompt to Use |
+|-------|------|---------------|
+| Full docs sync | Before release | "Run documentation sync check" |
+| Best practice score | After major feature | "Check best practice score" |
+| Security audit | Monthly | "Run security audit check" |
+| Coverage report | Before release | "Run test coverage report" |
+
+### Manual Check Prompts
+
+**Before Release:**
+```
+Run documentation sync check: verify version consistency, check for TODOs, verify all doc files exist.
+```
+
+**After Major Feature:**
+```
+Check best practice score: run lint, test, typecheck, and report any issues.
+```
+
+**Monthly Security:**
+```
+Run security audit: check for vulnerable dependencies and outdated packages.
+```
+
+---
+
+## 🚀 Release Process
+
+See `RELEASE_CHECKLIST.md` for step-by-step release instructions.
 
 ---
 
