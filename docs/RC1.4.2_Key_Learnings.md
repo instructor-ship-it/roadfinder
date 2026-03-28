@@ -1,10 +1,10 @@
-# RC 1.4.2 Key Learnings & Concepts
+# RC 1.9.1 Key Learnings & Concepts
 
-> **Version:** RC 1.4.2
-> **Date:** 2026-03-09
+> **Version:** RC 1.9.1
+> **Date:** June 2025
 > **Author:** Development Session Notes
 
-This document captures all key learnings, architectural decisions, and coding patterns from the RC 1.4.2 development session.
+This document captures all key learnings, architectural decisions, and coding patterns from the RC 1.9.1 development session.
 
 ---
 
@@ -37,6 +37,9 @@ This document captures all key learnings, architectural decisions, and coding pa
 25. [Coordinate Precision Handling](#25-coordinate-precision-handling)
 26. [Printable Report HTML Generation](#26-printable-report-html-generation)
 27. [Data Persistence Strategy Summary](#27-data-persistence-strategy-summary)
+28. [Speeding Alert Implementation](#28-speeding-alert-with-wa-fine-information)
+29. [Warning Banner Patterns](#29-warning-banner-patterns)
+30. [Settings Drawer Organization](#30-settings-drawer-organization)
 
 ---
 
@@ -77,7 +80,7 @@ if (calculatedStatus === 'retrieved') continue;
 Each sign has its own independent lifecycle based on `retrieval_type`:
 
 | Retrieval Type | Status Calculation |
-|----------------|-------------------|
+| ------------------ | ---------------------- |
 | `standard` | Due after 2 days from `placed_date` |
 | `scheduled` | Due on `retrieval_date` |
 | `maintain-daily` | Due every 1 day from `last_maintained_date` |
@@ -125,7 +128,7 @@ export function solveTSPNearestNeighbor(distances: number[][], startIndex = 0): 
 ### Hybrid Distance Calculation
 
 | Mode | Method | Use Case |
-|------|--------|----------|
+| ---- | ------ | -------- |
 | Online | OSRM API | Road distances (accurate) |
 | Offline | Haversine | Straight-line distance (fallback) |
 
@@ -197,7 +200,7 @@ Instead of separate sections for different actions, combine related buttons in a
 
 ```
 Job
-├── retrieval_type: 'standard'  ← Applied to ALL signs
+├── retrieval_type: 'standard'  → Applied to ALL signs
 ├── retrieval_date: '2026-03-10'
 └── signs: [Sign1, Sign2, Sign3]
 ```
@@ -259,7 +262,7 @@ updateSignInJob(jobId, signId, {
 ### The `status_manually_set` Flag
 
 | Value | Behavior |
-|-------|----------|
+| ------ | -------- |
 | `true` | Use stored status, don't recalculate |
 | `false` | Use `calculateSignStatus()` for real-time status |
 
@@ -282,7 +285,7 @@ export async function getOSRMDistanceMatrix(
   // Returns N×N matrix of distances and travel times
   return {
     distances: data.distances,  // In kilometers
-    durations: data.durations   // In minutes
+    durations: data.durations    // In minutes
   };
 }
 ```
@@ -381,7 +384,7 @@ export function saveAfterCareJobs(jobs: AfterCareJob[]): void {
 ### Why localStorage
 
 | Benefit | Description |
-|---------|-------------|
+| -------- | ----------- |
 | Vercel Compatible | Works on read-only filesystem |
 | Persists | Data survives browser close |
 | Offline | No server needed |
@@ -462,7 +465,7 @@ const signStatusCounts = useMemo(() => {
 ### Performance Impact
 
 | Without useMemo | With useMemo |
-|-----------------|--------------|
+| ----------------- | ---------------- |
 | Counts recalculated on every keystroke | Only recalculated when `jobs` changes |
 | Poor performance with large datasets | Optimized performance |
 
@@ -516,8 +519,8 @@ GPS gives lat/lon, but TCs need SLK. The projection algorithm interpolates along
 
 ### Australian Road Convention
 
-| Term | Meaning | Direction |
-|------|---------|-----------|
+| Term | Meaning | SLK Direction |
+| ---- | ------- | ------------- |
 | True Left | Left Carriageway | INCREASING SLK |
 | True Right | Right Carriageway | DECREASING SLK |
 
@@ -557,6 +560,16 @@ function getUpcomingSigns(roadId: string, currentSlk: number, direction: 'increa
 
 localStorage has ~5MB limit. We have 69,000+ roads.
 
+### IndexedDB vs localStorage
+
+| Feature | localStorage | IndexedDB |
+| ------- | ------------ | --------- |
+| Size Limit | ~5MB | ~50MB+ |
+| Data Type | Strings only | Objects, arrays, blobs |
+| Queries | Key-value only | Indexes, ranges |
+| Async | No | Yes |
+| Simple | Yes | No |
+
 ```typescript
 export async function initDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -576,15 +589,6 @@ export async function initDB(): Promise<IDBDatabase> {
   });
 }
 ```
-
-### IndexedDB vs localStorage
-
-| Feature | localStorage | IndexedDB |
-|---------|-------------|-----------|
-| Size Limit | ~5MB | ~50MB+ |
-| Data Type | Strings only | Objects, arrays, blobs |
-| Queries | Key-value only | Indexes, ranges |
-| Async | No | Yes |
 
 ---
 
@@ -709,10 +713,6 @@ export function importJobs(json: string, replace: boolean = false): { success: b
 
 ## 22. SSR (Server-Side Rendering) Guards
 
-### Problem
-
-`localStorage` and `indexedDB` don't exist on server during SSR.
-
 ```typescript
 // Safe localStorage access
 export function getAfterCareJobs(): AfterCareJob[] {
@@ -802,7 +802,7 @@ export function generateId(): string {
 ### Why This Works
 
 | Component | Purpose |
-|-----------|---------|
+| --------- | ------- |
 | `Date.now()` | Temporal uniqueness (milliseconds) |
 | `Math.random()` | Collision safety within same millisecond |
 | No dependencies | Simple, no external libraries |
@@ -815,15 +815,15 @@ export function generateId(): string {
 // SLK precision (2 decimal places = ~10 meters)
 const slkDisplay = roadInfo.slk.toFixed(2);  // "64.64"
 
-// GPS precision (6 decimal places = ~0.1 meter)
+// GPS precision (6 decimal places = ~0.1 meters)
 const latDisplay = coords.lat.toFixed(6);  // "-32.099427"
 const lonDisplay = coords.lon.toFixed(6);  // "116.907960"
 
 // Distance rounding for display
 const distanceKm = haversineDistance(lat1, lon1, lat2, lon2);
 const displayDistance = distanceKm < 1 
-  ? `${Math.round(distanceKm * 1000)}m`  // Show meters if < 1km
-  : `${distanceKm.toFixed(2)}km`;         // Show km otherwise
+  ? `${Math.round(distanceKm * 1000)}m`   // Show meters if < 1km
+  : `${distanceKm.toFixed(2)}km`;        // Show km otherwise
 ```
 
 ---
@@ -880,7 +880,7 @@ const html = `
 ## 27. Data Persistence Strategy Summary
 
 | Data Type | Storage | Size | Why |
-|-----------|---------|------|-----|
+| -------------- | --------- | ---- | --- |
 | AfterCare Jobs | localStorage | Small | User-editable, simple |
 | Speed Overrides | localStorage | Small | User-editable, simple |
 | Road Data (69K+) | IndexedDB | Large | Read-only, bulk queries |
@@ -889,33 +889,134 @@ const html = `
 
 ---
 
-## Quick Reference: Architecture Patterns
+## 28. Speeding Alert with WA Fine Information
 
-| Pattern | Use Case |
-|---------|----------|
-| **Calculated vs Stored** | Real-time status derivation |
-| **Sign-Level Types** | Independent lifecycle per sign |
-| **Aggregated Job Status** | Derive parent from children |
-| **Hybrid Online/Offline** | Graceful degradation |
-| **Manual Override Flag** | User control with undo |
-| **localStorage** | Client-side persistence |
-| **useMemo** | Performance optimization |
-| **Conditional Rendering** | Clean UI with only relevant actions |
-| **SSR Guards** | Next.js compatibility |
-| **TypeScript Interfaces** | Type safety and documentation |
+### Concept
+
+Display Western Australian fine information when the user exceeds the speed limit.
+
+```typescript
+interface SpeedingAlert {
+  currentSpeed: number;
+  speedLimit: number;
+  kmOver: number;
+  fineAmount: number;
+  demeritPoints: number;
+  threshold: number; // km/h over to trigger
+}
+
+// WA fine structure (approximate)
+const getWAFine = (kmOver: number): { fine: number; points: number } => {
+  if (kmOver <= 9) return { fine: 100, points: 0 };
+  if (kmOver <= 19) return { fine: 200, points: 2 };
+  if (kmOver <= 29) return { fine: 400, points: 3 };
+  if (kmOver <= 40) return { fine: 800, points: 4 };
+  return { fine: 1500, points: 6 }; // 40+ km/h over
+};
+```
+
+### Implementation
+
+- Real-time speed vs limit comparison
+- Configurable threshold (default: 5 km/h over)
+- Fine amounts and demerit points displayed
+- "Slow Down" warning message
 
 ---
 
-## Files Modified in RC 1.4.2
+## 29. Warning Banner Patterns
+
+### Weather Warning Banner
+
+```typescript
+interface WeatherWarning {
+  type: string;
+  title: string;
+  description: string;
+  issued: Date;
+  expires?: Date;
+}
+
+// Trigger: BOM severe weather warnings for current location
+// Display: Amber/yellow banner at top of page
+// Auto-refresh: Every 30 minutes
+// Dismissable: Can be dismissed for current session
+```
+
+### Incident Warning Banner
+
+```typescript
+interface RoadIncident {
+  type: 'crash' | 'roadworks' | 'hazard' | 'flooding';
+  location: string;
+  delay?: number; // minutes
+  lastUpdated: Date;
+}
+
+// Trigger: Active road incidents on current road
+// Display: Red/amber banner at top of page
+// Integration: MRWA Traffic Alerts API
+// Click: Opens incident details panel
+```
+
+---
+
+## 30. Settings Drawer Organization
+
+### Pattern
+
+Organize settings into logical sections for easier navigation.
+
+```typescript
+const settingsSections = [
+  { id: 'about', title: 'About', icon: 'ⓘ' },
+  { id: 'admin', title: 'Admin Data Sync', icon: '🔄' },
+  { id: 'gps', title: 'GPS & Tracking', icon: '📍' },
+  { id: 'offline', title: 'Offline Data', icon: '📥' },
+  { id: 'prefs', title: 'Preferences', icon: '⚙' },
+  { id: 'overrides', title: 'Speed Zone Overrides', icon: '🚗' },
+  { id: 'tools', title: 'TC Tools', icon: '🔧' },
+];
+```
+
+### UI Pattern
+
+- Bottom sheet drawer (mobile-friendly)
+- Collapsible sections
+- Grouped settings within sections
+- Toggle switches for boolean settings
+- Sliders for numeric ranges
+- Dropdown for selection options
+
+---
+
+## Quick Reference: Architecture Patterns
+
+| Pattern | Use Case |
+| ------- | -------- |
+| **Calculated vs Stored** | Real-time status derivation |
+| **Sign-Level Types** | Independent lifecycle per sign |
+| **Hybrid Online/Offline** | Graceful degradation |
+| **localStorage** | Client-side persistence |
+| **useMemo** | Performance optimization |
+| **Conditional Rendering** | Clean UI with relevant actions |
+| **SSR Guards** | Next.js compatibility |
+| **TypeScript Interfaces** | Type safety |
+| **Export/Import** | Data backup |
+
+---
+
+## Files Modified in RC 1.9.1
 
 | File | Changes |
-|------|---------|
+| ---- | ------- |
 | `src/app/aftercare/page.tsx` | Button layout, print report styling |
 | `src/lib/aftercare.ts` | `getUpcomingSigns()`, `getJobsForRoad()` fixes |
 | `src/lib/route-optimizer.ts` | TSP algorithm, OSRM integration |
 | `PROJECT_CONTEXT.md` | Version, changelog |
 | `README.md` | Version history |
 | `worklog.md` | Task entry |
+| `docs/*` | All documentation updated to RC 1.9.1 |
 
 ---
 
@@ -928,4 +1029,4 @@ const html = `
 
 ---
 
-*Document generated from RC 1.4.2 development session notes.*
+*Document generated from RC 1.9.1 development session notes.*
