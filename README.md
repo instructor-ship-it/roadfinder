@@ -1,5 +1,6 @@
 # TC Work Zone Locator
 
+[![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
 [![Version](https://img.shields.io/badge/version-RC%201.9.1-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
@@ -8,10 +9,10 @@
 
 A mobile-friendly web application for Traffic Controller (TC) work zone planning and real-time SLK (Straight Line Kilometre) tracking using Main Roads WA ArcGIS data.
 
-
 ## Features
 
 ### 🔧 Speed Zone Overrides (RC 1.9.1+)
+
 - **Community-verified corrections** for MRWA speed zone data
 - **Override management page** at `/overrides`
 - **MRWA Exception Report generator** for reporting discrepancies
@@ -20,6 +21,7 @@ A mobile-friendly web application for Traffic Controller (TC) work zone planning
 - **Export/Import** - backup and restore your override data
 
 ### 📍 Work Zone Location Lookup
+
 - Search roads by region and road ID
 - Enter SLK (Start/End) to get work zone coordinates
 - Get TC positions (±100m from work zone)
@@ -28,6 +30,7 @@ A mobile-friendly web application for Traffic Controller (TC) work zone planning
 - Navigate directly to Google Maps
 
 ### 📦 Offline SLK Tracking
+
 - Download road data for offline use (no internet required)
 - Real-time GPS-based SLK tracking
 - Direction indicator (towards/away from target)
@@ -44,11 +47,13 @@ A mobile-friendly web application for Traffic Controller (TC) work zone planning
   - Alerts based on 3 seconds travel time at current speed
 
 ### 🗺️ Navigation Integration
+
 - One-tap navigation to Google Maps
 - Street View links for all locations
 - Direct link to start SLK tracking from any result
 
 ### 🌤️ Weather & Traffic Data
+
 - Current weather conditions at work zone
 - Sunrise/sunset times and daylight hours
 - UV index with safety levels
@@ -56,6 +61,7 @@ A mobile-friendly web application for Traffic Controller (TC) work zone planning
 - Traffic volume (AADT) data
 
 ### 🏥 Nearby Amenities
+
 - Nearest hospital with emergency status
 - Fuel stations
 - Public toilets
@@ -64,6 +70,7 @@ A mobile-friendly web application for Traffic Controller (TC) work zone planning
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 18+ or Bun
 - Modern web browser with Geolocation support
 
@@ -89,6 +96,7 @@ bun start
 ## Usage Guide
 
 ### Work Zone Lookup
+
 1. Select a **Region** (e.g., Wheatbelt, Metropolitan)
 2. Select a **Road ID** from the dropdown
 3. Enter **Start SLK** (and optionally End SLK)
@@ -96,17 +104,20 @@ bun start
 5. View results including TC positions, speed zones, weather, and nearby amenities
 
 ### GPS Location Lookup
+
 1. Expand **"📍 Find by GPS Location"**
 2. Click **"Get My Location"** or enter coordinates manually
 3. The app will auto-fill the road and SLK based on your location
 
 ### Offline SLK Tracking
+
 1. Click the **⚙️ setup icon** in the header
 2. Click **"Download Data"** to store road data locally
 3. Click **"📍 Start SLK Tracking"** to begin real-time tracking
 4. The app works offline after downloading data
 
 ### Admin Data Sync (v4.1+)
+
 For updating data without developer assistance:
 
 1. Click the **⚙️ setup icon** in the header
@@ -119,6 +130,7 @@ For updating data without developer assistance:
 8. **Speed zones are automatically corrected** for default zones (v4.2+)
 
 **Speed Zone Correction** (v4.2+):
+
 - MRWA default zones (e.g., "50km/h in built-up areas or 110km/h outside") are intelligently corrected
 - Built-up areas: 50 km/h (detected by adjacent zones ≤80 km/h)
 - Rural areas: 110 km/h (detected by adjacent zones ≥90 km/h)
@@ -128,12 +140,15 @@ For updating data without developer assistance:
 **Note**: MRWA sync requires internet. Static files provide offline baseline.
 
 #### SLK Calibration
+
 If the SLK reading is inaccurate:
+
 1. While tracking, tap **"🎯 Calibrate SLK"**
 2. Enter the known correct SLK at your location
 3. The offset is saved per-road for future use
 
 ### Direction Color Codes
+
 - 🟢 **Green** - Moving towards target SLK
 - 🔴 **Red (pulsing)** - Moving away from target SLK
 - ⚪ **White** - No destination set
@@ -147,6 +162,7 @@ If the SLK reading is inaccurate:
 ### Offline Data
 
 The app includes pre-downloaded road data for **69,471 roads** across all 8 MRWA regions:
+
 - **Metropolitan**: 37,995 roads
 - **South West**: 10,952 roads
 - **Wheatbelt**: 7,895 roads
@@ -159,6 +175,7 @@ The app includes pre-downloaded road data for **69,471 roads** across all 8 MRWA
 Plus **69,455 speed zones** for accurate speed limit display.
 
 **Speed Zone Overrides** (`/public/data/speed-overrides.json`):
+
 - Community-verified corrections for MRWA data
 - GPS-verified sign locations
 - Currently includes M031 corrections (2024 road widening updates)
@@ -201,17 +218,17 @@ src/
 
 ## API Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/roads` | GET | List regions and roads |
-| `/api/roads` | POST | Get SLK coordinates |
-| `/api/gps` | GET | Convert GPS to SLK |
-| `/api/sync-data` | POST | Download offline data |
-| `/api/weather` | GET | Weather at coordinates |
-| `/api/traffic` | GET | Traffic volume data |
-| `/api/places` | GET | Nearby amenities |
-| `/api/intersections` | GET | Cross roads in zone |
-| `/api/admin-sync` | GET/POST | Sync data from MRWA |
+| Endpoint             | Method   | Description            |
+| -------------------- | -------- | ---------------------- |
+| `/api/roads`         | GET      | List regions and roads |
+| `/api/roads`         | POST     | Get SLK coordinates    |
+| `/api/gps`           | GET      | Convert GPS to SLK     |
+| `/api/sync-data`     | POST     | Download offline data  |
+| `/api/weather`       | GET      | Weather at coordinates |
+| `/api/traffic`       | GET      | Traffic volume data    |
+| `/api/places`        | GET      | Nearby amenities       |
+| `/api/intersections` | GET      | Cross roads in zone    |
+| `/api/admin-sync`    | GET/POST | Sync data from MRWA    |
 
 ## Browser Support
 
@@ -225,6 +242,7 @@ src/
 ## Version History
 
 ### RC 1.9.1 (Current) - AI Q&A Assistant
+
 - **New AI Q&A Assistant** (`/qa`)
   - Ask questions about traffic management, WHS, and road work documents
   - AI searches document abstracts and provides contextual answers
@@ -240,6 +258,7 @@ src/
 - **Requires internet** - AI Q&A is an online-only feature
 
 ### RC 1.8.0 - Library Offline Status Indicators
+
 - **Updated Offline Status Indicators**
   - 📥 (green) = Cached in browser storage - Available offline
   - 💾 (blue) = Downloaded to device - Permanently saved
@@ -257,6 +276,7 @@ src/
   - Shown in legend section and document info dialog
 
 ### RC 1.7.28 - Geometry-Based Intersection Verification
+
 - **TMP Viewer Mobile Responsiveness Fix**
   - Fixed TMP viewer not working well on mobile phones
   - Replaced fixed-width TOC sidebar (320px) with mobile-friendly drawer
@@ -280,6 +300,7 @@ src/
   - Duplicate intersection deduplication
 
 ### RC 1.7.27 - Emergency Direction Bug Fix
+
 - **Fixed emergency location direction bug**
   - Direction to nearest town was reversed
   - Example: If emergency was east of town, it incorrectly said "west of town"
@@ -287,6 +308,7 @@ src/
   - Cross road direction was already correct (no change needed)
 
 ### RC 1.7.26 - Wake Lock & Saved Locations
+
 - **Added Wake Lock for Screen Always On**
   - Screen stays on while GPS tracking is active
   - Uses browser Wake Lock API (`navigator.wakeLock.request('screen')`)
@@ -302,6 +324,7 @@ src/
   - Cross-region recall works by switching region automatically
 
 ### RC 1.7.25 - Signage Corridor Intersection Range (±700m)
+
 - **Fixed Signage Corridor showing correct intersections with expanded range**
   - Intersections now searched within ±700m signage corridor (was ±100m TC zone only)
   - Livesey Road (SLK 169.85) and Barrack Road (SLK 169.24) now appear for H005 at SLK 170
@@ -313,6 +336,7 @@ src/
   - Frontend makes two intersection calls: TC zone (±100m) and signage corridor (±700m)
 
 ### RC 1.7.20 - Amenities Toggle & Expanded Dataset
+
 - **Added Amenities Data Source Toggle**
   - New toggle in Settings → Data Source Toggles
   - Options: ONLINE (default) / OFFLINE
@@ -328,6 +352,7 @@ src/
   - Rest area toilets along entire highway corridor
 
 ### RC 1.7.19 - Intersection & Navigation Fixes
+
 - **Fixed Intersection Detection Bug for Decreasing SLK Direction**
   - Issue: Intersections (Livesey, Barrack) not showing when work zone goes from higher to lower SLK
   - Root cause: TC zone boundary check assumed SLK always increases
@@ -342,6 +367,7 @@ src/
   - Fix: Divide by 1000 when storing distance
 
 ### RC 1.7.18 - Signage Corridor Intersection Fix
+
 - **Fixed Signage Corridor showing incorrect intersections in work zone reports**
   - Previous issue: Report showed parallel roads (e.g., "Northam Cranbrook Rd") as intersections
   - Root cause: `findIntersectionsInCorridor()` found roads with geometry NEAR the corridor, not actual intersections
@@ -352,6 +378,7 @@ src/
 - Both text and HTML reports now show accurate intersection data
 
 ### RC 1.7.17 - Emergency Location Cross Road Detection Fix
+
 - **Created shared emergency module** (`src/lib/emergency.ts`)
   - Consolidated ~200 lines of duplicated code from page.tsx and drive/page.tsx
   - Functions: findCrossRoad(), findNearestTown(), findNearestHospital(), findNearestFireStation(), findNearestPoliceStation()
@@ -369,6 +396,7 @@ src/
   - Now uses numeric `distanceM` field for formatting
 
 ### RC 1.7.14 - Emergency Location Enhancement
+
 - **Added locality (town) name to emergency location**
   - GPS API now returns LG_NAME field from MRWA data
   - Shows town name (e.g., "Moora") instead of just region ("Wheatbelt")
@@ -384,6 +412,7 @@ src/
   - "southeast of Moora" = user is southeast of the town
 
 ### RC 1.7.7 - Selection Persistence Fix for Navigation
+
 - **Fixed selection being lost when navigating back**
   - Selection now saves even when empty (was skipping save if `size == 0`)
   - Removed condition that prevented saving deselected state
@@ -392,6 +421,7 @@ src/
   - localStorage key: `speed-sign-selection`
 
 ### RC 1.7.6 - Data Persistence Fix
+
 - **Fixed loadFromStorage() to NEVER overwrite user data**
   - Removed fallback to DEFAULT_SIGNS that was wiping user entries
   - User's localStorage data is now always preserved
@@ -404,6 +434,7 @@ src/
 - **Trim whitespace from road_id when saving new signs**
 
 ### RC 1.7.5 - Selection Persistence Fix
+
 - **Fixed selection being lost after adding new sign**
   - loadData() now accepts preserveSelection parameter
   - New signs are automatically added to selection
@@ -413,6 +444,7 @@ src/
   - End SLK values updated (64.81→65.37→67.62→69.19→75)
 
 ### RC 1.7.4 - End SLK Helper
+
 - **New "Find next zone boundary" feature**
   - Click to find the next zone boundary after current SLK
   - Shows suggestions from community signs (green) and MRWA zones (yellow)
@@ -423,6 +455,7 @@ src/
   - One tap to apply suggested value
 
 ### RC 1.7.3 - Form Labels Fixed
+
 - **Fixed Add Sign form labels**
   - Removed asterisks from fields with defaults (Direction, Sign Type, Replicated)
   - Clearer indication of which fields are truly required
@@ -430,6 +463,7 @@ src/
   - Conditionally required: End SLK (if replicated), Back Speed (if Double)
 
 ### RC 1.7.2 - Sign Face Display Format
+
 - **New signage corridor display format**
   - Speed signs now show sign face values: `TL[110/80] + TR[110/80]`
   - First number = what increasing SLK traffic sees
@@ -444,12 +478,14 @@ src/
   - Per SPEED ZONE BOUNDARY RULE: within a zone, both directions travel at same speed
 
 ### RC 1.7.1 - Duplicate Zone Fix
+
 - **Fixed duplicate signage in corridor**
   - MRWA zones starting near override zones (~20m) now filtered out
   - Prevents showing both MRWA 64.80 and community-verified 64.81 signs
   - Added SLK_THRESHOLD = 0.02 km (~20m) for survey discrepancy tolerance
 
 ### RC 1.7.0 - Speed Zone Boundary Rule
+
 - **Fixed northbound (decreasing SLK) speed display bug**
   - Root cause: Code created TWO directional zones for single carriageway roads
   - Fix: Now creates ONE zone with `carriageway: 'Single'` for both directions
@@ -461,6 +497,7 @@ src/
   - `back_speed` = sign face value only (what northbound sees at boundary)
 
 ### RC 1.6.0 - AfterCare Map View
+
 - **New AfterCare Map Page** (`/aftercare/map`)
   - Full-screen OpenStreetMap with colored pins for all signs
   - Filter by status: All / Retrieval (red) / Maintenance (yellow) / Active (green)
@@ -472,6 +509,7 @@ src/
   - Fixed viewport layout for proper map containment
 
 ### RC 1.5.9 - Expanded Offline Data Support
+
 - **Added offline support for additional data types**
   - Pavement data (MRWA Layer 12) - lanes, widths, shoulders
   - Traffic volume (MRWA Layer 27) - AADT, peak hour, heavy vehicles
@@ -483,6 +521,7 @@ src/
   - Weather shows "last updated" timestamp when cached
 
 ### RC 1.5.8 - Report Signage Fix
+
 - **Fixed signage corridor in work zone reports**
   - Intersections now correctly filtered to ±100m from work zone
   - All signage now explicitly filtered to ±700m corridor bounds
@@ -492,6 +531,7 @@ src/
   - Consistent filtering between on-screen display and reports
 
 ### RC 1.5.7 - Offline Startup Fix
+
 - **Fixed app hanging on startup without internet**
   - Root cause: `fetchRegions()` and `fetchRoads()` were calling API before checking offline status
   - API calls would hang for 30-60+ seconds waiting for network timeout
@@ -501,6 +541,7 @@ src/
 - **Result**: App now opens instantly (< 1 second) regardless of internet status
 
 ### RC 1.5.6 - Offline-First Mode & HTML Reports
+
 - **Offline-First Mode** (Default behavior changed)
   - All data source toggles default to ON (offline mode)
   - Offline mode tries IndexedDB first, falls back to online API if data unavailable
@@ -515,6 +556,7 @@ src/
   - Both reports now use consistent HTML format
 
 ### RC 1.5.3 - Work Zone Report Feature
+
 - **New Work Zone Report Generator**
   - Added "Generate Work Zone Report" button at bottom of work zone info page
   - Creates comprehensive report with work zone summary, speed zones, TC positions, signage corridor, weather, traffic, and amenities
@@ -522,6 +564,7 @@ src/
   - Downloadable as timestamped .txt file
 
 ### RC 1.5.2 - Multi-Region Roads Fix
+
 - **Fixed roads missing from regions they should be in**
   - Download script was only storing each road in its first-seen region
   - Roads like H005 (Great Eastern Hwy) span multiple regions but were only in Metropolitan
@@ -531,6 +574,7 @@ src/
 - **Wheatbelt now has 23 M-roads** (was 17)
 
 ### RC 1.5.1 - State Roads Filter Fix
+
 - **Fixed road dropdown showing local roads instead of state roads**
   - `getRoadsForRegion()` now filters to only return H-prefix and M-prefix roads
   - Static data files contain all roads (local + state), but dropdown should only show state roads
@@ -540,6 +584,7 @@ src/
   - Better error handling in `fetchRegions()` function
 
 ### RC 1.5.0 - Nearby Signs Page & Filtered AfterCare
+
 - **New Nearby Signs Page** (`/drive/nearby-signs`)
   - Dedicated page for viewing only signs requiring action
   - Shows only due-retrieval and due-maintenance signs
@@ -572,6 +617,7 @@ src/
   - Positioned next to SLK Tracking label
 
 ### RC 1.4.2 - Route Optimization & SLK Tracking Fix
+
 - **Print Report Button Improvements**
   - Changed from white outline to purple background for better visibility
   - Reduced button size to match route optimization buttons
@@ -587,6 +633,7 @@ src/
   - Optimized for mobile display with flexible wrapping
 
 ### RC 1.4.1 - Drive Page AfterCare Integration
+
 - **Drive Page AfterCare Integration**
   - Added AfterCare indicator on drive page when signs are on current road
   - Shows number of active AfterCare jobs
@@ -600,6 +647,7 @@ src/
   - Added AfterCare to offline capability table
 
 ### RC 1.4.0 - AfterCare Signage Tracking
+
 - **New AfterCare Module** (`/aftercare`)
   - Track signage placed on roads awaiting retrieval
   - Job-based organization with multiple signs per job
@@ -626,6 +674,7 @@ src/
   - Works offline with localStorage persistence
 
 ### RC 1.3.0 - Set Distance & Lane Naming
+
 - **Set Distance Feature** (renamed from SLK Meter)
   - Full screen modal display for distance tracking
   - Text link in TC Tools (not button), auto-closes settings drawer
@@ -645,6 +694,7 @@ src/
   - DECREASING: L1 = rightmost lane (reversed numbering)
 
 ### RC 1.2.26 - SLK Meter 10m Increments & Live Total
+
 - **Distance Display Improvements**
   - Changed from 3 decimal precision (0.000m) to 10m increments (0, 10, 20, 30...)
   - Easier to read while driving
@@ -657,6 +707,7 @@ src/
   - Total distance = sum of all marked distances + current distance
 
 ### RC 1.2.25 - SLK Meter Feature
+
 - **SLK Meter in TC Tools Section**
   - GPS-based distance measurement from reference point
   - Current SLK and road name display via /api/gps
@@ -670,11 +721,13 @@ src/
   - Collapsible, minimized by default
 
 ### RC 1.2.23 - Action Buttons Repositioned
+
 - **Initial button repositioning work**
   - Moved action buttons from bottom of Work Zone Summary section
   - Positioned under title, above road name
 
 ### RC 1.2.21 - Lane Direction Diagram
+
 - **Added Lane Direction Diagram to Work Zone Summary**
   - Visual diagram showing each lane with direction arrows on dark grey background
   - White arrows (↑) = INCREASING SLK direction
@@ -690,6 +743,7 @@ src/
   - Australian left-hand driving convention applied
 
 ### RC 1.2.20 - UI Simplification & Pavement Data
+
 - **Removed color indication from hamburger menu (☰)**
   - Previously showed green/gray for offline status
   - Now shows consistent gray background
@@ -702,6 +756,7 @@ src/
     - Left/Right carriageway: lanes per direction
 
 ### RC 1.2.17 - Landscape Mode Optimization
+
 - **Landscape layout for in-vehicle phone mounts**
   - Automatic orientation detection
   - 2-column side-by-side layout when in landscape
@@ -715,6 +770,7 @@ src/
 - **Portrait layout preserved** as default
 
 ### RC 1.2.16 - Navigation Cleanup
+
 - **Removed 3-dot menu from drive page**
   - Menu was confusing as it returned to home page
   - Clean header layout with centered title
@@ -724,6 +780,7 @@ src/
   - Color still indicates offline status (green/gray)
 
 ### RC 1.2.15 - UI Consistency & Navigation
+
 - **Settings Menu Icon Changed**
   - Replaced ⚙️ gear icon with ⋮ (three-dot menu) for cleaner look
   - Retained green/gray color coding for offline status
@@ -741,6 +798,7 @@ src/
   - Removed redundant manual icon
 
 ### RC 1.2.14 - Settings Restructure
+
 - **Settings Sections Reorganized Alphabetically**
   - About, Admin Data Sync, GPS & Tracking, Offline Data, Preferences, Speed Zone Overrides
   - All sections minimized by default (Offline Data expands for new users without data)
@@ -761,11 +819,13 @@ src/
   - White = no destination set (was yellow)
 
 ### RC 1.2.13 - GPS Indicator Refinement
+
 - **Moved GPS signal strength indicator** from header to SLK Tracking status position
 - Replaced redundant "Active" text with visual signal bars
 - Shows "Waiting for GPS..." while acquiring position
 
 ### RC 1.2.12 - UI/UX Refinements
+
 - **Settings Drawer Visual Hierarchy**
   - Replaced +/- with rotating chevron icons for expand/collapse
   - Added 4px colored left border accent on expanded sections
@@ -776,16 +836,19 @@ src/
   - Green (excellent <10m), Yellow (fair <20m), Orange (poor <30m), Red (very poor ≥30m)
 
 ### RC 1.2.11 - Settings Cleanup
+
 - **Moved Debug button to Admin Data Sync section**
   - Debug button now inside minimized Admin Data Sync section
   - Cleaner Settings drawer with less clutter
 
 ### RC 1.2.10 - User Manual Cleanup
+
 - **Removed distracting sticky Quick Reference footer**
   - Footer was always visible at bottom and distracting
   - Quick Reference info still available in Section 10 of manual
 
 ### RC 1.2.9 - User Manual Hybrid Approach
+
 - **User Manual redesigned with Hybrid Approach**
   - **Search functionality** - Filter sections by keyword
   - **Quick nav chips** - One-tap access to common sections
@@ -793,6 +856,7 @@ src/
   - **Quick Reference footer** - Always-visible key info
 
 ### RC 1.2.8 - Settings Bottom Sheet Drawer
+
 - **Settings converted to Bottom Sheet Drawer**
   - Mobile-friendly swipeable drawer for settings
   - Swipe down to close, tap outside to dismiss
@@ -802,6 +866,7 @@ src/
   - Removed redundant link from Settings menu
 
 ### RC 1.2.7 - Settings Reorganization (Fixed)
+
 - **FIXED: Implemented documented RC 1.2.6 changes that were not applied**
 - **Tools Menu Removed** from /drive page header
 - **Settings Categories Reorganized**:
@@ -813,20 +878,24 @@ src/
   - Admin Data Sync - minimized by default
 
 ### RC 1.2.6 - Settings Reorganization (Documentation Only)
+
 - **Documented but not implemented** - Changes were added to PROJECT_CONTEXT.md but code was not updated
 - See RC 1.2.7 for actual implementation
 
 ### RC 1.2.4 - Unified SLK Tracking Display
+
 - **Speed Display Toggle** moved to Settings
 - **Unified Location Display** - single adaptive display that changes based on scenario
 - Removed redundant Current Location and Trip Progress boxes
 
 ### RC 1.2.3 - Speed Display Toggle
+
 - Added toggle in Settings menu for Speed Display
 - Shows current GPS speed and posted speed limit when enabled
 - Default is OFF
 
 ### RC 1.2.2 - User Manual Page
+
 - **NEW: User Manual page** at `/manual`
   - Comprehensive documentation for all features
   - Mobile-friendly with collapsible sections
@@ -837,6 +906,7 @@ src/
   - HTML format works offline if cached
 
 ### RC 1.2.1 - Override Zone Visual Indicator
+
 - **NEW: Visual indicator for community-verified zones**
   - Pulsating ✓ icon appears when driving through override zones
   - Green border around speed limit circle indicates verified zone
@@ -848,6 +918,7 @@ src/
   - Form default changed from `True Right` to `True Left`
 
 ### RC 1.2.0 - Local Storage Overrides
+
 - **MAJOR: LocalStorage-based storage** - Data now persists on your device
   - Works on all hosting platforms (Vercel, Netlify, local)
   - No server-side file writes needed
@@ -859,6 +930,7 @@ src/
 - **Better error messages** for all operations
 
 ### RC 1.0.4 - Sign-Based Override System
+
 - **NEW: Sign-Based Override System** - Captures physical sign details:
   - Sign type (Single or Double sided)
   - Replicated status (matching sign on opposite side)
@@ -872,6 +944,7 @@ src/
 - **Delete functionality** for existing overrides
 
 ### RC 1.0.3 - Speed Zone Override System
+
 - **NEW: Speed Zone Override System** - Community-verified corrections for MRWA data
   - Override management page at `/overrides`
   - View all active overrides with MRWA comparison
@@ -882,28 +955,33 @@ src/
 - Discrepancies range from 10m to 280m between MRWA database and physical signs
 
 ### RC 1.0 - Release Candidate
+
 - **Official Release Candidate for production deployment**
 - All UI/UX finalized and documented
 - Complete feature set for Traffic Controller work zone operations
 
 ### v5.3.7
+
 - **UI Improvements**:
   - Local roads: Added manual road ID entry (no longer requires GPS lookup)
   - Drive page: Removed lookahead compensation message
   - Drive page: Removed Accuracy display from Current Location dialog
 
 ### v5.3.6
+
 - **UI Improvements**:
   - Changed "Back to Work Zone Locator" button from red to dark blue (consistency)
   - Updated on both drive and calibrate pages
 
 ### v5.3.5
+
 - **UI Improvements**:
   - Amenities dialog: Navigate/Street View buttons converted to small icon buttons
   - Signage Corridor: Intersections now filtered to ±100m from work zone (previously ±700m)
   - Signage Corridor: Removed Regulatory Signs section (clutter reduction)
 
 ### v5.0.0
+
 - **NEW: Extended Kalman Filter (EKF) GPS** - Complete GPS filtering rewrite:
   - **EKF Filtering**: Optimal Kalman filter for 50-60% accuracy improvement
   - **Position Prediction**: Continues tracking during GPS outages (10-60 seconds)
@@ -921,6 +999,7 @@ src/
 - **New Files**: `src/lib/gps-ekf.ts`, `src/hooks/useGpsTracking.ts`
 
 ### v4.2.0
+
 - **NEW: GPS Enhancements** - Three optional improvements for smoother tracking:
   - **Position Interpolation**: Estimates position between GPS updates using speed and heading (100ms updates)
   - **SLK Smoothing**: Weighted average of last 3 readings to reduce GPS jitter
@@ -935,24 +1014,29 @@ src/
 - **Improved: Debug info** now includes GPS settings, SLK history, and GPS age
 
 ### v4.1.4
+
 - **Fixed: Real-time progress display** - Shows "Fetching X of Y records..." during sync
 - Uses Server-Sent Events (SSE) streaming for live progress updates
 - No more "Starting..." stuck state
 
 ### v4.1.3
+
 - **Fixed: Pagination** - MRWA limits to 2,000 records per request (not 5,000)
 - Uses `resultOffset` for proper pagination
 
 ### v4.1.2
+
 - **Fixed: MRWA server URL** - Uses `gisservices.mainroads.wa.gov.au` (not blocked)
 - Previous server `mrgis.mainroads.wa.gov.au` was unreachable from some networks
 
 ### v4.1.1
+
 - **Fixed: Error handling** - Graceful fallback when MRWA unreachable
 - Connection status display (green = connected, amber = unreachable)
 - Increased timeout to 60 seconds
 
 ### v4.1.0
+
 - **NEW: Admin Data Sync Panel** - Sync data directly from MRWA servers
   - No developer assistance needed for data updates
   - Per-dataset sync controls (roads, speed zones, signage)
@@ -962,6 +1046,7 @@ src/
 - **Dataset management**: View local data status, clear individual datasets
 
 ### v4.0
+
 - **NEW: Signage Corridor Report** - Replaces Speed Zones section
   - Shows all signage within ±700m of work zone
   - Railway crossings with Public/Private type
@@ -970,30 +1055,36 @@ src/
   - Warning signs (advisory speeds, curves, signals ahead, railway ahead)
 - **New data layers downloaded**:
   - Layer 15: Rail Crossings
-  - Layer 22: Signs Regulatory  
+  - Layer 22: Signs Regulatory
   - Layer 23: Signs Warning
 - **Removed**: "Posted Speed Limit at Start SLK" dialog
 - **Improved**: Download now shows counts for all data types
 
 ### v3.2.3
+
 - **SLK precision fix**: SLK now correctly shows 3 decimal places when speed < 20 km/h
 - **Accuracy in metres**: GPS accuracy displayed as ±Xm instead of ±0.00Xkm
 
 ### v3.2.2
+
 - **GPS accuracy display**: Shows ±X.XXX km accuracy when speed < 20 km/h
 
 ### v3.2.1
+
 - **Fix: Build error** - Fixed TypeScript error where currentSpeedKmh was used before declaration
 
 ### v3.2
+
 - **Sticky road for speed zones**: Only uses speed zones from locked-in road
 - **Look-ahead speed display**: Shows speed limit BEFORE reaching the sign
 
 ### v3.1
+
 - **Searchable dropdowns**: Type to filter regions and roads
 - **Larger distance display**: Distance remaining shows larger text when under 2km
 
 ### v3.0
+
 - **Carriageway direction support**: Left = increasing SLK, Right = decreasing SLK
 - **SLK stall fix**: Sticky road logic prevents losing track on H005
 - **Event logging**: Troubleshooting info stored in localStorage
@@ -1001,6 +1092,7 @@ src/
 - **High precision mode**: Shows 3 decimal places when speed < 20 km/h
 
 ### v2.8.5
+
 - **Tools menu on drive page**: Added 🔧 spanner icon with Generate Debug Info and Calibrate SLK options
 - **Destination navigation**: Added Navigate and Street View buttons to destination info dialog
 - **Equally spaced buttons**: All Navigate/Street View buttons now equal width with text labels
@@ -1008,6 +1100,7 @@ src/
 - **Default region setting**: Users can set a default region in Settings that pre-selects on load
 
 ### v2.8.4
+
 - **Hidden inputs during restore**: Inputs stay hidden while restoring work zone info
 - **Persistent params**: Work zone params persist in sessionStorage until Reset is clicked
 - **Multiple tracking sessions**: User can go back and forth between tracking and main page
@@ -1015,53 +1108,63 @@ src/
 - Params only cleared when "Reset Work Zone Info" is clicked
 
 ### v2.8.3
+
 - **Auto-restore work zone info**: Results automatically display when returning from SLK tracking
 - **New `getWorkZoneInfo()` function**: Clean parameter-based architecture with `keepInfo` flag
 - Parameters saved to sessionStorage, results fetched fresh on return
 - No need to click "Get Work Zone Info" button after returning from tracking
 
 ### v2.8.2
+
 - **Fixed state restoration bug**: Work zone info now correctly restores when returning from SLK tracking
 - Added `isRestoring` ref to prevent `fetchRoads` from clearing selected road during state restore
 - State persistence now works reliably with sessionStorage
 
 ### v2.8.1
+
 - **Cleaner UI when results displayed**: GPS section, region, road ID, and SLK inputs are hidden when work zone results are shown
 - **Reset button**: "Get Work Zone Info" changes to "Reset Work Zone Info" when results are displayed
 - **State persistence**: Work zone info is maintained when returning from SLK tracking using sessionStorage
 - No duplicate inputs - cleaner, more focused interface
 
 ### v2.8.0
+
 - **UI Cleanup**: Replaced "Stop Tracking" button with "Back to Work Zone Locator" link on drive page
 - **Cleaner interface**: "Start SLK Tracking" button on front page now hidden when results are displayed
 - No duplicate tracking buttons - tracking button only appears in relevant context
 
 ### v2.7.9
+
 - **Fixed speed limit timing**: Speed limit is now looked up AFTER GPS confirms current location
 - Added useEffect that triggers speed lookup when roadInfo changes
 - Removed duplicate speed logic - single source of truth for speed limit updates
 - Speed limit now updates correctly while tracking without needing to stop/restart
 
 ### v2.7.8
+
 - **Fixed speed limit logic**: Speed limit is now ALWAYS based on current GPS position, never on destination SLK
 - Pre-loads speed zones for destination road (optimization) but doesn't set speed limit until GPS locks
 - Correctly handles both scenarios: tracking with or without destination
 
 ### v2.7.7
+
 - **Fixed speed limit using URL SLK**: Now uses the SLK from URL params immediately, not waiting for GPS-calibrated SLK
 - Speed limit displays correctly as soon as page loads with road_id and slk parameters
 
 ### v2.7.6
+
 - **Fixed speed limit display on page load**: Speed limit now shows immediately when opening SLK tracking from URL parameters
 - No longer waits for GPS lock to display the correct posted speed limit
 - Speed zones are loaded as soon as road_id is available from URL params
 
 ### v2.7.5
+
 - **Fixed speed limit calculation**: Speed zones now correctly display the actual speed limit at your current SLK position
 - Speed limits are now numeric values (e.g., 110 instead of "110km/h") for accurate comparison
 - Posted limit display now correctly shows the speed limit from MRWA data based on current road ID and SLK
 
 ### v2.7.0
+
 - **Complete WA road coverage**: 69,471 roads across all 8 MRWA regions
 - **69,455 speed zones** for speed limit lookup
 - Data sourced from Layer 17 (Road Network with RA_NAME for all roads)
@@ -1069,6 +1172,7 @@ src/
 - Updated status indicator shows "69K Roads • 8 Regions"
 
 ### v2.6.1
+
 - **Major data improvement**: Now using Layer 17 which includes region (RA_NAME) for ALL roads
 - **67,000+ roads** with correct MRWA region assignments
 - **Local roads now included** with proper region mapping
@@ -1077,23 +1181,27 @@ src/
 - Local roads like Hovea Crescent in Wundowie now correctly show Wheatbelt/Northam
 
 ### v2.5.5
+
 - Fixed TypeScript build error (parameter order)
 - Region-based downloading (downloads one region at a time)
 - Avoids Vercel timeout by fetching smaller chunks
 
 ### v2.5.4
+
 - Region-based downloading (downloads one region at a time)
 - Avoids Vercel timeout by fetching smaller chunks
 - Better progress messages showing current region
 - Continues with other regions if one fails
 
 ### v2.5.3
+
 - Changed to client-side downloading (bypasses server restrictions)
 - Downloads road data directly from browser to MRWA API
 - Better progress messages during download
 - Connection test before starting download
 
 ### v2.5.2
+
 - Improved offline data download with timeout handling
 - Added connectivity test before downloading
 - Shows detailed error messages from API
@@ -1101,12 +1209,14 @@ src/
 - Better error recovery during fetch
 
 ### v2.5.1
+
 - Added setup icon (⚙️) for offline data download
 - Added auto-start SLK tracking button
 - Added Street View links to all navigation buttons
 - Shows offline ready status indicator
 
 ### v2.5
+
 - Client-side IndexedDB for true offline support
 - SLK calibration per road
 - Direction color coding (towards/away/static)
@@ -1114,11 +1224,13 @@ src/
 - Speed warning indicator
 
 ### v2.4
+
 - Weather and UV index integration
 - Traffic volume data
 - Nearby amenities
 
 ### v2.0
+
 - Complete rewrite with Next.js App Router
 - MRWA ArcGIS API integration
 - Work zone calculation
@@ -1132,4 +1244,3 @@ This project is for internal use by Traffic Controllers for work zone planning a
 - Main Roads Western Australia for providing open road data
 - OpenStreetMap contributors for amenity data
 - Open-Meteo for weather API
-
