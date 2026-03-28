@@ -52,6 +52,7 @@ export default function TrafficCounterSetupPage() {
   // Setup state
   const [duration, setDuration] = useState<number>(5);
   const [customDuration, setCustomDuration] = useState<string>('');
+  const [isCustomMode, setIsCustomMode] = useState<boolean>(false); // Track if custom duration is active
   const [directionMode, setDirectionMode] = useState<CountDirection>('both-ways');
   const [notes, setNotes] = useState('');
 
@@ -128,11 +129,18 @@ export default function TrafficCounterSetupPage() {
       if (mins > 0 && mins <= 480) {
         // Allow up to 8 hours
         setDuration(mins);
+        setIsCustomMode(true); // Mark as custom mode
         setCustomDuration('');
       } else if (mins > 480) {
         alert('Maximum duration is 480 minutes (8 hours)');
       }
     }
+  };
+
+  // Handle preset duration selection (clears custom mode)
+  const handlePresetDuration = (mins: number) => {
+    setDuration(mins);
+    setIsCustomMode(false); // Exit custom mode when preset selected
   };
 
   // Start counting - save state and navigate
@@ -274,13 +282,13 @@ export default function TrafficCounterSetupPage() {
         <Card className="bg-gray-800 border-gray-700">
           <CardContent className="pt-3 pb-3">
             <label className="block text-xs font-medium text-gray-400 mb-1.5">⏱️ Duration</label>
-            <div className="flex gap-1.5 flex-wrap">
+            <div className="flex gap-1.5 flex-wrap items-center">
               {[3, 5, 15].map((mins) => (
                 <Button
                   key={mins}
-                  onClick={() => setDuration(mins)}
+                  onClick={() => handlePresetDuration(mins)}
                   className={`flex-1 min-w-12 h-9 text-sm text-white ${
-                    duration === mins
+                    !isCustomMode && duration === mins
                       ? 'bg-blue-600 hover:bg-blue-700'
                       : 'bg-gray-700 hover:bg-gray-600'
                   }`}
@@ -288,6 +296,16 @@ export default function TrafficCounterSetupPage() {
                   {mins}m
                 </Button>
               ))}
+              {/* Custom duration button - shown when custom is set */}
+              {isCustomMode && (
+                <Button
+                  onClick={() => setIsCustomMode(false)}
+                  className="flex-1 min-w-16 h-9 text-sm text-white bg-blue-600 hover:bg-blue-700"
+                >
+                  {duration}m ✓
+                </Button>
+              )}
+              {/* Custom duration input */}
               <div className="flex gap-1">
                 <input
                   type="number"
