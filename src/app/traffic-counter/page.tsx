@@ -136,7 +136,68 @@ export default function TrafficCounterSetupPage() {
   };
 
   // Start counting - save state and navigate
-  const startCounting = () => {
+  // Auto-fetch location if not set
+  const startCounting = async () => {
+    // If location not set, try to get it automatically
+    if (!location.road_id && !location.lat) {
+      if (!navigator.geolocation) {
+        alert('GPS not available. Please set location manually or continue without location.');
+      } else {
+        setLoadingLocation(true);
+        try {
+          const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+              enableHighAccuracy: true,
+              timeout: 10000,
+            });
+          });
+
+          const { latitude, longitude } = position.coords;
+          const response = await fetch(`/api/gps?lat=${latitude}&lon=${longitude}`);
+
+          let finalLocation: LocationData;
+          if (response.ok) {
+            const data = await response.json();
+            finalLocation = {
+              road_id: data.road_id || '',
+              road_name: data.road_name || '',
+              slk: data.slk || null,
+              lat: latitude,
+              lon: longitude,
+              region: data.region || '',
+            };
+          } else {
+            finalLocation = {
+              road_id: '',
+              road_name: '',
+              slk: null,
+              lat: latitude,
+              lon: longitude,
+              region: '',
+            };
+          }
+
+          // Save state with auto-fetched location and navigate
+          const setupState: SetupState = {
+            duration,
+            directionMode,
+            location: finalLocation,
+            notes,
+          };
+          sessionStorage.setItem('trafficCounterSetup', JSON.stringify(setupState));
+          router.push('/traffic-counter/count');
+          return;
+        } catch (err) {
+          console.error('Auto-location error:', err);
+          // Continue without location rather than blocking
+          alert('Could not get GPS location. Starting count without location.');
+        } finally {
+          setLoadingLocation(false);
+        }
+      }
+    }
+
+    // Location already set or GPS failed - proceed with current state
     const setupState: SetupState = {
       duration,
       directionMode,
@@ -342,9 +403,10 @@ export default function TrafficCounterSetupPage() {
         {/* Start Button */}
         <Button
           onClick={startCounting}
-          className="w-full bg-green-600 hover:bg-green-700 h-12 text-lg font-bold"
+          disabled={loadingLocation}
+          className="w-full bg-green-600 hover:bg-green-700 h-12 text-lg font-bold disabled:bg-green-800"
         >
-          ▶️ START COUNTING
+          {loadingLocation ? '📍 Getting GPS...' : '▶️ START COUNTING'}
         </Button>
       </div>
 
