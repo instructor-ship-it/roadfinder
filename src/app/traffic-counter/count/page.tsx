@@ -475,6 +475,7 @@ export default function TrafficCounterCountPage() {
   const [isComplete, setIsComplete] = useState(false);
   const [startTime] = useState<Date>(() => new Date());
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [capturedDuration, setCapturedDuration] = useState<number | null>(null); // Capture actual duration when stopped
 
   // Counter state
   const [counts, setCounts] = useState<CounterState>({
@@ -568,6 +569,8 @@ export default function TrafficCounterCountPage() {
   };
 
   const confirmStop = () => {
+    // Capture the actual duration at the moment user confirms stop
+    setCapturedDuration(elapsedSeconds);
     setIsComplete(true);
     setShowStopConfirm(false);
     haptic(50);
@@ -578,13 +581,16 @@ export default function TrafficCounterCountPage() {
 
   // Save handler
   const handleSave = () => {
-    if (!isDurationSufficient) {
+    // Use captured duration if available (stopped early), otherwise use elapsedSeconds (timer completed)
+    const actualElapsedSeconds = capturedDuration ?? elapsedSeconds;
+
+    if (actualElapsedSeconds < MINIMUM_DURATION_SECONDS) {
       alert('Count duration must be at least 3 minutes to save.');
       return;
     }
 
     const endTime = new Date();
-    const actualDurationMin = Math.ceil(elapsedSeconds / 60);
+    const actualDurationMin = Math.ceil(actualElapsedSeconds / 60);
 
     const totalLight =
       directionMode === 'both-ways'
@@ -935,7 +941,7 @@ export default function TrafficCounterCountPage() {
         isOpen={isComplete}
         counts={counts}
         plannedDuration={plannedDuration}
-        actualDuration={elapsedSeconds}
+        actualDuration={capturedDuration ?? elapsedSeconds}
         directionMode={directionMode}
         location={location}
         notes={notes}
@@ -943,7 +949,7 @@ export default function TrafficCounterCountPage() {
         onSave={handleSave}
         onReset={handleReset}
         onCancel={handleCancel}
-        insufficientData={!isDurationSufficient}
+        insufficientData={(capturedDuration ?? elapsedSeconds) < MINIMUM_DURATION_SECONDS}
       />
     </div>
   );
