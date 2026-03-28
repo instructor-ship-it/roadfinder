@@ -4,9 +4,9 @@
 
 ### Complete Reference for All Data APIs and Sources
 
-**Version: RC 1.7.18**
+**Version: RC 1.9.1**
 
-**Date: March 12, 2026**
+**Date: March 28, 2026**
 
 ---
 
@@ -39,6 +39,7 @@ https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets
 |-------|------|-------------|
 | 17 | Road Network | All roads with geometry, SLK, and region (RA_NAME) |
 | 24 | State Road Network | State roads (H/M prefix) with intersection nodes |
+| 6 | Intersections | Road intersection nodes and names |
 | 8 | Legal Speed Limit | Speed zones with SPEED_LIMIT field |
 | 15 | Rail Crossings | Railway crossing locations and types |
 | 22 | Regulatory Signs | Speed restriction, STOP, GIVE WAY signs |
@@ -66,7 +67,18 @@ Layer 17 is the primary road network layer containing geometry and attributes fo
 GET /17/query?where=ROAD='H005'&outFields=ROAD,ROAD_NAME,START_SLK,END_SLK,RA_NAME&returnGeometry=true&f=json
 ```
 
-### 2.3 Layer 24 - State Road Network
+### 2.3 Layer 6 - Intersections (NEW)
+
+Layer 6 contains road intersection nodes with names and SLK positions. Used for finding nearest cross roads for emergency location.
+
+| Field | Description |
+|-------|-------------|
+| NODE_NAME | Intersection name (e.g., "Great Eastern Hwy & Orrong Rd") |
+| ROAD | Reference road ID |
+| SLK | SLK position on reference road |
+| CONNECTED_ROAD | ID of intersecting road |
+
+### 2.4 Layer 24 - State Road Network
 
 Layer 24 contains state roads only (H and M prefix roads) with additional node information for intersection detection. Used for finding intersection nodes with START_NODE_NO and END_NODE_NO fields.
 
@@ -78,7 +90,7 @@ Layer 24 contains state roads only (H and M prefix roads) with additional node i
 | END_NODE_NAME | Intersection name at segment end |
 | CWY | Carriageway (Left, Right, Single) |
 
-### 2.4 Layer 8 - Legal Speed Limit
+### 2.5 Layer 8 - Legal Speed Limit
 
 Layer 8 contains legal speed zones with the SPEED_LIMIT field containing actual speed values or descriptive text for default zones. This layer is used for speed zone lookahead and corridor signage reporting.
 
@@ -97,7 +109,7 @@ The SPEED_LIMIT field can contain:
 
 Default zones are flagged as `requires_verification=true` and default to 110 km/h. Client-side correction logic adjusts to 50 km/h for built-up areas based on adjacent zones.
 
-### 2.5 Layer 15 - Railway Crossings
+### 2.6 Layer 15 - Railway Crossings
 
 Layer 15 contains all railway crossings on the road network with crossing type (Public/Private) and crossing numbers for contacting Arc Infrastructure.
 
@@ -107,7 +119,7 @@ Layer 15 contains all railway crossings on the road network with crossing type (
 | CROSSING_NO | Crossing identifier for Arc Infrastructure |
 | SLK | SLK location of crossing |
 
-### 2.6 Layer 22 - Regulatory Signs
+### 2.7 Layer 22 - Regulatory Signs
 
 Layer 22 contains regulatory signs including speed restriction signs, STOP signs, and GIVE WAY signs. The application filters this layer to only include speed and railway-related signs for the signage corridor report.
 
@@ -117,7 +129,7 @@ Layer 22 contains regulatory signs including speed restriction signs, STOP signs
 | PANEL_MEANING | Sign meaning text (e.g., 'Speed Limit 60') |
 | SIGN_TYPE | Sign type classification |
 
-### 2.7 Layer 23 - Warning Signs
+### 2.8 Layer 23 - Warning Signs
 
 Layer 23 contains warning signs including curve warnings, advisory speeds, and hazard warnings. The application filters to keep only curves, advisory speeds, signals, and railway-related signs.
 
@@ -127,7 +139,7 @@ Layer 23 contains warning signs including curve warnings, advisory speeds, and h
 | PANEL_MEANING | Warning text (e.g., 'Curve 65 km/h') |
 | SIGN_TYPE | Warning sign type |
 
-### 2.8 Layer 27 - Traffic Count Sites
+### 2.9 Layer 27 - Traffic Count Sites
 
 Layer 27 contains traffic count data from MRWA Traffic Digest. Used for AADT (Annual Average Daily Traffic) and heavy vehicle percentage information.
 
@@ -139,7 +151,7 @@ Layer 27 contains traffic count data from MRWA Traffic Digest. Used for AADT (An
 | MON_SUN | AADT (Annual Average Daily Traffic) |
 | PCT_HEAVY_MON_SUN | Heavy vehicle percentage |
 
-### 2.9 Layer 12 - Pavement Data
+### 2.10 Layer 12 - Pavement Data
 
 Layer 12 contains pavement and surfacing data including lane counts and road widths.
 
@@ -238,7 +250,7 @@ Hospitals are filtered to exclude non-emergency medical facilities. Excluded ter
 
 ### 4.2 Nominatim - Reverse Geocoding
 
-Nominatim provides reverse geocoding to convert coordinates to location names for weather display.
+Nominatim provides reverse geocoding to convert coordinates to location names for weather display and emergency location.
 
 **URL:** `https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=json`
 
@@ -248,25 +260,61 @@ Nominatim provides reverse geocoding to convert coordinates to location names fo
 
 The application provides internal API routes that aggregate data from multiple sources. These routes are server-side only and do not expose external API keys.
 
+### 5.1 Core Routes
+
 | Route | Method | Purpose |
 |-------|--------|---------|
 | /api/roads | GET/POST | Region list, road search, SLK coordinate lookup |
 | /api/gps | GET | Convert GPS coordinates to road/SLK |
 | /api/weather | GET | Weather conditions from Open-Meteo |
 | /api/warnings | GET | BOM weather warnings RSS feed |
+| /api/weather/warnings | GET | Combined weather data with warnings |
 | /api/traffic | GET | AADT data from MRWA Layer 27 |
 | /api/places | GET | Nearby amenities from Overpass API |
 | /api/intersections | GET | Cross road detection using MRWA nodes |
-| /api/admin-sync | GET/POST | Direct sync from MRWA servers |
+| /api/nearest-intersections | GET | Find nearest intersections for emergency location |
+
+### 5.2 Emergency Routes
+
+| Route | Method | Purpose |
+|-------|--------|---------|
+| /api/emergency-stations | GET | All emergency facility locations |
+| /api/hospitals | GET | Hospital locations from OSM |
+| /api/nearest-hospital | GET | Find nearest hospital to coordinates |
+| /api/police-stations | GET | Police station locations |
+
+### 5.3 Speed Zone Routes
+
+| Route | Method | Purpose |
+|-------|--------|---------|
 | /api/overrides | GET/POST | Override storage pass-through |
 | /api/speed-compare | GET | MRWA vs OSM speed limit comparison |
 | /api/osm-speed | GET | OpenStreetMap speed limit data |
 | /api/speed-verify | GET | Speed verification |
 | /api/speedlimit | GET | Speed limit lookup |
+
+### 5.4 Data Management Routes
+
+| Route | Method | Purpose |
+|-------|--------|---------|
+| /api/admin-sync | GET/POST | Direct sync from MRWA servers |
 | /api/download-signs | GET | Sign data download |
 | /api/export-pdf | POST | Work zone report export |
 | /api/sync-data | POST | Offline data sync |
 | /api/route | GET | Route API |
+
+### 5.5 QA Routes
+
+| Route | Method | Purpose |
+|-------|--------|---------|
+| /api/qa | GET | QA test data and validation |
+| /api/qa-saved | GET/POST | Saved QA test results |
+
+### 5.6 Incidents Route
+
+| Route | Method | Purpose |
+|-------|--------|---------|
+| /api/incidents | GET | Live road incidents (future integration) |
 
 ---
 
@@ -285,6 +333,7 @@ For offline capability, MRWA data is stored in IndexedDB on the client device. T
 | warningSigns | road_id | Filtered warning signs |
 | metadata | key | Download date, total roads, regions |
 | datasetMeta | dataset | Sync status per dataset |
+| amenities | region | Amenities cached by region |
 
 ### 6.2 Data Flow
 
@@ -304,6 +353,8 @@ For offline capability, MRWA data is stored in IndexedDB on the client device. T
 | afterCarePresets | Custom sign type presets |
 | defaultRegion | User's preferred region |
 | gpsSettings | GPS/EKF configuration |
+| trafficCountHistory | Manual traffic count records |
+| qaResults | QA test results |
 
 ---
 
@@ -314,11 +365,22 @@ For offline capability, MRWA data is stored in IndexedDB on the client device. T
 | src/lib/mrwa_api.ts | MRWA ArcGIS queries and transforms |
 | src/app/api/weather/route.ts | Open-Meteo weather integration |
 | src/app/api/warnings/route.ts | BOM RSS warning parser |
+| src/app/api/weather/warnings/route.ts | Combined weather endpoint |
 | src/app/api/places/route.ts | Overpass API amenity search |
 | src/app/api/traffic/route.ts | MRWA traffic count queries |
 | src/app/api/admin-sync/route.ts | MRWA bulk data sync |
+| src/app/api/emergency-stations/route.ts | Emergency facility queries |
+| src/app/api/hospitals/route.ts | Hospital location queries |
+| src/app/api/nearest-hospital/route.ts | Nearest hospital finder |
+| src/app/api/police-stations/route.ts | Police station queries |
+| src/app/api/incidents/route.ts | Road incidents (future) |
+| src/app/api/nearest-intersections/route.ts | Intersection finder |
+| src/app/api/qa/route.ts | QA test endpoints |
+| src/app/api/qa-saved/route.ts | QA results storage |
 | src/lib/offline-db.ts | IndexedDB operations |
+| src/lib/offline-storage.ts | Offline data management |
 | src/lib/aftercare.ts | AfterCare storage operations |
+| src/lib/traffic-counter-storage.ts | Traffic count storage |
 
 ---
 
@@ -346,4 +408,4 @@ For offline capability, MRWA data is stored in IndexedDB on the client device. T
 
 ---
 
-*This document is part of the TC Work Zone Locator documentation suite, Version RC 1.7.18.*
+*This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.1.*
