@@ -15,6 +15,7 @@ import {
 import { IncidentsSection } from '@/components/IncidentsSection'
 import { WarningsSection } from '@/components/WarningsSection'
 import SpeedZoneLayout from '@/components/SpeedZoneLayout'
+import { SavedLocations } from '@/components/home/SavedLocations'
 import {
   Select,
   SelectContent,
@@ -3603,51 +3604,11 @@ export default function Home() {
         )}
 
         {/* Saved Locations */}
-        {savedLocations.length > 0 && (
-          <div className="bg-gray-800 rounded-lg p-3 mt-4 overflow-hidden">
-            <h4 className="text-sm font-semibold text-purple-400 mb-2 shrink-0">📌 Saved Locations ({savedLocations.length})</h4>
-            <div className="space-y-2 max-h-48 overflow-y-auto overscroll-contain pr-1" style={{ scrollbarWidth: 'thin' }}>
-              {savedLocations.map(loc => {
-                // Format the saved date
-                const savedDate = loc.created_at ? new Date(loc.created_at) : null
-                const dateStr = savedDate ? savedDate.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' }) : ''
-                const timeStr = savedDate ? savedDate.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' }) : ''
-                
-                return (
-                  <div key={loc.id} className="flex items-center gap-2 bg-gray-700 rounded p-2 hover:bg-gray-600/50 transition-colors shrink-0">
-                    <button
-                      onClick={() => recallLocation(loc)}
-                      className="flex-1 text-left px-2 py-1"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-green-400 text-sm font-semibold">{loc.road_id}</span>
-                        <span className="text-xs text-gray-500">SLK {loc.start_slk}{loc.end_slk ? ` - ${loc.end_slk}` : ''}</span>
-                      </div>
-                      <div className="text-xs text-gray-300 truncate">
-                        {loc.name}
-                      </div>
-                      {savedDate && (
-                        <div className="text-xs text-gray-500 mt-0.5">
-                          📅 {dateStr} at {timeStr}
-                        </div>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => deleteSavedLocation(loc.id)}
-                      className="text-red-400 hover:text-red-300 hover:bg-red-900/30 p-2 rounded text-lg shrink-0"
-                      title="Delete"
-                    >
-                      ×
-                    </button>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        )}
-          </>
-        )}
-
+        <SavedLocations 
+          locations={savedLocations}
+          onRecall={recallLocation}
+          onDelete={deleteSavedLocation}
+        />
         {/* Loading indicator during restore */}
         {isRestoringUI && !result && (
           <div className="text-center py-8">
