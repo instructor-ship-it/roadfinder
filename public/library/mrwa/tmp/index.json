@@ -1,0 +1,2216 @@
+[
+  {
+    "n": 1,
+    "t": "Cover Page",
+    "s": "MAIN ROADS WESTERN AUSTRALIA GENERIC TRAFFIC MANAGEMENT PLAN NON-COMPLEX TRAFFIC MANAGEMENT ARRANGEMENTS WHEATBELT REGION MAY 2025 TO MAY 2026",
+    "g": false
+  },
+  {
+    "n": 2,
+    "t": "Declaration",
+    "s": "GENERIC DRAWING REGISTER The following checklist must be used to determine the suitability of the proposed Generic Traffic Management Plan and associated Traffic Guidance Schemes for the site-specific",
+    "g": false
+  },
+  {
+    "n": 3,
+    "t": "Generic Drawing Register",
+    "s": "REVISION REGISTER Table 1: Revision Register Revision                                                                 Section/ Revision Date                   Comments                                 ",
+    "g": false
+  },
+  {
+    "n": 4,
+    "t": "Generic Drawing Register",
+    "s": "CONTENTS 1.   Introduction ............................................................................................................................................... 8 1.1     Purpose and Scope..",
+    "g": false
+  },
+  {
+    "n": 5,
+    "t": "Generic Drawing Register",
+    "s": "5.   Site Assessment ....................................................................................................................................... 79 5.1     Provision to Address Environment",
+    "g": false
+  },
+  {
+    "n": 6,
+    "t": "Generic Drawing Register",
+    "s": "8.5     Failure of Services .......................................................................................................................... 109 8.5.1     Failure of Traffic Signals.........",
+    "g": false
+  },
+  {
+    "n": 7,
+    "t": "Revision Register",
+    "s": "GLOSSARY AGTTM       Austroads Guide to temporary traffic management AS          Australian Standard AS/NZS      Australian and New Zealand Standard WHS         Workplace Health and Safety",
+    "g": false
+  },
+  {
+    "n": 8,
+    "t": "Revision Register",
+    "s": "1.           INTRODUCTION 1.1          Purpose and Scope This Non-Complex Traffic Management Plan and associated plans are designed to outline the general traffic management procedures and controls re",
+    "g": false
+  },
+  {
+    "n": 9,
+    "t": "Revision Register",
+    "s": "1.2    Objectives and Strategies The objectives of the Traffic Management Plan are to ensure: • The safety of the road workers. • All road users, including vulnerable road users, are safely guided aro",
+    "g": false
+  },
+  {
+    "n": 10,
+    "t": "Table of Contents & Introduction",
+    "s": "2.     PROJECT OVERVIEW 2.1    Location The works may occur on any road or asset within the Main Roads Network in the State of Western Australia (Figure 2) but has been specifically designed for maint",
+    "g": false
+  },
+  {
+    "n": 11,
+    "t": "Table of Contents & Introduction",
+    "s": "Figure 3: State Road Network – Wheatbelt Region Traffic Management Plan 0922-01531 Rev. 6        OFFICIAL                  11 | P a g e",
+    "g": false
+  },
+  {
+    "n": 12,
+    "t": "Table of Contents & Introduction",
+    "s": "2.2      Project Details and Site Constraints/Impacts ITEM                                                 DESCRIPTION Non-Complex Traffic Management Arrangements Project Title Wheatbelt Region",
+    "g": false
+  },
+  {
+    "n": 13,
+    "t": "Table of Contents & Introduction",
+    "s": "The Main Roads Network within the State of Western Australia contains many complex roads and intersections. The Traffic Management Assessor or Delivery Supervisor must provide additional site-specific",
+    "g": false
+  },
+  {
+    "n": 14,
+    "t": "Table of Contents & Introduction",
+    "s": "ITEM                                             DESCRIPTION o Within a signalised intersection o Within 30m of the stop line on the approach o Within 30m of the adjacent stop line on the departure • ",
+    "g": false
+  },
+  {
+    "n": 15,
+    "t": "Table of Contents & Introduction",
+    "s": "*TBA – details to be noted in the daily diary. Main Roads Western Australia have commissioned this Traffic Management Plan and associated controls for the works. This Traffic Management Plan will be i",
+    "g": false
+  },
+  {
+    "n": 16,
+    "t": "Table of Contents & Introduction",
+    "s": "3.       RISK MANAGEMENT The following details the preliminary assessment of site hazards likely to be encountered, the level of risk associated with each, and the control proposed. Note that the risk",
+    "g": false
+  },
+  {
+    "n": 17,
+    "t": "Table of Contents & Introduction",
+    "s": "Table 3: 203B.1 – Risk Classification Matrix Reputation & trust Health &                                                   (Political,        Business Rating                                  Transport",
+    "g": false
+  },
+  {
+    "n": 18,
+    "t": "Table of Contents & Introduction",
+    "s": "IMPORTANT NOTE: The likelihood of an event or hazard occurring shall first be assessed over the duration of the activity (i.e. “period of exposure”). For risk assessment purposes, at which point the a",
+    "g": false
+  },
+  {
+    "n": 19,
+    "t": "Table of Contents & Introduction",
+    "s": "OFFICIAL 3.2         Generic Risk Register The generic risk register below outlines the predicted risks which may be encountered during the works. The generic risk assessment varies from the Main Road",
+    "g": false
+  },
+  {
+    "n": 20,
+    "t": "Table of Contents & Introduction",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 21,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 22,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 23,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 24,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 25,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 26,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 27,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 28,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 29,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 30,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 31,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 32,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 33,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 34,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 35,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 36,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 37,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 38,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 39,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 40,
+    "t": "Implementation Procedures",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 41,
+    "t": "TMP Content",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 42,
+    "t": "TMP Content",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 43,
+    "t": "TMP Content",
+    "s": "OFFICIAL Pre-treatment Item (Generic / Site                                                                                                                                                             ",
+    "g": false
+  },
+  {
+    "n": 44,
+    "t": "TMP Content",
+    "s": "3.3    Site-Specific Risk Register A comprehensive site-specific risk assessment must be completed prior to any works commencing, particularly under Short Term Low Impact or Mobile work scenarios. Thi",
+    "g": false
+  },
+  {
+    "n": 45,
+    "t": "TMP Content",
+    "s": "•   Impacts to vulnerable road user facilities causing unsafe manoeuvres. •   Road features or temporary traffic management setups that are hazardous for motorcyclists or on-road cyclists. •   Changes",
+    "g": false
+  },
+  {
+    "n": 46,
+    "t": "TMP Content",
+    "s": "Table 9: Site-Specific Risk Register Pre-treatment Item (Generic /                                                                                                               Residual Risk        TM",
+    "g": false
+  },
+  {
+    "n": 47,
+    "t": "TMP Content",
+    "s": "4.      TRAFFIC MANAGEMENT PLANNING AND ASSESSMENT 4.1 Traffic Assessment and Analysis 4.1.1 Traffic and Speed Data The Traffic Management Assessor or Delivery Supervisor must refer to existing traffi",
+    "g": false
+  },
+  {
+    "n": 48,
+    "t": "TMP Content",
+    "s": "Where applicable, the MRWA Traffic Management Code of Practice further expands volumes based on speed and duration of works which may be used as follows: Freeways and Controlled Access Highways: Table",
+    "g": false
+  },
+  {
+    "n": 49,
+    "t": "TMP Content",
+    "s": "4.1.3   Temporary Speed Zones Temporary speed limits will follow the guidance within Section 5.5 of AGTTM Part 3, table 5.5 Length of temporary speed zone and the Main Roads Code of Practice. These de",
+    "g": false
+  },
+  {
+    "n": 50,
+    "t": "TMP Content",
+    "s": "If significant congestion or delays is to occur on-site, which is unacceptable, works must cease and traffic control measures removed from the roadway or scaled back, where safe to do so. If any unsaf",
+    "g": false
+  },
+  {
+    "n": 51,
+    "t": "TMP Content",
+    "s": "Queue Treatments the details must be provided to the Traffic Management Implementor prior to the works commencing. 4.1.7   Portable Traffic Control Devices Portable Traffic Control Devices (PTCD) are ",
+    "g": false
+  },
+  {
+    "n": 52,
+    "t": "TMP Content",
+    "s": "•    Rumble strips and/or temporary speed humps. •    Variable Message Signs (VMS) and electronic/variable speed limit signs. •    Additional Police enforcement. Speed Feedback signage MUST be used wh",
+    "g": false
+  },
+  {
+    "n": 53,
+    "t": "TMP Content",
+    "s": "4.2      Road Users 4.2.1    Pedestrians Where impacts occur to pedestrian facilities which may increase the normal use of the road facilities by people with disabilities and other vulnerable road use",
+    "g": false
+  },
+  {
+    "n": 54,
+    "t": "TMP Content",
+    "s": "Cyclists facilities include, but are not limited to, on-road cyclists, principal shared paths and dedicated cyclists lanes. Traffic Management should be provided where these facilities are adjacent or",
+    "g": false
+  },
+  {
+    "n": 55,
+    "t": "TMP Content",
+    "s": "vehicles through the worksite. Where facility access cannot be maintained, detours via adjacent accesses or other mitigating procedures must be implemented to ensure no significant impacts occur. 4.2.",
+    "g": false
+  },
+  {
+    "n": 56,
+    "t": "TMP Content",
+    "s": "should be entered into the Road Space Booking System and those responsible for the delivery of the works must check for conflicts. Conflicts to the worksite include but are not limited to; adjacent ev",
+    "g": false
+  },
+  {
+    "n": 57,
+    "t": "TMP Content",
+    "s": "•   Scenario 1 – Activities / works within a traffic lane (open or closed) •   Scenario 2 – Activities / works within 2m of the live traffic lane on roads with a permanent speed limit of 80km/h or mor",
+    "g": false
+  },
+  {
+    "n": 58,
+    "t": "TMP Content",
+    "s": "4.5.1 Truck Mounted Attenuators A TMA must be provided where all the criteria is met in any of the below scenarios: Table 20: Main Roads Requirements for the use of Truck Mounted Attenuators Code of P",
+    "g": false
+  },
+  {
+    "n": 59,
+    "t": "TMP Content",
+    "s": "Table 21: Main Roads Requirements for the use of Truck Mounted Attenuators Code of Practice Scenario 1 – Works on high speed/volume roads on the Main Roads network Criteria                            ",
+    "g": false
+  },
+  {
+    "n": 60,
+    "t": "TMP Content",
+    "s": "Scenario 4 cont. Road Number                      Road Name                                     Locality Entire H059                      Willinge Drive (Following completion of BORR)",
+    "g": false
+  },
+  {
+    "n": 61,
+    "t": "TMP Content",
+    "s": "Temporary line markings will consist of raised retro reflective markers. Temporary reflective pavement markers will be of the type manufactured with butyl adhesive base that allows easy and quick plac",
+    "g": false
+  },
+  {
+    "n": 62,
+    "t": "TMP Content",
+    "s": "4.8    Temporary Traffic Management Requirements 4.8.1 Short Term Low Impact Setups 4.8.1.1 Works on Road – Protected by Specialist Vehicles This practice may be used where at minimum a single lane re",
+    "g": false
+  },
+  {
+    "n": 63,
+    "t": "TMP Content",
+    "s": "The typical Temporary Traffic Management requirements for working in gaps of traffic may include a lookout person and a work vehicle fitted with a vehicle mounted warning device. This practice may onl",
+    "g": false
+  },
+  {
+    "n": 64,
+    "t": "TMP Content",
+    "s": "Table 26: AGTTM Part 5 Section 4.2.2 Table 4.2: Sight Distance to the Vehicle Mounted Warning Device (lookout person not required) Speed (km/h)                   Distance (m) ≤ 45                     ",
+    "g": false
+  },
+  {
+    "n": 65,
+    "t": "TMP Content",
+    "s": "Table 27: AGTTM Part 5 Section 4.3.2 Table 4.4: Short-term Works in Traffic Within 1.2m or Partially in Lane Criteria                                                                                   ",
+    "g": false
+  },
+  {
+    "n": 66,
+    "t": "TMP Content",
+    "s": "Table 29: AGTTM Part 5 Section 4.3.5 Table 4.6: Sight Distance for Lookout Person Speed (km/h)                     Distance (m) ≤ 45                          80 46 – 55                         100 56 ",
+    "g": false
+  },
+  {
+    "n": 67,
+    "t": "TMP Content",
+    "s": "Table 30: AGTTM Part 5 Section 4.4.2 Table 4.7: Frequently Changing Work Area – in Lane Criteria                                                                                       Yes/No The work a",
+    "g": false
+  },
+  {
+    "n": 68,
+    "t": "TMP Content",
+    "s": "The works vehicle placement should consider the impact on vulnerable road users including cyclists. Equipment or materials which are brought onto the work area should be unloaded from the non-traffic ",
+    "g": false
+  },
+  {
+    "n": 69,
+    "t": "TMP Content",
+    "s": "This practice may only be used where all the criteria is met in either Table 33 or Table 34 below: Table 33: AGTTM Part 5 Section 4.5.2 Table 4.9: Constantly Moving Work Area Mobile Inspections Within",
+    "g": false
+  },
+  {
+    "n": 70,
+    "t": "TMP Content",
+    "s": "A shadow vehicle should be considered for every scenario however, based on a risk assessment may be omitted as part of mobile inspections or grading works. During the installation of signs and where t",
+    "g": false
+  },
+  {
+    "n": 71,
+    "t": "TMP Content",
+    "s": "This practice may only be used where all the criteria is met in the tables below: Table 37: AGTTM Part 5 Section 5.1.2 Table 5.1: Works on Shoulders, Medians, Verges and Footpaths Workers on Foot / Sm",
+    "g": false
+  },
+  {
+    "n": 72,
+    "t": "TMP Content",
+    "s": "4.8.1.7 Works off Road – Shoulder, Medians, Verges and Footpaths with Large Plant Items This practice may be used where the works are completely off the road and involve large items of plant. This wor",
+    "g": false
+  },
+  {
+    "n": 73,
+    "t": "TMP Content",
+    "s": "4.8.1.8 Works off Road – Frequently Changing Work Area (outside of lane) This practice may be used where the work area moves frequently between successive locations of a road. This work must not encro",
+    "g": false
+  },
+  {
+    "n": 74,
+    "t": "TMP Content",
+    "s": "Equipment or materials which are brought onto the work area should be unloaded from the non-traffic side of a stationary work vehicle. The required advanced warning signs, to be erected by workers, sh",
+    "g": false
+  },
+  {
+    "n": 75,
+    "t": "TMP Content",
+    "s": "The position of each vehicle in the mobile convoy must consider the impacts on vulnerable road users, particularly cyclists. The below describes the different types of vehicles within a mobile works c",
+    "g": false
+  },
+  {
+    "n": 76,
+    "t": "TMP Content",
+    "s": "Where possible, the advanced warning vehicle should be positioned on the far left or far right, depending on the side where the works occur. The advanced warning vehicle should be positioned on the sh",
+    "g": false
+  },
+  {
+    "n": 77,
+    "t": "TMP Content",
+    "s": "The position of each vehicle in the mobile convoy must consider the impacts on vulnerable road users, particularly cyclists. The below describes the different types of vehicles within a mobile works c",
+    "g": false
+  },
+  {
+    "n": 78,
+    "t": "TMP Content",
+    "s": "On sections of roads where the sight distance is reduced, the advanced warning vehicle must be stopped prior to the obstruction until enough room is provided for the advanced warning distance. The dri",
+    "g": false
+  },
+  {
+    "n": 79,
+    "t": "TMP Content",
+    "s": "5.       SITE ASSESSMENT 5.1      Provision to Address Environmental Conditions 5.1.1.1 Adverse Weather The weather may influence the effectiveness of the traffic control detailed in the Traffic Manag",
+    "g": false
+  },
+  {
+    "n": 80,
+    "t": "TMP Content",
+    "s": "5.1.3      Fog/Dust/Smoke Where fog, dust or smoke is identified as adversely affecting a driver’s ability to sight signage and / or traffic control devices, sign locations may need to be adjusted and",
+    "g": false
+  },
+  {
+    "n": 81,
+    "t": "TMP Content",
+    "s": "6.       SAFETY PLAN 6.1      Occupational Safety and Health All persons and organisations undertaking these works or using the roadwork site have a duty of care under statute and common law to themse",
+    "g": false
+  },
+  {
+    "n": 82,
+    "t": "TMP Content",
+    "s": "6.2.2   Roles The hierarchical relationships between the various organisations and individuals undertaking and accountable for Temporary Traffic Management is shown in the figure below. The Principal ",
+    "g": false
+  },
+  {
+    "n": 83,
+    "t": "TMP Content",
+    "s": "6.2.2.3 Traffic Management Assessor The Traffic Management Assessor is responsible for providing any additional Traffic Management related advice for the proposed works. The Traffic Management Assesso",
+    "g": false
+  },
+  {
+    "n": 84,
+    "t": "TMP Content",
+    "s": "6.2.2.4.1      Roadworks Traffic Manager The Roadworks Traffic Manager is responsible for ensuring that plans involving ‘Complex Traffic Arrangements’, particularly in the Metropolitan Region and as d",
+    "g": false
+  },
+  {
+    "n": 85,
+    "t": "TMP Content",
+    "s": "•   Where changes are required to complex Traffic Management arrangements, the Traffic Management Supervisor must risk assess those changes and record variations in the Daily Diary. Where an RTM is no",
+    "g": false
+  },
+  {
+    "n": 86,
+    "t": "TMP Content",
+    "s": "6.5     Trip Hazards The worksite and its immediate surroundings shall be suitably protected and free of hazards, which could result in tripping by cyclists or pedestrians. Hazards, which cannot be re",
+    "g": false
+  },
+  {
+    "n": 87,
+    "t": "TGS Selection Guide",
+    "s": "7.          IMPLEMENTATION 7.1         Traffic Guidance Schemes The Traffic Guidance Scheme (TGS) outline the sign and device requirements for the proposed Temporary Traffic Management Setups. The pro",
+    "g": false
+  },
+  {
+    "n": 88,
+    "t": "TGS Selection Guide",
+    "s": "Should the need for additional (not shown on the Traffic Guidance Schemes) or reduced number of signs or devices be required due to unforeseen circumstances, they shall be recorded within the Daily Di",
+    "g": false
+  },
+  {
+    "n": 89,
+    "t": "TGS Selection Guide",
+    "s": "Continuous Signage Implementation – TGS-IW-002 Scenario 1                              IW-008A Continuous Signage Implementation – TGS-IW-002 Scenario 2                              IW-008B Continuous",
+    "g": false
+  },
+  {
+    "n": 90,
+    "t": "TGS Selection Guide",
+    "s": "7.1.7 Non-Complex Drawings List Table 48: Non-Complex Drawing List TGS                                 Posted     Temporary Number        TGS Category           Speed        Speed                     ",
+    "g": false
+  },
+  {
+    "n": 91,
+    "t": "TGS Selection Guide",
+    "s": "TGS                                  Posted       Temporary Number        TGS Category            Speed          Speed                         Description                    Implementation/Selection L",
+    "g": false
+  },
+  {
+    "n": 92,
+    "t": "TGS Selection Guide",
+    "s": "TGS                                 Posted      Temporary Number        TGS Category           Speed         Speed                        Description                 Implementation/Selection MS2-002  ",
+    "g": false
+  },
+  {
+    "n": 93,
+    "t": "TGS Selection Guide",
+    "s": "TGS                                  Posted        Temporary Number        TGS Category            Speed           Speed                       Description                    Implementation/Selection M",
+    "g": false
+  },
+  {
+    "n": 94,
+    "t": "TGS Selection Guide",
+    "s": "TGS                               Posted      Temporary Number      TGS Category           Speed         Speed                         Description                         Implementation/Selection RF-0",
+    "g": false
+  },
+  {
+    "n": 95,
+    "t": "TGS Selection Guide",
+    "s": "TGS                                 Posted      Temporary Number        TGS Category           Speed         Speed                        Description                            Implementation/Selectio",
+    "g": false
+  },
+  {
+    "n": 96,
+    "t": "TGS Selection Guide",
+    "s": "TGS                                  Posted       Temporary Number        TGS Category            Speed          Speed                         Description                           Implementation/Sele",
+    "g": false
+  },
+  {
+    "n": 97,
+    "t": "TGS Selection Guide",
+    "s": "TGS                               Posted     Temporary Number      TGS Category           Speed        Speed                            Description                          Implementation/Selection WR",
+    "g": false
+  },
+  {
+    "n": 98,
+    "t": "TGS Selection Guide",
+    "s": "7.2    Sequence and Staging 7.2.1 Traffic Guidance Schemes Installation General TTM measures must be installed, maintained, and removed in a planned and safe manner. Prior to commencing, the Traffic M",
+    "g": false
+  },
+  {
+    "n": 99,
+    "t": "TGS Selection Guide",
+    "s": "•      turn around procedures must be conducted in a safe and legal manner •      Traffic Management Implementer must face the traffic when placing devices •      all workers must know their escape ro",
+    "g": false
+  },
+  {
+    "n": 100,
+    "t": "TGS Selection Guide",
+    "s": "Always remember: A shadow vehicle displaying a vehicle mounted warning device (or TMA if applicable) must be used in advance of the Traffic Management Implementer’s installing signs and traffic contro",
+    "g": false
+  },
+  {
+    "n": 101,
+    "t": "TGS Selection Guide",
+    "s": "•      the vehicle mounted warning device must be operating and the hazard/arrow board used as required • all workers must wear correct PPE • a look out person/spotter must be used for all activities ",
+    "g": false
+  },
+  {
+    "n": 102,
+    "t": "TGS Selection Guide",
+    "s": "• Colour of fluorescent signs - fluorescent signs whose colour has faded to a point where they have lost their daylight impact shall be replaced. • Retro reflectivity. - Signs for night-time use whose",
+    "g": false
+  },
+  {
+    "n": 103,
+    "t": "TGS Selection Guide",
+    "s": "7.3.2    Tolerances on Positioning of Signs and Devices Where a specific distance for the longitudinal positioning of signs or devices with respect to other items or features is stated, for the spacin",
+    "g": false
+  },
+  {
+    "n": 104,
+    "t": "TGS Selection Guide",
+    "s": "7.3.4    Delineation and Edge Clearance Cones shall be used for delineation unless another treatment is specified in the Traffic Management Plan or on the Traffic Guidance Schemes. All cones shall be ",
+    "g": false
+  },
+  {
+    "n": 105,
+    "t": "TGS Selection Guide",
+    "s": "Table 51: ‘Past’ spacing of traffic cones, bollards and post-mounted delineators – AGTTM Part 3 Table 5.3 Purpose and usage                         Speed (km/h)*                 Recommended maximum sp",
+    "g": false
+  },
+  {
+    "n": 106,
+    "t": "TGS Selection Guide",
+    "s": "A variation to the standards has been attached to this TMP for point 8, during mobile work operations due to limited number of VMB signs in a convoy to display all the required messages. 7.4     Site ",
+    "g": false
+  },
+  {
+    "n": 107,
+    "t": "TGS Selection Guide",
+    "s": "•    Indicate intention to enter the traffic stream using direction indicators; •    Ensure there is a suitable gap from oncoming traffic to allow for a safe entry manoeuvre; and, •       Turn off the",
+    "g": false
+  },
+  {
+    "n": 108,
+    "t": "TGS Selection Guide",
+    "s": "8.       EMERGENCY ARRANGEMENTS AND CONTINGENCIES 8.1        Traffic Incident Procedures All traffic incidents shall be reported to MRWA and incident reports are to be made available to the Delivery S",
+    "g": false
+  },
+  {
+    "n": 109,
+    "t": "TGS Selection Guide",
+    "s": "8.2      Emergency Services Notification to the Emergency services via DFES of the proposed works nature, location, date and times as well as contact details for the site supervisor. On-site traffic c",
+    "g": false
+  },
+  {
+    "n": 110,
+    "t": "TGS Selection Guide",
+    "s": "8.6     Emergency Contacts In the event of an emergency, the nature of the emergency works, the location and the type of emergency is required to be advised to the following relevant authorities (cont",
+    "g": false
+  },
+  {
+    "n": 111,
+    "t": "TGS Selection Guide",
+    "s": "9.        MONITORING AND MEASUREMENT 9.1       Daily Inspections Prior to works commencing the Site Supervisor must communicate the Traffic Management Plan to all key stakeholders and affected parties",
+    "g": false
+  },
+  {
+    "n": 112,
+    "t": "TGS Selection Guide",
+    "s": "9.1.2   During work hours • Designate and ensure that appropriate work personnel drive through the site periodically to inspect all signs and devices and ensure they are undamaged and comply with the ",
+    "g": false
+  },
+  {
+    "n": 113,
+    "t": "TGS Selection Guide",
+    "s": "9.3     Records A daily diary recording all inspections including variations to the approved Traffic Management Plan shall be kept using Standard Forms “Daily Diary”. A video recording of each TM layo",
+    "g": false
+  },
+  {
+    "n": 114,
+    "t": "TGS Selection Guide",
+    "s": "10.     MANAGEMENT REVIEW AND APPROVALS 10.1    Traffic Management Plan Review and Improvement This Traffic Management Plan requires reviewing either yearly or at a time where an updated revision of t",
+    "g": false
+  },
+  {
+    "n": 115,
+    "t": "TGS Selection Guide",
+    "s": "APPENDIX A - NOTIFICATION OF ROAD WORKS SUBMISSION OF THE NOTIFICATION OF ROADWORKS FORM IS THE RESPONSIBILITY OF THE DELIVERY SUPERVISOR, ENSURING ALL THE RELEVANT AUTHORITIES BE SENT A COPY. THE MAI",
+    "g": false
+  },
+  {
+    "n": 116,
+    "t": "TGS Selection Guide",
+    "s": "NOTIFICATION OF ROADWORKS Notifications are to be distributed at least one (1) week in advance of works Where the traffic management is to interfere with traffic signal operation, prior approval is re",
+    "g": false
+  },
+  {
+    "n": 117,
+    "t": "TGS Selection Guide",
+    "s": "Please provide the name and phone number of            Name: the best contact for further details in relation to these works.                                           Contact number (mobile): Please ",
+    "g": false
+  },
+  {
+    "n": 118,
+    "t": "TGS Selection Guide",
+    "s": "APPENDIX B - VARIATION TO STANDARDS FORM Variation to the Standard Template APPLICATION FOR APPROVAL TO VARY REQUIREMENTS OF AUSTRALIAN STANDARDS AS1742.3, AGTTM OR MRWA TRAFFIC MANAGEMENT CODES OF PR",
+    "g": false
+  },
+  {
+    "n": 119,
+    "t": "TGS Selection Guide",
+    "s": "Traffic Management Plan Designer: Accreditation Number: C Postal address:",
+    "g": false
+  },
+  {
+    "n": 120,
+    "t": "TGS Selection Guide",
+    "s": "Specify Point of Departure from                              Additional Counter Measures To Be Taken         Residual Risk* E                                Standard / Code of Practice          Justif",
+    "g": false
+  },
+  {
+    "n": 121,
+    "t": "TGS Selection Guide",
+    "s": "Generic TGS Variations to the Standards APPLICATION FOR APPROVAL TO VARY REQUIREMENTS OF AUSTRALIAN STANDARDS AS1742.3, AGTTM OR MRWA TRAFFIC MANAGEMENT CODES OF PRACTICE Form Instruction 1.    Sectio",
+    "g": false
+  },
+  {
+    "n": 122,
+    "t": "TGS Selection Guide",
+    "s": "Traffic Management Plan Michael Reed (TTMP Main Roads WA) Designer: Accreditation Number:        AWTM-22-11536-02 C",
+    "g": false
+  },
+  {
+    "n": 123,
+    "t": "TGS Selection Guide",
+    "s": "Specify Point of Departure from                                                                           Additional Counter Measures To Be Taken            Residual Risk* E                           ",
+    "g": false
+  },
+  {
+    "n": 124,
+    "t": "TGS Selection Guide",
+    "s": "MRWA CoP Section 6.16 Speed feedback signs must be used at static worksites on Main Roads’ roads when all the following apply: • Workers on foot are not protected by a",
+    "g": false
+  },
+  {
+    "n": 125,
+    "t": "TGS Selection Guide",
+    "s": "APPENDIX C – SAMPLE RECORDS FORMS (Including Daily Diary & Incident Report Form) Traffic Management Plan 0922-01531 Rev. 6      OFFICIAL                 125 | P a g e",
+    "g": false
+  },
+  {
+    "n": 126,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL Daily Diary TO BE RECORDED BY TM COMPANY / INTERNAL CREW USING OWN DOCUMENTATION OR THE APPENDED AND KEPT FOR A MINIMUM OF SEVEN YEARS. Location:                                              ",
+    "g": false
+  },
+  {
+    "n": 127,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL Are vehicle queue lengths acceptable Is road surface condition adequate Is the work area clearly defined? Are the travel paths for both directions of traffic clearly",
+    "g": false
+  },
+  {
+    "n": 128,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL Additional Comments I confirm that the details contained herein are true and correct Name: (TTM Leader):                                                Signed:",
+    "g": false
+  },
+  {
+    "n": 129,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL Incident Report Form Any incident occurring onsite shall be reported using the following incident report format. Region:                                                          Incident Repo",
+    "g": false
+  },
+  {
+    "n": 130,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL 2.0     Details of Traffic Management in place: Traffic                                            Name of individual Management                                         that prepared the Plan",
+    "g": false
+  },
+  {
+    "n": 131,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL 4.0    Description of Incident: Draw the Incident including the direction of travel, traffic control signs, fixed structures and north point. North 5.0     Attachments: The following copies M",
+    "g": false
+  },
+  {
+    "n": 132,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL Non-Complex Traffic Guidance Scheme Selection Checklist Road Name: _____________________________________________________ Suburb:________________________________ Type of work to be undertaken:",
+    "g": false
+  },
+  {
+    "n": 133,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL Rolling block of live lanes required.                                  0922-01531-MS2-016 to 020 No speed reduction required for vehicle clearances.                           0922-01531-MS2-0",
+    "g": false
+  },
+  {
+    "n": 134,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL 0922-01531-RF-009, 010, 013, 019, 020, 024, 025, 029, 030, Dual lane road, lane closures with on direction maintained. 031 & 032 Lane closure at T-intersection with one direction maintained. ",
+    "g": false
+  },
+  {
+    "n": 135,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL Selected TGS: Step B – Select the spacing of signs, delineation devices and length of tapers from the relevant table/information provided on drawing. Applicable                               ",
+    "g": false
+  },
+  {
+    "n": 136,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL and ensure relevant notification has been provided. Are the volumes for midblock or signalised                        Postpone the works to a time where intersection within the accepted capac",
+    "g": false
+  },
+  {
+    "n": 137,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL APPENDIX D - TRAFFIC ANALYSIS AND VOLUME COUNT N/A Traffic Management Plan 0922-01531 Rev. 6              137 | P a g e",
+    "g": false
+  },
+  {
+    "n": 138,
+    "t": "TGS Selection Guide",
+    "s": "OFFICIAL APPENDIX E – ROADWAY ACCESS AUTHORISATION PERMIT N/A Traffic Management Plan 0922-01531 Rev. 6              138 | P a g e",
+    "g": false
+  },
+  {
+    "n": 139,
+    "t": "TGS Diagram 1",
+    "s": "OFFICIAL APPENDIX F – GENERIC TRAFFIC GUIDANCE SCHEME Traffic Management Plan 0922-01531 Rev. 6              139 | P a g e",
+    "g": true
+  },
+  {
+    "n": 140,
+    "t": "TGS Diagram 2",
+    "s": "A    B                                C                                                D                                           E   F         G            H STAGE 1:                                ",
+    "g": true
+  },
+  {
+    "n": 141,
+    "t": "TGS Diagram 3",
+    "s": "A       B             C                                          D                  E   F         G            H SCENARIO 1:                                                                            ",
+    "g": true
+  },
+  {
+    "n": 142,
+    "t": "TGS Diagram 4",
+    "s": "A            B                                 C                            D                        E   F                          G            H STAGE 1:                                             ",
+    "g": true
+  },
+  {
+    "n": 143,
+    "t": "TGS Diagram 5",
+    "s": "A         B          C                            D                                     E   F         G            H STAGE 4:                                                                           ",
+    "g": true
+  },
+  {
+    "n": 144,
+    "t": "TGS Diagram 6",
+    "s": "A                                B                                                     C                                                D            E             F         G            H STAGE 1:    ",
+    "g": true
+  },
+  {
+    "n": 145,
+    "t": "TGS Diagram 7",
+    "s": "A                                B                                            C                  D                                    E                             F         G            H STAGE 4:   ",
+    "g": true
+  },
+  {
+    "n": 146,
+    "t": "TGS Diagram 8",
+    "s": "A         B                C    D                        E              F                G            H NOTES DOCUMENTATION ON-SITE VARIATIONS MUST BE APPROVED BY THE TRAFFIC MANAGEMENT SUPERVISOR, TH",
+    "g": true
+  },
+  {
+    "n": 147,
+    "t": "TGS Diagram 9",
+    "s": "A                                          B                            C                        D                        E                               F                   G            H SCENARIO 1A",
+    "g": true
+  },
+  {
+    "n": 148,
+    "t": "TGS Diagram 10",
+    "s": "A                                           B                                  C                          D                         E                              F                    G            H S",
+    "g": true
+  },
+  {
+    "n": 149,
+    "t": "TGS Diagram 11",
+    "s": "A                                       B                                C                      D                           E                                     F                G            H SCENAR",
+    "g": true
+  },
+  {
+    "n": 150,
+    "t": "TGS Diagram 12",
+    "s": "A                                      B                                         C                                 D                                               E                        F           ",
+    "g": true
+  },
+  {
+    "n": 151,
+    "t": "TGS Diagram 13",
+    "s": "A                                                                                           B                                                   C                                                       ",
+    "g": true
+  },
+  {
+    "n": 152,
+    "t": "TGS Diagram 14",
+    "s": "A                                  B                               C                                      D                               E                                               F             ",
+    "g": true
+  },
+  {
+    "n": 153,
+    "t": "TGS Diagram 15",
+    "s": "A                                                                                             B                                          C                                                           D  ",
+    "g": true
+  },
+  {
+    "n": 154,
+    "t": "TGS Diagram 16",
+    "s": "A                                                                      B                                                      C                                                                D        ",
+    "g": true
+  },
+  {
+    "n": 155,
+    "t": "TGS Diagram 17",
+    "s": "A                                                                 B                                      C                                     D                           E                            ",
+    "g": true
+  },
+  {
+    "n": 156,
+    "t": "TGS Diagram 18",
+    "s": "A                                                                                B                                         C                                                           D                ",
+    "g": true
+  },
+  {
+    "n": 157,
+    "t": "TGS Diagram 19",
+    "s": "A                                             B                             C                                      D                                E                                      F            ",
+    "g": true
+  },
+  {
+    "n": 158,
+    "t": "TGS Diagram 20",
+    "s": "A                                                                      B                                      C                              D                            E                             ",
+    "g": true
+  },
+  {
+    "n": 159,
+    "t": "TGS Diagram 21",
+    "s": "A                                                                      B                                      C                                D                                       E                ",
+    "g": true
+  },
+  {
+    "n": 160,
+    "t": "TGS Diagram 22",
+    "s": "A                                                B                                  C                                                            D                                                      ",
+    "g": true
+  },
+  {
+    "n": 161,
+    "t": "TGS Diagram 23",
+    "s": "EMERGENCY ONLY EMERGENCY RESPONSE SIGNAGE TABLE OF CONTENTS PRIMARY               ALT LEFT PANEL                ALT RIGHT PANEL                ALT BOTTOM PANEL     APPROX WIDTH             EXTRA PANEL",
+    "g": true
+  },
+  {
+    "n": 162,
+    "t": "TGS Diagram 24",
+    "s": "A                                                       B                   C                                      D                E                        F               G                          ",
+    "g": true
+  },
+  {
+    "n": 163,
+    "t": "TGS Diagram 25",
+    "s": "A                                                       B              C                          D                E                        F               G                                           ",
+    "g": true
+  },
+  {
+    "n": 164,
+    "t": "TGS Diagram 26",
+    "s": "A                                                         B                                                   C                                                                                       D ",
+    "g": true
+  },
+  {
+    "n": 165,
+    "t": "TGS Diagram 27",
+    "s": "A                                                                                       B                                                                                         C                     ",
+    "g": true
+  },
+  {
+    "n": 166,
+    "t": "TGS Diagram 28",
+    "s": "A                                                                         B                                                               C                        D             E                      ",
+    "g": true
+  },
+  {
+    "n": 167,
+    "t": "TGS Diagram 29",
+    "s": "A                                                                   B                       C               D                                             E                                            F",
+    "g": true
+  },
+  {
+    "n": 168,
+    "t": "TGS Diagram 30",
+    "s": "A                                                                         B                                                               C                  D            E                     F       ",
+    "g": true
+  },
+  {
+    "n": 169,
+    "t": "TGS Diagram 31",
+    "s": "A                                                                              B                                                                       C                       D               E        ",
+    "g": true
+  },
+  {
+    "n": 170,
+    "t": "TGS Diagram 32",
+    "s": "A                                                           B                                                   C                                      D                                                ",
+    "g": true
+  },
+  {
+    "n": 171,
+    "t": "TGS Diagram 33",
+    "s": "A                                                             B                                                                C                                                      D                 ",
+    "g": true
+  },
+  {
+    "n": 172,
+    "t": "TGS Diagram 34",
+    "s": "A                                                         B                 C                                   D           E                                          F            G   H EMERGENCY ONLY",
+    "g": true
+  },
+  {
+    "n": 173,
+    "t": "TGS Diagram 35",
+    "s": "A                                                        B                                              C                                                    D                                          ",
+    "g": true
+  },
+  {
+    "n": 174,
+    "t": "TGS Diagram 36",
+    "s": "A                                                              B                                                 C                                                        D                             ",
+    "g": true
+  },
+  {
+    "n": 175,
+    "t": "TGS Diagram 37",
+    "s": "A                                                                                        B                                                                             C                                ",
+    "g": true
+  },
+  {
+    "n": 176,
+    "t": "TGS Diagram 38",
+    "s": "A                                                                        B                                                                                     C                                        ",
+    "g": true
+  },
+  {
+    "n": 177,
+    "t": "TGS Diagram 39",
+    "s": "A                                                                                    B                                                                                                                  ",
+    "g": true
+  },
+  {
+    "n": 178,
+    "t": "TGS Diagram 40",
+    "s": "A                                                                                       B                                                                                                               ",
+    "g": true
+  },
+  {
+    "n": 179,
+    "t": "TGS Diagram 41",
+    "s": "A                                                                                  B                                                                                                                    ",
+    "g": true
+  },
+  {
+    "n": 180,
+    "t": "TGS Diagram 42",
+    "s": "A                                                                                B                                                                                                C                     ",
+    "g": true
+  },
+  {
+    "n": 181,
+    "t": "TGS Diagram 43",
+    "s": "A                                                       B                                                                                 C                                                             ",
+    "g": true
+  },
+  {
+    "n": 182,
+    "t": "TGS Diagram 44",
+    "s": "A                                                                          B                                                                    C                                           D           ",
+    "g": true
+  },
+  {
+    "n": 183,
+    "t": "TGS Diagram 45",
+    "s": "A                                                                                                    B                                                                                                  ",
+    "g": true
+  },
+  {
+    "n": 184,
+    "t": "TGS Diagram 46",
+    "s": "A                                                                                        B                                                  C                                    D                      ",
+    "g": true
+  },
+  {
+    "n": 185,
+    "t": "TGS Diagram 47",
+    "s": "A                                                                   B                                                                          C                                                        ",
+    "g": true
+  },
+  {
+    "n": 186,
+    "t": "TGS Diagram 48",
+    "s": "A                                               B                                                                      C                                D                           E                   ",
+    "g": true
+  },
+  {
+    "n": 187,
+    "t": "TGS Diagram 49",
+    "s": "A                                                                     B                                          C                          D                             E                             ",
+    "g": true
+  },
+  {
+    "n": 188,
+    "t": "TGS Diagram 50",
+    "s": "A                                                                                              B                                 C                                   D                     E            ",
+    "g": true
+  },
+  {
+    "n": 189,
+    "t": "TGS Diagram 51",
+    "s": "A                                                                                                   B                                                                           C                       ",
+    "g": true
+  },
+  {
+    "n": 190,
+    "t": "TGS Diagram 52",
+    "s": "A                                                                                  B                                   C                             D                    E                        F    ",
+    "g": true
+  },
+  {
+    "n": 191,
+    "t": "TGS Diagram 53",
+    "s": "A                                                                   B                                                      C                                                      D                    E",
+    "g": true
+  },
+  {
+    "n": 192,
+    "t": "TGS Diagram 54",
+    "s": "A                                                                                                            B                               C                             D                            ",
+    "g": true
+  },
+  {
+    "n": 193,
+    "t": "TGS Diagram 55",
+    "s": "A                                                                                                         B                                                                                         C   ",
+    "g": true
+  },
+  {
+    "n": 194,
+    "t": "TGS Diagram 56",
+    "s": "A                                                                                     B                                  C                          D                   E                               ",
+    "g": true
+  },
+  {
+    "n": 195,
+    "t": "TGS Diagram 57",
+    "s": "A                                                                   B                                                      C                                                        D                   ",
+    "g": true
+  },
+  {
+    "n": 196,
+    "t": "TGS Diagram 58",
+    "s": "A                                                                                             B                                                 C                        D                        E     ",
+    "g": true
+  },
+  {
+    "n": 197,
+    "t": "TGS Diagram 59",
+    "s": "A                                                             B                                                     C                                                                      D            ",
+    "g": true
+  },
+  {
+    "n": 198,
+    "t": "TGS Diagram 60",
+    "s": "A                                                    B                                                                     C                                                D                         E ",
+    "g": true
+  },
+  {
+    "n": 199,
+    "t": "TGS Diagram 61",
+    "s": "A                                                                        B                            C                                                       D                         E               ",
+    "g": true
+  },
+  {
+    "n": 200,
+    "t": "TGS Diagram 62",
+    "s": "A                                                                         B                                                     C            D                         E            F                   ",
+    "g": true
+  },
+  {
+    "n": 201,
+    "t": "TGS Diagram 63",
+    "s": "A                                                                                             B                                                                           C                             ",
+    "g": true
+  },
+  {
+    "n": 202,
+    "t": "TGS Diagram 64",
+    "s": "A                                                                         B                                                                          C                                                  ",
+    "g": true
+  },
+  {
+    "n": 203,
+    "t": "TGS Diagram 65",
+    "s": "A                                                                                                           B                                               C                                           ",
+    "g": true
+  },
+  {
+    "n": 204,
+    "t": "TGS Diagram 66",
+    "s": "A                                                        B                                         C                                                                 D                         E        ",
+    "g": true
+  },
+  {
+    "n": 205,
+    "t": "TGS Diagram 67",
+    "s": "A                                                              B                                                                                   C                      D                             ",
+    "g": true
+  },
+  {
+    "n": 206,
+    "t": "TGS Diagram 68",
+    "s": "A                                                                     B                                                               C                      D                            E           F ",
+    "g": true
+  },
+  {
+    "n": 207,
+    "t": "TGS Diagram 69",
+    "s": "A                                                                     B                                                                                        C                        D               ",
+    "g": true
+  },
+  {
+    "n": 208,
+    "t": "TGS Diagram 70",
+    "s": "A                                                                        B                                                    C            D                         E            F                     ",
+    "g": true
+  },
+  {
+    "n": 209,
+    "t": "TGS Diagram 71",
+    "s": "A                                                                          B                                                                                C                                    D      ",
+    "g": true
+  },
+  {
+    "n": 210,
+    "t": "TGS Diagram 72",
+    "s": "A                                                                  B                                                                                   C                          D                     ",
+    "g": true
+  },
+  {
+    "n": 211,
+    "t": "TGS Diagram 73",
+    "s": "A                                                                                     B                                                     C                                                           ",
+    "g": true
+  },
+  {
+    "n": 212,
+    "t": "TGS Diagram 74",
+    "s": "A                                                                                                   B                                                     C                                             ",
+    "g": true
+  },
+  {
+    "n": 213,
+    "t": "TGS Diagram 75",
+    "s": "A                                                                B                                                       C                                         D                         E          ",
+    "g": true
+  },
+  {
+    "n": 214,
+    "t": "TGS Diagram 76",
+    "s": "A                                                                                   B                                                                                  C                              D ",
+    "g": true
+  },
+  {
+    "n": 215,
+    "t": "TGS Diagram 77",
+    "s": "A                                                 B                        C                            D                        E                  F                                              G    ",
+    "g": true
+  },
+  {
+    "n": 216,
+    "t": "TGS Diagram 78",
+    "s": "A                                                                                          B                                                                     C                               D      ",
+    "g": true
+  },
+  {
+    "n": 217,
+    "t": "TGS Diagram 79",
+    "s": "A                                                                           B                                                                             C                               D             ",
+    "g": true
+  },
+  {
+    "n": 218,
+    "t": "TGS Diagram 80",
+    "s": "A                                                            B                  C                              D                      E              F                             G                    ",
+    "g": true
+  },
+  {
+    "n": 219,
+    "t": "TGS Diagram 81",
+    "s": "A                                                                 B                                                                                             C                               D       ",
+    "g": true
+  },
+  {
+    "n": 220,
+    "t": "TGS Diagram 82",
+    "s": "A                                                               B                                                                   C                           D                            E          ",
+    "g": true
+  },
+  {
+    "n": 221,
+    "t": "TGS Diagram 83",
+    "s": "A                                                         B                                           C                                                                                  D              ",
+    "g": true
+  },
+  {
+    "n": 222,
+    "t": "TGS Diagram 84",
+    "s": "A                                                         B                                            C                                                                                     D          ",
+    "g": true
+  },
+  {
+    "n": 223,
+    "t": "TGS Diagram 85",
+    "s": "A                                                                    B                                                                                C                             D                   ",
+    "g": true
+  },
+  {
+    "n": 224,
+    "t": "TGS Diagram 86",
+    "s": "A                                                                                   B                                                                                  C                              D ",
+    "g": true
+  },
+  {
+    "n": 225,
+    "t": "TGS Diagram 87",
+    "s": "A                                                         B                                            C                                                                                     D          ",
+    "g": true
+  },
+  {
+    "n": 226,
+    "t": "TGS Diagram 88",
+    "s": "A                                                    B                                                                                    C                   D                                  E      ",
+    "g": true
+  },
+  {
+    "n": 227,
+    "t": "TGS Diagram 89",
+    "s": "A                                                    B                                                                                    C                   D                                         ",
+    "g": true
+  },
+  {
+    "n": 228,
+    "t": "TGS Diagram 90",
+    "s": "A                                                        B                                                       C                                                                        D             ",
+    "g": true
+  },
+  {
+    "n": 229,
+    "t": "TGS Diagram 91",
+    "s": "A         B   C                  D                      E                F    G   H SCENARIO 1:                                                                               1. NOTES THIS DRAWING MAY ",
+    "g": true
+  },
+  {
+    "n": 230,
+    "t": "TGS Diagram 92",
+    "s": "A                         B                         C                     D                    E                        F                      G                                H SCENARIO 1:           ",
+    "g": true
+  },
+  {
+    "n": 231,
+    "t": "TGS Diagram 93",
+    "s": "A                       B                        C                    D                    E                        F                      G                                H SCENARIO 1:               ",
+    "g": true
+  },
+  {
+    "n": 232,
+    "t": "TGS Diagram 94",
+    "s": "A                            B                           C                        D                       E                             F                      G                                H SCENAR",
+    "g": true
+  },
+  {
+    "n": 233,
+    "t": "TGS Diagram 95",
+    "s": "A                       B                       C                     D                    E                        F                      G                                H SCENARIO 1:               ",
+    "g": true
+  },
+  {
+    "n": 234,
+    "t": "TGS Diagram 96",
+    "s": "A                            B                           C                       D                        E                             F                      G                                H SCENAR",
+    "g": true
+  },
+  {
+    "n": 235,
+    "t": "TGS Diagram 97",
+    "s": "A                                B                                C            D                   E                   F                  G                                H SCENARIO 1:                ",
+    "g": true
+  },
+  {
+    "n": 236,
+    "t": "TGS Diagram 98",
+    "s": "A                           B                      C                        D                 E                             F                   G                                H SCENARIO 1:          ",
+    "g": true
+  },
+  {
+    "n": 237,
+    "t": "TGS Diagram 99",
+    "s": "A                           B                      C                        D                 E                             F                   G                                H SCENARIO 1:          ",
+    "g": true
+  },
+  {
+    "n": 238,
+    "t": "TGS Diagram 100",
+    "s": "A                           B                      C                        D                 E                             F                   G                                H SCENARIO 1:          ",
+    "g": true
+  },
+  {
+    "n": 239,
+    "t": "TGS Diagram 101",
+    "s": "A                           B                      C                        D                 E                             F                   G                                H SCENARIO 1:          ",
+    "g": true
+  },
+  {
+    "n": 240,
+    "t": "TGS Diagram 102",
+    "s": "A                   B                     C                       D                  E                       F                     G                                H SCENARIO 1:                       ",
+    "g": true
+  },
+  {
+    "n": 241,
+    "t": "TGS Diagram 103",
+    "s": "A                   B                C                 D                   E                 F   G   H SCENARIO 1:                                                                                      ",
+    "g": true
+  },
+  {
+    "n": 242,
+    "t": "TGS Diagram 104",
+    "s": "A         B   C                 D                      E              F                  G   H SCENARIO 1:                                                                                              ",
+    "g": true
+  },
+  {
+    "n": 243,
+    "t": "TGS Diagram 105",
+    "s": "A                       B                       C                       D                    E                        F                      G                                H SCENARIO 1:             ",
+    "g": true
+  },
+  {
+    "n": 244,
+    "t": "TGS Diagram 106",
+    "s": "A                       B                      C                      D                    E                        F                      G                                H SCENARIO 1:               ",
+    "g": true
+  },
+  {
+    "n": 245,
+    "t": "TGS Diagram 107",
+    "s": "A                            B                            C                      D                       E                             F                      G                                H SCENARI",
+    "g": true
+  },
+  {
+    "n": 246,
+    "t": "TGS Diagram 108",
+    "s": "A                               B                         C              D                     E                F                  G                                H SCENARIO 1:                       ",
+    "g": true
+  },
+  {
+    "n": 247,
+    "t": "TGS Diagram 109",
+    "s": "A                          B                        C                       D                 E                             F                   G                                H SCENARIO 1:          ",
+    "g": true
+  },
+  {
+    "n": 248,
+    "t": "TGS Diagram 110",
+    "s": "A              B                     C                 D                     E                  F                G   H SCENARIO 1:                                                                      ",
+    "g": true
+  },
+  {
+    "n": 249,
+    "t": "TGS Diagram 111",
+    "s": "A         B   C          D                  E           F   G   H SCENARIO 1:                                                             1. NOTES THIS DRAWING MAY BE USED ON THE FOLLOWING SCENARIOS: ",
+    "g": true
+  },
+  {
+    "n": 250,
+    "t": "TGS Diagram 112",
+    "s": "A                   B                     C                     D                     E                      F                      G                                H SCENARIO 1:                      ",
+    "g": true
+  },
+  {
+    "n": 251,
+    "t": "TGS Diagram 113",
+    "s": "A                   B                     C                     D                     E                      F                      G                                H SCENARIO 1:                      ",
+    "g": true
+  },
+  {
+    "n": 252,
+    "t": "TGS Diagram 114",
+    "s": "A                   B                     C                     D                     E                      F                      G                                H SCENARIO 1:                      ",
+    "g": true
+  },
+  {
+    "n": 253,
+    "t": "TGS Diagram 115",
+    "s": "A                      B                             C                            D                      E                          F                     G                                H SCENARIO 1:",
+    "g": true
+  },
+  {
+    "n": 254,
+    "t": "TGS Diagram 116",
+    "s": "A                      B                            C                            D                   E                          F                     G                                H SCENARIO 1:    ",
+    "g": true
+  },
+  {
+    "n": 255,
+    "t": "TGS Diagram 117",
+    "s": "A                                B                                C            D                   E                   F                  G                                H SCENARIO 1:                ",
+    "g": true
+  },
+  {
+    "n": 256,
+    "t": "TGS Diagram 118",
+    "s": "A                           B                       C                       D                           E                             F                   G                                H SCENARIO 1:",
+    "g": true
+  },
+  {
+    "n": 257,
+    "t": "TGS Diagram 119",
+    "s": "A                           B                       C                       D                           E                             F                   G                                H SCENARIO 1:",
+    "g": true
+  },
+  {
+    "n": 258,
+    "t": "TGS Diagram 120",
+    "s": "A                           B                       C                       D                           E                             F                   G                                H SCENARIO 1:",
+    "g": true
+  },
+  {
+    "n": 259,
+    "t": "TGS Diagram 121",
+    "s": "A                           B                      C                      D                          E                             F                   G                                H SCENARIO 1:   ",
+    "g": true
+  },
+  {
+    "n": 260,
+    "t": "TGS Diagram 122",
+    "s": "A                                                                                   B                                                                         C                                         ",
+    "g": true
+  },
+  {
+    "n": 261,
+    "t": "TGS Diagram 123",
+    "s": "A                                                                                               B                                                             C                                         ",
+    "g": true
+  },
+  {
+    "n": 262,
+    "t": "TGS Diagram 124",
+    "s": "A                                                            B                                                                                                   C                                      ",
+    "g": true
+  },
+  {
+    "n": 263,
+    "t": "TGS Diagram 125",
+    "s": "A                                                                   B                                                                               C                                                   ",
+    "g": true
+  },
+  {
+    "n": 264,
+    "t": "TGS Diagram 126",
+    "s": "A                                                            B                                                                                                      C                                   ",
+    "g": true
+  },
+  {
+    "n": 265,
+    "t": "TGS Diagram 127",
+    "s": "A                                                                    B                                                                         C                                                        ",
+    "g": true
+  },
+  {
+    "n": 266,
+    "t": "TGS Diagram 128",
+    "s": "A                                                                 B                                                            C                                                                        ",
+    "g": true
+  },
+  {
+    "n": 267,
+    "t": "TGS Diagram 129",
+    "s": "A                                                 B                                                    C                                                                 D                              ",
+    "g": true
+  },
+  {
+    "n": 268,
+    "t": "TGS Diagram 130",
+    "s": "A                                                     B                                                                C                                                                 D              ",
+    "g": true
+  },
+  {
+    "n": 269,
+    "t": "TGS Diagram 131",
+    "s": "A                                                     B                                                                C                                                          D                     ",
+    "g": true
+  },
+  {
+    "n": 270,
+    "t": "TGS Diagram 132",
+    "s": "A                                                             B                                                         C                                                                               ",
+    "g": true
+  },
+  {
+    "n": 271,
+    "t": "TGS Diagram 133",
+    "s": "A                               B                                                         C                                                                                    D                        ",
+    "g": true
+  },
+  {
+    "n": 272,
+    "t": "TGS Diagram 134",
+    "s": "A                                                           B                                                       C                                  D                             E                  ",
+    "g": true
+  },
+  {
+    "n": 273,
+    "t": "TGS Diagram 135",
+    "s": "A                                                                      B                                                                                        C                                       ",
+    "g": true
+  },
+  {
+    "n": 274,
+    "t": "TGS Diagram 136",
+    "s": "A                                                                                               B                                                             C                                         ",
+    "g": true
+  },
+  {
+    "n": 275,
+    "t": "TGS Diagram 137",
+    "s": "A                                                                         B                                                               C                                              D              ",
+    "g": true
+  },
+  {
+    "n": 276,
+    "t": "TGS Diagram 138",
+    "s": "A                                                           B                                                        C                                  D                             E                 ",
+    "g": true
+  },
+  {
+    "n": 277,
+    "t": "TGS Diagram 139",
+    "s": "A                                                                B                                                                                      C                                               ",
+    "g": true
+  },
+  {
+    "n": 278,
+    "t": "TGS Diagram 140",
+    "s": "A                                                                                             B                                                               C                                         ",
+    "g": true
+  },
+  {
+    "n": 279,
+    "t": "TGS Diagram 141",
+    "s": "A                               B                      C                        D                         E                               F                   G                                H NOTES T",
+    "g": true
+  },
+  {
+    "n": 280,
+    "t": "TGS Diagram 142",
+    "s": "A                                                                                                B                                                                                     C                ",
+    "g": true
+  },
+  {
+    "n": 281,
+    "t": "TGS Diagram 143",
+    "s": "A                                                                                                              B                                                     C                                  ",
+    "g": true
+  },
+  {
+    "n": 282,
+    "t": "TGS Diagram 144",
+    "s": "A                                                                                      B                                                                     C                                          ",
+    "g": true
+  },
+  {
+    "n": 283,
+    "t": "TGS Diagram 145",
+    "s": "A                                                                                     B                                                                      C                                          ",
+    "g": true
+  },
+  {
+    "n": 284,
+    "t": "TGS Diagram 146",
+    "s": "A                                                                                                                              B                                                             C          ",
+    "g": true
+  },
+  {
+    "n": 285,
+    "t": "TGS Diagram 147",
+    "s": "A                                                         B                                                       C                                                  D                                  ",
+    "g": true
+  },
+  {
+    "n": 286,
+    "t": "TGS Diagram 148",
+    "s": "A                                                             B                                                                                       C                                                 ",
+    "g": true
+  },
+  {
+    "n": 287,
+    "t": "TGS Diagram 149",
+    "s": "A                                                             B                                                                                                 C                                       ",
+    "g": true
+  },
+  {
+    "n": 288,
+    "t": "TGS Diagram 150",
+    "s": "A                                                                             B                                                                               C                                         ",
+    "g": true
+  },
+  {
+    "n": 289,
+    "t": "TGS Diagram 151",
+    "s": "A                                                                                                                  B                                            C                                       ",
+    "g": true
+  },
+  {
+    "n": 290,
+    "t": "TGS Diagram 152",
+    "s": "A                                                                                                                 B                                                C                                    ",
+    "g": true
+  },
+  {
+    "n": 291,
+    "t": "TGS Diagram 153",
+    "s": "A                                                                                                      B                                                               C                                ",
+    "g": true
+  },
+  {
+    "n": 292,
+    "t": "TGS Diagram 154",
+    "s": "A                                                                                            B                                                                      C                                   ",
+    "g": true
+  },
+  {
+    "n": 293,
+    "t": "TGS Diagram 155",
+    "s": "A                                                                                                                 B                                                                C                    ",
+    "g": true
+  },
+  {
+    "n": 294,
+    "t": "TGS Diagram 156",
+    "s": "A                                                            B                                                                                                   C                                      ",
+    "g": true
+  },
+  {
+    "n": 295,
+    "t": "TGS Diagram 157",
+    "s": "A                                                            B                                                                                                   C                                      ",
+    "g": true
+  },
+  {
+    "n": 296,
+    "t": "TGS Diagram 158",
+    "s": "A                                                        B                                                                                                         C                                    ",
+    "g": true
+  },
+  {
+    "n": 297,
+    "t": "TGS Diagram 159",
+    "s": "A                                                                                              B                                                                                     C                  ",
+    "g": true
+  },
+  {
+    "n": 298,
+    "t": "TGS Diagram 160",
+    "s": "A                                                                                                 B                                                             C                                       ",
+    "g": true
+  },
+  {
+    "n": 299,
+    "t": "TGS Diagram 161",
+    "s": "A                                                                                                                                    B                                            C                     ",
+    "g": true
+  },
+  {
+    "n": 300,
+    "t": "TGS Diagram 162",
+    "s": "A                                                                                                             B                                                  C                                      ",
+    "g": true
+  },
+  {
+    "n": 301,
+    "t": "TGS Diagram 163",
+    "s": "A                                                                                                            B                                                               C                          ",
+    "g": true
+  },
+  {
+    "n": 302,
+    "t": "TGS Diagram 164",
+    "s": "A                                                                                                            B                                                               C                          ",
+    "g": true
+  },
+  {
+    "n": 303,
+    "t": "TGS Diagram 165",
+    "s": "A                                                                    B                                                                                                           C                      ",
+    "g": true
+  },
+  {
+    "n": 304,
+    "t": "TGS Diagram 166",
+    "s": "A                                                                              B                                                                                                           C            ",
+    "g": true
+  },
+  {
+    "n": 305,
+    "t": "TGS Diagram 167",
+    "s": "A                                                                                     B                                                                                                   C             ",
+    "g": true
+  },
+  {
+    "n": 306,
+    "t": "TGS Diagram 168",
+    "s": "A                                                                                     B                                                                                                   C             ",
+    "g": true
+  },
+  {
+    "n": 307,
+    "t": "TGS Diagram 169",
+    "s": "A                                                                                                                 B                                                                     C               ",
+    "g": true
+  },
+  {
+    "n": 308,
+    "t": "TGS Diagram 170",
+    "s": "A                                                                                           B                                                                                        C                  ",
+    "g": true
+  },
+  {
+    "n": 309,
+    "t": "TGS Diagram 171",
+    "s": "A                                                                                     B                                                                               C                                 ",
+    "g": true
+  },
+  {
+    "n": 310,
+    "t": "TGS Diagram 172",
+    "s": "A                                                                                                                  B                                                                                    ",
+    "g": true
+  },
+  {
+    "n": 311,
+    "t": "TGS Diagram 173",
+    "s": "A                                                        B                                                                                                         C                                    ",
+    "g": true
+  },
+  {
+    "n": 312,
+    "t": "TGS Diagram 174",
+    "s": "A                                                                B                                                                                      C                                               ",
+    "g": true
+  },
+  {
+    "n": 313,
+    "t": "TGS Diagram 175",
+    "s": "A                                                               B                                                                           C                                                           ",
+    "g": true
+  },
+  {
+    "n": 314,
+    "t": "TGS Diagram 176",
+    "s": "A                                                                                                                 B                                                  C                                  ",
+    "g": true
+  },
+  {
+    "n": 315,
+    "t": "TGS Diagram 177",
+    "s": "A                                                                                       B                                                                 C                                             ",
+    "g": true
+  },
+  {
+    "n": 316,
+    "t": "TGS Diagram 178",
+    "s": "A                                                                                                               B                                                              C                        ",
+    "g": true
+  },
+  {
+    "n": 317,
+    "t": "TGS Diagram 179",
+    "s": "A                                                                                     B                                                                      C                                          ",
+    "g": true
+  },
+  {
+    "n": 318,
+    "t": "TGS Diagram 180",
+    "s": "A                  B                     C                     D               E               F             G                   H SCENARIO 1:                                                          ",
+    "g": true
+  },
+  {
+    "n": 319,
+    "t": "TGS Diagram 181",
+    "s": "A                     B                       C                     D                     E               F                  G            H SCENARIO 1:                FLASHING ARROW ON                ",
+    "g": true
+  },
+  {
+    "n": 320,
+    "t": "TGS Diagram 182",
+    "s": "A                  B                          C                          D                    E                  F                  G                                H SCENARIO 1:                 FLASH",
+    "g": true
+  },
+  {
+    "n": 321,
+    "t": "TGS Diagram 183",
+    "s": "A                 B                           C                      D                      E             F                  G                                 H SCENARIO 1:                 FLASHING AR",
+    "g": true
+  },
+  {
+    "n": 322,
+    "t": "TGS Diagram 184",
+    "s": "A                                                             B                                C                   D                    E                                 F                             ",
+    "g": true
+  },
+  {
+    "n": 323,
+    "t": "TGS Diagram 185",
+    "s": "A                                                               B                                C                  D                     E                               F                             ",
+    "g": true
+  },
+  {
+    "n": 324,
+    "t": "TGS Diagram 186",
+    "s": "A                                                                         B                                            C                     D                   E                                      ",
+    "g": true
+  },
+  {
+    "n": 325,
+    "t": "TGS Diagram 187",
+    "s": "A                                                                       B                                         C                  D                  E                                               ",
+    "g": true
+  },
+  {
+    "n": 326,
+    "t": "TGS Diagram 188",
+    "s": "A                                                                         B                             C                 D                    E                             F                          ",
+    "g": true
+  },
+  {
+    "n": 327,
+    "t": "TGS Diagram 189",
+    "s": "A                                                                                 B                                                 C                    D                  E                           ",
+    "g": true
+  },
+  {
+    "n": 328,
+    "t": "TGS Diagram 190",
+    "s": "A                                                       B                                                          C                     D                        E                                     ",
+    "g": true
+  },
+  {
+    "n": 329,
+    "t": "TGS Diagram 191",
+    "s": "A                                               B                    C                D                    E                            F                                     G                         ",
+    "g": true
+  },
+  {
+    "n": 330,
+    "t": "TGS Diagram 192",
+    "s": "A                                              B              C                 D                    E                                        F                                    G                    ",
+    "g": true
+  },
+  {
+    "n": 331,
+    "t": "TGS Diagram 193",
+    "s": "A                                                       B                C               D                     E                             F                                         G                ",
+    "g": true
+  },
+  {
+    "n": 332,
+    "t": "TGS Diagram 194",
+    "s": "A                                                                B                C              D                     E                                  F                                            G",
+    "g": true
+  },
+  {
+    "n": 333,
+    "t": "TGS Diagram 195",
+    "s": "A                                  B                C                                        D                            E                                                   F                  G      ",
+    "g": true
+  },
+  {
+    "n": 334,
+    "t": "TGS Diagram 196",
+    "s": "A                                  B                C                                        D                            E                                                   F                  G      ",
+    "g": true
+  },
+  {
+    "n": 335,
+    "t": "TGS Diagram 197",
+    "s": "A                                              B                       C                                       D                            E                                             F             ",
+    "g": true
+  },
+  {
+    "n": 336,
+    "t": "TGS Diagram 198",
+    "s": "A                                      B                                                C                  D                   E                                          F                             ",
+    "g": true
+  },
+  {
+    "n": 337,
+    "t": "TGS Diagram 199",
+    "s": "A                            B                 C                  D                               E                              F                               G                                H SCEN",
+    "g": true
+  },
+  {
+    "n": 338,
+    "t": "TGS Diagram 200",
+    "s": "A                            B                       C                     D                      E                              F                               G                                H SCEN",
+    "g": true
+  },
+  {
+    "n": 339,
+    "t": "TGS Diagram 201",
+    "s": "A                       B               C                 D                         E                              F                              G                                H SCENARIO 1:        ",
+    "g": true
+  },
+  {
+    "n": 340,
+    "t": "TGS Diagram 202",
+    "s": "A                       B               C                  D                        E                              F                              G                                 H SCENARIO 1:       ",
+    "g": true
+  },
+  {
+    "n": 341,
+    "t": "TGS Diagram 203",
+    "s": "A                  B                     C                   D               E               F             G                   H SCENARIO 1:                                                            ",
+    "g": true
+  },
+  {
+    "n": 342,
+    "t": "TGS Diagram 204",
+    "s": "A                     B                      C                     D                     E               F                   G           H SCENARIO 1:                FLASHING ARROW ON                 ",
+    "g": true
+  },
+  {
+    "n": 343,
+    "t": "TGS Diagram 205",
+    "s": "A                                                 B                                                  C                                                                             D                    ",
+    "g": true
+  },
+  {
+    "n": 344,
+    "t": "TGS Diagram 206",
+    "s": "A                                                           B                                                                                                   C                                       ",
+    "g": true
+  },
+  {
+    "n": 345,
+    "t": "TGS Diagram 207",
+    "s": "A                                                   B                                                          C                                       D                                                ",
+    "g": true
+  },
+  {
+    "n": 346,
+    "t": "TGS Diagram 208",
+    "s": "A                                                   B                                                                                 C                                                                 ",
+    "g": true
+  },
+  {
+    "n": 347,
+    "t": "TGS Diagram 209",
+    "s": "A                                                   B                                                                               C                                                                   ",
+    "g": true
+  },
+  {
+    "n": 348,
+    "t": "TGS Diagram 210",
+    "s": "A                                                         B                                                            C                                                                                ",
+    "g": true
+  },
+  {
+    "n": 349,
+    "t": "TGS Diagram 211",
+    "s": "A                                                             B                                           C                                                                                             ",
+    "g": true
+  },
+  {
+    "n": 350,
+    "t": "TGS Diagram 212",
+    "s": "A                                                                                  B                                                                                                               C    ",
+    "g": true
+  },
+  {
+    "n": 351,
+    "t": "TGS Diagram 213",
+    "s": "A                                                                                         B                                                                                                 C           ",
+    "g": true
+  },
+  {
+    "n": 352,
+    "t": "TGS Diagram 214",
+    "s": "A                                                             B                                                                 C                                               D                       ",
+    "g": true
+  },
+  {
+    "n": 353,
+    "t": "TGS Diagram 215",
+    "s": "A                                                        B                                                                                    C               D                           E             ",
+    "g": true
+  },
+  {
+    "n": 354,
+    "t": "TGS Diagram 216",
+    "s": "A                                                                     B                   C      D                           E        F                   G                                             ",
+    "g": true
+  },
+  {
+    "n": 355,
+    "t": "TGS Diagram 217",
+    "s": "A                                                   B                                               C                                                D                                             E    ",
+    "g": true
+  },
+  {
+    "n": 356,
+    "t": "TGS Diagram 218",
+    "s": "A                                                B                   C                                                        D                         E             F                G                ",
+    "g": true
+  },
+  {
+    "n": 357,
+    "t": "TGS Diagram 219",
+    "s": "A                                                                     B          C               D                         E                   F                   G                                    ",
+    "g": true
+  },
+  {
+    "n": 358,
+    "t": "TGS Diagram 220",
+    "s": "A                                                           B                                                                    C                                                            D         ",
+    "g": true
+  },
+  {
+    "n": 359,
+    "t": "TGS Diagram 221",
+    "s": "A                                                        B                                                                                     C                                D                       ",
+    "g": true
+  },
+  {
+    "n": 360,
+    "t": "TGS Diagram 222",
+    "s": "A                 B                   C        D                        E          F                     G                             H NOTES TOLERANCES POSITION OF SIGNS: MINIMUM 10% LESS THAN THE D",
+    "g": true
+  },
+  {
+    "n": 361,
+    "t": "TGS Diagram 223",
+    "s": "A                               B                 C                        D                          E                    F               G                        H NOTES TOLERANCES POSITION OF SIGNS",
+    "g": true
+  },
+  {
+    "n": 362,
+    "t": "TGS Diagram 224",
+    "s": "A                                                  B                          C               D                          E                          F                              G                    ",
+    "g": true
+  },
+  {
+    "n": 363,
+    "t": "TGS Diagram 225",
+    "s": "A                                                        B   C                        D                        E                         F                            G                                 ",
+    "g": true
+  },
+  {
+    "n": 364,
+    "t": "TGS Diagram 226",
+    "s": "A                                                                                    B                           C                           D                                        E                 ",
+    "g": true
+  },
+  {
+    "n": 365,
+    "t": "TGS Diagram 227",
+    "s": "A   B                                                                          C                                                 D                              E                              F        ",
+    "g": true
+  },
+  {
+    "n": 366,
+    "t": "TGS Diagram 228",
+    "s": "A                                          B                                                                         C                                                            D                     ",
+    "g": true
+  },
+  {
+    "n": 367,
+    "t": "TGS Diagram 229",
+    "s": "A                                               B                                                                                  C                                             D                      ",
+    "g": true
+  },
+  {
+    "n": 368,
+    "t": "TGS Diagram 230",
+    "s": "A                                          B                                                                         C                                                            D                     ",
+    "g": true
+  },
+  {
+    "n": 369,
+    "t": "TGS Diagram 231",
+    "s": "A                                               B                                                                                  C                                             D                      ",
+    "g": true
+  }
+]

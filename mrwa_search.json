@@ -1,0 +1,92 @@
+[
+  {
+    "url": "https://portal-mainroads.opendata.arcgis.com/datasets/mainroads::road-hierarchy",
+    "name": "Road Hierarchy",
+    "snippet": "This site was built with ArcGIS Hub and uses anonymous tracking to improve performance and analyze site usage in accordance with Esri's Privacy Statement. Read more",
+    "host_name": "portal-mainroads.opendata.arcgis.com",
+    "rank": 0,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://portal-mainroads.opendata.arcgis.com/datasets/mainroads::road-network",
+    "name": "Road Network | Main Roads Open Data, Maps & Apps",
+    "snippet": "This site was built with ArcGIS Hub and uses anonymous tracking to improve performance and analyze site usage in accordance with Esri's Privacy Statement.",
+    "host_name": "portal-mainroads.opendata.arcgis.com",
+    "rank": 1,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://portal-mainroads.opendata.arcgis.com/datasets/mainroads::culverts",
+    "name": "Culverts | Main Roads Open Data, Maps & Apps",
+    "snippet": "This layer indicates the location of culverts managed and controlled by Main Roads Western Australia. A culvert is a drain or pipe that allows water to flow ...",
+    "host_name": "portal-mainroads.opendata.arcgis.com",
+    "rank": 2,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://portal-mainroads.opendata.arcgis.com/datasets/mainroads::m-links-road-network",
+    "name": "M-Links Road Network",
+    "snippet": "This site was built with ArcGIS Hub and uses anonymous tracking to improve performance and analyze site usage in accordance with Esri's Privacy Statement.",
+    "host_name": "portal-mainroads.opendata.arcgis.com",
+    "rank": 3,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://portal-mainroads.opendata.arcgis.com/datasets",
+    "name": "Main Roads Open Data, Maps & Apps",
+    "snippet": "This layer shows the location of Speed Zones on all public access roads found in the Integrated Road Information System (IRIS) and includes temporal speed ... Read more",
+    "host_name": "portal-mainroads.opendata.arcgis.com",
+    "rank": 4,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://portal-mainroads.opendata.arcgis.com/datasets/mainroads::signs-other",
+    "name": "Signs - Other | Main Roads Open Data, Maps & Apps",
+    "snippet": "All other signs that are not regulatory , warning or guide signs that are under the responsibility of Main Roads Western Australia.",
+    "host_name": "portal-mainroads.opendata.arcgis.com",
+    "rank": 5,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://portal-mainroads.opendata.arcgis.com/datasets/intersections",
+    "name": "Intersections | Main Roads Open Data, Maps & Apps",
+    "snippet": "This layer shows intersections on the road network stored in the Integrated Road Information System (IRIS). An intersection is a road junction where two or ...",
+    "host_name": "portal-mainroads.opendata.arcgis.com",
+    "rank": 6,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://portal-mainroads.opendata.arcgis.com/datasets/mainroads::2-axle-special-purpose-vehicle",
+    "name": "2 Axle Special Purpose Vehicle - Open Data, Maps & Apps",
+    "snippet": "Enter a number to expand filtered area. Units. Metric Meters Kilometers Imperial Feet Miles Nautical Miles, Meters, Kilometers, Feet, Miles ... Read more",
+    "host_name": "portal-mainroads.opendata.arcgis.com",
+    "rank": 7,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://portal-mainroads.opendata.arcgis.com/datasets/mainroads::kerbs",
+    "name": "Kerbs | Main Roads Open Data, Maps & Apps",
+    "snippet": "This layer shows the location of kerbing on the State Road Network. Kerbs are a border of rigid material formed (concrete) at the edge of the carriageway.",
+    "host_name": "portal-mainroads.opendata.arcgis.com",
+    "rank": 8,
+    "date": "",
+    "favicon": ""
+  },
+  {
+    "url": "https://portal-mainroads.opendata.arcgis.com/datasets/mainroads::line-marking",
+    "name": "Line Marking | Main Roads Open Data, Maps & Apps - ArcGIS",
+    "snippet": "This layer shows the location of Line Marking on all public access roads found in the Integrated Road Information System (IRIS). Line Marking is any kind of ...",
+    "host_name": "portal-mainroads.opendata.arcgis.com",
+    "rank": 9,
+    "date": "",
+    "favicon": ""
+  }
+]

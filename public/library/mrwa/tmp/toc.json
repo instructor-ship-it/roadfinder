@@ -1,0 +1,304 @@
+[
+  {
+    "section": "1",
+    "title": "Introduction",
+    "page": 8,
+    "children": [
+      { "section": "1.1", "title": "Purpose and Scope", "page": 8 },
+      { "section": "1.2", "title": "Objectives and Strategies", "page": 9 }
+    ]
+  },
+  {
+    "section": "2",
+    "title": "Project Overview",
+    "page": 10,
+    "children": [
+      { "section": "2.1", "title": "Location", "page": 10 },
+      { "section": "2.2", "title": "Project Details and Site Constraints/Impacts", "page": 12 },
+      { "section": "2.3", "title": "Existing Traffic and Road Environment", "page": 13 },
+      { "section": "2.4", "title": "Overview of Proposed TTM", "page": 13 },
+      { "section": "2.5", "title": "Project Representatives", "page": 14 }
+    ]
+  },
+  {
+    "section": "3",
+    "title": "Risk Management",
+    "page": 16,
+    "children": [
+      { "section": "3.1", "title": "Risk Classification Tables", "page": 16 },
+      { "section": "3.2", "title": "Generic Risk Register", "page": 19 },
+      { 
+        "section": "3.3", 
+        "title": "Site-Specific Risk Register", 
+        "page": 44,
+        "children": [
+          { "section": "3.3.1", "title": "Risk Considerations", "page": 44 }
+        ]
+      }
+    ]
+  },
+  {
+    "section": "4",
+    "title": "Traffic Management Planning and Assessment",
+    "page": 47,
+    "children": [
+      { 
+        "section": "4.1", 
+        "title": "Traffic Assessment and Analysis", 
+        "page": 47,
+        "children": [
+          { "section": "4.1.1", "title": "Traffic and Speed Data", "page": 47 },
+          { "section": "4.1.2", "title": "Traffic Flow Analysis", "page": 47 },
+          { "section": "4.1.3", "title": "Temporary Speed Zones", "page": 49 },
+          { "section": "4.1.4", "title": "Existing Traffic signals", "page": 49 },
+          { "section": "4.1.5", "title": "Impact on Adjoining Road Network", "page": 49 },
+          { "section": "4.1.6", "title": "End of Queue Treatment", "page": 50 },
+          { "section": "4.1.7", "title": "Portable Traffic Control Devices", "page": 51 },
+          { "section": "4.1.8", "title": "Speed Management", "page": 51 },
+          { "section": "4.1.9", "title": "Excavations or Above Ground Hazards", "page": 52 }
+        ]
+      },
+      { 
+        "section": "4.2", 
+        "title": "Road Users", 
+        "page": 53,
+        "children": [
+          { "section": "4.2.1", "title": "Pedestrians", "page": 53 },
+          { "section": "4.2.2", "title": "Cyclists", "page": 53 },
+          { "section": "4.2.3", "title": "Public Transport", "page": 54 },
+          { "section": "4.2.4", "title": "Heavy and Oversized Vehicles and Loads", "page": 54 },
+          { "section": "4.2.5", "title": "Existing Parking Facilities", "page": 54 },
+          { "section": "4.2.6", "title": "Access to Adjoining Properties/Business", "page": 54 },
+          { "section": "4.2.7", "title": "Rail Crossings", "page": 55 },
+          { "section": "4.2.8", "title": "School Crossings", "page": 55 },
+          { "section": "4.2.9", "title": "Special Events and Other Works", "page": 55 },
+          { "section": "4.2.10", "title": "Emergency Vehicle Access", "page": 56 }
+        ]
+      },
+      { "section": "4.3", "title": "Night Works Provisions", "page": 56 },
+      { "section": "4.4", "title": "Road Safety Barriers", "page": 56 },
+      { 
+        "section": "4.5", 
+        "title": "Shadow Vehicles", 
+        "page": 56,
+        "children": [
+          { "section": "4.5.1", "title": "Truck Mounted Attenuators", "page": 58 }
+        ]
+      },
+      { 
+        "section": "4.6", 
+        "title": "Consultation and Communication/Notification", 
+        "page": 60,
+        "children": [
+          { "section": "4.6.1", "title": "Other Agencies", "page": 60 },
+          { "section": "4.6.2", "title": "Public", "page": 60 }
+        ]
+      },
+      { "section": "4.7", "title": "Temporary Pavement Markings", "page": 60 },
+      { 
+        "section": "4.8", 
+        "title": "Temporary Traffic Management Requirements", 
+        "page": 62,
+        "children": [
+          { "section": "4.8.1", "title": "Short Term Low Impact Setups", "page": 62 },
+          { "section": "4.8.2", "title": "Class 2 Mobile Convoys", "page": 74 },
+          { "section": "4.8.3", "title": "Class 3 Mobile Convoys", "page": 76 }
+        ]
+      }
+    ]
+  },
+  {
+    "section": "5",
+    "title": "Site Assessment",
+    "page": 79,
+    "children": [
+      { 
+        "section": "5.1", 
+        "title": "Provision to Address Environmental Conditions", 
+        "page": 79,
+        "children": [
+          { "section": "5.1.2", "title": "Sun Glare", "page": 79 },
+          { "section": "5.1.3", "title": "Fog/Dust/Smoke", "page": 80 },
+          { "section": "5.1.4", "title": "Road Geometry, Terrain, Vegetation and Structures", "page": 80 }
+        ]
+      },
+      { "section": "5.2", "title": "Existing Traffic and Advertising Signage", "page": 80 }
+    ]
+  },
+  {
+    "section": "6",
+    "title": "Safety Plan",
+    "page": 81,
+    "children": [
+      { "section": "6.1", "title": "Occupational Safety and Health", "page": 81 },
+      { 
+        "section": "6.2", 
+        "title": "Roles and Responsibilities", 
+        "page": 81,
+        "children": [
+          { "section": "6.2.1", "title": "Responsibilities", "page": 81 },
+          { "section": "6.2.2", "title": "Roles", "page": 82 }
+        ]
+      },
+      { "section": "6.3", "title": "Personal Protective Equipment", "page": 85 },
+      { "section": "6.4", "title": "Plant and Equipment", "page": 85 },
+      { "section": "6.5", "title": "Trip Hazards", "page": 86 }
+    ]
+  },
+  {
+    "section": "7",
+    "title": "Implementation",
+    "page": 87,
+    "children": [
+      { 
+        "section": "7.1", 
+        "title": "Traffic Guidance Schemes", 
+        "page": 87,
+        "children": [
+          { "section": "7.1.1", "title": "Independent Works Crew", "page": 88 },
+          { "section": "7.1.2", "title": "TMI with BWTM", "page": 88 },
+          { "section": "7.1.3", "title": "TMI with 3 Months Experience", "page": 88 },
+          { "section": "7.1.4", "title": "Additional Planning & Approvals", "page": 88 },
+          { "section": "7.1.5", "title": "Setup and Guidance Drawings", "page": 88 },
+          { "section": "7.1.6", "title": "Traffic Management Setups to be used in Emergency Scenarios Only", "page": 89 },
+          { "section": "7.1.7", "title": "Non-Complex Drawings List", "page": 90 }
+        ]
+      },
+      { 
+        "section": "7.2", 
+        "title": "Sequence and Staging", 
+        "page": 98,
+        "children": [
+          { "section": "7.2.1", "title": "Traffic Guidance Schemes Installation General", "page": 98 },
+          { "section": "7.2.2", "title": "Typical Installation Principles", "page": 98 },
+          { "section": "7.2.3", "title": "Installation Process", "page": 99 },
+          { "section": "7.2.4", "title": "Placement of Signs and Devices", "page": 99 },
+          { "section": "7.2.5", "title": "Traffic Guidance Schemes Removal General", "page": 100 },
+          { "section": "7.2.6", "title": "Typical Removal Principles", "page": 100 },
+          { "section": "7.2.7", "title": "Removal Process", "page": 101 },
+          { "section": "7.2.8", "title": "Removal Order for Signs and Devices", "page": 101 }
+        ]
+      },
+      { 
+        "section": "7.3", 
+        "title": "Traffic Control Devices", 
+        "page": 101,
+        "children": [
+          { "section": "7.3.1", "title": "Requirements for Signs", "page": 101 },
+          { "section": "7.3.2", "title": "Tolerances on Positioning of Signs and Devices", "page": 103 },
+          { "section": "7.3.3", "title": "Flashing Arrow Signs", "page": 103 },
+          { "section": "7.3.4", "title": "Delineation and Edge Clearance", "page": 104 },
+          { "section": "7.3.5", "title": "Variable Message Signs", "page": 105 }
+        ]
+      },
+      { "section": "7.4", "title": "Site Access for Works Vehicles", "page": 106 },
+      { "section": "7.5", "title": "Communicating Traffic Management Plan Requirements", "page": 107 }
+    ]
+  },
+  {
+    "section": "8",
+    "title": "Emergency Arrangements and Contingencies",
+    "page": 108,
+    "children": [
+      { 
+        "section": "8.1", 
+        "title": "Traffic Incident Procedures", 
+        "page": 108,
+        "children": [
+          { "section": "8.1.1", "title": "Serious Injury or Fatality", "page": 108 },
+          { "section": "8.1.2", "title": "Minor Incident or Vehicle Break Down within Site", "page": 108 }
+        ]
+      },
+      { "section": "8.2", "title": "Emergency Services", "page": 109 },
+      { "section": "8.3", "title": "Dangerous Goods", "page": 109 },
+      { "section": "8.4", "title": "Damage to Services", "page": 109 },
+      { 
+        "section": "8.5", 
+        "title": "Failure of Services", 
+        "page": 109,
+        "children": [
+          { "section": "8.5.1", "title": "Failure of Traffic Signals", "page": 109 },
+          { "section": "8.5.2", "title": "Failure of Street Lighting", "page": 109 },
+          { "section": "8.5.3", "title": "Failure of Power", "page": 109 }
+        ]
+      },
+      { "section": "8.6", "title": "Emergency Contacts", "page": 110 }
+    ]
+  },
+  {
+    "section": "9",
+    "title": "Monitoring and Measurement",
+    "page": 111,
+    "children": [
+      { 
+        "section": "9.1", 
+        "title": "Daily Inspections", 
+        "page": 111,
+        "children": [
+          { "section": "9.1.1", "title": "Before works start", "page": 111 },
+          { "section": "9.1.2", "title": "During work hours", "page": 112 },
+          { "section": "9.1.3", "title": "Closing down each day", "page": 112 },
+          { "section": "9.1.4", "title": "After hours", "page": 112 }
+        ]
+      },
+      { "section": "9.2", "title": "Traffic Management Plan Audits and Inspections", "page": 112 },
+      { "section": "9.3", "title": "Records", "page": 113 },
+      { "section": "9.4", "title": "Public Feedback", "page": 113 }
+    ]
+  },
+  {
+    "section": "10",
+    "title": "Management Review and Approvals",
+    "page": 114,
+    "children": [
+      { "section": "10.1", "title": "Traffic Management Plan Review and Improvement", "page": 114 },
+      { "section": "10.2", "title": "Variations", "page": 114 },
+      { "section": "10.3", "title": "Approvals, Authorisations and Permits", "page": 114 }
+    ]
+  },
+  {
+    "section": "A",
+    "title": "Appendix A - Notification of Road Works",
+    "page": 115,
+    "isAppendix": true
+  },
+  {
+    "section": "B",
+    "title": "Appendix B - Variation to Standards Form",
+    "page": 118,
+    "isAppendix": true,
+    "children": [
+      { "section": "B.1", "title": "Variation to the Standard Template", "page": 118 },
+      { "section": "B.2", "title": "Generic TGS Variations to the Standards", "page": 121 }
+    ]
+  },
+  {
+    "section": "C",
+    "title": "Appendix C - Sample Records Forms",
+    "page": 125,
+    "isAppendix": true,
+    "children": [
+      { "section": "C.1", "title": "Incident Report Form", "page": 129 },
+      { "section": "C.2", "title": "Onsite Traffic Guidance Scheme Selection Checklist", "page": 132 }
+    ]
+  },
+  {
+    "section": "D",
+    "title": "Appendix D - Traffic Analysis and Volume Count",
+    "page": 137,
+    "isAppendix": true
+  },
+  {
+    "section": "E",
+    "title": "Appendix E - Roadway Access Authorisation Permit",
+    "page": 138,
+    "isAppendix": true
+  },
+  {
+    "section": "F",
+    "title": "Appendix F - Generic Traffic Guidance Scheme (TGS Diagrams)",
+    "page": 139,
+    "isAppendix": true,
+    "isTgs": true
+  }
+]

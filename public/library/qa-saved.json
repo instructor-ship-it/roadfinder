@@ -1,0 +1,434 @@
+[
+  {
+    "id": "qa-example-001",
+    "question": "What are the speed zone requirements for TC positions?",
+    "answer": "Based on **AGTTM Part 3** and the **MRWA Code of Practice**:\n\n## Speed Zone Requirements\n\n- TC positions require speed zones to be set at **40 km/h or less** in work zones\n- Approach speed zones are typically set **200-500m** before the TC position\n- The speed zone length depends on the road classification and approach speed\n\n### Minimum Approach Distances\n\n| Normal Speed | Minimum Approach |\n|--------------|------------------|\n| \u226460 km/h | 100m |\n| >60 km/h | 200m |\n\n> **Note:** Always refer to the current MRWA Code of Practice for exact requirements.",
+    "documents": [
+      "agttm-part-3",
+      "mrwa-cop-2025"
+    ],
+    "documentNames": [
+      "AGTTM Part 3",
+      "MRWA COP May 2025"
+    ],
+    "category": "Speed Zones",
+    "createdAt": "2026-03-22T10:00:00.000Z",
+    "isFavorite": true
+  },
+  {
+    "id": "qa-2026-03-23-004",
+    "question": "What is the distance required from the ending taper to the TC to allow traffic back into their natural lane?",
+    "answer": "Based on **AGTTM Part 3** (Static Worksites) and **MRWA Code of Practice**:\n\n## Termination Area Length (Downstream Distance)\n\nThe distance required after the end of the taper (the **termination area**) allows traffic to safely return to their normal lane position. This distance varies by speed:\n\n| Speed Range (km/h) | Minimum Termination Length |\n|--------------------|----------------------------|\n| \u226445 | **30m** |\n| 46-55 | **50m** |\n| 56-65 | **70m** |\n| 66-75 | **100m** |\n| 76-85 | **150m** |\n| 86-95 | **200m** |\n| \u226596 | **250m** |\n\n---\n\n## Purpose of the Termination Area\n\nThe termination area serves several critical functions:\n\n1. **Allows traffic to merge back** \u2013 Drivers need time to adjust and return to normal lane position\n2. **Provides buffer from work zone** \u2013 Keeps vehicles clear of workers and equipment\n3. **Sign placement location** \u2013 Where END ROADWORK or other termination signs are placed\n\n---\n\n## Summary for 60 km/h Site\n\nFor a typical 60 km/h worksite:\n\n| Component | Length |\n|-----------|--------|\n| TC position to taper start | 6m |\n| Approach taper (lateral shift) | 30m |\n| Work area | As required |\n| End taper | 30m (or 60m for merge) |\n| **Termination area** | **70m** |\n\n> **Important:** Always refer to your specific TGS and the MRWA Code of Practice.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Traffic Control",
+    "createdAt": "2026-03-23T03:00:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-03-23-005",
+    "question": "What's the sequence of events when covering up permanent speed signs and why?",
+    "answer": "Based on **MRWA Code of Practice** and **AGTTM Part 3** (Static Worksites):\n\n## Sequence of Events \u2013 Covering Permanent Speed Signs\n\n### \u2705 Correct Sequence (Installation)\n\nWhen setting up a reduced speed zone for roadworks:\n\n| Step | Action | Reason |\n|------|--------|--------|\n| **1** | Install temporary speed signs FIRST | Establish new speed limit before removing old one |\n| **2** | Verify signs are visible and correctly placed | Ensure motorists see new limit in time to comply |\n| **3** | Cover/remove permanent speed signs LAST | Only after temporary signs are fully operational |\n\n---\n\n### \u274c Wrong Sequence (Creates Danger)\n\n> **Never** cover permanent speed signs BEFORE installing temporary speed signs!\n\nThis creates a **speed zone vacuum** where:\n- Motorists have no speed guidance\n- Legal speed limit becomes unclear\n- Workers are exposed to unpredictable vehicle speeds\n- Potential for enforcement issues\n\n---\n\n## Removal Sequence (Pack-up)\n\n### \u2705 Correct Sequence (Removal)\n\n| Step | Action | Reason |\n|------|--------|--------|\n| **1** | Uncover permanent speed signs FIRST | Re-establish original speed limit |\n| **2** | Verify permanent signs are visible | Ensure drivers see correct limit |\n| **3** | Remove temporary speed signs LAST | Only after permanent signs are visible |\n| **4** | Remove remaining warning signs | In reverse order of installation |\n\n---\n\n## Summary\n\n| Phase | Sequence |\n|-------|----------|\n| **Setup** | Temporary signs FIRST \u2192 Cover permanent signs LAST |\n| **Pack-up** | Uncover permanent signs FIRST \u2192 Remove temporary signs LAST |\n\n> **Key Rule:** Never leave a speed zone without visible speed limit signage. The new limit must be established before the old one is removed, and the original limit must be restored before temporary signs are removed.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Signage",
+    "createdAt": "2026-03-23T03:30:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-03-23-006",
+    "question": "When do I need to instigate follow me and why?",
+    "answer": "Based on **MRWA Code of Practice** and **AGTTM Part 3** (Static Worksites):\n\n## What is a \"Follow Me\" Operation?\n\nA \"Follow Me\" operation (also called **pilot vehicle escort**) uses a vehicle to lead traffic through or past a worksite at a controlled speed.\n\n---\n\n## When to Instigate Follow Me\n\n### \u2705 Required Situations\n\n| Situation | Why Follow Me is Needed |\n|-----------|------------------------|\n| **Single lane closure on two-way road** | No room for opposing traffic to pass safely |\n| **Narrow lane width** | Vehicles need guidance to stay within safe path |\n| **Blind corners or crests** | Drivers can't see oncoming traffic or hazards |\n| **Complex work zone layouts** | Multiple hazards requiring navigation |\n| **Fresh seal or roadworks surface** | Loose material, uneven surface, no centre line |\n| **Bridge or culvert works** | Reduced width, structural considerations |\n| **Unsealed road sections** | No clear lane markings, dust, surface changes |\n| **Night work with limited visibility** | Drivers need guidance past hazards |\n\n---\n\n## Follow Me vs Stop-Slow Decision Matrix\n\n| Condition | Stop-Slow (TC) | Follow Me (Pilot) |\n|-----------|----------------|-------------------|\n| Short work zone (<200m) | \u2705 Preferred | Usually not needed |\n| Long work zone (>200m) | \u26a0\ufe0f May cause delays | \u2705 More efficient |\n| Continuous traffic flow needed | \u274c Not suitable | \u2705 Preferred |\n| Complex path through site | \u26a0\ufe0f High risk | \u2705 Better control |\n| High traffic volume | \u26a0\ufe0f Long queues | \u2705 Keeps traffic moving |\n| Blind spots/hazards | \u26a0\ufe0f Risk of incidents | \u2705 Driver guided safely |\n\n---\n\n## Summary\n\n| Factor | Use Follow Me When... |\n|--------|----------------------|\n| **Sight distance** | Inadequate for drivers to see hazards/oncoming traffic |\n| **Lane width** | Less than 3.0m or restricted passage |\n| **Work zone length** | Greater than 200m |\n| **Traffic volume** | Moderate to high, need to maintain flow |\n| **Complexity** | Multiple hazards, unclear path, no linemarking |\n| **Surface condition** | Fresh seal, unsealed, uneven, or changing conditions |\n\n> **Key Rule:** Follow me (pilot vehicle) operations should be used when traffic needs to be guided through a work zone because sight distance, lane width, surface conditions, or work zone complexity make self-navigation unsafe.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Traffic Control",
+    "createdAt": "2026-03-23T04:00:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-03-23-007",
+    "question": "Am I allowed to place signage within barriers?",
+    "answer": "Based on **MRWA Code of Practice** and **AGTTM Part 3** (Static Worksites):\n\n## General Rule \u2013 Signage Within Barriers\n\n### \u274c NOT Recommended \u2013 But May Be Permitted Under Specific Conditions\n\nPlacing signage within safety barriers (behind the barrier line) is generally **not recommended** because it defeats the purpose of the barrier protection.\n\n---\n\n## Why Signs Should NOT Be Placed Within Barriers\n\n| Issue | Consequence |\n|--------|-------------|\n| **Reduced protection** | Workers must go behind barrier to install/maintain signs |\n| **Barrier compromised** | Sign posts can penetrate barrier if struck |\n| **Worker exposure** | Workers outside protected zone during installation |\n| **Maintenance access** | Requires workers to enter potentially unsafe areas |\n\n---\n\n## When Signage Within Barriers MAY Be Allowed\n\n### \u2705 Permitted Situations\n\n| Situation | Conditions |\n|-----------|------------|\n| **No practical alternative** | No safe location available on approach side |\n| **Protected by additional barrier** | Sign position also protected from traffic |\n| **Sign is essential for work zone** | Required for safety or regulatory compliance |\n| **Installed during barrier setup** | Workers protected during initial installation |\n| **Temporary placement** | Short duration with appropriate risk controls |\n\n---\n\n## Sign Placement Hierarchy\n\n| Priority | Location | Reasoning |\n|----------|----------|-----------|\n| **1st** | **Clear zone on approach side** | Best visibility, workers don't cross barrier line |\n| **2nd** | **Verge/shoulder area** | Outside traffic lanes, accessible safely |\n| **3rd** | **Behind barrier with protection** | Only if no other option, with risk assessment |\n| **4th** | **Within barrier (last resort)** | Requires documented justification |\n\n---\n\n## Summary\n\n| Question | Answer |\n|----------|--------|\n| **Can signage be placed within barriers?** | \u26a0\ufe0f Generally NO, but may be permitted with conditions |\n| **When is it allowed?** | No practical alternative, documented risk assessment, safe installation method |\n| **Best practice?** | Place signs outside barrier line where possible |\n\n> **Key Rule:** Signs should be placed outside the barrier line whenever possible. If signs must be placed within barriers, ensure workers are protected during installation and maintenance.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Signage",
+    "createdAt": "2026-03-23T04:30:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-03-23-008",
+    "question": "Am I allowed to place signage within permanent road barriers?",
+    "answer": "Based on **MRWA Code of Practice**, **AS 1742.3**, and **Main Roads WA standards**:\n\n## Understanding Permanent Road Barriers\n\nPermanent road barriers include:\n- **W-beam guardrails** (steel roadside barriers)\n- **Concrete median barriers** (on highways/freeways)\n- **Wire rope safety barriers**\n- **Bridge parapets**\n- **Noise walls**\n\nThese are **road infrastructure** designed to protect road users \u2013 NOT temporary work zone barriers.\n\n---\n\n## General Rule \u2013 Signs and Permanent Barriers\n\n### \u2705 Signs MAY Be Attached to Permanent Barriers (With Conditions)\n\n| Barrier Type | Sign Attachment | Conditions |\n|--------------|-----------------|------------|\n| **W-beam guardrail** | \u2705 Common | Use approved mount brackets |\n| **Concrete barrier** | \u2705 Permitted | Must not damage barrier surface |\n| **Wire rope barrier** | \u274c Generally NO | Cannot attach to tensioned cables |\n| **Bridge parapet** | \u26a0\ufe0f Restricted | Structural approval required |\n| **Noise wall** | \u26a0\ufe0f Check ownership | May need authority approval |\n\n---\n\n## Installation Methods\n\n### W-Beam Guardrail\n\n| Method | Acceptance |\n|--------|------------|\n| **U-bolt clamps** | \u2705 Preferred \u2013 no drilling |\n| **Post-mounted brackets** | \u2705 Acceptable |\n| **Drilling through rail** | \u274c Not recommended |\n| **Welding to rail** | \u274c Not permitted (damages galvanising) |\n\n---\n\n## Wire Rope Safety Barriers (WRSB)\n\n### \u274c Generally NO Sign Attachment\n\nWire rope barriers are **tensioned systems** where:\n\n- Any attachment could affect cable tension\n- Signs could become projectiles if cables break\n- The barrier must flex and deflect when struck\n\n> **Important:** Signs must NOT be attached to wire rope safety barriers. Place signs on separate posts beside the barrier.\n\n---\n\n## Summary\n\n| Question | Answer |\n|----------|--------|\n| **Can signs be attached to permanent barriers?** | \u2705 **Yes**, with conditions |\n| **W-beam guardrail?** | \u2705 Yes \u2013 use clamp brackets, no drilling |\n| **Concrete barriers?** | \u2705 Yes \u2013 use approved anchors/clamps |\n| **Wire rope barriers?** | \u274c **No** \u2013 use separate posts |\n| **Bridge parapets?** | \u26a0\ufe0f Restricted \u2013 structural approval needed |\n\n> **Key Rule:** Signs may be attached to permanent road barriers (except wire rope barriers) using approved methods that do not compromise the barrier's structural integrity or crashworthiness.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Signage",
+    "createdAt": "2026-03-23T05:00:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-03-23-009",
+    "question": "Am I allowed to place signage within permanent road barriers using MMS signage frame and legs?",
+    "answer": "Based on **MRWA Code of Practice**, **AGTTM Part 3**, and **WHS Act 2020**:\n\n## Understanding MMS Signage Frames\n\n**MMS** (Multi-Message Signage) frames are portable, stand-alone sign systems with:\n- **Frame** \u2013 Holds interchangeable sign panels\n- **Legs** \u2013 Typically galvanised steel A-frame or tripod style\n- **Base** \u2013 May include sandbags or ballast for stability\n\n---\n\n## General Rule \u2013 MMS Frames Within Permanent Barriers\n\n### \u26a0\ufe0f Generally NOT Recommended \u2013 May Be Permitted With Conditions\n\nPlacing portable MMS sign frames **within or behind permanent road barriers** requires careful consideration.\n\n---\n\n## Key Considerations\n\n### 1. Why Is The Sign There?\n\n| Purpose | Assessment |\n|---------|------------|\n| **For road users** | \u274c Problem \u2013 Sign should be visible BEFORE barrier, not behind it |\n| **For workers inside barrier** | \u2705 May be acceptable \u2013 Internal work zone signage |\n| **Temporary work zone** | \u26a0\ufe0f Assess if barrier provides adequate protection |\n\n### 2. Visibility Requirements\n\n| Question | Answer |\n|----------|--------|\n| Can drivers see the sign? | Must be visible from adequate distance |\n| Is sign hidden by barrier? | If yes, sign is not effective |\n| Does sign need to be read before barrier? | Most traffic control signs do |\n\n### 3. Worker Safety for Installation\n\n| Risk Factor | Consideration |\n|-------------|---------------|\n| **Access to sign location** | How will workers install/remove the MMS frame? |\n| **Crossing live traffic lanes** | Workers must not be exposed to traffic |\n| **Working near barrier edge** | Risk of falling or being struck |\n| **Safe installation method** | Lane closure? Spotter? TMA protection? |\n\n---\n\n## When MMS Frames MAY Be Placed Within Permanent Barriers\n\n### \u2705 Acceptable Situations\n\n| Situation | Conditions |\n|-----------|------------|\n| **Inside a closed work zone** | Road closed to traffic, workers protected |\n| **Behind barrier with wide shoulder** | Sign outside traffic lanes, stable surface |\n| **Internal site signage** | Directing workers, not road users |\n| **During barrier installation** | Sign placed before traffic uses road |\n| **End of barrier section** | Where termination area begins |\n\n### \u274c NOT Acceptable Situations\n\n| Situation | Reason |\n|-----------|--------|\n| **Sign must be seen before barrier** | Placing it behind barrier defeats purpose |\n| **Workers exposed to install** | WHS risk \u2013 crossing live lanes |\n| **Sign could fall into traffic** | Creates hazard for road users |\n| **Narrow space behind barrier** | No room for sign and safe worker access |\n| **High-speed road** | Greater risk if sign dislodges |\n\n---\n\n## MMS Frame Stability Requirements\n\n### Wind and Vibration\n\nPermanent barriers are often on high-speed roads where:\n\n| Factor | Risk |\n|--------|------|\n| **Wind turbulence** | From passing heavy vehicles can blow over light frames |\n| **Ground vibration** | Can cause frame to walk or tip |\n| **Slipstream effect** | Particularly from trucks at speed |\n\n### Ballast Requirements\n\n| Situation | Minimum Ballast |\n|-----------|------------------|\n| **Sheltered behind barrier** | Standard sandbags may suffice |\n| **Exposed to wind** | Additional ballast required |\n| **High-speed road** | Extra ballast + potentially anchored |\n| **Extended duration** | Consider more permanent mounting |\n\n---\n\n## Correct Placement for Traffic Control Signs\n\nTraffic control signs should be positioned **before** the barrier, not behind it:\n\n```\n[Sign on verge/shoulder] \u2192 [Barrier starts] \u2192 [Work zone] \u2192 [Barrier ends]\n         \u2191\n   Sign visible to traffic BEFORE entering work zone\n```\n\n---\n\n## Summary Decision Matrix\n\n| Question | If YES | If NO |\n|----------|--------|-------|\n| **Is sign for road users?** | Place BEFORE barrier | May place within barrier |\n| **Can sign be seen by drivers?** | Check sight lines | Relocate sign |\n| **Can workers install safely?** | Proceed with caution | Do not place sign there |\n| **Is there adequate space?** | Assess stability | Do not place |\n| **Is sign stable?** | Proceed | Add ballast or anchor |\n\n---\n\n## Final Answer\n\n| Scenario | Answer |\n|----------|--------|\n| **Traffic control sign for road users** | \u274c **NO** \u2013 Place before barrier where visible |\n| **Internal work zone sign for workers** | \u2705 **YES** \u2013 Acceptable if workers protected |\n| **Temporary sign during roadworks** | \u26a0\ufe0f **MAYBE** \u2013 Risk assess and ensure safe installation |\n| **Sign behind barrier on closed road** | \u2705 **YES** \u2013 Road closed, no traffic risk |\n\n> **Key Rule:** MMS signage frames should NOT be placed within permanent barriers if the sign is intended for road users \u2013 place signs BEFORE the barrier where they are visible. If a sign must be placed within the barrier zone (for workers or site operations), ensure safe installation methods, adequate stability, and document the justification in your TMP.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Signage",
+    "createdAt": "2026-03-23T05:30:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-03-23-010",
+    "question": "Am I allowed to place MMS signage frame and legs on the road side of permanent barriers?",
+    "answer": "Based on **MRWA Code of Practice**, **AS 1742.3**, and **WHS Act 2020**:\n\n## Clarifying the Scenario\n\nYou are asking about placing an **MMS (Multi-Message Signage) frame with legs** on the **traffic side** of a permanent road barrier (e.g., W-beam guardrail), NOT behind the barrier.\n\n```\n[TRAFFIC LANE] \u2192 [MMS Sign] \u2192 [Permanent Barrier] \u2192 [Shoulder/Verge]\n                      \u2191\n              Sign on traffic side of barrier\n```\n\n---\n\n## General Rule \u2013 MMS Frames on Traffic Side of Permanent Barriers\n\n### \u2705 Generally ACCEPTABLE \u2013 With Conditions\n\nThis is a **common and acceptable practice** when the sign needs to be visible to traffic and the permanent barrier is the available infrastructure.\n\n---\n\n## Key Requirements\n\n### 1. Clearances from Traffic Lane\n\n| Requirement | Minimum Distance |\n|-------------|------------------|\n| **From edge of traffic lane** | As per TGS \u2013 minimum clearance required |\n| **From barrier face** | Sign should not touch barrier |\n| **Sign height** | Per Australian Standards |\n\n### 2. Sign Stability\n\n| Factor | Requirement |\n|--------|-------------|\n| **Wind load** | Sign must withstand wind without tipping |\n| **Ballast** | Sandbags or weights on frame legs |\n| **Surface** | Stable, level ground for frame legs |\n| **Not blocking barrier function** | Must not prevent barrier from performing its safety role |\n\n### 3. Does Not Compromise Barrier\n\n| Consideration | Details |\n|---------------|---------|\n| **Barrier clearance** | Space between sign and barrier for barrier deflection |\n| **If struck** | Sign should not push into barrier or become a projectile |\n| **Access for maintenance** | Barrier must remain accessible for inspection/repair |\n\n---\n\n## Advantages of This Placement\n\n| Advantage | Benefit |\n|-----------|--------|\n| **Excellent visibility** | Sign clearly visible to approaching traffic |\n| **Uses existing infrastructure** | No need to install separate sign posts |\n| **Protected from some hazards** | Barrier provides some protection from run-off-road vehicles |\n| **Minimal ground disturbance** | No digging required for portable frame |\n\n---\n\n## Potential Issues to Address\n\n### 1. Space Constraints\n\n| Issue | Solution |\n|-------|----------|\n| **Narrow shoulder** | Check if sign fits within available space |\n| **Barrier too close to lane** | May need to use smaller sign or mount on barrier |\n| **No room for frame legs** | Consider barrier-mounted sign instead |\n\n### 2. Ground Conditions\n\n| Condition | Consideration |\n|-----------|---------------|\n| **Uneven surface** | May need to level ground or use adjustable legs |\n| **Soft ground** | Additional ballast may be required |\n| **Drainage** | Don't block drainage paths |\n| **Vegetation** | Clear area for stable placement |\n\n### 3. Wind Exposure\n\n| Situation | Action Required |\n|-----------|-----------------|\n| **High-speed road** | Extra ballast on frame legs |\n| **Open/exposed location** | Consider wind rating of sign |\n| **Extended duration** | May need more permanent mounting solution |\n\n---\n\n## MMS Frame Positioning Options\n\n### Option A: Frame Legs on Ground (Your Scenario)\n\n```\n[LANE] \u2192 [Shoulder] \u2192 [MMS Frame] \u2192 [Barrier]\n                       \u2191\n              Legs on ground, sign visible\n```\n\n| Pros | Cons |\n|------|------|\n| Portable, quick setup | Requires level ground |\n| Easy to relocate | Needs ballast for stability |\n| No drilling/mounting | Takes up shoulder space |\n\n### Option B: Frame Clamped to Barrier\n\n```\n[LANE] \u2192 [Shoulder] \u2192 [Barrier + Clamped Sign]\n                              \u2191\n                    Sign mounted on barrier face\n```\n\n| Pros | Cons |\n|------|------|\n| No ground space needed | Requires clamping hardware |\n| More stable | Less portable |\n| No ballast needed | Must not damage barrier |\n\n---\n\n## Document References\n\n> **Note:** The following references are from the documents in your library. Specific page numbers may vary.\n\n### MRWA Code of Practice (May 2025)\n- Section on signage placement and traffic management\n- Sign stability requirements\n- Ballast and wind load considerations\n\n### AGTTM Part 3 \u2013 Static Worksites (Edition 1.1, 2021)\n- Traffic guidance scheme requirements\n- Sign positioning standards\n- Work zone layout principles\n\n### AGTTM Part 7 \u2013 Traffic Controllers (Edition 1.1, 2021)\n- Traffic controller position requirements\n- Sign visibility and placement\n\n### WHS Act 2020 (Western Australia)\n- **Section 19** \u2013 Primary duty of care\n- **Section 20** \u2013 Duty of officers\n- Worker safety during installation and maintenance\n\n### WHS General Regulations 2022\n- **Regulation 41** \u2013 Facilities for workers\n- **Part 3.1** \u2013 Managing risks to health and safety\n\n---\n\n## WHS Considerations\n\n### Installation Safety\n\n| Control Measure | When Required |\n|-----------------|---------------|\n| **Spotter** | Workers near live traffic |\n| **Vehicle protection** | On high-speed or high-volume roads |\n| **Temporary traffic control** | If worker exposure exceeds safe limits |\n| **High-vis PPE** | Always required |\n\n### Risk Assessment\n\nUnder **WHS Act 2020**:\n\n- Assess risk of placing sign in clear zone\n- Consider if sign becomes hazard if struck\n- Document in TMP/SWMS if required\n- Ensure workers can install safely\n\n---\n\n## Summary\n\n| Question | Answer |\n|----------|--------|\n| **Can MMS frame be placed on traffic side of permanent barrier?** | \u2705 **YES** \u2013 This is acceptable and common practice |\n| **Key requirements?** | Stable ground, adequate ballast, minimum clearances from traffic |\n| **Advantages?** | Good visibility, portable, uses existing infrastructure |\n| **Watch out for?** | Narrow shoulders, unstable ground, wind exposure |\n\n---\n\n## Checklist\n\n- [ ] Adequate space between lane edge and barrier\n- [ ] Stable, level ground for frame legs\n- [ ] Sufficient ballast for wind conditions\n- [ ] Minimum clearance from traffic lane maintained\n- [ ] Sign visible from adequate approach distance\n- [ ] Does not obstruct barrier function\n- [ ] Workers can install safely with appropriate controls\n\n> **Key Rule:** Placing MMS signage frames on the traffic side of permanent barriers is acceptable practice. Ensure the frame is stable with adequate ballast, maintains minimum clearances from the traffic lane, and does not interfere with the barrier's safety function.\n\n> **Important:** For specific clearance values and detailed requirements, refer to the current MRWA Code of Practice and relevant Australian Standards (AS 1742.3). The values may vary based on road classification, speed limit, and local authority requirements.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Signage",
+    "createdAt": "2026-03-23T06:00:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-03-24-001",
+    "question": "What is the policy of MRWA regarding first aid requirements for work crews?",
+    "answer": "Based on **WHS General Regulations 2022** (Regulation 42) and **MRWA Code of Practice**:\n\n## Legal Framework\n\nMRWA does not have a separate first aid policy \u2013 they follow the **WHS General Regulations 2022**, which set out the legal requirements for all workplaces in Western Australia.\n\n---\n\n## WHS General Regulations 2022 \u2013 Regulation 42\n\n### Duty to Provide First Aid\n\nA person conducting a business or undertaking (PCBU) at a workplace must ensure:\n\n| Requirement | Details |\n|-------------|---------|\n| **First aid equipment** | Provision of first aid equipment for the workplace |\n| **Worker access** | Each worker at the workplace has access to the equipment |\n| **Facilities** | Access to facilities for the administration of first aid |\n\n### Trained Personnel Requirement\n\nThe PCBU must ensure that:\n\n| Option | Description |\n|--------|-------------|\n| **Option A** | An adequate number of workers are trained to administer first aid at the workplace |\n| **Option B** | Workers have access to an adequate number of other persons who have been trained to administer first aid |\n\n---\n\n## Factors to Consider (Regulation 42(3))\n\nWhen determining what is \"adequate\", the PCBU must have regard to:\n\n| Factor | Considerations for Traffic Management Work Crews |\n|--------|------------------------------------------------|\n| **Nature of the work** | High-risk construction work on roads, working near traffic |\n| **Nature of the hazards** | Traffic, mobile plant, excavations, weather exposure |\n| **Size and location of the workplace** | Remote/rural locations, long linear worksites |\n| **Number and composition of workers** | Crew size, shift arrangements, multiple contractors |\n\n---\n\n## Practical Implications for Traffic Management Work Crews\n\n### First Aid Equipment\n\n| Consideration | Guidance |\n|---------------|----------|\n| **Type of kit** | Workplace first aid kit appropriate for number of workers and risks |\n| **Location** | Accessible to all workers on site, typically in the work vehicle |\n| **Remote work** | Consider additional supplies for remote/rural locations |\n| **Multiple sites** | Each work location needs first aid provisions |\n\n### Trained First Aiders\n\n| Scenario | Typical Requirement |\n|----------|---------------------|\n| **Small crew (2-5 workers)** | At least one trained first aider on site |\n| **Larger crews** | Proportionally more trained first aiders |\n| **Remote locations** | Higher level of first aid training recommended |\n| **High-risk work** | Consider advanced first aid or remote area first aid training |\n\n### Facilities for First Aid\n\n| Facility Type | Application to Traffic Management |\n|---------------|----------------------------------|\n| **First aid room** | Not typically required for mobile/short-term works |\n| **Clean area** | Vehicle or sheltered area for treatment |\n| **Privacy** | Ability to treat injuries away from public view |\n| **Communication** | Means to call emergency services |\n\n---\n\n## Emergency Plans (Regulation 43)\n\nUnder WHS General Regulations 2022, emergency plans must include:\n\n| Element | Relevance to Traffic Management Crews |\n|---------|--------------------------------------|\n| **Effective response** | Procedures for common injuries (struck by vehicle, heat stress, etc.) |\n| **Evacuation procedures** | How to safely evacuate work zone |\n| **Notifying emergency services** | Location details, access routes for ambulances |\n| **Medical treatment** | First aid, transport to medical facility |\n| **Communication** | Between work crew and emergency services |\n\n---\n\n## Penalties for Non-Compliance\n\n| Offender | Penalty |\n|----------|--------|\n| **Individual** | Fine up to $7,000 |\n| **Body corporate** | Fine up to $35,000 |\n\n---\n\n## Summary\n\n| Question | Answer |\n|----------|--------|\n| **Does MRWA have a separate first aid policy?** | No \u2013 follows WHS General Regulations 2022 |\n| **Legal requirement?** | Regulation 42 \u2013 Duty to provide first aid |\n| **Key requirements?** | Equipment, access, facilities, trained personnel |\n| **What determines \"adequate\"?** | Nature of work, hazards, location, worker numbers |\n| **For traffic management crews?** | Kit in vehicle, trained first aider on site, emergency plan |\n\n---\n\n## Key References\n\n| Document | Reference |\n|----------|-----------|\n| **WHS General Regulations 2022** | Regulation 42 \u2013 Duty to provide first aid |\n| **WHS General Regulations 2022** | Regulation 43 \u2013 Emergency plans |\n| **MRWA COP May 2025** | Appendix A2 \u2013 WHS Risk Assessment Matrix |\n\n> **Key Rule:** Traffic management work crews must have access to first aid equipment, facilities for treatment, and trained first aid personnel. The specific requirements depend on the nature of the work, hazards, location, and crew size as determined by risk assessment.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "WHS & Safety",
+    "createdAt": "2026-03-24T08:00:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-03-25-001",
+    "question": "I want to count traffic volume out on site, what should I be counting, do I only count traffic in one direction or both and for how long to establish a correct count?",
+    "answer": "Based on **AGTTM Part 2** (Traffic Management Planning), **AGTTM Part 3** (Static Worksites), and **MRWA Code of Practice**:\n\n## What to Count\n\n### Vehicle Types\n\nWhen conducting a traffic count, you should count:\n\n| Vehicle Type | Description | Why It Matters |\n|--------------|-------------|----------------|\n| **Average vehicles** | Cars, light vehicles, motorcycles | Used for lane capacity and queue calculations |\n| **Oversized/heavy vehicles** | Trucks, buses, heavy vehicles | Require different queue multipliers and affect capacity |\n\n> **From AGTTM Part 2:** \"Traffic \u2013 total amount of traffic and the patterns, including peak hours, unusual periods of high demand, mix of vehicle types including oversize and/or overmass vehicles.\"\n\n---\n\n## Direction \u2013 One Direction or Both?\n\n### It Depends on Your Purpose:\n\n| Purpose | Count Direction | Reference |\n|---------|-----------------|-----------|\n| **Lane capacity planning** | **ONE direction only** | AGTTM Part 2, Table 3.1 |\n| **Shuttle flow operations** | **BOTH directions** | AGTTM Part 2, Table 3.5 |\n| **Reversible flow operations** | **BOTH directions** | MRWA COP, Table 15 |\n| **Queue length estimation** | Count vehicles passing the TC position (both directions for shuttle) | AGTTM Part 3, Table 4.3 |\n\n### Key Quote from AGTTM Part 2:\n> \"The desirable number of lanes for each direction is determined according to the total traffic volume in **one direction**, per hour (vehicles per hour).\"\n\n---\n\n## How Long to Count\n\n### Quick Estimate (3-5 minutes)\n\n| Duration | Method |\n|----------|--------|\n| **3 minutes** | Count vehicles, multiply by 20 to get VPH |\n| **5 minutes** | Count vehicles, multiply by 12 to get VPH |\n\n**Example from AGTTM Part 2:**\n> \"Traffic volumes may be estimated by manually counting vehicles in each direction for a few minutes, adding the vehicle counts together and determining the vehicles per hour (VPH) based on the count. For example, 40 vehicles in 3 minutes equates to 800 vehicles per hour.\"\n\n### More Accurate Count (15 minutes)\n\n| Situation | Recommended Duration |\n|-----------|---------------------|\n| **Busy roads / Arterial roads** | 15 minutes |\n| **For queue length estimation** | 5 minutes |\n| **Quick estimate on low-volume roads** | 3-5 minutes |\n\n> **From AGTTM Part 2:** \"If the road is busy or an arterial road, extend the counting period to 15 minutes to account for variances in traffic volumes.\"\n\n---\n\n## Step-by-Step Counting Process\n\n### Step 1: Obtain Existing Data (If Available)\n\n| Source | What You Get |\n|--------|--------------|\n| **MRWA Traffic Map** | AADT, peak hour volumes |\n| **Road infrastructure manager** | Historical traffic data |\n| **MRWA Traffic Digest** | Traffic count data |\n\n### Step 2: Conduct Manual Count (If No Data Available)\n\n| Action | Method |\n|--------|--------|\n| **Select location** | At or near the worksite |\n| **Choose duration** | 3-5 minutes (quick) or 15 minutes (accurate) |\n| **Count by direction** | One direction for lane capacity, both for shuttle |\n| **Classify vehicles** | Separate average vs oversized/heavy |\n| **Calculate VPH** | (Count \u00f7 minutes) \u00d7 60 |\n\n### Step 3: Apply Reduction Factors (If Applicable)\n\nFrom MRWA COP, reduce volumes under certain conditions:\n\n| Condition | Reduction Factor |\n|-----------|-----------------|\n| **Rough or unsealed pavement** | Reduce by 30% |\n| **Geometry reduced to <40 km/h speed** | Reduce by 50% |\n| **Heavy vehicles >10% on down/level/easy grade** | Reduce by 20% |\n| **Heavy vehicles >10% on sustained upgrade >5%** | Reduce by 40% |\n\n---\n\n## Lane Capacity Reference (AGTTM Part 2, Table 3.1)\n\n| Mid-block (one direction) VPH | Within 200m of intersection (one direction) VPH | Desirable Open Lanes |\n|-------------------------------|------------------------------------------------|----------------------|\n| \u22641000 | \u2264500 | 1 lane |\n| 1001\u20132000 | 501\u20131000 | 2 lanes |\n| 2001\u20133000 | 1001\u20131500 | 3 lanes |\n| 3001\u20134000 | 1501\u20132000 | 4 lanes |\n\n---\n\n## Shuttle Flow Length Reference (AGTTM Part 2, Table 3.5 & MRWA COP Table 15)\n\n| Traffic volume BOTH directions (VPH) | Maximum single lane section length |\n|--------------------------------------|-----------------------------------|\n| Residential street | 60m |\n| 701\u2013800 | 70m |\n| 601\u2013700 | 100m |\n| 501\u2013600 | 150m |\n| 401\u2013500 | 250m |\n| 351\u2013400 | 400m |\n| 301\u2013350 | 600m |\n| 251\u2013300* | 800m |\n| 201\u2013250* | 1200m |\n| 151\u2013200* | 1600m |\n| <150* | 2200m |\n\n*Requires risk assessment approved by Road Infrastructure Manager\n\n---\n\n## Queue Length Estimation (AGTTM Part 3, Table 4.3)\n\n**Count for 5 minutes** and use these multipliers:\n\n| Maximum Stopping Time (min) | Multiplier for Average Vehicles (Ma) | Multiplier for Oversized Vehicles (Mo) |\n|-----------------------------|--------------------------------------|---------------------------------------|\n| 2 | 2.4 | 8 |\n| 5 | 6 | 20 |\n| 10 | 12 | \u2014 |\n\n**Queue Length Formula:**\n`(number of average vehicles \u00d7 Ma) + (number of oversized vehicles \u00d7 Mo) = queue length`\n\n---\n\n## Summary Table\n\n| Question | Answer |\n|----------|--------|\n| **What to count?** | Average vehicles AND oversized/heavy vehicles separately |\n| **One direction or both?** | ONE direction for lane capacity; BOTH directions for shuttle flow |\n| **How long to count?** | 3-5 minutes for quick estimate; 15 minutes for busy/arterial roads |\n| **When to use 5 minutes?** | For queue length estimation |\n\n---\n\n## Document References\n\n| Document | Section | Key Content |\n|----------|---------|-------------|\n| **AGTTM Part 2** | Section 3.2.3 (Pages 11-12) | Traffic volume counting methodology |\n| **AGTTM Part 2** | Table 3.1 | Lane capacity by VPH (one direction) |\n| **AGTTM Part 2** | Table 3.5 | Shuttle flow lengths (both directions) |\n| **AGTTM Part 3** | Section 4.8, Table 4.3 | Queue length estimation multipliers |\n| **MRWA COP May 2025** | Section 6.8, 6.11 | Traffic volumes and reduction factors |\n| **MRWA COP May 2025** | Table 15, 19, 20 | Volume tables and variations |\n\n> **Key Rule:** Count traffic in ONE direction for lane capacity planning, BOTH directions for shuttle flow operations. Count for at least 3-5 minutes for quick estimates, or 15 minutes on busy/arterial roads for accuracy. Always classify vehicles as average or oversized/heavy for queue calculations.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Traffic Management",
+    "createdAt": "2026-03-25T10:00:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-03-25-002",
+    "question": "When using UHF radios on site, what channels am I allowed to use or can I pick any of them?",
+    "answer": "Based on **AGTTM Part 7** (Traffic Controllers), **MRWA Code of Practice**, **MRWA WHS Control Standards**, and **ACMA Class Licence**:\n\n## UHF Radio Channels \u2013 What You Can Use\n\n### You Cannot Pick Just Any Channel\n\nUHF CB (Citizens Band) radio channels are regulated by the **Australian Communications and Media Authority (ACMA)**. Some channels are legally reserved for specific purposes.\n\n---\n\n## ACMA Reserved Channels (Verified)\n\n### Source: ACMA Citizen Band Radio Stations Class Licence\n**URL:** https://www.acma.gov.au/licences/citizen-band-radio-stations-class-licence\n\n### Emergency Channels \u2013 UHF\n\n| Channel | Frequency | Purpose | Reference |\n|---------|-----------|---------|-----------|\n| **Channel 5** | 476.525 MHz | **Emergency only** (repeater output) | ACMA Class Licence |\n| **Channel 35** | 477.275 MHz | **Emergency only** (repeater input for Ch 5) | ACMA Class Licence |\n\n> **From ACMA:** \"We set aside 3 channels that are only for emergency messages: channel 9 (27.065 MHz) in the HF band, channels 5/35 (476.525/477.275 MHz) in the UHF band.\"\n\n### Data Transmission Channels \u2013 UHF\n\n| Channel | Frequency | Purpose | Reference |\n|---------|-----------|---------|-----------|\n| **Channel 22** | 476.950 MHz | **Data/telemetry only** (no voice) | ACMA Class Licence |\n| **Channel 23** | 476.975 MHz | **Data/telemetry only** (no voice) | ACMA Class Licence |\n\n> **From ACMA:** \"You can only use telemetry and telecommand on UHF channels 22 and 23. We do not allow packet radio and other types of data operation on CB.\"\n\n### HF Emergency Channel (Not UHF)\n\n| Channel | Frequency | Purpose |\n|---------|-----------|---------|\n| **HF Channel 9** | 27.065 MHz | Emergency only (27MHz/HF band, NOT UHF) |\n\n---\n\n## Repeater Channels\n\n**From ACMA Class Licence:**\n\n| Channel Type | Channels | Use |\n|--------------|----------|-----|\n| **Repeater output** | 1-8, 41-48 | For use with repeater stations |\n| **Repeater input** | 31-38, 71-78 | Matching inputs for repeaters |\n\n> **Important:** Do not use repeater input channels for simplex (direct) communication.\n\n---\n\n## Key Channel \u2013 UHF Channel 40\n\n### Designated for Heavy Vehicles (MRWA)\n\n| Channel | Frequency | Purpose | Reference |\n|---------|-----------|---------|-----------|\n| **Channel 40** | 477.400 MHz | Heavy vehicle and road/highway communication | MRWA TMP |\n\n**From MRWA Traffic Management Plan:**\n> \"TC's to monitor channel 40 for duration of works. If required; works are to cease, workers to exit the road way to a safe distance and all traffic to be held until the vehicles have passed.\"\n\n> \"Traffic Management Personnel on site must manage UHF Channel 40 and communicate with heavy vehicle operators and pilots as required.\"\n\n---\n\n## UHF CB Channel Guide (80 Channel)\n\n### Channels You CAN Use for Worksites\n\n| Channel Range | Purpose | Can Use for Worksite? |\n|---------------|---------|----------------------|\n| **9-21** (excl. 22) | General use | \u2705 Yes |\n| **24-30** | General use | \u2705 Yes |\n| **39** | General use | \u2705 Yes |\n| **40** | Road/highway (heavy vehicles) | \u26a0\ufe0f Use with caution \u2013 monitor for trucks |\n| **41-48** | Repeater outputs | \u26a0\ufe0f Only if simplex (check local use) |\n| **61-70** | General use (80-channel radios) | \u2705 Yes |\n| **71-78** | Repeater inputs | \u274c Do not use for simplex |\n| **79-80** | General use | \u2705 Yes |\n\n### Channels You CANNOT Use (or Restricted)\n\n| Channel | Restriction | Reason |\n|---------|-------------|--------|\n| **5** | \u274c Emergency only | ACMA reserved \u2013 distress calls only |\n| **35** | \u274c Emergency only | ACMA reserved \u2013 emergency repeater input |\n| **22** | \u274c No voice | ACMA reserved \u2013 data/telemetry only |\n| **23** | \u274c No voice | ACMA reserved \u2013 data/telemetry only |\n| **1-8** | \u26a0\ufe0f Repeater outputs | May interfere with repeater systems |\n| **31-38** | \u26a0\ufe0f Repeater inputs | Do not use for simplex |\n\n---\n\n## How to Select Your Worksite Channel\n\n### Step 1: Site-Specific Channel Assignment\n\n| Action | Requirement |\n|--------|-------------|\n| **Primary channel** | Designated at pre-start meeting/induction |\n| **Backup channel** | Must also be identified in case of interference |\n| **Communicate to all** | All workers must know the channel/s |\n\n**From AGTTM Part 7:**\n> \"Ensure you know the relevant channel for the worksite (including any back up channels).\"\n\n### Step 2: Radio Check at Pre-Start\n\n| Check | Requirement |\n|-------|-------------|\n| **Radio functioning** | Turned on, tuned to correct channel, audible |\n| **Battery charged** | Ensure sufficient charge for the shift |\n| **Communication test** | Verify all personnel can hear and transmit |\n\n---\n\n## ACMA Compliance Requirements\n\n**From AGTTM Part 7:**\n> Users must \"not use profanities or breach relevant Australian Communications and Media Authority (ACMA) or Commerce Commission of New Zealand (ComCom) communications standards.\"\n\n### ACMA Rules for UHF CB\n\n| Rule | Requirement |\n|------|-------------|\n| **Language** | No profanity or offensive language |\n| **Emergency channels** | Do not use Channels 5 and 35 except for emergencies |\n| **Data channels** | Do not use Channels 22 and 23 for voice |\n| **Interference** | Do not intentionally interfere with other users |\n| **Power output** | Maximum 5 watts for CB radios |\n\n---\n\n## Radio Communication Protocols\n\n### From MRWA WHS Control Standards \u2013 Section 11.5\n\n| Protocol | Requirement |\n|----------|-------------|\n| **Training** | All workers must be trained in two-way communication protocols |\n| **Stop task** | Protocol in place if positive communication not established |\n| **Mayday** | Protocol for emergencies within the construction site |\n| **Acknowledgment** | Always acknowledge the last incoming call VERBALLY |\n| **No clicking** | Do not acknowledge by just \"clicking\" your handset |\n| **Clear speech** | Speak clearly and slowly |\n| **No idle chatter** | Do not use radio for non-work conversations |\n| **No swearing** | Do not swear, yell or use inappropriate language |\n\n---\n\n## Special Situations\n\n### Pilot Vehicle Operations\n\nFrom MRWA WHS Control Standards:\n> Pilot vehicles must \"contain an operational UHF radio.\"\n\n### Railway Crossings\n\nFrom MRWA Traffic Management Plan:\n> \"Flag Person must be equipped with a two-way radio and are to watch for trains, advising Traffic Controllers with enough time to stop traffic before the train approaches.\"\n\n### Mobile Convoys\n\nFrom MRWA Traffic Management Plan:\n> \"ALL VEHICLES WITHIN MOBILE CONVOY MUST HAVE CLEAR COMMUNICATION METHODS USING TWO-WAY RADIO DEVICES.\"\n\n---\n\n## Summary\n\n| Question | Answer |\n|----------|--------|\n| **Can I pick any channel?** | No \u2013 some channels are legally reserved |\n| **Emergency channels (UHF)?** | **Channels 5 and 35** \u2013 emergency use only |\n| **Data channels (UHF)?** | **Channels 22 and 23** \u2013 data only, no voice |\n| **Heavy vehicle channel?** | **Channel 40** \u2013 used by truck drivers |\n| **What channel for worksite?** | Choose a general-use channel (9-21, 24-30, 39, 61-70) |\n| **Must I have backup?** | Yes \u2013 always identify a backup channel |\n| **What are the ACMA rules?** | No profanity, don't use emergency/data channels for voice |\n\n---\n\n## Document References\n\n| Document | Section | Key Content |\n|----------|---------|-------------|\n| **ACMA Class Licence** | Emergency channels | UHF Channels 5 & 35 for emergency only |\n| **ACMA Class Licence** | Data channels | UHF Channels 22 & 23 for telemetry only |\n| **AGTTM Part 7** | Section 2.6.4 | Communication devices and ACMA compliance |\n| **MRWA TMP Wheatbelt** | Pages 35, 40 | UHF Channel 40 for heavy vehicles |\n| **MRWA WHS Control Standards** | Section 11.5 | Two-way communication protocols |\n\n---\n\n## ACMA Official Reference\n\n**Source:** Australian Communications and Media Authority\n**Web:** https://www.acma.gov.au/licences/citizen-band-radio-stations-class-licence\n**Quote:** \"We set aside 3 channels that are only for emergency messages: channel 9 (27.065 MHz) in the HF band, channels 5/35 (476.525/477.275 MHz) in the UHF band.\"\n\n> **Key Rule:** Choose a worksite channel at pre-start meeting. Avoid Channels 5, 35 (emergency), Channels 22, 23 (data only), and be aware Channel 40 is used by heavy vehicles. Always identify a backup channel. Monitor Channel 40 when heavy vehicles may be passing your worksite. Comply with ACMA standards \u2013 no profanity, no use of reserved channels for general communication.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Communication",
+    "createdAt": "2026-03-25T11:00:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-03-25-003",
+    "question": "Is it mandatory or optional for work crew, MRWA crew and/or contractors to have two-way radio communication with traffic controllers? Cite references.",
+    "answer": "Based on **MRWA WHS Control Standards**, **MRWA Traffic Management Plan**, **AGTTM Part 7**, and **WHS General Regulations 2022**:\n\n## Short Answer\n\n**It depends on the type of worksite.** The requirement differs between **static traffic management sites** and **active construction sites**.\n\n---\n\n## Critical Distinction: Site Type Determines Requirement\n\n### WHS General Regulations 2022 \u2013 Regulation 291(o)\n\n> \"high risk construction work means construction work that \u2014 (o) is carried out in an area at a workplace in which there is any **movement of powered mobile plant**\"\n\n| Site Type | Mobile Plant? | Classification | Two-Way Radio Requirement |\n|-----------|---------------|----------------|---------------------------|\n| **Static TM Site** | No | Traffic management only | \"May be useful\" (AGTTM) \u2013 OPTIONAL |\n| **Active Construction Site** | Yes (bobcats, rollers, etc.) | High risk construction work | **MANDATORY** (MRWA WHS Section 11.5) |\n\n---\n\n## When Two-Way Radio is MANDATORY\n\n### 1. Mobile Convoy Operations\n\n> **Quote from MRWA Traffic Management Plan:**\n> \"ALL VEHICLES WITHIN MOBILE CONVOY MUST HAVE CLEAR COMMUNICATION METHODS USING TWO-WAY RADIO DEVICES.\"\n\n| Requirement | Status | Reference |\n|-------------|--------|-----------|\n| All convoy vehicles must have two-way radios | **MANDATORY** | MRWA TMP |\n\n---\n\n### 2. Pilot Vehicle Operations\n\n> **Quote from MRWA WHS Control Standards:**\n> Pilot vehicles must \"contain an operational UHF radio.\"\n\n| Requirement | Status | Reference |\n|-------------|--------|-----------|\n| Pilot vehicles must have operational UHF radio | **MANDATORY** | MRWA WHS Control Standards |\n\n---\n\n### 3. Railway Crossing Works\n\n> **Quote from MRWA Traffic Management Plan:**\n> \"Flag Person must be equipped with a two-way radio and are to watch for trains, advising Traffic Controllers with enough time to stop traffic before the train approaches.\"\n\n| Requirement | Status | Reference |\n|-------------|--------|-----------|\n| Flag Person must have two-way radio | **MANDATORY** | MRWA TMP |\n\n---\n\n### 4. Heavy Vehicle Monitoring\n\n> **Quote from MRWA Traffic Management Plan:**\n> \"Traffic Management Personnel on site must manage UHF Channel 40 and communicate with heavy vehicle operators and pilots as required.\"\n\n| Requirement | Status | Reference |\n|-------------|--------|-----------|\n| TC must monitor Channel 40 for heavy vehicles | **MANDATORY** | MRWA TMP |\n\n---\n\n## When Two-Way Communication is REQUIRED (May Be Radio or Alternative)\n\n### MRWA WHS Control Standards \u2013 Section 11.5\n\n> **Quote from MRWA WHS Control Standards:**\n> \"All Workers within the active work zone must be trained in two way communication protocols.\"\n\n> \"Workers must operate in accordance with the prescribed two way communication protocol at all times.\"\n\n> \"Include a stop task protocol in place where positive communication is not established.\"\n\n| Requirement | Details |\n|-------------|--------|\n| **All workers** | Must be trained in two-way communication protocols |\n| **Positive communication** | Must be established before work proceeds |\n| **Stop task protocol** | If positive communication cannot be established, work MUST stop |\n\n---\n\n### AGTTM Part 7 \u2013 Traffic Controllers (Section 2.6.4)\n\n> **Quote from AGTTM Part 7:**\n> \"Portable two-way radios or similar means will be used for communication where traffic controllers cannot see or hear each other.\"\n\n| Requirement | Details |\n|-------------|--------|\n| **When TCs can't see each other** | Two-way radios (or similar means) REQUIRED |\n| **Alternative means** | Visual signals, audible signals may be acceptable if radios unavailable |\n| **Radio checks** | Must be performed at pre-start |\n\n---\n\n## Summary Table \u2013 Mandatory vs Required\n\n| Situation | Requirement | Status | Reference |\n|-----------|-------------|--------|-----------|\n| **Mobile convoy** | All vehicles must have two-way radios | **MANDATORY** | MRWA TMP |\n| **Pilot vehicles** | Must have operational UHF radio | **MANDATORY** | MRWA WHS Standards |\n| **Railway crossing** | Flag Person must have two-way radio | **MANDATORY** | MRWA TMP |\n| **Heavy vehicle monitoring** | TC must monitor Channel 40 | **MANDATORY** | MRWA TMP |\n| **TC to TC communication** | Two-way radio or similar means | **REQUIRED** | AGTTM Part 7 |\n| **Work crew to TC** | Positive communication must be established | **REQUIRED** | MRWA WHS Standards |\n| **All workers** | Must be trained in communication protocols | **REQUIRED** | MRWA WHS Standards |\n\n---\n\n## Who Must Have Radio Communication?\n\n| Personnel | Requirement | Citation |\n|-----------|-------------|---------|\n| **MRWA crews** | Same requirements as contractors \u2013 positive communication required | MRWA WHS Standards Sec 11.5 |\n| **Contractors** | Same requirements as MRWA crews \u2013 positive communication required | MRWA WHS Standards Sec 11.5 |\n| **Work crews** | Must be trained in protocols; positive communication must be established | MRWA WHS Standards Sec 11.5 |\n| **Traffic Controllers** | Two-way radio when cannot see other TCs | AGTTM Part 7 Sec 2.6.4 |\n| **Pilot vehicle drivers** | MUST have operational UHF radio | MRWA WHS Standards |\n| **Flag Persons (rail)** | MUST have two-way radio | MRWA TMP |\n\n---\n\n## \"Positive Communication\" Requirement\n\n### What This Means:\n\nFrom MRWA WHS Control Standards Section 11.5:\n\n| Protocol | Requirement |\n|----------|-------------|\n| **Establish before work** | Positive communication must be in place before work starts |\n| **Maintain during work** | Workers must operate in accordance with protocol at all times |\n| **Stop if not established** | Stop task protocol applies if communication fails |\n| **Training required** | All workers must be trained in protocols |\n\n### Positive Communication Methods:\n\n| Method | Acceptable? | Notes |\n|--------|-------------|-------|\n| **Two-way radio** | \u2705 Yes | Preferred method |\n| **Mobile phone** | \u2705 Yes | If reception is reliable |\n| **Visual signals** | \u2705 Yes | If line of sight exists |\n| **Direct voice** | \u2705 Yes | If within hearing distance |\n| **Hand signals** | \u2705 Yes | If TC and crew can see each other |\n\n---\n\n## Stop Task Protocol\n\nFrom MRWA WHS Control Standards:\n\n> \"Include a stop task protocol in place where positive communication is not established.\"\n\n| Situation | Action Required |\n|-----------|-----------------|\n| Radio fails | Stop work until communication restored |\n| Cannot contact TC | Stop work until contact made |\n| Battery dead | Replace battery or use backup method |\n| Interference on channel | Switch to backup channel |\n\n---\n\n## Document References\n\n| Document | Section | Key Content |\n|----------|---------|-------------|\n| **MRWA WHS Control Standards** | Section 11.5 | Two-way communication protocols, training, stop task protocol |\n| **MRWA Traffic Management Plan** | Various | Mobile convoy requirements, pilot vehicles, railway crossings |\n| **AGTTM Part 7** | Section 2.6.4 | Communication devices, when radios required |\n| **AGTTM Part 6** | Page 10 | Field staff must be contactable at all times |\n\n---\n\n## Key Citations\n\n### Mandatory \u2013 Exact Quotes:\n\n**Mobile Convoys:**\n> \"ALL VEHICLES WITHIN MOBILE CONVOY MUST HAVE CLEAR COMMUNICATION METHODS USING TWO-WAY RADIO DEVICES.\" \u2013 MRWA Traffic Management Plan\n\n**Pilot Vehicles:**\n> Pilot vehicles must \"contain an operational UHF radio.\" \u2013 MRWA WHS Control Standards\n\n**Railway Crossings:**\n> \"Flag Person must be equipped with a two-way radio and are to watch for trains, advising Traffic Controllers with enough time to stop traffic before the train approaches.\" \u2013 MRWA Traffic Management Plan\n\n### Required \u2013 Exact Quotes:\n\n**All Workers:**\n> \"All Workers within the active work zone must be trained in two way communication protocols.\" \u2013 MRWA WHS Control Standards Section 11.5\n\n**Stop Task:**\n> \"Include a stop task protocol in place where positive communication is not established.\" \u2013 MRWA WHS Control Standards Section 11.5\n\n**Traffic Controllers:**\n> \"Portable two-way radios or similar means will be used for communication where traffic controllers cannot see or hear each other.\" \u2013 AGTTM Part 7 Section 2.6.4\n\n---\n\n## Summary\n\n| Question | Answer |\n|----------|--------|\n| **Is radio communication mandatory?** | YES \u2013 for mobile convoys, pilot vehicles, railway crossings, heavy vehicle monitoring, and ACTIVE CONSTRUCTION SITES with mobile plant |\n| **Is radio communication optional for static TM sites?** | YES \u2013 AGTTM Part 7 says \"may be useful\" for TC-to-crew communication |\n| **Is radio communication mandatory for active construction sites?** | YES \u2013 MRWA WHS Section 11.5 requires \"positive two-way communication protocols\" |\n| **Does this apply to MRWA crews?** | YES \u2013 same requirements as contractors |\n| **Does this apply to contractors?** | YES \u2013 same requirements as MRWA crews |\n| **What if communication fails?** | STOP WORK until communication is restored |\n\n---\n\n## Key Site Type Distinction\n\n| Site Type | Mobile Plant? | Radio Requirement | Applicable Standard |\n|-----------|---------------|-------------------|---------------------|\n| **Static TM Site** | No | \"May be useful\" \u2013 OPTIONAL | AGTTM Part 7 Section 2.6.4 |\n| **Active Construction Site** | Yes | **MANDATORY** | MRWA WHS Standards Section 11.5 |\n\n> **Key Rule:** Two-way radio communication is MANDATORY for mobile convoys, pilot vehicles, railway crossing operations, heavy vehicle monitoring, and **any worksite with powered mobile plant operating** (classified as high risk construction work under WHS Regulations 291(o)). For static traffic management sites without construction work, radio communication between TCs and work crew is recommended (\"may be useful\") but not mandatory. If positive communication cannot be established or maintained on a construction site, work must STOP. Both MRWA crews and contractors have the same requirements.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Communication",
+    "createdAt": "2026-03-25T12:00:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-03-25-004",
+    "question": "On a static site, is two-way radio communication required between traffic controllers and road crew?",
+    "answer": "Based on **AGTTM Part 7: Traffic Controllers** (Edition 1.1, 2021):\n\n## Short Answer\n\n**No, it is not mandatory** for road crew to have two-way radio communication with traffic controllers on a static site \u2013 but it is **recommended**.\n\n---\n\n## Exact Citation from AGTTM Part 7\n\n### Document: AGTTM Part 7: Traffic Controllers\n### Section: 2.6.4 Communication devices\n### Page: 16\n\n**Exact quote:**\n\n> \"Portable two-way radios or similar means **will be used** for communication where traffic controllers cannot see or hear each other. **Additional radios with site workers may be useful to ensure that the control is suitable for the worksite.** Prior to commencing any duties, the staff must ensure their radio is charged and operating correctly prior to starting any works.\"\n\n---\n\n## Key Language Analysis\n\n| Communication | Exact Wording | Implication |\n|--------------|---------------|-------------|\n| **TC to TC** | \"**will be used**\" | Mandatory language |\n| **TC to Work Crew** | \"**may be useful**\" | Optional/advisory language |\n\n---\n\n## What This Means for Static Sites\n\n### TC to TC Communication\n\n| Situation | Requirement |\n|-----------|-------------|\n| TCs **can see each other** | Radio not required (visual contact sufficient) |\n| TCs **cannot see each other** | Two-way radio **MANDATORY** (\"will be used\") |\n| TCs **cannot hear each other** | Two-way radio **MANDATORY** (\"will be used\") |\n\n### TC to Road Crew Communication\n\n| Situation | Requirement |\n|-----------|-------------|\n| Road crew have radios | \"**May be useful**\" \u2013 recommended but not mandatory |\n| Road crew do not have radios | Acceptable \u2013 not a breach of standards |\n| Alternative communication available | Acceptable (visual signals, direct voice, etc.) |\n\n---\n\n## When Radio Becomes Mandatory\n\nTwo-way radio communication IS mandatory for:\n\n| Situation | Requirement | Citation |\n|-----------|-------------|---------|\n| **Mobile convoy operations** | All vehicles MUST have radios | MRWA TMP |\n| **Pilot vehicles** | MUST have operational UHF radio | MRWA WHS Standards |\n| **Railway crossing works** | Flag Person MUST have radio | MRWA TMP |\n| **TCs cannot see each other** | Radios \"will be used\" | AGTTM Part 7 Sec 2.6.4 |\n\n---\n\n## Third Traffic Controller Scenario\n\n### From AGTTM Part 7, Section 2.9.9:\n\n> \"During single lane shuttle control, a third traffic controller is required when:\n> - the two traffic controllers cannot see each other, and two-way radios are **not available**\"\n\nThis confirms that radios are the **primary method** \u2013 if not available, additional personnel are required.\n\n---\n\n## Pre-Start Radio Checks\n\nEven though radio communication with road crew is not mandatory, AGTTM Part 7 Section 2.6.4 requires:\n\n> \"Prior to commencing any duties, the staff must ensure their radio is charged and operating correctly prior to starting any works.\"\n\nThis applies to TCs who are using radios for TC-to-TC communication.\n\n---\n\n## Summary Table\n\n| Question | Answer |\n|----------|--------|\n| **Is radio mandatory for TC-to-TC on static site?** | YES \u2013 if TCs cannot see or hear each other (\"will be used\") |\n| **Is radio mandatory for TC-to-road crew on static site?** | NO \u2013 \"may be useful\" is advisory, not mandatory |\n| **Is radio recommended for TC-to-road crew?** | YES \u2013 best practice for coordination |\n| **What if TCs can see each other?** | Radio not required (visual contact sufficient) |\n\n---\n\n## Document References\n\n| Document | Section | Page | Key Content |\n|----------|---------|------|-------------|\n| **AGTTM Part 7** | Section 2.6.4 | Page 16 | \"will be used\" vs \"may be useful\" distinction |\n| **AGTTM Part 7** | Section 2.9.9 | Page 31 | Third TC required if radios not available |\n\n---\n\n> **Key Rule:** On a static site, two-way radio communication between traffic controllers is **MANDATORY** if they cannot see or hear each other (\"will be used\"). However, radio communication between TCs and road crew is **NOT mandatory** \u2013 the standard uses advisory language (\"may be useful\"). Best practice is to provide radios to road crew for coordination, but it is not a breach of AGTTM if they do not have radios.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Communication",
+    "createdAt": "2026-03-25T13:00:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-03-25-005",
+    "question": "What does MRWA/WHS define as a construction site? What activities qualify when using bobcats, rollers and mobile plant in the work zone?",
+    "answer": "Based on **WHS General Regulations 2022** and **MRWA WHS Control Standards**:\n\n## Short Answer\n\n**MRWA does not provide its own definition** \u2013 it references the WHS General Regulations 2022. A work zone with bobcats, rollers and mobile plant **qualifies as both a \"construction site\" and \"high risk construction work\"** under WHS legislation.\n\n---\n\n## Legal Definitions\n\n### Construction Site Definition\n\n**WHS General Regulations 2022 \u2013 Regulation 5:**\n\n> \"construction site means a workplace where construction work is being carried out\"\n\n---\n\n### Construction Work Definition\n\n**WHS General Regulations 2022 \u2013 Regulation 289(1):**\n\n> \"construction work means any work carried out in connection with the **construction, alteration, conversion, fitting-out, commissioning, renovation, repair, maintenance, refurbishment, demolition, decommissioning or dismantling of a structure**.\"\n\n---\n\n### What Construction Work Includes (Regulation 289(2))\n\n| Activity | Included in Construction Work |\n|----------|------------------------------|\n| Installation or testing carried out in connection with construction activities | \u2705 Yes |\n| Removal of product or waste from demolition | \u2705 Yes |\n| Prefabrication or testing of elements at a place specifically established for construction work | \u2705 Yes |\n| Assembly of prefabricated elements to form a structure | \u2705 Yes |\n| Installation, testing or maintenance of essential services | \u2705 Yes |\n| **Any work connected with an excavation** | \u2705 Yes |\n| **Any work connected with preparatory work or site preparation (including landscaping)** | \u2705 Yes |\n| Work carried out on, under or near water | \u2705 Yes |\n\n---\n\n### Structure Definition (Regulation 290)\n\n**\"Structure\" includes:**\n\n| Type | Examples |\n|------|----------|\n| **Roadway or pathway** | Roads, highways, paths, cycleways |\n| Foundations, earth retention works | Foundations, retaining walls |\n| Formwork, falsework | Temporary support structures |\n| **Dock, harbour, channel, bridge, viaduct, dam** | Bridges, culverts, drains |\n| **Sewer or drainage works** | Stormwater drains, sewers |\n\n---\n\n## High Risk Construction Work \u2013 Mobile Plant\n\n**WHS General Regulations 2022 \u2013 Regulation 291(o):**\n\n> \"high risk construction work means construction work that \u2014 (o) is carried out in an area at a workplace in which there is any **movement of powered mobile plant**\"\n\n### This Means:\n\n| Your Situation | Classification |\n|----------------|----------------|\n| Work zone with bobcats, rollers, excavators | **High risk construction work** |\n| Mobile plant operating in work area | **High risk construction work** |\n| Construction work + powered mobile plant | **High risk construction work** |\n\n---\n\n## Typical Activities in Work Zones with Mobile Plant\n\nBased on WHS Regulations definition of construction work:\n\n| Activity Type | Examples with Bobcats/Rollers |\n|---------------|------------------------------|\n| **Site preparation** | Clearing vegetation, leveling ground, compacting surfaces with rollers |\n| **Excavation work** | Trenching, boring, potholing with bobcats/excavators |\n| **Road construction** | Laying base material, grading, compacting with rollers |\n| **Drainage works** | Digging trenches for drainage, installing culverts |\n| **Material handling** | Loading/unloading materials, moving spoil, stockpiling |\n| **Maintenance/repair** | Patching roads, repairing infrastructure |\n| **Demolition** | Removing existing structures, breaking up concrete |\n\n---\n\n## MRWA WHS Control Standards Requirements\n\n### When Mobile Plant is Operating in Active Construction Sites\n\n**MRWA WHS Control Standards \u2013 Section 11.4.1:**\n\n> \"Where mobile plant is operating within an active construction site where there is the potential for conflict with Workers on foot, other plant or equipment, vehicles and pedestrians (members of public) the risk must be assessed which includes (but is not limited to):\n> - The volume and type of public traffic if adjacent to an active construction site\n> - The interface with the traffic management plan, traffic guidance scheme\n> - The size, location, access and egress of the active construction site\n> - The mobile plant required during each stage and sequence of the active work / construction plan\n> - Separation, segregation, exclusion zones and \"no go zones\" within the active construction site\"\n\n---\n\n### Two-Way Communication Requirements for Construction Sites\n\n**MRWA WHS Control Standards \u2013 Section 11.5.1:**\n\n> \"A positive two-way communication protocols must be in place for all Workers within active construction site, which includes (but is not limited to):\n> - All Workers within the active work zone must be trained in two way communication protocols\n> - Workers must operate in accordance with the prescribed two way communication protocol at all times\n> - Include a stop task protocol in place where positive communication is not established\"\n\n---\n\n## Key Distinction: Static TM Site vs Active Construction Site\n\n| Factor | Static TM Site | Active Construction Site |\n|--------|----------------|------------------------|\n| **Primary activity** | Traffic control only | Construction work with mobile plant |\n| **Mobile plant** | None or minimal | Bobcats, rollers, excavators operating |\n| **Two-way radio requirement** | \"May be useful\" (AGTTM) | **Mandatory** (MRWA WHS Section 11.5) |\n| **Applicable standard** | AGTTM Part 7 | MRWA WHS Control Standards Section 11 |\n| **Classification** | Traffic management | High risk construction work |\n\n---\n\n## Document References\n\n| Document | Reference | Key Content |\n|----------|-----------|-------------|\n| **WHS General Regulations 2022** | Regulation 5 | Definition of \"construction site\" |\n| **WHS General Regulations 2022** | Regulation 289(1) | Definition of \"construction work\" |\n| **WHS General Regulations 2022** | Regulation 289(2) | What construction work includes |\n| **WHS General Regulations 2022** | Regulation 290 | Definition of \"structure\" |\n| **WHS General Regulations 2022** | Regulation 291(o) | High risk construction work \u2013 mobile plant |\n| **MRWA WHS Control Standards** | Section 11.4.1 | Active construction site risk assessment |\n| **MRWA WHS Control Standards** | Section 11.5.1 | Two-way communication protocols |\n\n---\n\n## Summary Table\n\n| Question | Answer |\n|----------|--------|\n| **Does MRWA define \"construction site\"?** | No \u2013 uses WHS General Regulations 2022 definition |\n| **What is a construction site?** | \"A workplace where construction work is being carried out\" |\n| **What is construction work?** | Work connected with construction, alteration, repair, maintenance, demolition of a structure |\n| **Does a road qualify as a structure?** | Yes \u2013 \"roadway or pathway\" is explicitly included |\n| **Does work with bobcats/rollers qualify?** | Yes \u2013 site preparation and excavation are construction work |\n| **Is it high risk construction work?** | Yes \u2013 if powered mobile plant is operating (Reg 291(o)) |\n| **What communication is required?** | Positive two-way communication protocols mandatory |\n\n---\n\n## Practical Implications\n\nIf your work zone has:\n- Bobcats, rollers, or other mobile plant operating\n- Workers on foot in the same area\n- Construction, repair, or maintenance activities\n\nThen you must:\n1. **Treat it as a construction site** (WHS Regulations apply)\n2. **Treat it as high risk construction work** (SWMS required)\n3. **Implement positive two-way communication** (MRWA WHS Section 11.5)\n4. **Establish vehicle movement plans** (MRWA WHS Section 11.4)\n5. **Define exclusion zones** (MRWA WHS Section 11.4)\n\n> **Key Rule:** MRWA does not define \"construction site\" separately \u2013 it uses the WHS General Regulations 2022 definition. A work zone with bobcats, rollers, or other mobile plant **automatically qualifies as both a construction site and high risk construction work** under Regulation 291(o). This triggers mandatory requirements for two-way communication protocols, vehicle movement plans, and exclusion zones under MRWA WHS Control Standards Section 11.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "WHS & Safety",
+    "createdAt": "2026-03-25T14:00:00.000Z",
+    "isFavorite": false
+  }
+]

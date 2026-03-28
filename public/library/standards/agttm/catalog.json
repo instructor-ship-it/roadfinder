@@ -1,0 +1,139 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-03-20",
+  "name": "AGTTM Document Registers",
+  "description": "Austroads Guide to Temporary Traffic Management and related state guides",
+  "documents": [
+    {
+      "id": "qgttm-part-1",
+      "title": "Queensland Guide to Temporary Traffic Management Part 1: Introduction",
+      "shortTitle": "QGTTM Part 1",
+      "agency": "TMR Queensland",
+      "version": "Current",
+      "pages": 10,
+      "path": "/library/standards/agttm/part-1",
+      "file": "/library/standards/agttm/part-1/qgttm-part-1.pdf",
+      "supplements": "AGTTM Part 1"
+    },
+    {
+      "id": "qgttm-part-2",
+      "title": "Queensland Guide to Temporary Traffic Management Part 2: Traffic Management Planning",
+      "shortTitle": "QGTTM Part 2",
+      "agency": "TMR Queensland",
+      "version": "Current",
+      "pages": 19,
+      "path": "/library/standards/agttm/part-2",
+      "file": "/library/standards/agttm/part-2/qgttm-part-2.pdf",
+      "supplements": "AGTTM Part 2"
+    },
+    {
+      "id": "qgttm-part-3",
+      "title": "Queensland Guide to Temporary Traffic Management Part 3: Static Worksites",
+      "shortTitle": "QGTTM Part 3",
+      "agency": "TMR Queensland",
+      "version": "Current",
+      "pages": 126,
+      "path": "/library/standards/agttm/part-3",
+      "file": "/library/standards/agttm/part-3/qgttm-part-3.pdf",
+      "supplements": "AGTTM Part 3"
+    },
+    {
+      "id": "qgttm-part-4",
+      "title": "Queensland Guide to Temporary Traffic Management Part 4: Mobile Works",
+      "shortTitle": "QGTTM Part 4",
+      "agency": "TMR Queensland",
+      "version": "Current",
+      "pages": 13,
+      "path": "/library/standards/agttm/part-4",
+      "file": "/library/standards/agttm/part-4/qgttm-part-4.pdf",
+      "supplements": "AGTTM Part 4"
+    },
+    {
+      "id": "qgttm-part-5",
+      "title": "Queensland Guide to Temporary Traffic Management Part 5: Short-Term Low-Impact Worksites",
+      "shortTitle": "QGTTM Part 5",
+      "agency": "TMR Queensland",
+      "version": "Current",
+      "pages": 41,
+      "path": "/library/standards/agttm/part-5",
+      "file": "/library/standards/agttm/part-5/qgttm-part-5.pdf",
+      "supplements": "AGTTM Part 5"
+    },
+    {
+      "id": "qgttm-part-6",
+      "title": "Queensland Guide to Temporary Traffic Management Part 6: Field Staff Implementation",
+      "shortTitle": "QGTTM Part 6",
+      "agency": "TMR Queensland",
+      "version": "Current",
+      "pages": 14,
+      "path": "/library/standards/agttm/part-6",
+      "file": "/library/standards/agttm/part-6/qgttm-part-6.pdf",
+      "supplements": "AGTTM Part 6"
+    },
+    {
+      "id": "agttm-part-7",
+      "title": "Austroads Guide to Temporary Traffic Management Part 7: Traffic Controllers",
+      "shortTitle": "AGTTM Part 7",
+      "agency": "Austroads",
+      "version": "Edition 1.1, 2021",
+      "pages": 41,
+      "path": "/library/standards/agttm/part-7",
+      "file": "/library/standards/agttm/part-7/agttm-part-7.pdf",
+      "isOriginal": true
+    },
+    {
+      "id": "qgttm-part-8",
+      "title": "Queensland Guide to Temporary Traffic Management Part 8: Processes and Procedures",
+      "shortTitle": "QGTTM Part 8",
+      "agency": "TMR Queensland",
+      "version": "Current",
+      "pages": 26,
+      "path": "/library/standards/agttm/part-8",
+      "file": "/library/standards/agttm/part-8/qgttm-part-8.pdf",
+      "supplements": "AGTTM Part 8"
+    },
+    {
+      "id": "qgttm-part-9",
+      "title": "Queensland Guide to Temporary Traffic Management Part 9: Sample Layouts",
+      "shortTitle": "QGTTM Part 9",
+      "agency": "TMR Queensland",
+      "version": "Current",
+      "pages": 9,
+      "path": "/library/standards/agttm/part-9",
+      "file": "/library/standards/agttm/part-9/qgttm-part-9.pdf",
+      "supplements": "AGTTM Part 9"
+    },
+    {
+      "id": "qgttm-part-10",
+      "title": "Queensland Guide to Temporary Traffic Management Part 10: Supporting Guidance",
+      "shortTitle": "QGTTM Part 10",
+      "agency": "TMR Queensland",
+      "version": "Current",
+      "pages": 10,
+      "path": "/library/standards/agttm/part-10",
+      "file": "/library/standards/agttm/part-10/qgttm-part-10.pdf",
+      "supplements": "AGTTM Part 10"
+    },
+    {
+      "id": "vic-worksite-safety-cop",
+      "title": "Code of Practice for Worksite Safety - Traffic Management",
+      "shortTitle": "VIC Worksite Safety COP",
+      "agency": "WorkSafe Victoria",
+      "version": "2023",
+      "pages": 20,
+      "path": "/library/standards/agttm/part-3",
+      "file": "/library/standards/agttm/part-3/vic-worksite-safety-cop.pdf",
+      "incorporates": "AGTTM Parts 1-10"
+    },
+    {
+      "id": "ttm-update",
+      "title": "Temporary Traffic Management Update",
+      "shortTitle": "TTM Update",
+      "agency": "TMR Queensland",
+      "version": "Nov 2025",
+      "pages": 126,
+      "path": "/library/standards/agttm/part-8",
+      "file": "/library/standards/agttm/part-8/ttm-update.pdf"
+    }
+  ]
+}

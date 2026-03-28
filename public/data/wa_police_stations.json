@@ -1,0 +1,1602 @@
+[
+  {
+    "name": "BUNBURY POLICE STATION",
+    "address": "76 WITTENOOM STREET",
+    "suburb": "BUNBURY",
+    "postcode": "",
+    "lat": -33.326048654999965,
+    "lon": 115.63500656800011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BUSSELTON POLICE STATION",
+    "address": "20 STANLEY STREET",
+    "suburb": "BUSSELTON",
+    "postcode": "",
+    "lat": -33.648109784999974,
+    "lon": 115.34669079000003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "LOOMA MFPF",
+    "address": "LOT 75 MYROODAH-LULUIGUI ROAD",
+    "suburb": "CAMBALLIN",
+    "postcode": "",
+    "lat": -18.04050956599997,
+    "lon": 124.14995083600002,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "CANNING VALE POLICE STATION",
+    "address": "449 NICHOLSON ROAD",
+    "suburb": "CANNING VALE",
+    "postcode": "",
+    "lat": -32.06281577999994,
+    "lon": 115.9367277770001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "CANNINGTON POLICE STATION",
+    "address": "1325 ALBANY HIGHWAY",
+    "suburb": "CANNINGTON",
+    "postcode": "",
+    "lat": -32.01707626499996,
+    "lon": 115.93124710100005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "CARNAMAH POLICE STATION",
+    "address": "34 MACPHERSON STREET",
+    "suburb": "CARNAMAH",
+    "postcode": "",
+    "lat": -29.68777025299994,
+    "lon": 115.88972301500007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "ALBANY POLICE STATION",
+    "address": "210 STIRLING TERRACE",
+    "suburb": "ALBANY",
+    "postcode": "",
+    "lat": -35.027234325999984,
+    "lon": 117.88135208300002,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "CARNARVON POLICE STATION",
+    "address": "11 ROBINSON STREET",
+    "suburb": "CARNARVON",
+    "postcode": "",
+    "lat": -24.884559382999953,
+    "lon": 113.65610151400006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "CLARKSON POLICE STATION",
+    "address": "14 OCEAN KEYS BVD",
+    "suburb": "CLARKSON",
+    "postcode": "",
+    "lat": -31.69002428799996,
+    "lon": 115.71606593700005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BELMONT POLICE STATION",
+    "address": "273 ABERNETHY ROAD",
+    "suburb": "CLOVERDALE",
+    "postcode": "",
+    "lat": -31.960339503999933,
+    "lon": 115.9343457650001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "COCKBURN POLICE STATION",
+    "address": "34 LINKAGE AVENUE",
+    "suburb": "COCKBURN CENTRAL",
+    "postcode": "",
+    "lat": -32.12455465199997,
+    "lon": 115.85599060600009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "COLLIE POLICE STATION",
+    "address": "39 WITTENOOM STREET",
+    "suburb": "COLLIE",
+    "postcode": "",
+    "lat": -33.36300604999997,
+    "lon": 116.15917491500011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "COOLGARDIE POLICE STATION",
+    "address": "61 SYLVESTER STREET",
+    "suburb": "COOLGARDIE",
+    "postcode": "",
+    "lat": -30.954044489999944,
+    "lon": 121.16481795900006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "ARMADALE POLICE STATION",
+    "address": "23 PROSPECT ROAD",
+    "suburb": "ARMADALE",
+    "postcode": "",
+    "lat": -32.15118524999997,
+    "lon": 116.01719439100009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "AUGUSTA POLICE STATION",
+    "address": "3 HILLVIEW ROAD",
+    "suburb": "AUGUSTA",
+    "postcode": "",
+    "lat": -34.31724121999997,
+    "lon": 115.15723260100003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "AUSTRALIND POLICE STATION",
+    "address": "LOT 5787 PARIS ROAD",
+    "suburb": "AUSTRALIND",
+    "postcode": "",
+    "lat": -33.27334174699996,
+    "lon": 115.73453930700009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BALLAJURA POLICE STATION",
+    "address": "37 CASSOWARY DRIVE",
+    "suburb": "BALLAJURA",
+    "postcode": "",
+    "lat": -31.84573621499993,
+    "lon": 115.8957018000001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BAYSWATER POLICE STATION",
+    "address": "1A HAMILTON STREET",
+    "suburb": "BAYSWATER",
+    "postcode": "",
+    "lat": -31.918564463999928,
+    "lon": 115.91358296800001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BEVERLEY POLICE STATION",
+    "address": "57 HUNT ROAD",
+    "suburb": "BEVERLEY",
+    "postcode": "",
+    "lat": -32.109451674999946,
+    "lon": 116.92265767600009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BODDINGTON POLICE STATION",
+    "address": "12 JOHNSTONE STREET",
+    "suburb": "BODDINGTON",
+    "postcode": "",
+    "lat": -32.80145722999998,
+    "lon": 116.47329740000009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BOYUP BROOK POLICE STATION",
+    "address": "88 ABEL STREET",
+    "suburb": "BOYUP BROOK",
+    "postcode": "",
+    "lat": -33.83327068299997,
+    "lon": 116.38986501400007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BRIDGETOWN POLICE STATION",
+    "address": "26 STEERE STREET",
+    "suburb": "BRIDGETOWN",
+    "postcode": "",
+    "lat": -33.95876418499995,
+    "lon": 116.13892293900005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BROOKTON POLICE STATION",
+    "address": "9 GROSER STREET",
+    "suburb": "BROOKTON",
+    "postcode": "",
+    "lat": -32.37087219099993,
+    "lon": 117.01298366000003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BROOME POLICE STATION",
+    "address": "7 FREDERICK STREET",
+    "suburb": "BROOME",
+    "postcode": "",
+    "lat": -17.956651932999932,
+    "lon": 122.241418855,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BRUCE ROCK POLICE STATION",
+    "address": "14 JOHNSON STREET",
+    "suburb": "BRUCE ROCK",
+    "postcode": "",
+    "lat": -31.87534285099997,
+    "lon": 118.14834502200006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "ESPERANCE POLICE STATION",
+    "address": "100-102 DEMPSTER STREET",
+    "suburb": "ESPERANCE",
+    "postcode": "",
+    "lat": -33.86309159899997,
+    "lon": 121.89151750700012,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "EUCLA POLICE STATION",
+    "address": "LOT 17 PATUPIS STREET",
+    "suburb": "EUCLA",
+    "postcode": "",
+    "lat": -31.67665775499995,
+    "lon": 128.88772279900002,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "EXMOUTH POLICE STATION",
+    "address": "32 MAIDSTONE CRESCENT",
+    "suburb": "EXMOUTH",
+    "postcode": "",
+    "lat": -21.92998738899996,
+    "lon": 114.12361291600007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "FITZROY CROSSING POLICE STATION",
+    "address": "55 MCLARTY ROAD",
+    "suburb": "FITZROY CROSSING",
+    "postcode": "",
+    "lat": -18.190254030999938,
+    "lon": 125.56629118300009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "FORRESTFIELD POLICE STATION",
+    "address": "40 STRELITZIA AVENUE",
+    "suburb": "FORRESTFIELD",
+    "postcode": "",
+    "lat": -31.98574167099997,
+    "lon": 116.00969951200011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "FREMANTLE POLICE STATION",
+    "address": "88 HIGH STREET",
+    "suburb": "FREMANTLE",
+    "postcode": "",
+    "lat": -32.05431106899994,
+    "lon": 115.74576857600005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WONGAN HILLS POLICE STATION",
+    "address": "1A MITCHELL STREET",
+    "suburb": "WONGAN HILLS",
+    "postcode": "",
+    "lat": -30.896023670999966,
+    "lon": 116.71964303100003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WUNDOWIE POLICE STATION",
+    "address": "42 BORONIA AVENUE",
+    "suburb": "WUNDOWIE",
+    "postcode": "",
+    "lat": -31.75876872999993,
+    "lon": 116.38295797600006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WYALKATCHEM POLICE STATION",
+    "address": "21 GAMBLE STREET",
+    "suburb": "WYALKATCHEM",
+    "postcode": "",
+    "lat": -31.178104106999967,
+    "lon": 117.38082535400008,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WYNDHAM POLICE STATION",
+    "address": "16 MACPHEE STREET",
+    "suburb": "WYNDHAM",
+    "postcode": "",
+    "lat": -15.461318146999929,
+    "lon": 128.10198192200005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "YALGOO POLICE STATION",
+    "address": "37-39 PIESSE STREET",
+    "suburb": "YALGOO",
+    "postcode": "",
+    "lat": -28.345916710999973,
+    "lon": 116.68314697100004,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "YANCHEP POLICE STATION",
+    "address": "110 YANCHEP BEACH ROAD",
+    "suburb": "YANCHEP",
+    "postcode": "",
+    "lat": -31.546616875999973,
+    "lon": 115.63891678700008,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BURRINGURRAH MFPF",
+    "address": "LOT 8 LANDOR-MOUNT AUGUSTUS ROAD",
+    "suburb": "GASCOYNE RIVER",
+    "postcode": "",
+    "lat": -24.65289246599997,
+    "lon": 116.92914680900003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "GERALDTON POLICE STATION",
+    "address": "21 MARINE TERRACE",
+    "suburb": "GERALDTON",
+    "postcode": "",
+    "lat": -28.77124702599997,
+    "lon": 114.61159380800007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "GINGIN POLICE STATION",
+    "address": "4 CONSTABLE STREET",
+    "suburb": "GINGIN",
+    "postcode": "",
+    "lat": -31.345377266999947,
+    "lon": 115.90528658100004,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "GNOWANGERUP POLICE STATION",
+    "address": "3 CORBETT STREET",
+    "suburb": "GNOWANGERUP",
+    "postcode": "",
+    "lat": -33.936119892999955,
+    "lon": 118.00271505900002,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "GOOMALLING POLICE STATION",
+    "address": "14 QUINLAN STREET",
+    "suburb": "GOOMALLING",
+    "postcode": "",
+    "lat": -31.298523563999936,
+    "lon": 116.82916780400001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "GOSNELLS POLICE STATION",
+    "address": "2291 ALBANY HIGHWAY",
+    "suburb": "GOSNELLS",
+    "postcode": "",
+    "lat": -32.073644986999966,
+    "lon": 116.0037272720001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "LEINSTER POLICE STATION",
+    "address": "LOT 492 MANSBRIDGE STREET",
+    "suburb": "LEINSTER",
+    "postcode": "",
+    "lat": -27.916970013999958,
+    "lon": 120.69913104400007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "LEONORA POLICE STATION",
+    "address": "13 ROCHESTER STREET",
+    "suburb": "LEONORA",
+    "postcode": "",
+    "lat": -28.885395467999956,
+    "lon": 121.33137879300011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MANDURAH POLICE STATION",
+    "address": "333 PINJARRA ROAD",
+    "suburb": "MANDURAH",
+    "postcode": "",
+    "lat": -32.53855015599993,
+    "lon": 115.74368371300011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MANJIMUP POLICE STATION",
+    "address": "6 MOUNT STREET",
+    "suburb": "MANJIMUP",
+    "postcode": "",
+    "lat": -34.23846112799998,
+    "lon": 116.14707078800006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MARBLE BAR POLICE STATION",
+    "address": "31 STATION STREET",
+    "suburb": "MARBLE BAR",
+    "postcode": "",
+    "lat": -21.17228904999996,
+    "lon": 119.74228545000005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MARGARET RIVER POLICE STATION",
+    "address": "47 WILLMOTT AVENUE",
+    "suburb": "MARGARET RIVER",
+    "postcode": "",
+    "lat": -33.95165437899993,
+    "lon": 115.07605888,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "YARLOOP POLICE STATION",
+    "address": "107 JOHNSTON ROAD",
+    "suburb": "YARLOOP",
+    "postcode": "",
+    "lat": -32.95340091199995,
+    "lon": 115.90033796500006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "YORK POLICE STATION",
+    "address": "4 FORD STREET",
+    "suburb": "YORK",
+    "postcode": "",
+    "lat": -31.884288847999983,
+    "lon": 116.76796345100001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BENCUBBIN POLICE STATION",
+    "address": "LOT 282 MONGER STREET",
+    "suburb": "BENCUBBIN",
+    "postcode": "",
+    "lat": -30.810813834999976,
+    "lon": 117.86011568200001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "DAMPIER PENINSULA MFPF",
+    "address": "LOT 144 LOMBADINA ROAD",
+    "suburb": "DAMPIER PENINSULA",
+    "postcode": "",
+    "lat": -16.515309161999937,
+    "lon": 122.89437405400008,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "JIGALONG MFPF",
+    "address": "175 INTERIOR 1 ROAD",
+    "suburb": "JIGALONG",
+    "postcode": "",
+    "lat": -23.36117457599994,
+    "lon": 120.78326060500001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KALUMBURU MFPF",
+    "address": "7 CARSON STREET",
+    "suburb": "KALUMBURU",
+    "postcode": "",
+    "lat": -14.292577611999945,
+    "lon": 126.64481385700003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KINTORE POLICE STATION",
+    "address": "GARRY JUNCTION ROAD",
+    "suburb": "KINTORE",
+    "postcode": "",
+    "lat": -23.275000965999936,
+    "lon": 129.38300093200007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MEEKATHARRA POLICE STATION",
+    "address": "78 MAIN STREET",
+    "suburb": "MEEKATHARRA",
+    "postcode": "",
+    "lat": -26.592269028999965,
+    "lon": 118.49551383000005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MERREDIN POLICE STATION",
+    "address": "22 MITCHELL STREET",
+    "suburb": "MERREDIN",
+    "postcode": "",
+    "lat": -31.480520499999955,
+    "lon": 118.280477657,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MIDLAND POLICE STATION",
+    "address": "32 SPRING PARK ROAD",
+    "suburb": "MIDLAND",
+    "postcode": "",
+    "lat": -31.88662282399997,
+    "lon": 116.00230221600009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MINGENEW POLICE STATION",
+    "address": "8 MOORE STREET",
+    "suburb": "MINGENEW",
+    "postcode": "",
+    "lat": -29.193389027999956,
+    "lon": 115.44055837600001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MIRRABOOKA POLICE STATION",
+    "address": "50 CHESTERFIELD ROAD",
+    "suburb": "MIRRABOOKA",
+    "postcode": "",
+    "lat": -31.87085985599998,
+    "lon": 115.86499893400003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MOORA POLICE STATION",
+    "address": "LOT 50 ROBERTS STREET",
+    "suburb": "MOORA",
+    "postcode": "",
+    "lat": -30.63979999999998,
+    "lon": 116.005446,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "HALLS CREEK POLICE STATION",
+    "address": "LOT 500 GREAT NORTHERN HIGHWAY",
+    "suburb": "HALLS CREEK",
+    "postcode": "",
+    "lat": -18.22473598299996,
+    "lon": 127.66595081200012,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "HARVEY POLICE STATION",
+    "address": "107-109 UDUC ROAD",
+    "suburb": "HARVEY",
+    "postcode": "",
+    "lat": -33.08035115299998,
+    "lon": 115.89312222100011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "HILLARYS POLICE STATION",
+    "address": "114 FLINDERS AVENUE",
+    "suburb": "HILLARYS",
+    "postcode": "",
+    "lat": -31.80903789599995,
+    "lon": 115.74310762700009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "HOPETOUN POLICE STATION",
+    "address": "37 VEAL STREET",
+    "suburb": "HOPETOUN",
+    "postcode": "",
+    "lat": -33.948166930999946,
+    "lon": 120.12592045500003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "JERRAMUNGUP POLICE STATION",
+    "address": "6 VASEY STREET",
+    "suburb": "JERRAMUNGUP",
+    "postcode": "",
+    "lat": -33.941879788999984,
+    "lon": 118.92054861400004,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "JOONDALUP POLICE STATION",
+    "address": "9 REID PROMENADE",
+    "suburb": "JOONDALUP",
+    "postcode": "",
+    "lat": -31.740941994999957,
+    "lon": 115.7684846950001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MORAWA POLICE STATION",
+    "address": "2 STOKES ROAD",
+    "suburb": "MORAWA",
+    "postcode": "",
+    "lat": -29.213917024999944,
+    "lon": 116.01082061300008,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MOUNT BARKER POLICE STATION",
+    "address": "13 MOUNT BARKER ROAD",
+    "suburb": "MOUNT BARKER",
+    "postcode": "",
+    "lat": -34.62999149299998,
+    "lon": 117.66064307300007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MOUNT MAGNET POLICE STATION",
+    "address": "33 RICHARDSON STREET",
+    "suburb": "MOUNT MAGNET",
+    "postcode": "",
+    "lat": -28.065511002999983,
+    "lon": 117.84781404300008,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MUKINBUDIN POLICE STATION",
+    "address": "48 MADDOCK STREET",
+    "suburb": "MUKINBUDIN",
+    "postcode": "",
+    "lat": -30.915356025999984,
+    "lon": 118.20368120900002,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MULLEWA POLICE STATION",
+    "address": "1 MILLS STREET",
+    "suburb": "MULLEWA",
+    "postcode": "",
+    "lat": -28.539401287999965,
+    "lon": 115.51040168700001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MUNDARING POLICE STATION",
+    "address": "7250 GREAT EASTERN HIGHWAY",
+    "suburb": "MUNDARING",
+    "postcode": "",
+    "lat": -31.902304123999954,
+    "lon": 116.1666743400001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BIDYADANGA MFPF",
+    "address": "69 BIDYADANGA ROAD",
+    "suburb": "LAGRANGE",
+    "postcode": "",
+    "lat": -18.68476981599997,
+    "lon": 121.77882485100008,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WARAKURNA MFPF",
+    "address": "WARAKURNA COMMUNITY ACCESS ROAD",
+    "suburb": "NGAANYATJARRA-GILES",
+    "postcode": "",
+    "lat": -25.043019151999943,
+    "lon": 128.30209740300006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "PANNAWONICA POLICE STATION",
+    "address": "LOT 54 PANNAWONICA DRIVE",
+    "suburb": "PANNAWONICA",
+    "postcode": "",
+    "lat": -21.64013992699995,
+    "lon": 116.32372410000005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BLACKSTONE MFPF",
+    "address": "LOT 123 PAPULANKUTJA RD E",
+    "suburb": "PAPULANKUTJA",
+    "postcode": "",
+    "lat": -25.99777284499993,
+    "lon": 128.2857554520001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "PEMBERTON POLICE STATION",
+    "address": "LOT 239 ELLIS STREET",
+    "suburb": "PEMBERTON",
+    "postcode": "",
+    "lat": -34.44686138099996,
+    "lon": 116.03639410200003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WARBURTON MFPF",
+    "address": "168  BLACKSTONE-WARBURTON ROAD",
+    "suburb": "WARBURTON",
+    "postcode": "",
+    "lat": -26.134284375999982,
+    "lon": 126.57589046700002,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "JURIEN BAY POLICE STATION",
+    "address": "2 BATT STREET",
+    "suburb": "JURIEN BAY",
+    "postcode": "",
+    "lat": -30.306338555999957,
+    "lon": 115.03856286400003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MUNDIJONG POLICE STATION",
+    "address": "1445 MUNDIJONG ROAD",
+    "suburb": "MUNDIJONG",
+    "postcode": "",
+    "lat": -32.298057004999976,
+    "lon": 115.9798813000001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MURDOCH POLICE STATION",
+    "address": "120 MURDOCH DRIVE",
+    "suburb": "MURDOCH",
+    "postcode": "",
+    "lat": -32.07175139199995,
+    "lon": 115.84370583600003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "NANNUP POLICE STATION",
+    "address": "55A WARREN ROAD",
+    "suburb": "NANNUP",
+    "postcode": "",
+    "lat": -33.98002647699997,
+    "lon": 115.76500156500003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "NAREMBEEN POLICE STATION",
+    "address": "9 LONGHURST STREET",
+    "suburb": "NAREMBEEN",
+    "postcode": "",
+    "lat": -32.066761844999974,
+    "lon": 118.39371340100001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "NARROGIN POLICE STATION",
+    "address": "82-84 EARL STREET",
+    "suburb": "NARROGIN",
+    "postcode": "",
+    "lat": -32.93413653399995,
+    "lon": 117.17591027300011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "NEWMAN POLICE STATION",
+    "address": "48 MINDARRA DRIVE",
+    "suburb": "NEWMAN",
+    "postcode": "",
+    "lat": -23.353799979999962,
+    "lon": 119.73421343000007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KALBARRI POLICE STATION",
+    "address": "48 GREY STREET",
+    "suburb": "KALBARRI",
+    "postcode": "",
+    "lat": -27.711345992999952,
+    "lon": 114.16469198400011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KALGOORLIE POLICE STATION",
+    "address": "67 BROOKMAN STREET",
+    "suburb": "KALGOORLIE",
+    "postcode": "",
+    "lat": -30.745738032999952,
+    "lon": 121.47277045400006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KAMBALDA POLICE STATION",
+    "address": "15 DODONEA DRIVE",
+    "suburb": "KAMBALDA WEST",
+    "postcode": "",
+    "lat": -31.20918792799995,
+    "lon": 121.62483557400003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KATANNING POLICE STATION",
+    "address": "148 CLIVE STREET",
+    "suburb": "KATANNING",
+    "postcode": "",
+    "lat": -33.692835334999984,
+    "lon": 117.55345390800005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KELLERBERRIN POLICE STATION",
+    "address": "56 MASSINGHAM STREET",
+    "suburb": "KELLERBERRIN",
+    "postcode": "",
+    "lat": -31.634216591999973,
+    "lon": 117.71841168200001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KENSINGTON POLICE STATION",
+    "address": "25 GEORGE STREET",
+    "suburb": "KENSINGTON",
+    "postcode": "",
+    "lat": -31.985146080999982,
+    "lon": 115.8865440730001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "NORSEMAN POLICE STATION",
+    "address": "85 PRINSEP STREET",
+    "suburb": "NORSEMAN",
+    "postcode": "",
+    "lat": -32.19841255199998,
+    "lon": 121.77835688000005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "NORTHAM POLICE STATION",
+    "address": "7 GAIRDNER STREET",
+    "suburb": "NORTHAM",
+    "postcode": "",
+    "lat": -31.657143642999984,
+    "lon": 116.66877334300011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "NORTHAMPTON POLICE STATION",
+    "address": "258 HAMPTON ROAD",
+    "suburb": "NORTHAMPTON",
+    "postcode": "",
+    "lat": -28.346863712999948,
+    "lon": 114.63175452700011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "PERTH POLICE STATION",
+    "address": "2 FITZGERALD STREET",
+    "suburb": "NORTHBRIDGE",
+    "postcode": "",
+    "lat": -31.94667654899996,
+    "lon": 115.85223251500008,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "NULLAGINE POLICE STATION",
+    "address": "20 GALLOP ROAD",
+    "suburb": "NULLAGINE",
+    "postcode": "",
+    "lat": -21.888852501999963,
+    "lon": 120.10598382,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "ONSLOW POLICE STATION",
+    "address": "3 SECOND AVENUE",
+    "suburb": "ONSLOW",
+    "postcode": "",
+    "lat": -21.63442349099995,
+    "lon": 115.11079874100005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KIARA POLICE STATION",
+    "address": "163 MORLEY DRIVE",
+    "suburb": "KIARA",
+    "postcode": "",
+    "lat": -31.88705932399995,
+    "lon": 115.93926704000012,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KOJONUP POLICE STATION",
+    "address": "125 ALBANY HIGHWAY",
+    "suburb": "KOJONUP",
+    "postcode": "",
+    "lat": -33.835414114999935,
+    "lon": 117.15962420700009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KONDININ POLICE STATION",
+    "address": "10 STUBBS STREET",
+    "suburb": "KONDININ",
+    "postcode": "",
+    "lat": -32.49170873999998,
+    "lon": 118.2661716340001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KOORDA POLICE STATION",
+    "address": "36 HAIG STREET",
+    "suburb": "KOORDA",
+    "postcode": "",
+    "lat": -30.825225170999943,
+    "lon": 117.48615138500008,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KULIN POLICE STATION",
+    "address": "21 JOHNSTON STREET",
+    "suburb": "KULIN",
+    "postcode": "",
+    "lat": -32.67197382699993,
+    "lon": 118.15316174300006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KUNUNURRA POLICE STATION",
+    "address": "94 COOLIBAH DRIVE",
+    "suburb": "KUNUNURRA",
+    "postcode": "",
+    "lat": -15.774746875999938,
+    "lon": 128.7387897760001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "PALMYRA POLICE STATION",
+    "address": "349 CANNING HIGHWAY",
+    "suburb": "PALMYRA",
+    "postcode": "",
+    "lat": -32.03615825099996,
+    "lon": 115.78674687800003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "PARABURDOO POLICE STATION",
+    "address": "LOT 600 ASHBURTON AVENUE",
+    "suburb": "PARABURDOO",
+    "postcode": "",
+    "lat": -23.20098799999994,
+    "lon": 117.67109400000004,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KARRATHA POLICE STATION",
+    "address": "51 WELCOME ROAD",
+    "suburb": "PEGS CREEK",
+    "postcode": "",
+    "lat": -20.73614564999997,
+    "lon": 116.84317061400009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "PERENJORI POLICE STATION",
+    "address": "12 RUSSELL STREET",
+    "suburb": "PERENJORI",
+    "postcode": "",
+    "lat": -29.442179109999984,
+    "lon": 116.28945606200011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "AFP - WA AVIATION - PERTH AIRPORT",
+    "address": "10 COLQUHOUN ROAD",
+    "suburb": "PERTH AIRPORT",
+    "postcode": "",
+    "lat": -31.97091899999998,
+    "lon": 115.97061300000007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "PINGELLY POLICE STATION",
+    "address": "7 PASTURE STREET",
+    "suburb": "PINGELLY",
+    "postcode": "",
+    "lat": -32.53441583699998,
+    "lon": 117.0823724070001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "PINJARRA POLICE STATION",
+    "address": "24 GEORGE STREET",
+    "suburb": "PINJARRA",
+    "postcode": "",
+    "lat": -32.62925361599997,
+    "lon": 115.87524419800002,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "KWINANA POLICE STATION",
+    "address": "2 SULPHUR ROAD",
+    "suburb": "KWINANA TOWN CENTRE",
+    "postcode": "",
+    "lat": -32.24042896799995,
+    "lon": 115.81568188300002,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "LAKE GRACE POLICE STATION",
+    "address": "54-56 STUBBS STREET",
+    "suburb": "LAKE GRACE",
+    "postcode": "",
+    "lat": -33.101218105999976,
+    "lon": 118.4649140570001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "LANCELIN POLICE STATION",
+    "address": "33 ATKINSON WAY",
+    "suburb": "LANCELIN",
+    "postcode": "",
+    "lat": -31.01653871299993,
+    "lon": 115.3332591730001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "LAVERTON POLICE STATION",
+    "address": "24 AUGUSTA STREET",
+    "suburb": "LAVERTON",
+    "postcode": "",
+    "lat": -28.62518259799998,
+    "lon": 122.40480270300009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "LEEMAN POLICE STATION",
+    "address": "22 MORCOMBE ROAD",
+    "suburb": "LEEMAN",
+    "postcode": "",
+    "lat": -29.949219339999956,
+    "lon": 114.98127384100007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "PORT HEDLAND POLICE STATION",
+    "address": "3 ANDERSON STREET",
+    "suburb": "PORT HEDLAND",
+    "postcode": "",
+    "lat": -20.312679722999974,
+    "lon": 118.5768920590001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "QUAIRADING POLICE STATION",
+    "address": "25 AVON STREET",
+    "suburb": "QUAIRADING",
+    "postcode": "",
+    "lat": -32.00866359099996,
+    "lon": 117.40087177500004,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "RAVENSTHORPE POLICE STATION",
+    "address": "62 MORGANS STREET",
+    "suburb": "RAVENSTHORPE",
+    "postcode": "",
+    "lat": -33.58210963299996,
+    "lon": 120.046151527,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "ROCKINGHAM POLICE STATION",
+    "address": "15 WHITFIELD STREET",
+    "suburb": "ROCKINGHAM",
+    "postcode": "",
+    "lat": -32.285005774999945,
+    "lon": 115.74723103200006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "ROEBOURNE POLICE STATION",
+    "address": "785 QUEEN STREET",
+    "suburb": "ROEBOURNE",
+    "postcode": "",
+    "lat": -20.777599540999972,
+    "lon": 117.1453154080001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "ROTTNEST POLICE STATION",
+    "address": "1 SOMERVILLE DRIVE",
+    "suburb": "ROTTNEST ISLAND",
+    "postcode": "",
+    "lat": -31.994183679999935,
+    "lon": 115.53902235600003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "CORRIGIN POLICE STATION",
+    "address": "35 WALTON STREET",
+    "suburb": "CORRIGIN",
+    "postcode": "",
+    "lat": -32.32861260499993,
+    "lon": 117.87392785000009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "COTTESLOE POLICE STATION",
+    "address": "166 CURTIN AVENUE",
+    "suburb": "COTTESLOE",
+    "postcode": "",
+    "lat": -32.000582634999944,
+    "lon": 115.76012923500002,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "CRANBROOK POLICE STATION",
+    "address": "LOT 205 CLIMIE STREET",
+    "suburb": "CRANBROOK",
+    "postcode": "",
+    "lat": -34.29372999999998,
+    "lon": 117.5557510000001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "CUE POLICE STATION",
+    "address": "74 AUSTIN STREET",
+    "suburb": "CUE",
+    "postcode": "",
+    "lat": -27.42283502899994,
+    "lon": 117.89984064300006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "CUNDERDIN POLICE STATION",
+    "address": "LOT 390 LUNDY AVENUE",
+    "suburb": "CUNDERDIN",
+    "postcode": "",
+    "lat": -31.649476999999933,
+    "lon": 117.23695900000007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "DALWALLINU POLICE STATION",
+    "address": "81 JOHNSTON STREET",
+    "suburb": "DALWALLINU",
+    "postcode": "",
+    "lat": -30.272821619999945,
+    "lon": 116.66176268900006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "SCARBOROUGH POLICE STATION",
+    "address": "92 SCARBOROUGH BEACH ROAD",
+    "suburb": "SCARBOROUGH",
+    "postcode": "",
+    "lat": -31.89376387899995,
+    "lon": 115.76610312200012,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "SOUTH HEDLAND POLICE STATION",
+    "address": "4 HAWKE PLACE",
+    "suburb": "SOUTH HEDLAND",
+    "postcode": "",
+    "lat": -20.40788751599996,
+    "lon": 118.59685849800007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "SOUTHERN CROSS POLICE STATION",
+    "address": "75 CANOPUS STREET",
+    "suburb": "SOUTHERN CROSS",
+    "postcode": "",
+    "lat": -31.23100165099993,
+    "lon": 119.3241499610001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "TAMBELLUP POLICE STATION",
+    "address": "3981 GNOWANGERUP-TAMBELLUP ROAD",
+    "suburb": "TAMBELLUP",
+    "postcode": "",
+    "lat": -34.046421728999974,
+    "lon": 117.64279626400003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "BALGO MFPF",
+    "address": "192 LUURNPA CIR",
+    "suburb": "TANAMI",
+    "postcode": "",
+    "lat": -20.13355020399996,
+    "lon": 127.98657140700004,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "THREE SPRINGS POLICE STATION",
+    "address": "42 CARTER STREET",
+    "suburb": "THREE SPRINGS",
+    "postcode": "",
+    "lat": -29.535741721999955,
+    "lon": 115.76236149100009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "DAMPIER POLICE STATION",
+    "address": "LOT 376 NIELSEN PLACE",
+    "suburb": "DAMPIER",
+    "postcode": "",
+    "lat": -20.66318600099993,
+    "lon": 116.70594411400009,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "SHARK BAY POLICE STATION",
+    "address": "20 DURLACHER STREET",
+    "suburb": "DENHAM",
+    "postcode": "",
+    "lat": -25.927334647999942,
+    "lon": 113.53649119500005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "DENMARK POLICE STATION",
+    "address": "49 SOUTH COAST HIGHWAY",
+    "suburb": "DENMARK",
+    "postcode": "",
+    "lat": -34.96117032899997,
+    "lon": 117.35371053400002,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "DERBY POLICE STATION",
+    "address": "123-125 LOCH STREET",
+    "suburb": "DERBY",
+    "postcode": "",
+    "lat": -17.306039448999968,
+    "lon": 123.63609460200007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "MORLEY POLICE STATION",
+    "address": "318 COODE STREET",
+    "suburb": "DIANELLA",
+    "postcode": "",
+    "lat": -31.89879632399993,
+    "lon": 115.88912134400005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "DONGARA POLICE STATION",
+    "address": "3 WALDECK STREET",
+    "suburb": "DONGARA",
+    "postcode": "",
+    "lat": -29.252850465999984,
+    "lon": 114.93048737100003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "TOM PRICE POLICE STATION",
+    "address": "1 COURT ROAD",
+    "suburb": "TOM PRICE",
+    "postcode": "",
+    "lat": -22.69591814399996,
+    "lon": 117.79472187600004,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "TOODYAY POLICE STATION",
+    "address": "118 STIRLING TERRACE",
+    "suburb": "TOODYAY",
+    "postcode": "",
+    "lat": -31.549697200999958,
+    "lon": 116.46676222300005,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WAGIN POLICE STATION",
+    "address": "4 UPLAND STREET",
+    "suburb": "WAGIN",
+    "postcode": "",
+    "lat": -33.310995582999965,
+    "lon": 117.3448509000001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WALPOLE POLICE STATION",
+    "address": "7 VISTA STREET",
+    "suburb": "WALPOLE",
+    "postcode": "",
+    "lat": -34.978223114999935,
+    "lon": 116.73364473800007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WANNEROO POLICE STATION",
+    "address": "51 DUNDEBAR ROAD",
+    "suburb": "WANNEROO",
+    "postcode": "",
+    "lat": -31.750142756999935,
+    "lon": 115.80698650700003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WARMUN MFPF",
+    "address": "LOT 23 GREAT NORTHERN HIGHWAY",
+    "suburb": "WARMUN",
+    "postcode": "",
+    "lat": -17.017520312999977,
+    "lon": 128.2189520270001,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "DONNYBROOK POLICE STATION",
+    "address": "50 SOUTH WESTERN HIGHWAY",
+    "suburb": "DONNYBROOK",
+    "postcode": "",
+    "lat": -33.57151913399997,
+    "lon": 115.82424265600002,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "DOWERIN POLICE STATION",
+    "address": "5 GOLDFIELDS ROAD",
+    "suburb": "DOWERIN",
+    "postcode": "",
+    "lat": -31.195573509999974,
+    "lon": 117.03253609400008,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "DUMBLEYUNG POLICE STATION",
+    "address": "36 ABSOLON STREET",
+    "suburb": "DUMBLEYUNG",
+    "postcode": "",
+    "lat": -33.31440115199996,
+    "lon": 117.73906300400006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "DUNSBOROUGH POLICE STATION",
+    "address": "1 LESLIE PEARCE COURT",
+    "suburb": "DUNSBOROUGH",
+    "postcode": "",
+    "lat": -33.616165071999944,
+    "lon": 115.10156112900006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "DWELLINGUP POLICE STATION",
+    "address": "55 MCLARTY STREET",
+    "suburb": "DWELLINGUP",
+    "postcode": "",
+    "lat": -32.71488356799995,
+    "lon": 116.06217554400007,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "ELLENBROOK POLICE STATION",
+    "address": "2 CIVIC TERRACE",
+    "suburb": "ELLENBROOK",
+    "postcode": "",
+    "lat": -31.780363342999976,
+    "lon": 115.96637280700008,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WAROONA POLICE STATION",
+    "address": "9 RECREATION ROAD",
+    "suburb": "WAROONA",
+    "postcode": "",
+    "lat": -32.84945837699996,
+    "lon": 115.92389514900003,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WARWICK POLICE STATION",
+    "address": "37 EDDINGTON ROAD",
+    "suburb": "WARWICK",
+    "postcode": "",
+    "lat": -31.839733726999953,
+    "lon": 115.81267880700011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WEMBLEY POLICE STATION",
+    "address": "379 CAMBRIDGE STREET",
+    "suburb": "WEMBLEY",
+    "postcode": "",
+    "lat": -31.941097130999935,
+    "lon": 115.80793820800011,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "AFP - WA - PERTH OFFICE",
+    "address": "619 MURRAY STREET",
+    "suburb": "WEST PERTH",
+    "postcode": "",
+    "lat": -31.94929099999996,
+    "lon": 115.84653500000002,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WICKEPIN POLICE STATION",
+    "address": "69 WOGOLIN ROAD",
+    "suburb": "WICKEPIN",
+    "postcode": "",
+    "lat": -32.78124441999995,
+    "lon": 117.50371552600006,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WILLIAMS POLICE STATION",
+    "address": "15 BROOKING STREET",
+    "suburb": "WILLIAMS",
+    "postcode": "",
+    "lat": -33.025635361999946,
+    "lon": 116.88193742600004,
+    "status": "OPERATIONAL",
+    "type": ""
+  },
+  {
+    "name": "WILUNA POLICE STATION",
+    "address": "58 WOTTON STREET",
+    "suburb": "WILUNA",
+    "postcode": "",
+    "lat": -26.592063536999945,
+    "lon": 120.22512539700006,
+    "status": "OPERATIONAL",
+    "type": ""
+  }
+]

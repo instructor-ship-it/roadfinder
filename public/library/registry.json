@@ -1,0 +1,1003 @@
+{
+  "version": "2.0",
+  "lastUpdated": "2026-03-22",
+  "name": "Document Register",
+  "description": "Comprehensive document registry for Traffic Management in Western Australia",
+  "categories": [
+    {
+      "id": "whs-legislation",
+      "label": "WHS Legislation",
+      "icon": "⚖️",
+      "description": "Work Health and Safety legal requirements",
+      "color": "red",
+      "parent": "whs"
+    },
+    {
+      "id": "whs-codes",
+      "label": "WHS Codes of Practice",
+      "icon": "📖",
+      "description": "Approved codes of practice under WHS Act",
+      "color": "orange",
+      "parent": "whs"
+    },
+    {
+      "id": "whs-forms",
+      "label": "WHS Forms & Templates",
+      "icon": "📝",
+      "description": "SWMS, risk assessments, incident reports",
+      "color": "yellow",
+      "parent": "whs"
+    },
+    {
+      "id": "whs-guidance",
+      "label": "WHS Guidance Material",
+      "icon": "💡",
+      "description": "Guides and information sheets",
+      "color": "amber",
+      "parent": "whs"
+    },
+    {
+      "id": "mrwa-cop",
+      "label": "MRWA Code of Practice",
+      "icon": "📜",
+      "description": "Traffic Management for Works on Roads",
+      "color": "blue",
+      "parent": "mrwa"
+    },
+    {
+      "id": "mrwa-tmp",
+      "label": "Traffic Management Plans",
+      "icon": "📋",
+      "description": "TMPs by region and type",
+      "color": "cyan",
+      "parent": "mrwa"
+    },
+    {
+      "id": "mrwa-specs",
+      "label": "MRWA Specifications",
+      "icon": "📄",
+      "description": "Specification 202, 203 and related",
+      "color": "indigo",
+      "parent": "mrwa"
+    },
+    {
+      "id": "mrwa-policies",
+      "label": "MRWA Policies",
+      "icon": "📘",
+      "description": "Signal approval, traffic management policies",
+      "color": "violet",
+      "parent": "mrwa"
+    },
+    {
+      "id": "agttm",
+      "label": "AGTTM",
+      "icon": "📕",
+      "description": "Austroads Guide to Temporary Traffic Management",
+      "color": "purple",
+      "parent": "standards"
+    },
+    {
+      "id": "as-standards",
+      "label": "Australian Standards",
+      "icon": "📗",
+      "description": "AS 1742.3 and related standards",
+      "color": "green",
+      "parent": "standards"
+    },
+    {
+      "id": "road-safety",
+      "label": "Road Safety Guides",
+      "icon": "🛡️",
+      "description": "Austroads Guide to Road Safety series",
+      "color": "teal",
+      "parent": "standards"
+    }
+  ],
+  "parentCategories": [
+    {
+      "id": "whs",
+      "label": "WHS & Safety",
+      "icon": "🦺"
+    },
+    {
+      "id": "mrwa",
+      "label": "Main Roads WA",
+      "icon": "🛣️"
+    },
+    {
+      "id": "standards",
+      "label": "Standards & Guides",
+      "icon": "📚"
+    }
+  ],
+  "regions": [
+    {
+      "id": "wheatbelt",
+      "label": "Wheatbelt"
+    },
+    {
+      "id": "metro",
+      "label": "Metropolitan"
+    },
+    {
+      "id": "southwest",
+      "label": "South West"
+    },
+    {
+      "id": "goldfields",
+      "label": "Goldfields-Esperance"
+    },
+    {
+      "id": "midwest",
+      "label": "Mid West"
+    },
+    {
+      "id": "kimberley",
+      "label": "Kimberley"
+    },
+    {
+      "id": "pilbara",
+      "label": "Pilbara"
+    },
+    {
+      "id": "greatsouthern",
+      "label": "Great Southern"
+    },
+    {
+      "id": "southcoastal",
+      "label": "South Coastal"
+    }
+  ],
+  "documents": [
+    {
+      "id": "whs-act-2020",
+      "type": "legislation",
+      "category": "whs-legislation",
+      "title": "Work Health and Safety Act 2020",
+      "shortTitle": "WHS Act 2020",
+      "agency": "WA Government",
+      "version": "Current",
+      "pages": 312,
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/whs/legislation/whs-act-2020",
+      "file": "/library/whs/legislation/whs-act-2020.pdf",
+      "fileSize": "1.4 MB",
+      "sourceUrl": "https://www.legislation.wa.gov.au/legislation/statutes.nsf/RedirectURL?OpenAgent&query=mrdoc_48252.pdf",
+      "tags": [
+        "legislation",
+        "primary",
+        "legal"
+      ],
+      "description": "Primary WHS legislation for Western Australia",
+      "abstract": "The Work Health and Safety Act 2020 is Western Australia's primary work health and safety legislation, which replaced the Occupational Safety and Health Act 1984. The Act commenced on 31 March 2022 and brings WA into the nationally harmonized WHS framework adopted across most Australian jurisdictions.\n\nThe Act establishes a primary duty of care for persons conducting a business or undertaking (PCBUs) to ensure, so far as is reasonably practicable, the health and safety of workers and others affected by the work. Officers (directors and senior executives) must exercise due diligence to ensure compliance with these duties.\n\nKey provisions include worker representation through Health and Safety Representatives (HSRs), enforcement powers for WorkSafe WA including improvement and prohibition notices, and industrial manslaughter provisions for negligent conduct causing death. The Act covers all workplaces in WA except mines and petroleum operations.",
+      "retention": "permanent"
+    },
+    {
+      "id": "whs-general-regs-2022",
+      "type": "legislation",
+      "category": "whs-legislation",
+      "title": "Work Health and Safety (General) Regulations 2022",
+      "shortTitle": "WHS General Regulations",
+      "agency": "WA Government",
+      "version": "Mar 2024",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/whs/legislation/whs-general-regulations-2022",
+      "file": "/library/whs/legislation/whs-general-regulations-2022.pdf",
+      "fileSize": "2.5 MB",
+      "sourceUrl": "https://www.legislation.wa.gov.au/legislation/prod/filestore.nsf/FileURL/mrdoc_46970.pdf/$FILE/Work%20Health%20and%20Safety%20(General)%20Regulations%202022%20-%20%5B00-h0-00%5D.pdf",
+      "tags": [
+        "legislation",
+        "regulations"
+      ],
+      "description": "General WHS regulations for WA workplaces",
+      "abstract": "The Work Health and Safety (General) Regulations 2022 provide the detailed regulatory requirements that support the WHS Act 2020 in Western Australia. These regulations specify how duties under the Act must be fulfilled and set out prescriptive requirements for various workplace hazards and situations.\n\nThe regulations cover a wide range of topics including management of risks, hazardous manual tasks, noise, plant and equipment, hazardous chemicals, construction work, confined spaces, and falling objects. They establish specific control measures and competency requirements that go beyond the general duties in the Act.\n\nFor traffic management and road work, the regulations are particularly relevant for construction work provisions, high-risk construction work requirements, and the management of mobile plant and equipment. Compliance with these regulations is mandatory and enforceable by WorkSafe WA inspectors.",
+      "retention": "permanent"
+    },
+    {
+      "id": "osh-act-1984",
+      "type": "legislation",
+      "category": "whs-legislation",
+      "title": "Occupational Safety and Health Act 1984",
+      "shortTitle": "OSH Act 1984",
+      "agency": "WA Government",
+      "version": "Repealed (transitional)",
+      "pages": 150,
+      "status": "superseded",
+      "path": "/library/whs/legislation/osh-act-1984",
+      "file": "/library/whs/legislation/osh-act-1984.pdf",
+      "fileSize": "812 KB",
+      "sourceUrl": "https://www.legislation.wa.gov.au/legislation/statutes.nsf/RedirectURL?OpenAgent&query=mrdoc_44724.pdf",
+      "tags": [
+        "legislation",
+        "repealed",
+        "transitional"
+      ],
+      "description": "Previous WA OSH legislation - still relevant for transitional provisions",
+      "abstract": "The Occupational Safety and Health Act 1984 was Western Australia's primary workplace safety legislation until it was repealed and replaced by the WHS Act 2020 on 31 March 2022. This Act had governed workplace safety in WA for 38 years.\n\nWhile the Act is now repealed, it remains relevant for transitional provisions and understanding the historical framework. Some matters that began under the OSH Act may still be governed by its provisions during the transition period.\n\nThe Act established the general duty of care for employers and employees, requirements for consultation, and the powers of safety inspectors. It differed from the new WHS Act in several key areas including the use of 'employer/employee' terminology rather than 'PCBU/worker', and did not include officer due diligence duties or industrial manslaughter provisions.",
+      "retention": "permanent"
+    },
+    {
+      "id": "whs-construction-cop",
+      "type": "code-of-practice",
+      "category": "whs-codes",
+      "title": "Construction Work Code of Practice",
+      "shortTitle": "Construction Work COP",
+      "agency": "Safe Work Australia",
+      "version": "Current",
+      "pages": 56,
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/whs/codes-of-practice/construction-work-code",
+      "fileSize": "141 KB",
+      "downloaded": false,
+      "url": "https://www.safeworkaustralia.gov.au/system/files/documents/1705/mcop-construction-work-v1.pdf",
+      "tags": [
+        "code-of-practice",
+        "construction",
+        "swms"
+      ],
+      "description": "Requirements for construction work including SWMS",
+      "abstract": "The Construction Work Code of Practice is an approved code of practice under the WHS Act that provides practical guidance on managing health and safety risks in construction work. It is admissible in court proceedings as evidence of what is known about a hazard and appropriate control measures.\n\nThe code covers the definition of construction work, duty holder responsibilities, and risk management requirements. It specifically addresses high-risk construction work which requires a Safe Work Method Statement (SWMS), including work on roads, work near traffic, work at heights, and work involving mobile plant.\n\nFor Traffic Controllers and road workers, this code is essential reading as it establishes the legal requirement for SWMS for road work and provides guidance on consultation, training, and supervision. Non-compliance with the code may be used as evidence of a breach of the WHS Act, though alternative methods may be used if they provide equivalent or better protection."
+    },
+    {
+      "id": "whs-workplace-traffic",
+      "type": "code-of-practice",
+      "category": "whs-codes",
+      "title": "General Guide to Workplace Traffic Management",
+      "shortTitle": "Workplace Traffic Guide",
+      "agency": "Safe Work Australia",
+      "version": "2021",
+      "pages": 30,
+      "status": "current",
+      "downloaded": false,
+      "path": "/library/whs/codes-of-practice/workplace-traffic",
+      "url": "https://www.safeworkaustralia.gov.au/sites/default/files/2021-04/General%20Guide%20to%20Workplace%20Traffic%20Management%20FINAL%202021%202.PDF",
+      "tags": [
+        "traffic-management",
+        "workplace-safety"
+      ],
+      "description": "Guide for managing traffic in workplaces",
+      "abstract": "The General Guide to Workplace Traffic Management provides practical guidance on managing the risks associated with traffic movement in workplaces. It complements the traffic management requirements for public roads but focuses on workplace premises such as warehouses, construction sites, and industrial facilities.\n\nThe guide covers separation of pedestrians and vehicles, traffic control measures, speed management, visibility requirements, and the design of traffic management plans for workplace sites. It addresses both powered mobile plant and conventional vehicles operating in work areas.\n\nFor Traffic Controllers working on internal traffic management within depot yards, laydown areas, or construction compounds, this guide provides essential principles. It should be read alongside the MRWA Code of Practice for work on public roads, as different requirements may apply to workplace premises versus public roadways."
+    },
+    {
+      "id": "whs-swms-guide",
+      "type": "guidance",
+      "category": "whs-guidance",
+      "title": "Safe Work Method Statement for High Risk Construction Work",
+      "shortTitle": "SWMS Information Sheet",
+      "agency": "WorkSafe WA",
+      "version": "Nov 2024",
+      "pages": 12,
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/whs/guidance/swms-high-risk-construction",
+      "fileSize": "525 KB",
+      "downloaded": false,
+      "url": "https://www.worksafe.wa.gov.au/system/files/migrated/sites/default/files/atoms/files/231293_br_swms-highrisk.pdf",
+      "tags": [
+        "swms",
+        "high-risk",
+        "guidance"
+      ],
+      "description": "How to prepare and use SWMS for high risk construction work",
+      "abstract": "This information sheet provides detailed guidance on preparing and implementing Safe Work Method Statements (SWMS) for high-risk construction work. An SWMS is a legal document that sets out the high-risk construction work to be carried out, the hazards and risks arising from that work, and the measures to be put in place to control the risks.\n\nHigh-risk construction work includes work on or near roads, work near traffic corridors, work at heights above 2 metres, work using powered mobile plant, and work involving excavations. Traffic management and road work activities fall squarely within this definition, making SWMS preparation mandatory.\n\nThe guide explains the required content of an SWMS, the consultation process with workers, review and revision requirements, and record-keeping obligations. It includes a practical template and examples relevant to road work. SWMS must be developed before work commences and must be readily accessible to any worker carrying out the high-risk construction work."
+    },
+    {
+      "id": "whs-records-guide",
+      "type": "guidance",
+      "category": "whs-guidance",
+      "title": "Records Management Including Document Control",
+      "shortTitle": "Records Management Guide",
+      "agency": "WorkSafe WA",
+      "version": "Current",
+      "pages": 20,
+      "status": "current",
+      "path": "/library/whs/guidance/records-management-guide",
+      "fileSize": "554 KB",
+      "downloaded": false,
+      "url": "https://www.worksafe.wa.gov.au/system/files/migrated/sites/default/files/atoms/files/241282_gl_recordsmgntdoccontrol.pdf",
+      "tags": [
+        "records",
+        "document-control",
+        "retention"
+      ],
+      "description": "Guide for WHS records management and retention periods",
+      "abstract": "This guide provides comprehensive information on WHS records management requirements, including document control, retention periods, and accessibility. Proper records management is both a legal requirement and essential for demonstrating compliance with WHS obligations.\n\nThe guide specifies minimum retention periods for various WHS records: daily diaries must be kept for 7 years, incident reports for serious incidents for 30 years, health monitoring records for 30 years, and training records for the duration of employment plus 7 years. SWMS must be retained for the duration of works plus 2 years.\n\nFor Traffic Controllers and traffic management companies, this guide is essential for establishing compliant record-keeping systems. It covers both electronic and hard copy records, access requirements for regulators, and the consequences of inadequate record keeping. Document control requirements ensure that current versions of procedures, SWMS, and TMPs are always available on site."
+    },
+    {
+      "id": "mrwa-cop-2025",
+      "type": "code-of-practice",
+      "category": "mrwa-cop",
+      "title": "Traffic Management for Works on Roads Code of Practice",
+      "shortTitle": "MRWA COP May 2025",
+      "agency": "MRWA",
+      "version": "May 2025",
+      "pages": 158,
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/mrwa/cop/traffic-management-cop-may-2025",
+      "file": "/library/mrwa/cop/traffic-management-cop-may-2025.pdf",
+      "fileSize": "4.4 MB",
+      "sourceUrl": "https://www.mainroads.wa.gov.au/493b29/globalassets/technical-commercial/working-on-roads/traffic-management/traffic-management-for-works-on-roads-code-of-practice.pdf",
+      "tags": [
+        "code-of-practice",
+        "traffic-management",
+        "standards"
+      ],
+      "description": "Primary MRWA code for traffic management on WA roads",
+      "abstract": "The Traffic Management for Works on Roads Code of Practice is the primary reference document for all traffic management activities on Western Australian roads. Published by Main Roads Western Australia (MRWA), this code establishes the mandatory requirements and standards that must be followed when conducting any work on roads.\n\nThe code adopts and adapts the Austroads Guide to Temporary Traffic Management (AGTTM) for Western Australian conditions. It covers the roles and responsibilities of all parties involved in traffic management, from Traffic Management Supervisors to Traffic Controllers, and establishes the requirements for traffic management plans, variations, and notifications.\n\nKey topics include traffic guidance scheme requirements, signage standards, speed zoning, pedestrian management, mobile works, short-term low-impact works, and emergency setups. All Traffic Controllers must be familiar with this code as it forms the basis of competency requirements and legal compliance for traffic management work in WA. The May 2025 edition is the current version and supersedes all previous editions.",
+      "relatedDocuments": [
+        "agttm-part-3",
+        "as-1742-3",
+        "mrwa-spec-203"
+      ]
+    },
+    {
+      "id": "mrwa-cop-2026-proposed",
+      "type": "code-of-practice",
+      "category": "mrwa-cop",
+      "title": "COP Proposed Updates March 2026",
+      "shortTitle": "COP March 2026 Proposed",
+      "agency": "MRWA",
+      "version": "Jan 2026 Draft",
+      "pages": 12,
+      "status": "draft",
+      "downloaded": false,
+      "path": "/library/mrwa/cop/march-2026-proposed",
+      "url": "https://www.mainroads.wa.gov.au/48e436/globalassets/technical-commercial/working-on-roads/traffic-management/traffic-management-for-works-on-roads-code-of-practice-proposed-updates.pdf",
+      "tags": [
+        "code-of-practice",
+        "draft",
+        "updates"
+      ],
+      "description": "Proposed updates for March 2026 edition",
+      "abstract": "This draft document outlines proposed amendments to the Traffic Management for Works on Roads Code of Practice scheduled for release in March 2026. It provides advance notice of changes that will affect traffic management practices in Western Australia.\n\nThe document is intended for industry consultation and feedback before the changes are finalized. Traffic management companies and practitioners are encouraged to review proposed changes and provide input through the MRWA consultation process.\n\nPlease note that this is a draft document only - the current May 2025 edition of the Code of Practice remains the authoritative reference until the March 2026 edition is officially released. Users should monitor MRWA communications for the official release and transition period."
+    },
+    {
+      "id": "mrwa-whs-controls",
+      "type": "specification",
+      "category": "mrwa-specs",
+      "title": "Minimum WHS Control Standards",
+      "shortTitle": "WHS Control Standards",
+      "agency": "MRWA",
+      "version": "Current",
+      "pages": 87,
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/mrwa/specifications/minimum-whs-control-standards",
+      "fileSize": "1.2 MB",
+      "downloaded": false,
+      "url": "https://www.mainroads.wa.gov.au/globalassets/technical-commercial/contracting-to-main-roads/minimum-whs-control-standards.pdf",
+      "tags": [
+        "whs",
+        "specification",
+        "controls"
+      ],
+      "description": "Supplements MRWA Specification 203 for WHS controls",
+      "abstract": "The Minimum WHS Control Standards document supplements MRWA Specification 203 and establishes the mandatory work health and safety requirements for all traffic management work conducted under MRWA contracts. This specification sets out the minimum controls that must be implemented on MRWA projects.\n\nThe document covers personal protective equipment (PPE) requirements, site establishment procedures, hazard identification and risk assessment processes, emergency response planning, and incident reporting requirements. It establishes the minimum competency requirements for personnel and specifies the documentation that must be maintained on site.\n\nFor Traffic Controllers and traffic management companies working on MRWA projects, this specification is mandatory reading. It forms part of the contract documents and compliance is required for contractual compliance in addition to WHS legal requirements. The standards are designed to integrate with the WHS Act 2020 and supporting regulations."
+    },
+    {
+      "id": "mrwa-spec-202",
+      "type": "specification",
+      "category": "mrwa-specs",
+      "title": "Specification 202 - Traffic Management",
+      "shortTitle": "Spec 202",
+      "agency": "MRWA",
+      "version": "Dec 2024",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/mrwa/specifications/specification-202-traffic-management",
+      "fileSize": "1.1 MB",
+      "downloaded": false,
+      "url": "https://www.mainroads.wa.gov.au/4902ab/globalassets/technical-commercial/technical-library/specifications/200-series-management-requirements/specification-202-traffic-management-doc.docx",
+      "tags": [
+        "specification",
+        "traffic-management"
+      ],
+      "description": "Traffic management specification requirements",
+      "abstract": "Specification 202 is MRWA's primary specification for traffic management on road construction and maintenance contracts. It defines the contractual requirements that traffic management must comply with on MRWA-funded projects, complementing the Code of Practice with specific deliverables and administrative requirements.\n\nThe specification sets out requirements for traffic management planning, documentation, personnel competencies, inspections, and record keeping. It establishes the framework for traffic management submissions, including the required content of Traffic Management Plans (TMPs) and Traffic Guidance Schemes (TGSs).\n\nKey requirements include minimum experience and accreditation levels for Traffic Management Supervisors, the inspection and audit frequency for traffic management setups, and the incident reporting and response requirements. This specification is contractually binding for MRWA projects and should be read alongside the Code of Practice and WHS legislation."
+    },
+    {
+      "id": "mrwa-tmp-wheatbelt-0922-part1",
+      "type": "traffic-management-plan",
+      "category": "mrwa-tmp",
+      "title": "Non-Complex Traffic Management Arrangements - Wheatbelt Region (Part 1)",
+      "shortTitle": "TMP Wheatbelt Part 1",
+      "agency": "MRWA",
+      "region": "wheatbelt",
+      "version": "Rev. 6",
+      "pages": 290,
+      "status": "current",
+      "parentDocument": "mrwa-cop-2025",
+      "path": "/library/mrwa/tmp/wheatbelt/tmp-0922-01531",
+      "file": "/library/mrwa/tmp/tmp-0922-01531-rev6-wheatbelt-part1.pdf",
+      "fileSize": "84 MB",
+      "downloaded": false,
+      "tags": [
+        "tmp",
+        "wheatbelt",
+        "non-complex",
+        "tgs"
+      ],
+      "description": "Non-complex TMP Part 1 (pages 1-290) - Includes TGS diagrams",
+      "abstract": "This Traffic Management Plan provides pre-approved traffic guidance schemes for non-complex traffic management arrangements on state roads in the Wheatbelt region of Western Australia. It is designed for use by accredited Traffic Management personnel on MRWA-maintained roads within the Wheatbelt region.\n\nPart 1 contains the introduction, scope, and the first section of Traffic Guidance Scheme (TGS) diagrams covering pages 1-290. The TGS diagrams cover various work scenarios including lane closures, shoulder closures, mobile works, and short-term low-impact works specific to rural road environments.\n\nThe diagrams are categorized by type: Setup and Guidance (IW), Lane Closures (LC), Lateral Shifts (LS), Reversible Flow (RF), Emergency Setups (EW), and Aftercare (AC). Each diagram includes speed zone requirements, signage schedules, and implementation notes. This TMP should be used in conjunction with the MRWA Code of Practice and requires site-specific adaptation by a Traffic Management Supervisor.",
+      "hasTgs": true,
+      "tgsPages": [
+        139,
+        290
+      ],
+      "relatedDocuments": [
+        "mrwa-cop-2025",
+        "agttm-part-3",
+        "as-1742-3"
+      ]
+    },
+    {
+      "id": "mrwa-tmp-wheatbelt-0922-part2",
+      "type": "traffic-management-plan",
+      "category": "mrwa-tmp",
+      "title": "Non-Complex Traffic Management Arrangements - Wheatbelt Region (Part 2)",
+      "shortTitle": "TMP Wheatbelt Part 2",
+      "agency": "MRWA",
+      "region": "wheatbelt",
+      "version": "Rev. 6",
+      "pages": 79,
+      "status": "current",
+      "parentDocument": "mrwa-cop-2025",
+      "path": "/library/mrwa/tmp/wheatbelt/tmp-0922-01531",
+      "file": "/library/mrwa/tmp/tmp-0922-01531-rev6-wheatbelt-part2.pdf",
+      "fileSize": "38 MB",
+      "downloaded": false,
+      "tags": [
+        "tmp",
+        "wheatbelt",
+        "non-complex",
+        "tgs"
+      ],
+      "description": "Non-complex TMP Part 2 (pages 291-369) - Continues TGS diagrams",
+      "abstract": "This is Part 2 of the Wheatbelt region Non-Complex Traffic Management Arrangements, continuing the Traffic Guidance Scheme (TGS) diagrams from Part 1. Together, these documents provide comprehensive coverage of standard traffic management setups for the Wheatbelt region.\n\nPart 2 covers pages 291-369, completing the TGS diagram collection with additional setups for mobile works, emergency response configurations, and aftercare arrangements. The diagrams are pre-approved for non-complex traffic management scenarios on state roads.\n\nUsers should note that this TMP is specific to the Wheatbelt region and its road characteristics, including single carriageway roads, varying road widths, and rural speed environments. The diagrams must be adapted to site-specific conditions by a qualified Traffic Management Supervisor, and variations from these standard setups require formal approval through the MRWA variation process.",
+      "hasTgs": true,
+      "tgsPages": [
+        291,
+        369
+      ],
+      "relatedDocuments": [
+        "mrwa-cop-2025",
+        "agttm-part-3",
+        "as-1742-3"
+      ]
+    },
+    {
+      "id": "agttm-part-1",
+      "type": "standard",
+      "category": "agttm",
+      "title": "AGTTM Part 1 - Introduction",
+      "shortTitle": "AGTTM Part 1",
+      "agency": "Austroads",
+      "version": "Edition 1.0, 2021",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/standards/agttm/part-1",
+      "file": "/library/standards/agttm/part-1/agttm01-21-introduction.pdf",
+      "fileSize": "2.2 MB",
+      "downloaded": false,
+      "tags": [
+        "agttm",
+        "introduction",
+        "framework"
+      ],
+      "description": "Introduction to the Guide to Temporary Traffic Management",
+      "abstract": "AGTTM Part 1 introduces the Austroads Guide to Temporary Traffic Management series and establishes the overarching framework for temporary traffic management across Australia and New Zealand. It provides the context and principles that underpin all other parts of the guide.\n\nThe guide explains the purpose and structure of the AGTTM series, its relationship with other standards including AS 1742.3, and how the guide is adopted and adapted by different jurisdictions. It establishes key definitions and terminology used throughout the series, ensuring consistent interpretation across all parts.\n\nFundamental concepts covered include the safe system approach to road safety, the hierarchy of controls, risk management principles, and the roles and responsibilities of various parties in temporary traffic management. Understanding Part 1 is essential before delving into the more technical later parts, as it provides the conceptual foundation for why certain requirements exist and how the parts relate to each other. This part should be read by anyone new to traffic management or seeking a deeper understanding of the framework."
+    },
+    {
+      "id": "agttm-part-2",
+      "type": "standard",
+      "category": "agttm",
+      "title": "AGTTM Part 2 - Traffic Management Planning",
+      "shortTitle": "AGTTM Part 2",
+      "agency": "Austroads",
+      "version": "Edition 1.1, 2021",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/standards/agttm/part-2",
+      "file": "/library/standards/agttm/part-2/agttm02-21-traffic-management-planning.pdf",
+      "fileSize": "4.4 MB",
+      "downloaded": false,
+      "tags": [
+        "agttm",
+        "planning",
+        "traffic-volumes"
+      ],
+      "description": "Traffic management planning and traffic flow analysis",
+      "abstract": "AGTTM Part 2 provides the framework for planning temporary traffic management on roads across Australia and New Zealand. It establishes the principles and processes for developing traffic management plans that maintain safety and traffic flow during road works.\n\nThe guide covers traffic management planning fundamentals including traffic flow analysis, capacity calculations, and delay assessments. It provides methodologies for determining appropriate traffic management approaches based on traffic volumes, road characteristics, and work activities. The planning process considers road user needs, worker safety, and the broader traffic network impacts.\n\nTraffic Management Supervisors use this guide when developing Traffic Management Plans (TMPs) for complex or high-impact works. The guide provides the technical basis for decisions about lane closures, detours, contraflow arrangements, and work scheduling to minimize traffic disruption while maintaining safety."
+    },
+    {
+      "id": "agttm-part-3",
+      "type": "standard",
+      "category": "agttm",
+      "title": "AGTTM Part 3 - Static Worksites",
+      "shortTitle": "AGTTM Part 3",
+      "agency": "Austroads",
+      "version": "Edition 1.1, 2021",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/standards/agttm/part-3",
+      "file": "/library/standards/agttm/part-3/agttm03-21-static-worksites.pdf",
+      "fileSize": "6.3 MB",
+      "downloaded": false,
+      "tags": [
+        "agttm",
+        "static-worksites",
+        "speed-zones"
+      ],
+      "description": "Static worksite requirements, speed zones, excavations",
+      "abstract": "AGTTM Part 3 is the most frequently referenced part for Traffic Controllers working on static worksites. It provides comprehensive guidance on setting up and managing traffic control at fixed work locations where road workers and equipment remain in one place for extended periods.\n\nThe guide covers the full range of static worksite configurations including single lane closures, multiple lane closures, road closures with detours, shoulder closures, and median works. It details the requirements for advance warning, transition zones, buffer zones, and termination areas. Speed zoning requirements are comprehensively addressed, including the relationship between temporary speed limits and traffic management setups.\n\nSpecific requirements for excavations in the road, footpath closures, and works near intersections are included. The guide establishes minimum sight distances, taper lengths, and signage spacing based on speed zones. This part is essential reading for all Traffic Management Supervisors and forms the technical basis for most Traffic Guidance Schemes."
+    },
+    {
+      "id": "agttm-part-4",
+      "type": "standard",
+      "category": "agttm",
+      "title": "AGTTM Part 4 - Mobile Works",
+      "shortTitle": "AGTTM Part 4",
+      "agency": "Austroads",
+      "version": "Edition 1.1, 2021",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/standards/agttm/part-4",
+      "file": "/library/standards/agttm/part-4/agttm04-21-mobile-works.pdf",
+      "fileSize": "2.8 MB",
+      "downloaded": false,
+      "tags": [
+        "agttm",
+        "mobile-works",
+        "moving-operations"
+      ],
+      "description": "Mobile works and moving operations traffic management",
+      "abstract": "AGTTM Part 4 addresses traffic management for mobile works where the work activity and traffic control devices move continuously or intermittently along the road. This includes line marking, vegetation control, road sweeping, and inspection activities.\n\nThe guide distinguishes between different types of mobile operations: continuously moving works, intermittent moving works, and works that move at intervals. Each type has different traffic management requirements based on the speed of movement, road environment, and risk profile. The guide covers the use of vehicle-mounted signage, shadow vehicles, and pilot vehicles.\n\nMobile works present unique challenges as the traffic management setup is constantly changing. The guide addresses the requirements for advance warning vehicles, spacing between vehicles, communication protocols, and the roles of personnel involved in mobile operations. It is essential reading for crews conducting any form of moving road work."
+    },
+    {
+      "id": "agttm-part-5",
+      "type": "standard",
+      "category": "agttm",
+      "title": "AGTTM Part 5 - Short Term Low Impact Worksites",
+      "shortTitle": "AGTTM Part 5",
+      "agency": "Austroads",
+      "version": "Edition 1.1, 2021",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/standards/agttm/part-5",
+      "file": "/library/standards/agttm/part-5/agttm05-21-short-term-low-impact.pdf",
+      "fileSize": "3.4 MB",
+      "downloaded": false,
+      "tags": [
+        "agttm",
+        "short-term",
+        "low-impact"
+      ],
+      "description": "Short term and low impact worksite requirements",
+      "abstract": "AGTTM Part 5 provides simplified traffic management requirements for short-term and low-impact works. These are works that have minimal impact on traffic and are completed quickly, typically within one shift, where the full requirements of Part 3 may be excessive.\n\nThe guide defines what constitutes short-term low-impact work based on duration, traffic impact, and road environment. It provides reduced traffic management requirements while still maintaining safety. Common applications include minor repairs, pothole patching, sign installation, and utility inspections.\n\nThe guide covers the use of simplified setups, reduced signage requirements, and specific provisions for different speed environments. It includes guidance on when short-term low-impact provisions can and cannot be used. Traffic Controllers must understand these limits to ensure the simplified provisions are not inappropriately applied to higher-risk situations."
+    },
+    {
+      "id": "agttm-part-6",
+      "type": "standard",
+      "category": "agttm",
+      "title": "AGTTM Part 6 - Field Staff Implementation",
+      "shortTitle": "AGTTM Part 6",
+      "agency": "Austroads",
+      "version": "Edition 1.1, 2021",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/standards/agttm/part-6",
+      "file": "/library/standards/agttm/part-6/agttm06-21-field-staff.pdf",
+      "fileSize": "3.1 MB",
+      "downloaded": false,
+      "tags": [
+        "agttm",
+        "field-staff",
+        "implementation"
+      ],
+      "description": "Field staff guide for implementing traffic management",
+      "abstract": "AGTTM Part 6 is a practical implementation guide for field personnel involved in setting up, monitoring, and removing temporary traffic management. It translates the technical requirements of other AGTTM parts into practical on-site procedures.\n\nThe guide covers the day-to-day activities of traffic management crews including pre-start checks, equipment inspection, signage installation sequences, ongoing monitoring requirements, and pack-down procedures. It provides step-by-step guidance for common tasks and decision-making frameworks for unexpected situations.\n\nThis part is particularly valuable for Traffic Controllers and traffic management crew members. It addresses practical considerations like positioning of vehicles, communication methods, dealing with public inquiries, and responding to incidents. The guide complements formal training by providing a reference for field implementation of traffic management requirements."
+    },
+    {
+      "id": "agttm-part-7",
+      "type": "standard",
+      "category": "agttm",
+      "title": "AGTTM Part 7 - Traffic Controllers",
+      "shortTitle": "AGTTM Part 7",
+      "agency": "Austroads",
+      "version": "Edition 1.1, 2021",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/standards/agttm/part-7",
+      "file": "/library/standards/agttm/part-7/agttm07-21-traffic-controllers.pdf",
+      "fileSize": "3.1 MB",
+      "downloaded": false,
+      "tags": [
+        "agttm",
+        "traffic-controller",
+        "stop-slow"
+      ],
+      "description": "Requirements for traffic controllers",
+      "abstract": "AGTTM Part 7 is the definitive guide for Traffic Controllers performing stop-slow baton duties. It establishes the competency requirements, operational procedures, and safety standards for this critical role in traffic management.\n\nThe guide covers the full scope of Traffic Controller duties including positioning, signaling techniques, communication protocols, and hazard awareness. It addresses the specific requirements for different work situations including single controller operations, multiple controller coordination, and night work. The guide also covers emergency procedures and incident response.\n\nCompetency requirements are detailed including the necessary training, assessment, and accreditation processes. The guide establishes the minimum standards that must be met before a person can work as a Traffic Controller. This part is essential reading for all Traffic Controllers and their supervisors, forming the basis for competency-based training and assessment."
+    },
+    {
+      "id": "agttm-part-8",
+      "type": "standard",
+      "category": "agttm",
+      "title": "AGTTM Part 8 - Processes and Procedures",
+      "shortTitle": "AGTTM Part 8",
+      "agency": "Austroads",
+      "version": "Edition 2.0, 2025",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/standards/agttm/part-8",
+      "file": "/library/standards/agttm/part-8/agttm08-25-processes-procedures.pdf",
+      "fileSize": "4.7 MB",
+      "downloaded": false,
+      "tags": [
+        "agttm",
+        "processes",
+        "roles"
+      ],
+      "description": "Processes, procedures and functional roles",
+      "abstract": "AGTTM Part 8 establishes the organizational framework for temporary traffic management including roles, responsibilities, and administrative processes. It defines the functional relationships between road authorities, contractors, and personnel involved in traffic management.\n\nThe guide details the responsibilities of key roles including the Traffic Management Designer, Traffic Management Supervisor, and Traffic Controller. It establishes the competency framework and certification requirements for each role. The processes for planning, approving, implementing, and auditing traffic management are comprehensively documented.\n\nAdministrative requirements including documentation, record keeping, incident reporting, and variations are covered. The guide also addresses the process for seeking approval to vary from standards and the risk assessment methodology required. This part is essential for understanding the governance framework and ensuring compliance with procedural requirements."
+    },
+    {
+      "id": "agttm-part-9",
+      "type": "standard",
+      "category": "agttm",
+      "title": "AGTTM Part 9 - Sample Layouts",
+      "shortTitle": "AGTTM Part 9",
+      "agency": "Austroads",
+      "version": "Edition 1.1, 2021",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/standards/agttm/part-9",
+      "file": "/library/standards/agttm/part-9/agttm09-21-sample-layouts.pdf",
+      "fileSize": "68 MB",
+      "downloaded": false,
+      "tags": [
+        "agttm",
+        "sample-layouts",
+        "diagrams"
+      ],
+      "description": "Sample traffic management layouts and diagrams",
+      "abstract": "AGTTM Part 9 is a comprehensive visual reference containing sample Traffic Guidance Scheme layouts for a wide range of traffic management scenarios. It provides standardized diagram templates that can be adapted to specific site conditions.\n\nThe guide contains hundreds of sample layouts organized by work type and road environment. Categories include lane closures on multi-lane roads, single lane closures on two-way roads, shoulder closures, intersection treatments, pedestrian management, and road closures with detours. Each layout includes signage schedules, taper lengths, and spacing requirements.\n\nThese sample layouts form the basis for most pre-approved Traffic Management Plans including MRWA's regional TMPs. Traffic Management Designers use these layouts as templates, adapting them to site-specific conditions. The layouts illustrate the application of requirements from Parts 3, 4, and 5, showing how theoretical requirements translate into practical setups."
+    },
+    {
+      "id": "agttm-part-10",
+      "type": "standard",
+      "category": "agttm",
+      "title": "AGTTM Part 10 - Supporting Guidance",
+      "shortTitle": "AGTTM Part 10",
+      "agency": "Austroads",
+      "version": "Edition 1.1, 2021",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/standards/agttm/part-10",
+      "file": "/library/standards/agttm/part-10/agttm10-21-supporting-guidance.pdf",
+      "fileSize": "4.0 MB",
+      "downloaded": false,
+      "tags": [
+        "agttm",
+        "supporting-guidance",
+        "reference"
+      ],
+      "description": "Supporting guidance for temporary traffic management",
+      "abstract": "AGTTM Part 10 provides supplementary guidance that supports the application of the other AGTTM parts. It addresses specialized situations, emerging issues, and provides additional technical information not covered in the main parts.\n\nThe guide covers a range of supporting topics including traffic management at special events, works near railways, works on bridges and structures, and traffic management in tunnels. It also addresses emerging technologies and their application in temporary traffic management, including electronic signage and intelligent transport systems.\n\nAdditional technical information includes detailed guidance on sight distance calculations, queue length assessments, and the impact of road works on heavy vehicles. This part serves as a reference for less common situations and provides the technical depth needed for complex traffic management scenarios. It should be consulted when situations fall outside the scope of the main AGTTM parts."
+    },
+    {
+      "id": "as-1742-3",
+      "type": "standard",
+      "category": "as-standards",
+      "title": "AS 1742.3 - Manual of Uniform Traffic Control Devices Part 3: Temporary Traffic Management",
+      "shortTitle": "AS 1742.3",
+      "agency": "Standards Australia",
+      "version": "Current",
+      "status": "current",
+      "mandatory": true,
+      "path": "/library/standards/australian-standards/as-1742-3",
+      "tags": [
+        "standard",
+        "mutcd",
+        "temporary-traffic"
+      ],
+      "description": "Australian standard for temporary traffic control devices",
+      "abstract": "AS 1742.3 is the Australian Standard that forms part of the Manual of Uniform Traffic Control Devices (MUTCD) series. It specifies the requirements for traffic control devices used in temporary traffic management situations, establishing the national baseline that state codes of practice build upon.\n\nThe standard covers the design, dimensions, colors, and retroreflective properties of temporary traffic control devices including signs, barriers, delineators, and pavement markings. It establishes the standard specifications that all traffic control devices must meet to be used on Australian roads.\n\nWhile AGTTM provides guidance on how to apply traffic management, AS 1742.3 specifies what the physical devices must look like and how they must perform. All traffic control equipment used in Western Australia must comply with this standard. Traffic Management Supervisors should ensure all equipment on site meets AS 1742.3 requirements, particularly regarding sign sizes, colors, and retroreflectivity classes."
+    },
+    {
+      "id": "as-nzs-31000",
+      "type": "standard",
+      "category": "as-standards",
+      "title": "AS/NZS ISO 31000 - Risk Management Principles and Guidelines",
+      "shortTitle": "AS/NZS ISO 31000",
+      "agency": "Standards Australia",
+      "version": "Current",
+      "status": "current",
+      "path": "/library/standards/australian-standards/as-nzs-31000",
+      "tags": [
+        "standard",
+        "risk-management"
+      ],
+      "description": "Risk management framework for variations",
+      "abstract": "AS/NZS ISO 31000 is the joint Australian and New Zealand adoption of the international risk management standard. It provides principles, framework, and processes for managing risk that can be applied to any organization, activity, or decision.\n\nIn the context of traffic management, this standard is particularly relevant when preparing variations to standard traffic management requirements. When a situation requires departure from the prescribed standards, a risk-based approach is needed to justify the alternative arrangements and demonstrate that risks are being managed appropriately.\n\nThe standard establishes a systematic process for risk identification, analysis, evaluation, and treatment. Traffic Management Designers use this framework when developing variations, documenting the risks associated with non-standard arrangements and the controls implemented to achieve acceptable risk levels. Understanding this standard is essential for anyone involved in preparing or assessing variation applications."
+    },
+    {
+      "id": "form-notification-roadworks",
+      "type": "form",
+      "category": "whs-forms",
+      "title": "Notification of Road Works Form",
+      "shortTitle": "Notification Form",
+      "agency": "MRWA",
+      "status": "current",
+      "editable": true,
+      "path": "/library/forms/templates/notification-roadworks",
+      "url": "https://www.mainroads.wa.gov.au/technical-commercial/working-on-roads",
+      "tags": [
+        "form",
+        "notification",
+        "agency"
+      ],
+      "description": "Required notification to agencies before works commence",
+      "abstract": "The Notification of Road Works Form is a mandatory administrative document that must be submitted to relevant authorities before commencing any works on roads. This form ensures that all stakeholders are informed of upcoming works and can coordinate their responses.\n\nThe notification must be submitted to MRWA, WA Police, and in some cases local government authorities, depending on the nature and location of the works. The form captures essential information including the location, duration, nature of works, traffic management arrangements, and contact details for the responsible personnel.\n\nSubmission timeframes vary based on the complexity and impact of the works. For routine works, notification is typically required at least 48 hours in advance. For works requiring temporary speed limit reductions or road closures, longer notice periods apply. Failure to submit required notifications may result in enforcement action and can affect insurance coverage in the event of an incident."
+    },
+    {
+      "id": "form-variation-standards",
+      "type": "form",
+      "category": "whs-forms",
+      "title": "Variation to Standards Form",
+      "shortTitle": "Variation Form",
+      "agency": "MRWA",
+      "status": "current",
+      "editable": true,
+      "path": "/library/forms/templates/variation-standards",
+      "tags": [
+        "form",
+        "variation",
+        "approval"
+      ],
+      "description": "Application to vary from AS 1742.3, AGTTM or MRWA COP",
+      "abstract": "The Variation to Standards Form is used when site conditions prevent compliance with standard traffic management requirements. This formal application process ensures that non-standard arrangements are properly assessed and approved before implementation.\n\nVariations may be required when physical constraints such as narrow road widths, lack of shoulder, intersection proximity, or existing infrastructure prevent full compliance with the MRWA Code of Practice, AGTTM, or AS 1742.3. The variation application must demonstrate why standard requirements cannot be met and what alternative controls will be implemented.\n\nThe application requires a risk assessment following AS/NZS ISO 31000 principles, documenting the hazards, risk analysis, and proposed treatments. Approval must be obtained from the relevant road authority before works commence. Unapproved variations constitute a breach of standards and may result in enforcement action, insurance complications, and liability in the event of an incident. Processing time varies but typically requires at least 5 business days."
+    },
+    {
+      "id": "form-swms-template",
+      "type": "form",
+      "category": "whs-forms",
+      "title": "Safe Work Method Statement Template",
+      "shortTitle": "SWMS Template",
+      "agency": "WorkSafe WA",
+      "status": "current",
+      "mandatory": true,
+      "editable": true,
+      "path": "/library/whs/forms/swms-template",
+      "tags": [
+        "form",
+        "swms",
+        "high-risk"
+      ],
+      "description": "Required for all high risk construction work including road work",
+      "abstract": "The Safe Work Method Statement (SWMS) Template is a mandatory document for all high-risk construction work, which includes all traffic management work on or near roads. The SWMS documents the hazards, risks, and control measures for the specific work being undertaken.\n\nThis template provides the standard format for documenting the work activities, associated hazards, risk ratings, and control measures. It must be completed before work commences and must be developed in consultation with workers who will be performing the work. The SWMS should be site-specific, though a generic SWMS can be used as a starting point.\n\nKey elements include the description of high-risk construction work, the hazards present, the risk assessment process, the control measures to be implemented, and how those controls will be monitored. The SWMS must be reviewed and updated if conditions change or if it is found to be ineffective. It must be readily available on site for all workers to access and should be used as a training tool during pre-start briefings."
+    },
+    {
+      "id": "form-incident-report",
+      "type": "form",
+      "category": "whs-forms",
+      "title": "Incident Report Form",
+      "shortTitle": "Incident Report",
+      "agency": "Company",
+      "status": "current",
+      "mandatory": true,
+      "editable": true,
+      "path": "/library/whs/forms/incident-report",
+      "tags": [
+        "form",
+        "incident",
+        "whs"
+      ],
+      "description": "Record all incidents and near misses on site",
+      "retention": "30 years",
+      "abstract": "The Incident Report Form is used to document all work-related incidents, injuries, and near misses that occur on traffic management worksites. Immediate and thorough incident reporting is both a legal requirement and essential for preventing future incidents.\n\nThe form captures critical information including the date, time, and location of the incident, details of persons involved, nature of any injuries, witnesses, immediate actions taken, and contributing factors. It should be completed as soon as practicable after the incident occurs, while details are fresh in the minds of those involved.\n\nSerious incidents requiring notification to WorkSafe WA must be reported immediately, and the scene must be preserved until an inspector arrives. The completed incident report forms part of the site records and must be retained for 30 years for serious incidents. Analysis of incident reports helps identify trends and informs improvements to work practices. This template should be customized to company-specific requirements while ensuring all regulatory reporting requirements are met."
+    },
+    {
+      "id": "form-daily-diary",
+      "type": "form",
+      "category": "whs-forms",
+      "title": "Daily Diary Template",
+      "shortTitle": "Daily Diary",
+      "agency": "MRWA",
+      "status": "current",
+      "mandatory": true,
+      "editable": true,
+      "path": "/library/forms/templates/daily-diary",
+      "tags": [
+        "form",
+        "daily-diary",
+        "records"
+      ],
+      "description": "Site documentation - must be kept for 7 years",
+      "retention": "7 years",
+      "abstract": "The Daily Diary is a mandatory site record that documents all activities, events, and conditions during traffic management operations. It serves as the primary evidence of work activities and forms a crucial legal document in the event of disputes or incidents.\n\nThe diary should record the date and weather conditions, personnel on site including their roles and competencies, the Traffic Management Plan being implemented, any variations from the plan, inspections conducted, incidents or near misses, communications with road users or authorities, and equipment deployed. Entries should be made throughout the day, not just at the end of the shift.\n\nDaily Diaries must be retained for a minimum of 7 years under WHS record-keeping requirements. In the event of a serious incident, the diary becomes critical evidence for investigators and may be subject to legal proceedings. Accurate, contemporaneous diary entries can protect workers and companies by demonstrating compliance with their duties. The diary should be completed legibly, signed by the responsible person, and stored securely."
+    },
+    {
+      "id": "form-risk-assessment",
+      "type": "form",
+      "category": "whs-forms",
+      "title": "Risk Assessment Template",
+      "shortTitle": "Risk Assessment",
+      "agency": "Company",
+      "status": "current",
+      "mandatory": true,
+      "editable": true,
+      "path": "/library/whs/forms/risk-assessment",
+      "tags": [
+        "form",
+        "risk",
+        "whs"
+      ],
+      "description": "Site-specific hazard identification and control measures",
+      "abstract": "The Risk Assessment Template is used to systematically identify, analyze, and evaluate hazards specific to a worksite, and to document the control measures to be implemented. Risk assessment is a fundamental requirement of the WHS Act and must be conducted before work commences.\n\nThe template follows the hierarchy of controls approach, requiring hazards to be identified, risks analyzed for likelihood and consequence, existing controls evaluated, and additional controls specified. The risk assessment should be conducted in consultation with workers who have knowledge of the work and site conditions.\n\nFor traffic management work, the risk assessment should address traffic hazards, environmental conditions, public interface risks, equipment hazards, and emergency response requirements. The assessment must be reviewed and updated when conditions change, when new information becomes available, or after an incident. This site-specific assessment complements the generic SWMS by addressing hazards unique to the particular location and conditions on the day of work."
+    },
+    {
+      "id": "form-induction-checklist",
+      "type": "form",
+      "category": "whs-forms",
+      "title": "Site Induction Checklist",
+      "shortTitle": "Induction Checklist",
+      "agency": "Company",
+      "status": "current",
+      "mandatory": true,
+      "editable": true,
+      "path": "/library/whs/forms/induction-checklist",
+      "tags": [
+        "form",
+        "induction",
+        "personnel"
+      ],
+      "description": "Record of site-specific induction for all personnel",
+      "abstract": "The Site Induction Checklist ensures that all personnel receive appropriate site-specific induction before commencing work on a traffic management site. Site induction is a legal requirement under the WHS Act and must be completed for every site, even for workers who have worked on similar sites before.\n\nThe induction should cover the site-specific hazards and controls, emergency procedures including evacuation routes and assembly points, the Traffic Management Plan being implemented, communication protocols, reporting requirements, and welfare facilities. The inductee must be given the opportunity to ask questions and clarify any concerns.\n\nThe checklist documents that the induction has been completed and that the worker understands the site requirements. Both the inductor and inductee should sign the form, which is then retained as part of the site records. Induction records should be kept for the duration of the worker's involvement on site and for a period after, typically matching training record retention requirements. This template can be customized to include company-specific induction elements."
+    },
+    {
+      "id": "agrs-part-3-safe-speed",
+      "type": "guide",
+      "category": "road-safety",
+      "title": "Guide to Road Safety Part 3 - Safe Speed",
+      "shortTitle": "AGRS Part 3 Safe Speed",
+      "agency": "Austroads",
+      "version": "Edition 3.0, 2025",
+      "status": "current",
+      "mandatory": false,
+      "path": "/library/standards/road-safety/part-3-safe-speed",
+      "file": "/library/standards/agttm/part-3/agrs03-25-safe-speed.pdf",
+      "fileSize": "4.5 MB",
+      "downloaded": false,
+      "tags": [
+        "road-safety",
+        "speed",
+        "speed-limits"
+      ],
+      "description": "Guide to establishing safe speed limits and speed management",
+      "abstract": "The Guide to Road Safety Part 3 provides comprehensive guidance on establishing safe speed limits and implementing speed management strategies. While not specific to temporary traffic management, understanding safe speed principles is fundamental to traffic management work.\n\nThe guide covers the relationship between speed and road safety outcomes, including how speed affects crash frequency and severity. It provides methodologies for determining appropriate speed limits based on road function, road environment, roadside conditions, and crash history. The safe system approach to speed management is explained.\n\nFor Traffic Management personnel, this guide provides valuable context for understanding why temporary speed limits are required in work zones and how speed affects worker and road user safety. The guide explains the physics of speed and stopping distances, which informs the spacing and advance warning requirements in traffic management standards. Understanding safe speed principles helps Traffic Management Supervisors make informed decisions about speed zone requirements and communicate the rationale for speed reductions to workers and road users."
+    }
+  ],
+  "documentRelationships": [
+    {
+      "from": "mrwa-tmp-wheatbelt-0922",
+      "to": "mrwa-cop-2025",
+      "type": "references",
+      "description": "TMP references COP for all requirements"
+    },
+    {
+      "from": "mrwa-tmp-wheatbelt-0922",
+      "to": "agttm-part-3",
+      "type": "references",
+      "description": "TMP uses AGTTM Part 3 for static worksites"
+    },
+    {
+      "from": "mrwa-tmp-wheatbelt-0922",
+      "to": "as-1742-3",
+      "type": "references",
+      "description": "TMP references AS 1742.3 for signage"
+    },
+    {
+      "from": "mrwa-cop-2025",
+      "to": "agttm-part-2",
+      "type": "adopts",
+      "description": "COP adopts AGTTM Part 2"
+    },
+    {
+      "from": "mrwa-cop-2025",
+      "to": "agttm-part-3",
+      "type": "adopts",
+      "description": "COP adopts AGTTM Part 3"
+    },
+    {
+      "from": "form-variation-standards",
+      "to": "as-nzs-31000",
+      "type": "requires",
+      "description": "Variations require risk assessment per ISO 31000"
+    },
+    {
+      "from": "form-swms-template",
+      "to": "whs-construction-cop",
+      "type": "required-by",
+      "description": "SWMS required by Construction COP"
+    }
+  ],
+  "retentionPeriods": {
+    "daily-diary": {
+      "years": 7,
+      "description": "Site records must be kept minimum 7 years"
+    },
+    "incident-report-serious": {
+      "years": 30,
+      "description": "Serious incident records kept 30 years"
+    },
+    "health-monitoring": {
+      "years": 30,
+      "description": "Health monitoring records kept 30 years"
+    },
+    "asbestos-exposure": {
+      "years": 40,
+      "description": "Asbestos exposure records kept 40 years"
+    },
+    "training-records": {
+      "years": 7,
+      "description": "Training records kept employment + 7 years"
+    },
+    "swms": {
+      "years": 2,
+      "description": "SWMS kept duration of works + 2 years"
+    },
+    "general-whs": {
+      "years": 5,
+      "description": "General WHS records 5-7 years"
+    }
+  },
+  "highRiskConstructionWork": [
+    {
+      "id": "road-work",
+      "label": "Work on or near a road or railway",
+      "requiresSwms": true
+    },
+    {
+      "id": "traffic-corridor",
+      "label": "Work near traffic corridors",
+      "requiresSwms": true
+    },
+    {
+      "id": "heights",
+      "label": "Work at heights above 2m",
+      "requiresSwms": true
+    },
+    {
+      "id": "mobile-plant",
+      "label": "Work using powered mobile plant",
+      "requiresSwms": true
+    },
+    {
+      "id": "excavation",
+      "label": "Work in or near a shaft or trench",
+      "requiresSwms": true
+    },
+    {
+      "id": "confined-space",
+      "label": "Work in a confined space",
+      "requiresSwms": true
+    },
+    {
+      "id": "hazardous-substances",
+      "label": "Work involving hazardous substances",
+      "requiresSwms": true
+    }
+  ],
+  "quickLinks": [
+    {
+      "label": "Wheatbelt TMP",
+      "documentId": "mrwa-tmp-wheatbelt-0922-part1",
+      "icon": "📋"
+    }
+  ]
+}

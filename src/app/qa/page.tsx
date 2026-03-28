@@ -1,0 +1,538 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import {
+  getQaHistory,
+  deleteQaEntry,
+  toggleQaFavorite,
+  clearQaHistory,
+  exportQaHistory,
+  importQaHistory,
+  type QaEntry,
+} from '@/lib/qa-storage';
+
+const APP_VERSION = 'RC 1.9.1';
+
+// Types
+interface SearchableDocument {
+  id: string;
+  title: string;
+  shortTitle: string;
+  category?: string;
+}
+
+export default function QaPage() {
+  // State
+  const [documents, setDocuments] = useState<SearchableDocument[]>([]);
+  const [selectedDocs, setSelectedDocs] = useState<Set<string>>(new Set());
+  const [question, setQuestion] = useState('');
+  const [generatedPrompt, setGeneratedPrompt] = useState<string | null>(null);
+  const [loadingDocs, setLoadingDocs] = useState(true);
+  const [savedQAs, setSavedQAs] = useState<QaEntry[]>([]);
+  const [filter, setFilter] = useState<'all' | 'favorites'>('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  // Load documents and saved Q&As on mount
+  useEffect(() => {
+    const loadDocuments = async () => {
+      try {
+        const response = await fetch('/api/qa');
+        if (response.ok) {
+          const data = await response.json();
+          setDocuments(data.documents || []);
+        }
+      } catch (err) {
+        console.error('Failed to load documents:', err);
+      } finally {
+        setLoadingDocs(false);
+      }
+    };
+
+    const loadSavedQAs = async () => {
+      try {
+        // Load from API (file-based storage)
+        const response = await fetch('/api/qa-saved');
+        if (response.ok) {
+          const data = await response.json();
+          const apiQAs = data.entries || [];
+          
+          // Load from localStorage
+          const localQAs = getQaHistory();
+          
+          // Merge: API entries first, then local entries (avoiding duplicates by ID)
+          const apiIds = new Set(apiQAs.map((qa: QaEntry) => qa.id));
+          const uniqueLocalQAs = localQAs.filter(qa => !apiIds.has(qa.id));
+          
+          // Combine and sort by date (newest first)
+          const allQAs = [...apiQAs, ...uniqueLocalQAs].sort((a, b) => 
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          
+          setSavedQAs(allQAs);
+          return;
+        }
+      } catch (err) {
+        console.error('Failed to load saved Q&As from API:', err);
+      }
+      
+      // Fallback to localStorage only
+      setSavedQAs(getQaHistory());
+    };
+
+    loadDocuments();
+    loadSavedQAs();
+  }, []);
+
+  // Toggle document selection
+  const toggleDocument = (docId: string) => {
+    setSelectedDocs(prev => {
+      const next = new Set(prev);
+      if (next.has(docId)) {
+        next.delete(docId);
+      } else {
+        next.add(docId);
+      }
+      return next;
+    });
+  };
+
+  // Select all documents
+  const selectAllDocuments = () => {
+    setSelectedDocs(new Set(documents.map(d => d.id)));
+  };
+
+  // Clear selection
+  const clearSelection = () => {
+    setSelectedDocs(new Set());
+  };
+
+  // Generate prompt for AI
+  const generatePrompt = () => {
+    if (!question.trim()) return;
+
+    const docsToSearch = selectedDocs.size > 0
+      ? documents.filter(d => selectedDocs.has(d.id))
+      : documents;
+
+    const docList = docsToSearch
+      .slice(0, 10)
+      .map(d => `- ${d.shortTitle} (${d.id})`)
+      .join('\n');
+
+    const prompt = `🔍 **TC Work Zone Locator - Q&A Request**
+
+**Documents to search:**
+${docList}
+
+**Question:**
+${question}
+
+---
+Please answer this question based on the documents listed above. After answering, please save the Q&A to GitHub using this format:
+
+\`\`\`json
+{
+  "question": "${question.replace(/"/g, '\\"')}",
+  "answer": "<your answer here>",
+  "documents": ${JSON.stringify(docsToSearch.slice(0, 10).map(d => d.id))},
+  "documentNames": ${JSON.stringify(docsToSearch.slice(0, 10).map(d => d.shortTitle))}
+}
+\`\`\`
+
+Save this to: \`public/library/qa-saved.json\` (append to the array)`;
+
+    setGeneratedPrompt(prompt);
+  };
+
+  // Copy to clipboard
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+
+  // Toggle favorite
+  const handleToggleFavorite = async (id: string) => {
+    // Update in local state immediately for UI responsiveness
+    setSavedQAs(prev => prev.map(qa => 
+      qa.id === id ? { ...qa, isFavorite: !qa.isFavorite } : qa
+    ));
+    
+    try {
+      // Try to update in API (file-based storage)
+      const entry = savedQAs.find(qa => qa.id === id);
+      if (entry) {
+        await fetch('/api/qa-saved', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id,
+            updates: { isFavorite: !entry.isFavorite }
+          }),
+        });
+      }
+    } catch (err) {
+      console.error('Failed to update favorite in API:', err);
+    }
+    
+    // Also update localStorage
+    toggleQaFavorite(id);
+  };
+
+  // Delete entry
+  const handleDeleteEntry = async (id: string) => {
+    if (!confirm('Delete this Q&A?')) return;
+    
+    try {
+      // Try to delete from API first (file-based storage)
+      const response = await fetch(`/api/qa-saved?id=${id}`, {
+        method: 'DELETE',
+      });
+      
+      if (response.ok) {
+        // Remove from local state
+        setSavedQAs(prev => prev.filter(qa => qa.id !== id));
+        return;
+      }
+    } catch (err) {
+      console.error('Failed to delete from API:', err);
+    }
+    
+    // Fallback: delete from localStorage
+    deleteQaEntry(id);
+    setSavedQAs(prev => prev.filter(qa => qa.id !== id));
+  };
+
+  // Clear all Q&As
+  const handleClearAll = () => {
+    if (!confirm('Clear ALL saved Q&As? This cannot be undone.')) return;
+    clearQaHistory();
+    setSavedQAs([]);
+  };
+
+  // Export Q&As
+  const handleExport = () => {
+    const json = exportQaHistory();
+    copyToClipboard(json);
+    alert('Q&A history copied to clipboard!');
+  };
+
+  // Import Q&As
+  const handleImport = () => {
+    const json = prompt('Paste Q&A history JSON:');
+    if (!json) return;
+    
+    const result = importQaHistory(json);
+    if (result.success) {
+      setSavedQAs(getQaHistory());
+      alert(`Imported ${result.count} Q&As`);
+    } else {
+      alert(`Import failed: ${result.error}`);
+    }
+  };
+
+  // Group documents by category
+  const documentsByCategory = documents.reduce((acc, doc) => {
+    const cat = doc.category || 'other';
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(doc);
+    return acc;
+  }, {} as Record<string, SearchableDocument[]>);
+
+  // Filter saved Q&As
+  const filteredQAs = savedQAs
+    .filter(qa => {
+      if (filter === 'favorites' && !qa.isFavorite) return false;
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        return qa.question.toLowerCase().includes(term) ||
+               qa.answer.toLowerCase().includes(term);
+      }
+      return true;
+    });
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white">
+      {/* Header */}
+      <div className="bg-gray-800 border-b border-gray-700 sticky top-0 z-10">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/library">
+                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                  ← Library
+                </Button>
+              </Link>
+              <div>
+                <h1 className="text-xl font-bold text-white">🤖 AI Q&A Assistant</h1>
+                <p className="text-xs text-gray-500">{APP_VERSION}</p>
+              </div>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSavedQAs(getQaHistory())}
+              className="bg-gray-700 border-gray-600"
+            >
+              🔄 Refresh ({savedQAs.length})
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+        {/* How it works */}
+        <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-4 text-sm">
+          <h3 className="font-semibold text-blue-300 mb-2">📋 How to use:</h3>
+          <ol className="text-blue-200 space-y-1 list-decimal list-inside">
+            <li>Select documents to search (or search all)</li>
+            <li>Type your question</li>
+            <li>Click <strong>Generate Prompt</strong> and copy it</li>
+            <li>Paste in the AI chat and get your answer</li>
+            <li>Save useful Q&As here for future reference</li>
+          </ol>
+        </div>
+
+        {/* Question Input */}
+        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Ask a question about traffic management, WHS, or road work:
+          </label>
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              placeholder="e.g., What are the speed zone requirements for TC positions?"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              className="bg-gray-700 border-gray-600 text-white flex-1"
+            />
+            <Button
+              onClick={generatePrompt}
+              disabled={!question.trim()}
+              className="bg-blue-600 hover:bg-blue-700 px-4"
+            >
+              Generate Prompt
+            </Button>
+          </div>
+        </div>
+
+        {/* Document Selection */}
+        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold text-white">📄 Select Documents to Search</h3>
+            <div className="flex gap-2">
+              <Button variant="ghost" size="sm" onClick={selectAllDocuments} className="text-blue-400">
+                Select All
+              </Button>
+              <Button variant="ghost" size="sm" onClick={clearSelection} className="text-gray-400">
+                Clear
+              </Button>
+            </div>
+          </div>
+
+          {loadingDocs ? (
+            <div className="text-center py-4 text-gray-400">Loading documents...</div>
+          ) : (
+            <div className="space-y-3 max-h-64 overflow-y-auto">
+              {Object.entries(documentsByCategory).map(([category, docs]) => (
+                <div key={category}>
+                  <p className="text-xs text-gray-500 uppercase mb-1">{category}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {docs.map(doc => (
+                      <button
+                        key={doc.id}
+                        onClick={() => toggleDocument(doc.id)}
+                        className={`px-3 py-1 rounded text-sm transition-colors ${
+                          selectedDocs.has(doc.id)
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        }`}
+                      >
+                        {selectedDocs.has(doc.id) ? '☑ ' : '☐ '}
+                        {doc.shortTitle}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <p className="text-xs text-gray-500 mt-3">
+            {selectedDocs.size === 0
+              ? 'No documents selected - will search all documents'
+              : `${selectedDocs.size} document${selectedDocs.size !== 1 ? 's' : ''} selected`
+            }
+          </p>
+        </div>
+
+        {/* Generated Prompt */}
+        {generatedPrompt && (
+          <div className="bg-green-900/30 border border-green-700 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-semibold text-green-300">✅ Your Prompt is Ready!</h3>
+              <Button
+                onClick={() => copyToClipboard(generatedPrompt!)}
+                className={copied ? 'bg-green-600' : 'bg-blue-600 hover:bg-blue-700'}
+              >
+                {copied ? '✓ Copied!' : '📋 Copy Prompt'}
+              </Button>
+            </div>
+            <pre className="bg-gray-900 rounded p-3 text-sm text-gray-300 whitespace-pre-wrap overflow-x-auto max-h-64 overflow-y-auto">
+              {generatedPrompt}
+            </pre>
+            <p className="text-green-200 text-sm mt-3">
+              👆 Copy this prompt and paste it in your AI chat. The AI will save the answer back to this app!
+            </p>
+          </div>
+        )}
+
+        {/* Saved Q&As */}
+        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold text-white">📚 Saved Q&As ({savedQAs.length})</h3>
+            <div className="flex gap-2">
+              <Button
+                variant={filter === 'all' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilter('all')}
+                className={filter === 'all' ? 'bg-blue-600' : 'bg-gray-700 border-gray-600'}
+              >
+                All
+              </Button>
+              <Button
+                variant={filter === 'favorites' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilter('favorites')}
+                className={filter === 'favorites' ? 'bg-amber-600' : 'bg-gray-700 border-gray-600'}
+              >
+                ⭐ Favorites
+              </Button>
+            </div>
+          </div>
+
+          <Input
+            type="text"
+            placeholder="Search saved Q&As..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-gray-700 border-gray-600 text-white mb-3"
+          />
+
+          {filteredQAs.length === 0 ? (
+            <div className="text-center py-8 text-gray-400">
+              <p>No saved Q&As yet</p>
+              <p className="text-sm mt-2">Generate a prompt, get an answer from AI, and save it here!</p>
+            </div>
+          ) : (
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {filteredQAs.map(qa => (
+                <Card key={qa.id} className="bg-gray-900 border-gray-700">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          {qa.isFavorite && <span className="text-amber-400">⭐</span>}
+                          {qa.category && (
+                            <Badge variant="outline" className="text-xs border-blue-500 text-blue-400">
+                              {qa.category}
+                            </Badge>
+                          )}
+                          <span className="text-xs text-gray-500">
+                            {new Date(qa.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <p className="font-semibold text-white mb-2">{qa.question}</p>
+                        <div className={`text-sm text-gray-300 prose prose-invert prose-sm max-w-none ${expandedId === qa.id ? '' : 'line-clamp-3'}`}>
+                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{qa.answer}</ReactMarkdown>
+                        </div>
+                        <button
+                          onClick={() => setExpandedId(expandedId === qa.id ? null : qa.id)}
+                          className="text-blue-400 text-xs mt-1 hover:underline"
+                        >
+                          {expandedId === qa.id ? '▲ Show less' : '▼ Show full answer'}
+                        </button>
+                        {qa.documentNames?.length > 0 && (
+                          <p className="text-xs text-gray-500 mt-2">
+                            Sources: {qa.documentNames.join(', ')}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex flex-col gap-1 shrink-0">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleToggleFavorite(qa.id)}
+                          className={qa.isFavorite ? 'text-amber-400' : 'text-gray-500'}
+                        >
+                          {qa.isFavorite ? '⭐' : '☆'}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => copyToClipboard(qa.answer)}
+                          className="text-blue-400"
+                        >
+                          📋
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteEntry(qa.id)}
+                          className="text-red-400 hover:text-red-300"
+                        >
+                          🗑️
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+          
+          {/* Export/Import/Clear buttons */}
+          <div className="flex gap-2 mt-4 pt-4 border-t border-gray-700">
+            <Button
+              onClick={handleExport}
+              variant="outline"
+              size="sm"
+              className="flex-1 bg-gray-700 border-gray-600"
+            >
+              📤 Export
+            </Button>
+            <Button
+              onClick={handleImport}
+              variant="outline"
+              size="sm"
+              className="flex-1 bg-gray-700 border-gray-600"
+            >
+              📥 Import
+            </Button>
+            <Button
+              onClick={handleClearAll}
+              variant="outline"
+              size="sm"
+              className="bg-gray-700 border-gray-600 text-red-400 hover:text-red-300"
+            >
+              🗑️ Clear All
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
