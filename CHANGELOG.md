@@ -9,6 +9,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.9.6] - 2026-03-28
 
+### Added
+
+- **Traffic Counter: Auto-Fetch GPS Location**
+  - Automatically fetches GPS location when "Start Counting" is pressed if no location is set
+  - Shows loading state ("📍 Getting GPS...") while fetching
+  - Gracefully continues without location if GPS fails (non-blocking)
+
+- **Traffic Counter: Custom Duration Button**
+  - Shows highlighted button with custom value (e.g., "160m ✓") when custom duration is set
+  - Clear visual feedback that custom duration was accepted
+  - Clicking preset buttons clears custom mode
+  - Clicking custom button returns to default selection
+
 ### Fixed
 
 - **Version Synchronization**: All version numbers now consistent across codebase
@@ -18,10 +31,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - qa/page.tsx: RC 1.9.1 → RC 1.9.6
   - aftercare/page.tsx: RC 1.9.1 → RC 1.9.6
 
+- **Traffic Counter: Duration Button Text Visibility**
+  - Changed duration button text to white for better readability
+  - Applied to preset buttons (3m, 5m, 15m) and custom duration controls
+
+- **Traffic Counter: Custom Duration Limit**
+  - Increased max custom duration from 60 to 480 minutes (8 hours)
+  - Added validation with user feedback for values exceeding max
+
+- **Traffic Counter: Actual Duration Recording**
+  - Fixed history entry showing incorrect sampling time when timer stopped early
+  - Now correctly captures actual elapsed time instead of planned duration
+
+- **Lint Errors**: Resolved all 8 ESLint errors and warnings
+  - Added eslint-disable comments for Leaflet SSR require() pattern
+  - Added eslint-disable comments for setState in useEffect (valid patterns)
+  - Removed unused eslint-disable directive
+
 ### Documentation
 
 - **CHANGELOG.md**: Added missing versions 1.9.2-1.9.5
-- **worklog.md**: Updated with version sync session details
+- **worklog.md**: Updated with all session details
 
 ---
 
@@ -239,23 +269,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
-| Version | Date       | Key Changes                                                  |
-| ------- | ---------- | ------------------------------------------------------------ |
-| 1.9.6   | 2026-03-28 | Version synchronization, documentation sync                  |
-| 1.9.5   | 2026-03-28 | Testing, CI/CD, Best Practice 100                            |
-| 1.9.4   | 2026-03-28 | Component extraction (Weather, Traffic, Amenities, WorkZone) |
-| 1.9.3   | 2026-03-28 | Prettier, CONTRIBUTING, SavedLocations component             |
-| 1.9.2   | 2026-03-28 | MIT License, .env.example                                    |
-| 1.9.1   | 2026-03-28 | Version synchronization note                                 |
-| 1.9.0   | 2026-03    | AI Q&A Assistant                                             |
-| 1.8.0   | 2026-03    | Library offline indicators                                   |
-| 1.7.x   | 2026-03    | Wake lock, saved locations, amenities                        |
-| 1.6.0   | 2026-03    | AfterCare map view                                           |
-| 1.5.0   | 2026-03    | PWA, nearby signs                                            |
-| 1.4.0   | 2026-03    | AfterCare module                                             |
-| 1.3.0   | 2026-03    | Set distance, lane names                                     |
-| 1.2.0   | 2026-03    | LocalStorage overrides                                       |
-| 1.0.0   | 2026-03    | Initial release                                              |
+| Version | Date       | Key Changes                                                               |
+| ------- | ---------- | ------------------------------------------------------------------------- |
+| 1.9.6   | 2026-03-28 | Traffic Counter: Auto-GPS, custom duration UI, duration fixes, lint fixes |
+| 1.9.5   | 2026-03-28 | Testing, CI/CD, Best Practice 100                                         |
+| 1.9.4   | 2026-03-28 | Component extraction (Weather, Traffic, Amenities, WorkZone)              |
+| 1.9.3   | 2026-03-28 | Prettier, CONTRIBUTING, SavedLocations component                          |
+| 1.9.2   | 2026-03-28 | MIT License, .env.example                                                 |
+| 1.9.1   | 2026-03-28 | Version synchronization note                                              |
+| 1.9.0   | 2026-03    | AI Q&A Assistant                                                          |
+| 1.8.0   | 2026-03    | Library offline indicators                                                |
+| 1.7.x   | 2026-03    | Wake lock, saved locations, amenities                                     |
+| 1.6.0   | 2026-03    | AfterCare map view                                                        |
+| 1.5.0   | 2026-03    | PWA, nearby signs                                                         |
+| 1.4.0   | 2026-03    | AfterCare module                                                          |
+| 1.3.0   | 2026-03    | Set distance, lane names                                                  |
+| 1.2.0   | 2026-03    | LocalStorage overrides                                                    |
+| 1.0.0   | 2026-03    | Initial release                                                           |
 
 ---
 
