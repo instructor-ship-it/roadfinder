@@ -43,14 +43,14 @@ The design philosophy prioritizes offline-first functionality, ensuring that cri
 
 The application is built on Next.js 15 with the App Router architecture, which provides server-side rendering capabilities and API routes within a single framework. The frontend utilizes React with TypeScript for type safety and improved developer experience. Tailwind CSS handles styling with a custom dark theme optimized for outdoor visibility. The shadcn/ui component library provides accessible, customizable UI components including dialogs, buttons, and input fields. The application runs exclusively on port 3000 in the development environment.
 
-| Component | Technology |
-|-----------|------------|
-| Framework | Next.js 15 with App Router |
-| Language | TypeScript (strict mode) |
-| Styling | Tailwind CSS with dark theme |
-| UI Components | shadcn/ui (Radix primitives) |
-| Storage | IndexedDB + localStorage (client-side) |
-| Maps | Leaflet + OpenStreetMap |
+| Component        | Technology                                |
+| ---------------- | ----------------------------------------- |
+| Framework        | Next.js 15 with App Router                |
+| Language         | TypeScript (strict mode)                  |
+| Styling          | Tailwind CSS with dark theme              |
+| UI Components    | shadcn/ui (Radix primitives)              |
+| Storage          | IndexedDB + localStorage (client-side)    |
+| Maps             | Leaflet + OpenStreetMap                   |
 | State Management | React hooks + localStorage/sessionStorage |
 
 ### 2.2 Page Structure
@@ -94,10 +94,10 @@ export function haversineDistance(lat1, lon1, lat2, lon2) {
   const phi2 = (lat2 * Math.PI) / 180;
   const dPhi = ((lat2 - lat1) * Math.PI) / 180;
   const dLambda = ((lon2 - lon1) * Math.PI) / 180;
-  const a = Math.sin(dPhi/2) * Math.sin(dPhi/2) +
-            Math.cos(phi1) * Math.cos(phi2) *
-            Math.sin(dLambda/2) * Math.sin(dLambda/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const a =
+    Math.sin(dPhi / 2) * Math.sin(dPhi / 2) +
+    Math.cos(phi1) * Math.cos(phi2) * Math.sin(dLambda / 2) * Math.sin(dLambda / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return EARTH_RADIUS_M * c;
 }
 ```
@@ -134,14 +134,14 @@ The algorithm processes all road segments stored in IndexedDB, examining each se
 
 The AfterCare system implements a sophisticated sign status calculation that determines when signs are due for retrieval or maintenance. The `calculateSignStatus()` function evaluates each sign based on its retrieval type and time elapsed:
 
-| Retrieval Type | Due Condition |
-|----------------|---------------|
-| standard | 2 days after placement |
-| scheduled | On specified retrieval_date |
-| maintain-daily | Daily from last_maintained_date |
-| maintain-weekly | Weekly from last_maintained_date |
+| Retrieval Type   | Due Condition                     |
+| ---------------- | --------------------------------- |
+| standard         | 2 days after placement            |
+| scheduled        | On specified retrieval_date       |
+| maintain-daily   | Daily from last_maintained_date   |
+| maintain-weekly  | Weekly from last_maintained_date  |
 | maintain-monthly | Monthly from last_maintained_date |
-| tba | Never (indefinite) |
+| tba              | Never (indefinite)                |
 
 The algorithm respects manually set statuses and never changes retrieved signs. Job status is aggregated from all sign statuses using `calculateJobStatus()`.
 
@@ -152,12 +152,12 @@ The drive page implements a speeding fine calculation based on Western Australia
 **WA Speeding Fine Tiers:**
 
 | km/h Over | Fine (AUD) | Demerit Points |
-|-----------|------------|----------------|
-| 0-9 | $100 | 0 |
-| 10-19 | $200 | 2 |
-| 20-29 | $400 | 3 |
-| 30-40 | $800 | 6 |
-| 40+ | $1,200 | 7 |
+| --------- | ---------- | -------------- |
+| 0-9       | $100       | 0              |
+| 10-19     | $200       | 2              |
+| 20-29     | $400       | 3              |
+| 30-40     | $800       | 6              |
+| 40+       | $1,200     | 7              |
 
 **Implementation (src/app/drive/page.tsx):**
 
@@ -173,7 +173,7 @@ const WA_SPEEDING_FINES = [
 const getSpeedingFine = (speedKph: number, limitKph: number) => {
   const kmOver = speedKph - limitKph;
   if (kmOver < 1) return null;
-  return WA_SPEEDING_FINES.find(tier => kmOver <= tier.maxOver);
+  return WA_SPEEDING_FINES.find((tier) => kmOver <= tier.maxOver);
 };
 ```
 
@@ -182,6 +182,7 @@ const getSpeedingFine = (speedKph: number, limitKph: number) => {
 The drive page calculates and displays time-based metrics for driver awareness:
 
 **Minutes per Kilometer (`getMinutesPerKm`):**
+
 ```typescript
 const getMinutesPerKm = (speedKph: number): string => {
   if (speedKph < 1) return '--';
@@ -195,6 +196,7 @@ const getMinutesPerKm = (speedKph: number): string => {
 ```
 
 **Time for 10km (`getTimeFor10km`):**
+
 ```typescript
 const getTimeFor10km = (speedKph: number): string => {
   if (speedKph < 1) return '--';
@@ -216,22 +218,23 @@ const getTimeFor10km = (speedKph: number): string => {
 
 The application uses IndexedDB for client-side storage of all road-related data, enabling full offline functionality. The database schema is designed to optimize the most common query patterns: finding roads by region, retrieving speed zones by road ID, and searching for nearby amenities.
 
-| Object Store | Key Path | Purpose |
-|--------------|----------|---------|
-| regions | 'region' (string) | Roads grouped by MRWA region |
-| speedZones | 'road_id' (string) | Speed limit zones per road |
-| metadata | 'key' (string) | Download date, total roads |
-| railCrossings | 'road_id' (string) | Railway crossing locations |
-| regulatorySigns | 'road_id' (string) | Regulatory sign positions |
-| warningSigns | 'road_id' (string) | Warning sign positions |
-| datasetMeta | 'dataset' (string) | Sync status per dataset |
-| amenities | 'region' (string) | Amenities cached by region |
+| Object Store    | Key Path           | Purpose                      |
+| --------------- | ------------------ | ---------------------------- |
+| regions         | 'region' (string)  | Roads grouped by MRWA region |
+| speedZones      | 'road_id' (string) | Speed limit zones per road   |
+| metadata        | 'key' (string)     | Download date, total roads   |
+| railCrossings   | 'road_id' (string) | Railway crossing locations   |
+| regulatorySigns | 'road_id' (string) | Regulatory sign positions    |
+| warningSigns    | 'road_id' (string) | Warning sign positions       |
+| datasetMeta     | 'dataset' (string) | Sync status per dataset      |
+| amenities       | 'region' (string)  | Amenities cached by region   |
 
 ### 4.2 Data Persistence Strategy
 
 The application employs a dual-persistence strategy using both localStorage and sessionStorage for different types of state:
 
 **localStorage (persistent across sessions):**
+
 - Default region preference
 - GPS tracking configuration (EKF settings, lookahead time, lag compensation)
 - Wind gust alert threshold
@@ -241,6 +244,7 @@ The application employs a dual-persistence strategy using both localStorage and 
 - QA test results
 
 **sessionStorage (cleared when browser session ends):**
+
 - Current work zone selection (region, road ID, start/end SLK)
 
 ---
@@ -251,58 +255,58 @@ The application implements several API routes using Next.js App Router conventio
 
 ### 5.1 Core Routes
 
-| Route | Method | Purpose |
-|-------|--------|---------|
-| /api/roads | GET/POST | Region list, road search, SLK coordinate lookup |
-| /api/gps | GET | Convert GPS coordinates to road/SLK |
-| /api/weather | GET | Weather conditions from Open-Meteo |
-| /api/warnings | GET | BOM weather warnings RSS feed |
-| /api/weather/warnings | GET | Combined weather with warnings |
-| /api/traffic | GET | AADT data from MRWA Layer 27 |
-| /api/places | GET | Nearby amenities from Overpass API |
-| /api/intersections | GET | Cross road detection using MRWA nodes |
-| /api/nearest-intersections | GET | Find nearest intersections |
+| Route                      | Method   | Purpose                                         |
+| -------------------------- | -------- | ----------------------------------------------- |
+| /api/roads                 | GET/POST | Region list, road search, SLK coordinate lookup |
+| /api/gps                   | GET      | Convert GPS coordinates to road/SLK             |
+| /api/weather               | GET      | Weather conditions from Open-Meteo              |
+| /api/warnings              | GET      | BOM weather warnings RSS feed                   |
+| /api/weather/warnings      | GET      | Combined weather with warnings                  |
+| /api/traffic               | GET      | AADT data from MRWA Layer 27                    |
+| /api/places                | GET      | Nearby amenities from Overpass API              |
+| /api/intersections         | GET      | Cross road detection using MRWA nodes           |
+| /api/nearest-intersections | GET      | Find nearest intersections                      |
 
 ### 5.2 Emergency Routes
 
-| Route | Method | Purpose |
-|-------|--------|---------|
-| /api/emergency-stations | GET | All emergency facility locations |
-| /api/hospitals | GET | Hospital locations from OSM |
-| /api/nearest-hospital | GET | Find nearest hospital |
-| /api/police-stations | GET | Police station locations |
+| Route                   | Method | Purpose                          |
+| ----------------------- | ------ | -------------------------------- |
+| /api/emergency-stations | GET    | All emergency facility locations |
+| /api/hospitals          | GET    | Hospital locations from OSM      |
+| /api/nearest-hospital   | GET    | Find nearest hospital            |
+| /api/police-stations    | GET    | Police station locations         |
 
 ### 5.3 Speed Zone Routes
 
-| Route | Method | Purpose |
-|-------|--------|---------|
-| /api/overrides | GET/POST | Override storage pass-through |
-| /api/speed-compare | GET | MRWA vs OSM speed limit comparison |
-| /api/osm-speed | GET | OpenStreetMap speed limit data |
-| /api/speed-verify | GET | Speed verification |
-| /api/speedlimit | GET | Speed limit lookup |
+| Route              | Method   | Purpose                            |
+| ------------------ | -------- | ---------------------------------- |
+| /api/overrides     | GET/POST | Override storage pass-through      |
+| /api/speed-compare | GET      | MRWA vs OSM speed limit comparison |
+| /api/osm-speed     | GET      | OpenStreetMap speed limit data     |
+| /api/speed-verify  | GET      | Speed verification                 |
+| /api/speedlimit    | GET      | Speed limit lookup                 |
 
 ### 5.4 Data Management Routes
 
-| Route | Method | Purpose |
-|-------|--------|---------|
-| /api/admin-sync | GET/POST | Direct sync from MRWA servers |
-| /api/download-signs | GET | Sign data download |
-| /api/export-pdf | POST | Work zone report export |
-| /api/sync-data | POST | Offline data sync |
+| Route               | Method   | Purpose                       |
+| ------------------- | -------- | ----------------------------- |
+| /api/admin-sync     | GET/POST | Direct sync from MRWA servers |
+| /api/download-signs | GET      | Sign data download            |
+| /api/export-pdf     | POST     | Work zone report export       |
+| /api/sync-data      | POST     | Offline data sync             |
 
 ### 5.5 QA Routes
 
-| Route | Method | Purpose |
-|-------|--------|---------|
-| /api/qa | GET | QA test data and validation |
-| /api/qa-saved | GET/POST | Saved QA test results |
+| Route         | Method   | Purpose                     |
+| ------------- | -------- | --------------------------- |
+| /api/qa       | GET      | QA test data and validation |
+| /api/qa-saved | GET/POST | Saved QA test results       |
 
 ### 5.6 Incidents Route
 
-| Route | Method | Purpose |
-|-------|--------|---------|
-| /api/incidents | GET | Live road incidents |
+| Route          | Method | Purpose             |
+| -------------- | ------ | ------------------- |
+| /api/incidents | GET    | Live road incidents |
 
 ---
 
@@ -336,6 +340,7 @@ The application provides advance warning of speed zone changes by analyzing the 
 ### 6.4 Speeding Alert System
 
 When the vehicle speed exceeds the posted limit, the drive page displays a prominent alert showing:
+
 - Current speed in red with pulsing animation
 - Speed limit in a bordered circle
 - km/h over the limit
@@ -357,6 +362,7 @@ The Emergency Location Module (`src/lib/emergency.ts`) provides functionality to
 The `findCrossRoad()` function uses MRWA Layer 6 (Intersections) to find the nearest intersecting road to the user's position. This is more accurate than geometry-based proximity searches, which can incorrectly identify parallel roads as intersections.
 
 **Key Implementation Details:**
+
 - Queries `/api/nearest-intersections` endpoint
 - Uses `resultRecordCount=200` to ensure all nearby intersections are captured
 - Filters to only show actual intersecting roads, not parallel roads
@@ -367,6 +373,7 @@ The `findCrossRoad()` function uses MRWA Layer 6 (Intersections) to find the nea
 The `findNearestTown()` function uses OpenStreetMap Nominatim API to find nearby towns and cities, providing context for emergency location reporting (e.g., "5km southeast of Moora").
 
 **Implementation:**
+
 - Searches for `place=city`, `place=town`, `place=suburb` within 50km radius
 - Uses Haversine formula for accurate distance calculation
 - Calculates cardinal direction using bearing formula
@@ -374,6 +381,7 @@ The `findNearestTown()` function uses OpenStreetMap Nominatim API to find nearby
 ### 7.4 Emergency Facilities
 
 The module provides functions to find the nearest:
+
 - `findNearestHospital()` - Medical facilities
 - `findNearestFireStation()` - Fire services
 - `findNearestPoliceStation()` - Police services
@@ -381,6 +389,7 @@ The module provides functions to find the nearest:
 ### 7.5 Utility Functions
 
 The emergency module uses shared utilities from `src/lib/utils.ts`:
+
 - `getBearing(lat1, lon1, lat2, lon2)` - Calculate direction between GPS points
 - `getDirectionFromBearing(bearing)` - Convert bearing to cardinal direction (N, NE, E, etc.)
 - `formatDistance(meters)` - Format distance as "m" or "km" appropriately
@@ -396,6 +405,7 @@ The AfterCare system provides comprehensive signage tracking for Traffic Control
 ### 8.2 Data Structures
 
 **AfterCareJob:**
+
 ```typescript
 interface AfterCareJob {
   id: string;
@@ -410,6 +420,7 @@ interface AfterCareJob {
 ```
 
 **AfterCareSign:**
+
 ```typescript
 interface AfterCareSign {
   id: string;
@@ -430,6 +441,7 @@ interface AfterCareSign {
 ### 8.3 Status Types
 
 **RetrievalType:**
+
 - `standard`: Due 2 days after placement
 - `scheduled`: Due on specific date
 - `maintain-daily`: Daily maintenance required
@@ -438,6 +450,7 @@ interface AfterCareSign {
 - `tba`: Indefinite, awaiting instruction
 
 **SignStatus:**
+
 - `placed`: Sign is active, not yet due
 - `due-retrieval`: Ready to be retrieved
 - `due-maintenance`: Needs maintenance check
@@ -447,6 +460,7 @@ interface AfterCareSign {
 ### 8.4 Route Optimization
 
 The route optimizer (`src/lib/route-optimizer.ts`) helps plan efficient routes for retrieving multiple signs:
+
 - `optimizeRoute()`: Optimizes visit order using nearest-neighbor algorithm
 - `getAllSignsDueForRetrieval()`: Aggregates all signs needing retrieval
 - `getAllSignsDueForMaintenance()`: Aggregates all signs needing maintenance
@@ -455,6 +469,7 @@ The route optimizer (`src/lib/route-optimizer.ts`) helps plan efficient routes f
 ### 8.5 Map Integration
 
 The AfterCare Map (`/aftercare/map`) uses Leaflet with OpenStreetMap tiles:
+
 - Colored markers indicate sign status (red=retrieval, yellow=maintenance, green=active)
 - Filter buttons show specific status groups
 - Click markers for sign details
@@ -466,17 +481,26 @@ The AfterCare Map (`/aftercare/map`) uses Leaflet with OpenStreetMap tiles:
 
 ### 9.1 Overview
 
-The Traffic Counter module (`src/app/traffic-counter/page.tsx`) provides manual vehicle counting capability for Traffic Controllers who need to conduct traffic surveys.
+The Traffic Counter module provides manual vehicle counting capability for Traffic Controllers conducting traffic surveys. It consists of two pages:
+
+- **Setup Page** (`src/app/traffic-counter/page.tsx`): Configure count parameters
+- **Count Page** (`src/app/traffic-counter/count/page.tsx`): Active counting interface
 
 ### 9.2 Features
 
 - Count vehicles by direction (True Left / True Right)
 - Count by type (Light / Heavy vehicles)
-- Configurable count duration
+- Configurable count duration (3m, 5m, 15m presets, or custom 1-480 minutes)
+- Direction mode selection (one-way / both-ways)
+- Auto-fetch GPS location on count start
 - Real-time VPH (Vehicles Per Hour) calculation
-- Automatic heavy vehicle percentage calculation
-- Historical count records with statistics
-- Export capability
+- Real-time queue length estimation
+- Lane capacity estimation
+- Heavy vehicle percentage with +20% adjustment warning
+- Shuttle flow max length (for both-ways mode)
+- Minimum 3-minute count duration enforcement
+- Early stop capability (saves actual elapsed time)
+- Historical count records with export
 
 ### 9.3 Data Structure
 
@@ -489,7 +513,7 @@ interface TrafficCountRecord {
   lat: number | null;
   lon: number | null;
   region: string;
-  duration_minutes: number;
+  duration_minutes: number; // Actual elapsed time
   direction_mode: 'one-way' | 'both-ways';
   true_left_light: number;
   true_left_heavy: number;
@@ -502,19 +526,60 @@ interface TrafficCountRecord {
   vph_true_left: number;
   vph_true_right: number;
   vph_combined: number;
+  vph_one_direction: number;
+  queue_length?: number; // Estimated queue in meters
   date: string;
   start_time: string;
   end_time: string;
+  notes: string;
+  created_at: string;
 }
 ```
 
 ### 9.4 VPH Calculation
 
-VPH is calculated by extrapolating the count over the duration to an hourly rate:
+VPH is calculated by extrapolating the count over the actual duration to an hourly rate:
 
 ```typescript
 const vph = (count / duration_minutes) * 60;
 ```
+
+For both-ways mode, `vph_combined` is the sum of both directions, while `vph_one_direction` is the maximum of the two.
+
+### 9.5 Queue Length Calculation
+
+Queue length is estimated using AGTTM Part 3, Table 4.3 multipliers:
+
+1. **Estimate stopping time** based on VPH:
+   - > 600 VPH → 2 minutes
+   - 300-600 VPH → 5 minutes
+   - < 300 VPH → 10 minutes
+
+2. **Apply multipliers**:
+   - Light vehicles: ×2.4 (2min), ×6 (5min), ×12 (10min)
+   - Heavy vehicles: ×8 (2min), ×20 (5min)
+
+3. **Calculate queue**: `Queue = (light_count × Ma) + (heavy_count × Mo)`
+
+For both-ways mode, the worst case (higher queue) direction is used.
+
+### 9.6 Minimum Duration Logic
+
+Counts under 3 minutes cannot be saved. The timer displays:
+
+- Red pulsing ring during first 3 minutes (insufficient data)
+- Green ring after 3 minutes (can save)
+- Amber ring when < 60 seconds remaining
+- Red ring when < 30 seconds remaining
+
+### 9.7 Early Stop Handling
+
+When user stops count before timer completes:
+
+1. Capture actual elapsed seconds at stop moment
+2. Use actual duration for all calculations
+3. Show planned vs actual duration in completion screen
+4. Save actual duration to record (not planned)
 
 ---
 
@@ -531,6 +596,7 @@ The drive page is designed for in-vehicle use with large, high-contrast displays
 ### 10.3 AfterCare Page Layout
 
 The AfterCare page displays jobs grouped by status:
+
 - Due for Retrieval (red, expanded by default)
 - Due for Maintenance (yellow, expanded by default)
 - TBA - Awaiting Instruction (gray)
@@ -539,6 +605,7 @@ The AfterCare page displays jobs grouped by status:
 - Archived (hidden, expandable)
 
 Each job card shows:
+
 - Road ID and name
 - Job name and creation date
 - Status badges with counts
@@ -547,17 +614,38 @@ Each job card shows:
 
 ### 10.4 Traffic Counter Layout
 
-The Traffic Counter page provides:
-- Location selection (road, SLK, GPS)
-- Duration configuration
-- Direction mode selection (one-way / both-ways)
-- Large count buttons for each category
-- Real-time VPH display
-- Historical records list with statistics
+The Traffic Counter has two distinct pages:
+
+**Setup Page:**
+
+- Duration selection (3m, 5m, 15m presets + custom 1-480m)
+- Custom duration shows highlighted button when set
+- Direction mode toggle (One Direction / Both Ways)
+- GPS location capture with auto-fetch on start
+- Optional notes field
+- Start Counting button with loading state
+
+**Count Page:**
+
+- Circular progress timer with color-coded status
+- Large counter buttons (Light/Heavy for each direction)
+- Live statistics: Total, Heavy %, VPH, Lanes, Queue
+- Quick reference panel: Shuttle Max, Queue Length
+- Stop button with confirmation dialog
+- Completion overlay with save/reset/cancel options
+
+**History Modal:**
+
+- List of saved count records
+- Copy individual record to clipboard
+- Delete individual records
+- Export all history
+- Clear all history
 
 ### 10.5 Settings Drawer
 
 A unified Settings Drawer component (`src/components/SettingsDrawer.tsx`) provides consistent navigation and settings across all pages:
+
 - About section with Documents Library link
 - Library access
 - Preferences
@@ -573,6 +661,7 @@ A unified Settings Drawer component (`src/components/SettingsDrawer.tsx`) provid
 ### 11.1 GPS Enhancement Settings
 
 The GPS settings panel provides control over EKF behavior and warning preferences:
+
 - **EKF Enable**: Toggles Extended Kalman Filter for position smoothing
 - **Road Constraint**: Snaps predictions to known road geometry
 - **Max Prediction Time**: Maximum seconds to predict during GPS outage
@@ -588,6 +677,7 @@ The wind gust threshold setting allows traffic controllers to set a maximum wind
 ### 11.3 Offline Data Toggles
 
 Six toggles allow switching between online API and offline IndexedDB data:
+
 - Roads List
 - Work Zone Lookup
 - Speed Zones
@@ -602,6 +692,7 @@ Six toggles allow switching between online API and offline IndexedDB data:
 ### 12.1 GPS Error Handling
 
 GPS errors are handled gracefully with user-friendly messages:
+
 - Permission denied: Prompt to enable location access
 - Position unavailable: Indicate GPS hardware issues
 - Timeout: Suggest moving to area with better GPS reception
@@ -629,6 +720,7 @@ GPS position updates are throttled to prevent excessive road finding queries. Th
 ### 13.3 Component Rendering Optimization
 
 React best practices are followed to prevent unnecessary re-renders:
+
 - `isRestoring` ref prevents clearing selected road during state restoration
 - `pendingRestoreParams` ref defers work zone queries until roads are loaded
 - Collapsible sections use local state for expand/collapse
@@ -658,4 +750,4 @@ The current implementation has several areas identified for future improvement:
 
 ---
 
-*This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.1.*
+_This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.1._

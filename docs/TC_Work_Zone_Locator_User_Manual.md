@@ -6,7 +6,7 @@ Version RC 1.9.1
 
 June 2025
 
-*For Traffic Controllers in Western Australia*
+_For Traffic Controllers in Western Australia_
 
 https://github.com/instructor-ship-it/roadfinder
 
@@ -58,6 +58,7 @@ TC Work Zone Locator is a mobile-first web application designed specifically for
 ### 1.3 Who Should Use This App
 
 This application is designed for Traffic Controllers in Western Australia who need to:
+
 - Locate work zones on state and local roads
 - Navigate to TC positions (±100m from work zone)
 - Know speed limits for the road they are working on
@@ -98,6 +99,7 @@ To save time, set your most commonly used region:
 **Step 3: Enable Location Access**
 
 When prompted, allow the app to access your location. This is required for:
+
 - GPS-based road detection
 - Real-time SLK tracking
 - Speed limit display
@@ -116,18 +118,21 @@ The header shows important status information:
 You can install this app on your phone's home screen for quick access:
 
 **iPhone/iPad:**
+
 1. Open the app in Safari
 2. Tap the Share button
 3. Scroll down and tap "Add to Home Screen"
 4. Tap "Add" in the top right
 
 **Android:**
+
 1. Open the app in Chrome
 2. Tap menu (three dots)
 3. Tap "Add to Home screen" or "Install app"
 4. Confirm installation
 
 Benefits of PWA installation:
+
 - Opens like a native app (no browser UI)
 - Works offline after first load
 - Faster startup
@@ -145,36 +150,36 @@ This is essential for Traffic Controllers working in remote areas of Western Aus
 
 ### 3.2 What Works Offline
 
-| **Feature** | **Storage** | **Offline?** |
-| -------------- | --------------- | ---------------- |
-| Work Zone Lookup | IndexedDB | ✓ Yes |
-| GPS Tracking | Device + IndexedDB | ✓ Yes |
-| SLK Position | Computed locally | ✓ Yes |
-| Speed Zones | IndexedDB + localStorage | ✓ Yes |
-| Speed Sign Overrides | localStorage | ✓ Yes |
-| AfterCare Jobs | localStorage | ✓ Yes |
-| AfterCare Map | OpenStreetMap tiles* | ✓ Yes |
-| Signage Corridor | IndexedDB | ✓ Yes |
-| TC Position Calculation | Computed locally | ✓ Yes |
-| Direction Detection | Computed from GPS | ✓ Yes |
-| Google Maps Links | Generated URLs | ✓ Yes |
-| Set Distance Tool | Device GPS | ✓ Yes |
-| Library | Cached docs | ✓ Yes |
-| Traffic Counter | localStorage | ✓ Yes |
-| Q&A Assistant | AI API | ✗ No |
-| Settings | localStorage | ✓ Yes |
+| **Feature**             | **Storage**              | **Offline?** |
+| ----------------------- | ------------------------ | ------------ |
+| Work Zone Lookup        | IndexedDB                | ✓ Yes        |
+| GPS Tracking            | Device + IndexedDB       | ✓ Yes        |
+| SLK Position            | Computed locally         | ✓ Yes        |
+| Speed Zones             | IndexedDB + localStorage | ✓ Yes        |
+| Speed Sign Overrides    | localStorage             | ✓ Yes        |
+| AfterCare Jobs          | localStorage             | ✓ Yes        |
+| AfterCare Map           | OpenStreetMap tiles\*    | ✓ Yes        |
+| Signage Corridor        | IndexedDB                | ✓ Yes        |
+| TC Position Calculation | Computed locally         | ✓ Yes        |
+| Direction Detection     | Computed from GPS        | ✓ Yes        |
+| Google Maps Links       | Generated URLs           | ✓ Yes        |
+| Set Distance Tool       | Device GPS               | ✓ Yes        |
+| Library                 | Cached docs              | ✓ Yes        |
+| Traffic Counter         | localStorage             | ✓ Yes        |
+| Q&A Assistant           | AI API                   | ✗ No         |
+| Settings                | localStorage             | ✓ Yes        |
 
-*Map tiles are cached after first view
+\*Map tiles are cached after first view
 
 ### 3.3 What Requires Internet
 
-| **Feature** | **Source** | **Offline?** |
-| -------------- | --------------- | ---------------- |
-| Weather Data | Open-Meteo API | ✗ No |
-| BOM Weather Warnings | RSS Feed | ✗ No |
-| Nearby Amenities | Overpass API | ✗ No |
-| Traffic Volume | MRWA API | ✗ No |
-| Street View Images | Google Maps | ✗ No |
+| **Feature**          | **Source**     | **Offline?** |
+| -------------------- | -------------- | ------------ |
+| Weather Data         | Open-Meteo API | ✗ No         |
+| BOM Weather Warnings | RSS Feed       | ✗ No         |
+| Nearby Amenities     | Overpass API   | ✗ No         |
+| Traffic Volume       | MRWA API       | ✗ No         |
+| Street View Images   | Google Maps    | ✗ No         |
 
 ### 3.4 Data Storage
 
@@ -257,6 +262,7 @@ Tap "Find by GPS Location" to auto-fill the road and SLK based on your current p
 **Lane Direction Diagram:**
 
 Visual diagram showing lane allocation with arrows:
+
 - White arrows (⇒) = Traffic moving INCREASING SLK
 - Yellow arrows (⇐) = Traffic moving DECREASING SLK
 - Lane names (L1, L2, etc.) for roads with 3+ lanes
@@ -264,6 +270,7 @@ Visual diagram showing lane allocation with arrows:
 **Road Width Breakdown:**
 
 Visual bar showing road width components from left to right:
+
 - Amber = Unsealed shoulder
 - Gray = Sealed shoulder
 - Blue = Trafficable lanes
@@ -345,6 +352,7 @@ Large green numbers show your current speed. Turns red when speeding.
 **Speeding Alert:**
 
 When exceeding the speed limit, a warning banner displays:
+
 - Current speed vs limit
 - Amount over the limit
 - **WA Fine Information**:
@@ -447,13 +455,13 @@ From the home page, open Settings (☰) and tap "AfterCare Signs" in the TC Tool
 
 Jobs are grouped by status:
 
-| **Status** | **Color** | **Marker** | **Meaning** |
-| -------------- | -------- | -------- | -------------- |
-| Due for Retrieval | Red | 🔴 | Past scheduled/standard date |
-| Due Maintenance | Yellow | 🟡 | Maintenance interval passed |
-| TBA | Gray | ⏸ | Awaiting instruction |
-| Active | Green | 🟢 | Not yet due for retrieval |
-| Archived | Blue | ✓ | All signs collected |
+| **Status**        | **Color** | **Marker** | **Meaning**                  |
+| ----------------- | --------- | ---------- | ---------------------------- |
+| Due for Retrieval | Red       | 🔴         | Past scheduled/standard date |
+| Due Maintenance   | Yellow    | 🟡         | Maintenance interval passed  |
+| TBA               | Gray      | ⏸          | Awaiting instruction         |
+| Active            | Green     | 🟢         | Not yet due for retrieval    |
+| Archived          | Blue      | ✓          | All signs collected          |
 
 ### 6.4 Creating a New Job
 
@@ -543,12 +551,12 @@ From the AfterCare page, tap the "🗺️ Map" button.
 
 ### 7.3 Filter Buttons
 
-| **Button** | **Filter** | **Color** |
-| -------------- | -------------- | -------- |
-| All | Show all signs | Gray |
-| 🔴 | Due for retrieval only | Red |
-| 🟡 | Due for maintenance only | Yellow |
-| 🟢 | Active signs only | Green |
+| **Button** | **Filter**               | **Color** |
+| ---------- | ------------------------ | --------- |
+| All        | Show all signs           | Gray      |
+| 🔴         | Due for retrieval only   | Red       |
+| 🟡         | Due for maintenance only | Yellow    |
+| 🟢         | Active signs only        | Green     |
 
 Counts shown on each button update as signs change status.
 
@@ -566,6 +574,7 @@ Tap any marker to see popup with:
 ### 7.5 Legend Bar
 
 Fixed at bottom-left of map:
+
 - 🟢 Active
 - 🟡 Maintenance
 - 🔴 Retrieval
@@ -591,6 +600,7 @@ Fixed at bottom-left of map:
 ### 8.1 Why Override Speed Zones?
 
 Sometimes MRWA database doesn't match physical signs. This can happen after:
+
 - Road works and sign relocations
 - Recent speed limit changes
 - Data entry errors
@@ -619,33 +629,33 @@ Navigate to `/overrides` or use the link in Settings (☰) under Speed Zone Over
 
 ### 8.4 Direction Reference
 
-| **Direction** | **Carriageway** | **SLK Movement** |
-| -------------- | -------------------- | ------------------ |
-| True Left | Left Carriageway | INCREASING SLK |
-| True Right | Right Carriageway | DECREASING SLK |
+| **Direction** | **Carriageway**   | **SLK Movement** |
+| ------------- | ----------------- | ---------------- |
+| True Left     | Left Carriageway  | INCREASING SLK   |
+| True Right    | Right Carriageway | DECREASING SLK   |
 
 ### 8.5 Zone Generation Logic
 
-| **Sign Type** | **Replicated** | **Zones Created** |
-| ---------------- | ------------------ | --------------------- |
-| Single | No | None (repeater only) |
-| Single | Yes | One directional zone |
-| Double | Same speeds | One Single carriageway zone |
-| Double | Diff speeds | Two directional zones |
+| **Sign Type** | **Replicated** | **Zones Created**           |
+| ------------- | -------------- | --------------------------- |
+| Single        | No             | None (repeater only)        |
+| Single        | Yes            | One directional zone        |
+| Double        | Same speeds    | One Single carriageway zone |
+| Double        | Diff speeds    | Two directional zones       |
 
 ### 8.6 Example: M031 Correction
 
 For the M031 bidirectional zone issue at SLK 67.34-67.62:
 
-| Field | Value |
-| -------- | ------- |
-| Road ID | M031 |
-| Direction | True Right (button selection) |
-| Start SLK | 67.340 |
-| End SLK | 67.620 |
-| MRWA Speed | 90 |
-| Correct Speed | 60 |
-| Notes | Double-sided sign: 60 True Right, 90 True Left |
+| Field         | Value                                          |
+| ------------- | ---------------------------------------------- |
+| Road ID       | M031                                           |
+| Direction     | True Right (button selection)                  |
+| Start SLK     | 67.340                                         |
+| End SLK       | 67.620                                         |
+| MRWA Speed    | 90                                             |
+| Correct Speed | 60                                             |
+| Notes         | Double-sided sign: 60 True Right, 90 True Left |
 
 ### 8.7 Exporting Overrides
 
@@ -713,12 +723,12 @@ Navigate to `/library` or use the link in Settings.
 
 ### 10.3 Document Categories
 
-| **Category** | **Contents** |
-| -------------- | -------------- |
-| Manuals | User manual, quick reference guides |
-| Technical | Architecture docs, API references |
-| Data | Data dictionary, source documentation |
-| Forms | Work zone report templates |
+| **Category** | **Contents**                          |
+| ------------ | ------------------------------------- |
+| Manuals      | User manual, quick reference guides   |
+| Technical    | Architecture docs, API references     |
+| Data         | Data dictionary, source documentation |
+| Forms        | Work zone report templates            |
 
 ### 10.4 Using the Library
 
@@ -739,30 +749,191 @@ Navigate to `/library` or use the link in Settings.
 
 ### 11.1 Overview
 
-The Traffic Counter tool helps with vehicle counting for traffic studies and reports.
+The Traffic Counter tool helps with vehicle counting for traffic studies, lane capacity assessments, and shuttle flow operations. It provides real-time calculations for vehicles per hour (VPH), heavy vehicle percentage, lane capacity estimates, and queue length predictions.
 
 ### 11.2 Accessing the Traffic Counter
 
-Navigate to `/traffic-counter` from the Settings menu.
+Navigate to `/traffic-counter` from the Settings menu or home page.
 
-### 11.3 Counter Controls
+### 11.3 Setup Page
 
-- **Start Counting** - Begin a new counting session
-- **Stop** - Pause counting temporarily
-- **Reset** - Clear current count
+Before starting a count, configure the following options:
 
-### 11.4 Count Display
+#### Duration Selection
 
-- Total vehicle count
-- Heavy vehicle count (separate counter)
-- Time elapsed
-- Counts per hour (calculated)
+| **Option** | **Description**                      |
+| ---------- | ------------------------------------ |
+| 3m         | Quick estimate (minimum recommended) |
+| 5m         | Standard count duration              |
+| 15m        | Busy roads / accurate data           |
+| Custom     | Enter 1-480 minutes (8 hours max)    |
 
-### 11.5 Session Management
+- Tap preset buttons (3m, 5m, 15m) to select
+- Enter custom value and tap "Set" for other durations
+- Custom duration shows highlighted button (e.g., "160m ✓") when active
+- Tap custom button again to return to preset selection
 
-- Save session with notes
-- Export session data to CSV
-- View previous sessions history
+#### Direction Mode
+
+| **Mode**      | **Use Case**                                       |
+| ------------- | -------------------------------------------------- |
+| One Direction | Count one direction for lane capacity calculations |
+| Both Ways     | Count both directions for shuttle flow operations  |
+
+- One Direction: Only True Left counters are active
+- Both Ways: Both True Left and True Right counters available
+
+#### Location
+
+- Tap "📍 GPS" button to fetch current location
+- Location auto-fetches if not set when "Start Counting" is pressed
+- Shows road ID, road name, SLK, and region
+- If GPS fails, count proceeds without location
+
+#### Notes (Optional)
+
+- Add notes about conditions (e.g., "Peak hour", "Roadworks nearby")
+- Notes are saved with the count record
+
+### 11.4 Counting Page
+
+#### Timer Display
+
+- Large circular progress ring shows time remaining
+- Red pulsing ring during first 3 minutes (minimum required)
+- Green ring after 3 minutes (can save)
+- Amber ring when < 60 seconds remaining
+- Red ring when < 30 seconds remaining
+
+#### Counter Buttons
+
+Each direction has two counters:
+
+| **Button** | **Vehicle Type**                      |
+| ---------- | ------------------------------------- |
+| 🚗 Light   | Cars, motorcycles, light vehicles     |
+| 🚛 Heavy   | Trucks, buses, heavy vehicles (>4.5t) |
+
+- Tap +1 to increment count
+- Tap − to decrement (correct mistakes)
+- Total shown below each counter
+
+#### Direction Labels
+
+| **Label**    | **Description**                                   |
+| ------------ | ------------------------------------------------- |
+| ← True Left  | Vehicles traveling in direction of increasing SLK |
+| True Right → | Vehicles traveling in direction of decreasing SLK |
+
+#### Live Statistics
+
+During counting, see real-time calculations:
+
+| **Stat** | **Description**                  |
+| -------- | -------------------------------- |
+| Total    | Total vehicles counted           |
+| Heavy %  | Percentage of heavy vehicles     |
+| VPH      | Vehicles per hour (extrapolated) |
+| Lanes    | Estimated lanes needed           |
+| Queue    | Estimated queue length (meters)  |
+
+#### Quick Reference Panel
+
+- **Shuttle Max**: Maximum shuttle flow length for current VPH
+- **Queue Length**: Based on stopping time and VPH
+- **Heavy Vehicle Warning**: If >10%, lane capacity is adjusted +20%
+
+### 11.5 Stopping Early
+
+- Tap "⏹ Stop" to end count before timer completes
+- Confirmation dialog shows if under 3 minutes
+- Actual elapsed time is recorded (not planned duration)
+- Counts under 3 minutes cannot be saved
+
+### 11.6 Completion Screen
+
+When count completes (or stopped):
+
+| **Action** | **Description**        |
+| ---------- | ---------------------- |
+| 💾 Save    | Save record to history |
+| 🔄 Reset   | Return to setup page   |
+| ✕ Cancel   | Discard count          |
+
+Completion screen shows:
+
+- Location details
+- Actual duration (vs planned if different)
+- Total vehicles and heavy percentage
+- VPH and lane capacity estimate
+- Queue length calculation
+- Shuttle max length (for both-ways mode)
+
+### 11.7 Reference Tables
+
+Tap "📖 Ref" button to view reference tables:
+
+#### Lane Capacity (One Direction)
+
+Source: AGTTM Part 2, Table 3.1
+
+| Mid-Block VPH | Near Intersection VPH | Lanes |
+| ------------- | --------------------- | ----- |
+| 1000          | 800                   | 1     |
+| 2000          | 1600                  | 2     |
+| 3000          | 2400                  | 3     |
+| 4000          | 3200                  | 4     |
+
+#### Shuttle Flow (Both Directions)
+
+Source: AGTTM Part 2, Table 3.5 & MRWA COP Table 15
+
+| VPH     | Max Shuttle Length |
+| ------- | ------------------ |
+| 0-200   | 2200m\*            |
+| 201-250 | 1200m\*            |
+| 251-300 | 800m\*             |
+| 301-350 | 600m               |
+| 351-400 | 400m               |
+| 401-500 | 250m               |
+| 501-600 | 150m               |
+| 601-700 | 100m               |
+| 701+    | 70m                |
+
+\*Requires risk assessment
+
+### 11.8 History
+
+Tap "📜 (X)" button to view saved counts:
+
+| **Action** | **Description**                 |
+| ---------- | ------------------------------- |
+| 📋 Copy    | Copy record text to clipboard   |
+| 🗑️ Delete  | Delete individual record        |
+| 📤 Export  | Export all history to clipboard |
+| 🗑️ Clear   | Clear all history               |
+
+History shows:
+
+- Road ID and name
+- SLK location
+- Duration and direction mode
+- Total vehicles, heavy %, VPH
+
+### 11.9 Minimum Requirements
+
+- **Minimum Duration**: 3 minutes required to save
+- **GPS**: Optional but recommended
+- **Internet**: Required for GPS location lookup (road details)
+- **Offline**: Counting works offline once page loaded
+
+### 11.10 Tips for Accurate Counts
+
+1. **Duration**: Longer counts = more accurate VPH estimates
+2. **Peak Hours**: Note time period in notes field
+3. **Heavy Vehicles**: Count anything >4.5 tonnes as heavy
+4. **Consistency**: Use same direction labels throughout
+5. **Location**: Always capture GPS for reference
 
 ---
 
@@ -813,27 +984,27 @@ Access settings by tapping the ☰ (hamburger) icon in the header. A bottom shee
 
 ### 13.1 Settings Sections (Alphabetical)
 
-| **Section** | **Contents** |
-| -------------- | -------------- |
-| About | App info, contact, user manual link |
-| Admin Data Sync | MRWA sync options, data status |
-| GPS & Tracking | EKF settings, speed display, calibration |
-| Offline Data | Download/clear data, offline toggles |
-| Preferences | Default region, wind gust threshold |
-| Speed Zone Overrides | Override management link |
-| TC Tools | AfterCare, Set Distance links |
+| **Section**          | **Contents**                             |
+| -------------------- | ---------------------------------------- |
+| About                | App info, contact, user manual link      |
+| Admin Data Sync      | MRWA sync options, data status           |
+| GPS & Tracking       | EKF settings, speed display, calibration |
+| Offline Data         | Download/clear data, offline toggles     |
+| Preferences          | Default region, wind gust threshold      |
+| Speed Zone Overrides | Override management link                 |
+| TC Tools             | AfterCare, Set Distance links            |
 
 ### 13.2 GPS Settings
 
-| **Setting** | **Default** | **Description** |
-| -------------- | --------- | --------------- |
-| EKF Filtering | On | Kalman filter for smoother GPS |
-| Road Constraint | On | Snap predictions to road |
-| Max Prediction Time | 30s | GPS outage prediction limit |
-| Show Uncertainty | On | Display ±Xm accuracy |
-| Early Warnings | On | Alert earlier at higher speeds |
-| Speed Lookahead | 5s | Lookahead time for warnings |
-| GPS Lag Compensation | 0s | Measured lag offset |
+| **Setting**          | **Default** | **Description**                |
+| -------------------- | ----------- | ------------------------------ |
+| EKF Filtering        | On          | Kalman filter for smoother GPS |
+| Road Constraint      | On          | Snap predictions to road       |
+| Max Prediction Time  | 30s         | GPS outage prediction limit    |
+| Show Uncertainty     | On          | Display ±Xm accuracy           |
+| Early Warnings       | On          | Alert earlier at higher speeds |
+| Speed Lookahead      | 5s          | Lookahead time for warnings    |
+| GPS Lag Compensation | 0s          | Measured lag offset            |
 
 ### 13.3 Wind Gust Alert
 
@@ -843,11 +1014,11 @@ Alert shows when gusts exceed threshold - important for traffic control device s
 
 ### 13.4 Speeding Alert Settings
 
-| **Setting** | **Default** | **Description** |
-| -------------- | --------- | --------------- |
-| Show Speeding Alert | On | Display warning when speeding |
-| Show WA Fines | On | Display WA fine information |
-| Alert Threshold | 5 km/h | km/h over limit to trigger |
+| **Setting**         | **Default** | **Description**               |
+| ------------------- | ----------- | ----------------------------- |
+| Show Speeding Alert | On          | Display warning when speeding |
+| Show WA Fines       | On          | Display WA fine information   |
+| Alert Threshold     | 5 km/h      | km/h over limit to trigger    |
 
 ### 13.5 Offline Data
 
@@ -862,6 +1033,7 @@ Removes all offline data. Use if you want to re-download fresh data.
 **Offline Toggles:**
 
 Six toggles to switch between online API and offline IndexedDB data:
+
 - Roads List
 - Work Zone Lookup
 - Speed Zones
@@ -872,6 +1044,7 @@ Six toggles to switch between online API and offline IndexedDB data:
 ### 13.6 TC Tools
 
 Quick access to:
+
 - **AfterCare Signs** - Signage tracking page
 - **Set Distance** - GPS distance measurement tool
 
@@ -882,6 +1055,7 @@ Quick access to:
 ### 14.1 App Shows Wrong Road
 
 If GPS is detecting the wrong road:
+
 - Make sure offline data is downloaded
 - Check GPS accuracy - low confidence indicates poor signal
 - Try clearing and re-downloading data
@@ -890,6 +1064,7 @@ If GPS is detecting the wrong road:
 ### 14.2 Speed Limit Incorrect
 
 If speed limit doesn't match physical signs:
+
 - MRWA data may be outdated
 - Add an override in the Overrides page
 - Record the physical sign details
@@ -898,6 +1073,7 @@ If speed limit doesn't match physical signs:
 ### 14.3 GPS Not Working
 
 If GPS tracking won't start:
+
 - Check location permissions in browser settings
 - Make sure you're not in a building or underground
 - Wait for GPS signal (can take 30+ seconds)
@@ -906,6 +1082,7 @@ If GPS tracking won't start:
 ### 14.4 Data Won't Download
 
 If download fails:
+
 - Check your internet connection
 - Clear browser cache and try again
 - Try a different browser
@@ -914,6 +1091,7 @@ If download fails:
 ### 14.5 App Slow or Unresponsive
 
 If app is running slowly:
+
 - Close other browser tabs
 - Clear browser cache
 - Restart the browser
@@ -922,6 +1100,7 @@ If app is running slowly:
 ### 14.6 Speed Warnings Too Early/Late
 
 If lookahead timing seems off:
+
 - Use the Calibrate page to measure GPS lag
 - Apply the measured lag compensation
 - Recalibrate if you change devices
@@ -929,6 +1108,7 @@ If lookahead timing seems off:
 ### 14.7 AfterCare Signs Not Showing on Map
 
 If signs don't appear on the map:
+
 - Signs need GPS coordinates to show on map
 - Edit sign and tap "Capture Current Location"
 - Or the sign will auto-fetch coordinates when road_id + SLK is known
@@ -937,6 +1117,7 @@ If signs don't appear on the map:
 ### 14.8 Map Tiles Not Loading Offline
 
 If map doesn't work offline:
+
 - Open the AfterCare map once while online
 - This caches the OpenStreetMap tiles
 - Tiles for your area will be available offline
@@ -947,61 +1128,62 @@ If map doesn't work offline:
 
 ### 15.1 Direction Terminology
 
-| **Term** | **Meaning** | **SLK Direction** |
-| -------- | -------------- | --------------------- |
-| True Left | Left Carriageway | INCREASING SLK |
-| True Right | Right Carriageway | DECREASING SLK |
+| **Term**   | **Meaning**       | **SLK Direction** |
+| ---------- | ----------------- | ----------------- |
+| True Left  | Left Carriageway  | INCREASING SLK    |
+| True Right | Right Carriageway | DECREASING SLK    |
 
 ### 15.2 Status Colors
 
-| **Color** | **Meaning** |
-| -------- | -------------- |
-| Green text | At/below speed limit, moving towards destination |
-| Red text | Exceeding speed limit, moving away from destination |
-| Yellow text | Stationary |
-| White text | No destination set |
-| Amber border | Speed decrease ahead |
-| Green border + ✓ | In override zone |
+| **Color**        | **Meaning**                                         |
+| ---------------- | --------------------------------------------------- |
+| Green text       | At/below speed limit, moving towards destination    |
+| Red text         | Exceeding speed limit, moving away from destination |
+| Yellow text      | Stationary                                          |
+| White text       | No destination set                                  |
+| Amber border     | Speed decrease ahead                                |
+| Green border + ✓ | In override zone                                    |
 
 ### 15.3 AfterCare Status Colors
 
-| **Status** | **Color** | **Marker** |
-| -------------- | -------- | -------- |
-| Active | Green | 🟢 |
-| Due Maintenance | Yellow | 🟡 |
-| Due Retrieval | Red | 🔴 |
-| Retrieved | Blue | ✓ |
-| TBA | Gray | ⏸ |
+| **Status**      | **Color** | **Marker** |
+| --------------- | --------- | ---------- |
+| Active          | Green     | 🟢         |
+| Due Maintenance | Yellow    | 🟡         |
+| Due Retrieval   | Red       | 🔴         |
+| Retrieved       | Blue      | ✓          |
+| TBA             | Gray      | ⏸          |
 
 ### 15.4 EKF Confidence Indicators
 
-| **Symbol** | **Confidence** |
-| -------------- | ----------------- |
-| ◉ Green dot | High accuracy |
-| ◐ Yellow dot | Medium accuracy |
-| ◔ Orange dot | Low accuracy |
+| **Symbol**     | **Confidence**         |
+| -------------- | ---------------------- |
+| ◉ Green dot    | High accuracy          |
+| ◐ Yellow dot   | Medium accuracy        |
+| ◔ Orange dot   | Low accuracy           |
 | ◇ Cyan diamond | Predicted (GPS outage) |
 
 ### 15.5 Key Distances
 
-| **Feature** | **Distance** |
-| -------------- | --------------- |
-| TC Positions | ±100m from work zone |
-| Signage Corridor | ±700m from work zone |
+| **Feature**          | **Distance**          |
+| -------------------- | --------------------- |
+| TC Positions         | ±100m from work zone  |
+| Signage Corridor     | ±700m from work zone  |
 | Intersection Display | ±1100m from work zone |
-| Speed Sign Detection | ±700m from work zone |
+| Speed Sign Detection | ±700m from work zone  |
 
 ### 15.6 Offline Data Summary
 
-| **Data Type** | **Count** |
-| ----------------- | ------------ |
-| Roads | 69,000+ |
-| Speed Zones | 69,000+ |
-| Regions | 8 MRWA regions |
+| **Data Type** | **Count**      |
+| ------------- | -------------- |
+| Roads         | 69,000+        |
+| Speed Zones   | 69,000+        |
+| Regions       | 8 MRWA regions |
 
 ### 15.7 Keyboard Shortcuts (Desktop)
 
 When using on a computer:
+
 - **Enter** - Submit form / Start search
 - **Tab** - Move between fields
 - **Escape** - Close dialogs
