@@ -146,10 +146,12 @@ function ProgressRing({
   progress,
   timeRemaining,
   totalTime,
+  elapsedSeconds,
 }: {
   progress: number;
   timeRemaining: number;
   totalTime: number;
+  elapsedSeconds: number;
 }) {
   const radius = 60;
   const stroke = 8;
@@ -157,11 +159,17 @@ function ProgressRing({
   const circumference = normalizedRadius * 2 * Math.PI;
   const strokeDashoffset = circumference - progress * circumference;
 
-  // Color based on time remaining
+  const MINIMUM_DURATION = 180; // 3 minutes in seconds
+  const isInsufficientData = elapsedSeconds < MINIMUM_DURATION;
+
+  // Color based on saveability and time remaining
   const getColor = () => {
-    if (timeRemaining <= 30) return '#ef4444'; // red
+    // Red if under 3 minutes (can't save)
+    if (isInsufficientData) return '#ef4444'; // red
+    // After 3 min, use countdown colors
+    if (timeRemaining <= 30) return '#ef4444'; // red (final countdown)
     if (timeRemaining <= 60) return '#f59e0b'; // amber
-    return '#22c55e'; // green
+    return '#22c55e'; // green (can save)
   };
 
   const formatTime = (seconds: number) => {
@@ -172,7 +180,11 @@ function ProgressRing({
 
   return (
     <div className="relative inline-flex items-center justify-center">
-      <svg height={radius * 2} width={radius * 2} className="transform -rotate-90">
+      <svg
+        height={radius * 2}
+        width={radius * 2}
+        className={`transform -rotate-90 ${isInsufficientData ? 'animate-pulse' : ''}`}
+      >
         <circle
           stroke="#374151"
           fill="transparent"
@@ -735,6 +747,7 @@ export default function TrafficCounterCountPage() {
           progress={progress}
           timeRemaining={timeRemaining}
           totalTime={plannedDuration * 60}
+          elapsedSeconds={elapsedSeconds}
         />
         <Button onClick={handleStop} className="bg-red-600 hover:bg-red-700 h-12 px-4">
           ⏹ Stop
