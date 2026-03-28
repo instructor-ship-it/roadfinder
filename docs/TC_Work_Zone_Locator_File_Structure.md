@@ -2,13 +2,13 @@
 
 ## File Structure Documentation
 
-**Version RC 1.7.18**
+**Version RC 1.9.1**
 
 ---
 
 ## 1. Project Overview
 
-The TC Work Zone Locator is a Next.js 15 application built with the App Router architecture. This document provides a comprehensive reference of all files and directories in the project, designed specifically for Traffic Controllers in Western Australia to locate work zones, track GPS position, manage signage (AfterCare), and work offline in remote areas.
+The TC Work Zone Locator is a Next.js 15 application built with the App Router architecture. This document provides a comprehensive reference of all files and directories in the project, designed specifically for Traffic Controllers in Western Australia to locate work zones, track GPS position, manage signage (AfterCare), work offline in remote areas, and count traffic.
 
 ---
 
@@ -25,7 +25,6 @@ The TC Work Zone Locator is a Next.js 15 application built with the App Router a
 | `README.md` | Project readme |
 | `PROJECT_CONTEXT.md` | Single source of truth for AI |
 | `worklog.md` | Development work log |
-| `RC1_Test_Checklist.md` | Testing checklist |
 
 ---
 
@@ -36,13 +35,23 @@ The TC Work Zone Locator is a Next.js 15 application built with the App Router a
 | File | Purpose |
 |------|---------|
 | `page.tsx` | Home page - Work zone lookup |
-| `drive/page.tsx` | GPS tracking page with EKF filtering |
+| `drive/page.tsx` | GPS tracking page with EKF filtering, speed alerts |
 | `drive/nearby-signs/page.tsx` | Nearby signs requiring action |
 | `overrides/page.tsx` | Speed sign override management |
+| `overrides/layout/page.tsx` | Override layout visualization |
+| `overrides/map/page.tsx` | Override map with Leaflet |
 | `aftercare/page.tsx` | AfterCare job management |
 | `aftercare/map/page.tsx` | AfterCare map with Leaflet |
+| `library/page.tsx` | Documents library browser |
+| `library/[docId]/page.tsx` | Document viewer |
+| `library/[docId]/[pageNum]/page.tsx` | Document page viewer |
+| `library/expanded/page.tsx` | Expanded library view |
+| `library/tmp/[region]/[document]/page.tsx` | Temporary document storage |
 | `calibrate/page.tsx` | GPS calibration tool |
 | `manual/page.tsx` | User manual page |
+| `offline/page.tsx` | Offline data management |
+| `qa/page.tsx` | Quality assurance testing page |
+| `traffic-counter/page.tsx` | Manual traffic counting tool |
 | `layout.tsx` | Root layout |
 | `globals.css` | Global styles |
 
@@ -54,9 +63,11 @@ The TC Work Zone Locator is a Next.js 15 application built with the App Router a
 | `gps/route.ts` | GPS to SLK conversion |
 | `weather/route.ts` | Weather data (Open-Meteo) |
 | `warnings/route.ts` | BOM weather warnings RSS |
+| `weather/warnings/route.ts` | Weather warnings sub-endpoint |
 | `traffic/route.ts` | Traffic volume data |
 | `places/route.ts` | Nearby amenities |
 | `intersections/route.ts` | Cross road detection |
+| `nearest-intersections/route.ts` | Find nearest intersections |
 | `admin-sync/route.ts` | MRWA direct sync |
 | `overrides/route.ts` | Override storage pass-through |
 | `speed-compare/route.ts` | MRWA vs OSM comparison |
@@ -67,12 +78,20 @@ The TC Work Zone Locator is a Next.js 15 application built with the App Router a
 | `export-pdf/route.ts` | Work zone report export |
 | `sync-data/route.ts` | Offline data sync |
 | `route/route.ts` | Route API |
+| `emergency-stations/route.ts` | Emergency facility locations |
+| `hospitals/route.ts` | Hospital locations |
+| `nearest-hospital/route.ts` | Find nearest hospital |
+| `police-stations/route.ts` | Police station locations |
+| `incidents/route.ts` | Live road incidents |
+| `qa/route.ts` | QA test data |
+| `qa-saved/route.ts` | Saved QA results |
 
 ### 3.3 Library Modules (src/lib/)
 
 | File | Purpose |
 |------|---------|
 | `offline-db.ts` | IndexedDB storage, sign-to-zone logic |
+| `offline-storage.ts` | Offline data management utilities |
 | `aftercare.ts` | AfterCare job/sign storage and management |
 | `emergency.ts` | Emergency location functions (cross road, nearest town, facilities) |
 | `route-optimizer.ts` | Route optimization for retrieval/maintenance |
@@ -81,12 +100,14 @@ The TC Work Zone Locator is a Next.js 15 application built with the App Router a
 | `utils.ts` | Haversine distance, bearing, direction utilities |
 | `db.ts` | Database utilities |
 | `download-roads.ts` | Static data loader |
+| `qa-storage.ts` | QA test storage and management |
+| `traffic-counter-storage.ts` | Traffic count record storage |
 
 ### 3.4 React Hooks (src/hooks/)
 
 | File | Purpose |
 |------|---------|
-| `useGpsTracking.ts` | GPS tracking with EKF, speed zones |
+| `useGpsTracking.ts` | GPS tracking with EKF, speed zones, speed alerts |
 | `useOrientation.ts` | Screen orientation detection |
 | `use-mobile.ts` | Mobile device detection |
 | `use-toast.ts` | Toast notification hook |
@@ -95,7 +116,14 @@ The TC Work Zone Locator is a Next.js 15 application built with the App Router a
 
 | File | Purpose |
 |------|---------|
+| `SettingsDrawer.tsx` | Unified settings/drawer component for all pages |
 | `SignageMap.tsx` | Map component for signage display |
+| `SpeedZoneLayout.tsx` | Speed zone visualization layout |
+| `IncidentWarningBanner.tsx` | Live road incident warning banner |
+| `IncidentsSection.tsx` | Incidents display section |
+| `WarningsSection.tsx` | Weather warnings section |
+| `WeatherWarningBanner.tsx` | Weather warning banner |
+| `ServiceWorkerRegistration.tsx` | PWA service worker registration |
 | `ui/` | shadcn/ui components (Radix primitives) |
 
 ---
@@ -126,7 +154,11 @@ The TC Work Zone Locator is a Next.js 15 application built with the App Router a
 | `TC_Work_Zone_Locator_Program_Logic.md` | Program logic |
 | `TC_Work_Zone_Locator_User_Manual.md` | User manual |
 | `RC1_Test_Checklist.md` | Testing checklist |
+| `RC1.4.2_Key_Learnings.md` | AI context and learnings |
 | `Work_Zone_Report_Implementation_Guide.md` | Report implementation |
+| `BOM_Warnings_Integration_Mockup.md` | Future: BOM integration |
+| `Road_Incidents_Integration_Mockup.md` | Future: Incidents integration |
+| `screenshots/` | Test screenshots |
 
 ---
 
@@ -162,10 +194,60 @@ The AfterCare module provides comprehensive signage tracking and management:
 
 ### 7.2 Drive Module (src/app/drive/)
 
-- **`page.tsx`**: Main GPS tracking with EKF filtering, speed zone lookahead
+- **`page.tsx`**: Main GPS tracking with EKF filtering, speed zone lookahead, speeding alerts
 - **`nearby-signs/page.tsx`**: Shows only signs requiring action (retrieval/maintenance)
 
-### 7.3 Library Modules (src/lib/)
+**Features:**
+- Real-time GPS tracking with EKF smoothing
+- Speed limit display with override zone indicators
+- Speeding alert with WA fine/demerit information
+- Minutes per km and 10km travel time display
+- AfterCare integration with nearby sign alerts
+
+### 7.3 Library Module (src/app/library/)
+
+- **`page.tsx`**: Documents library browser
+- **`[docId]/page.tsx`**: Document viewer with zoom
+- **`[docId]/[pageNum]/page.tsx`**: Page-specific viewer
+- **`expanded/page.tsx`**: Expanded document view
+
+**Features:**
+- Browse documents by region
+- View MRWA documents and diagrams
+- Zoom and navigation controls
+
+### 7.4 Traffic Counter Module (src/app/traffic-counter/)
+
+- **`page.tsx`**: Manual traffic counting interface
+
+**Features:**
+- Count vehicles by direction (True Left/True Right)
+- Count by type (Light/Heavy)
+- Configurable duration
+- VPH (Vehicles Per Hour) calculations
+- Historical count records
+- Statistics dashboard
+
+### 7.5 Overrides Module (src/app/overrides/)
+
+- **`page.tsx`**: Speed sign override management
+- **`layout/page.tsx`**: Override layout visualization
+- **`map/page.tsx`**: Map view of overrides
+
+**Features:**
+- Add/edit/delete speed sign overrides
+- Community-verified speed zone corrections
+- Export/Import functionality
+
+### 7.6 Library Modules (src/lib/)
+
+#### offline-db.ts
+Primary IndexedDB storage module including:
+- Database initialization and management
+- Road data storage and retrieval
+- Speed zone data handling
+- Signage data management
+- Dataset metadata tracking
 
 #### aftercare.ts
 Comprehensive AfterCare data management including:
@@ -174,6 +256,19 @@ Comprehensive AfterCare data management including:
 - Sign management: `addSignToJob()`, `updateSignInJob()`, `markSignRetrieved()`
 - Status calculations: `calculateSignStatus()`, `calculateJobStatus()`
 - Navigation: `generateMapsUrl()`, `getNearbySigns()`
+
+#### traffic-counter-storage.ts
+Traffic counting storage and management:
+- Type definitions: `TrafficCountRecord`, `TrafficCountStats`, `CountDirection`
+- Storage functions: `getTrafficCountHistory()`, `saveTrafficCountRecord()`
+- Statistics: `getTrafficCountStats()`
+- VPH calculations
+
+#### emergency.ts
+Emergency location functions:
+- Type definitions: `CrossRoad`, `NearestTown`, `NearestHospital`, `EmergencyData`
+- Location functions: `findNearestCrossRoad()`, `findNearestTown()`
+- Facility functions: `findNearestHospital()`, `findNearestPoliceStation()`
 
 #### route-optimizer.ts
 Route optimization for multi-stop signage retrieval:
@@ -191,6 +286,8 @@ Route optimization for multi-stop signage retrieval:
 | Road geometry, MRWA data | IndexedDB | Large datasets, offline access |
 | Speed sign overrides | localStorage | User-editable, works on Vercel |
 | AfterCare jobs & signs | localStorage | User-editable, offline tracking |
+| Traffic count records | localStorage | User data, exportable |
+| QA test results | localStorage | Testing and validation |
 | App preferences | localStorage | Simple key-value |
 
 ---
@@ -199,6 +296,9 @@ Route optimization for multi-stop signage retrieval:
 
 | Version | Date | Key Changes |
 |---------|------|-------------|
+| RC 1.9.1 | March 2026 | Speeding alerts with WA fine info, minutes per km, 10km time |
+| RC 1.9.0 | March 2026 | Traffic Counter feature, Documents Library |
+| RC 1.8.0 | March 2026 | QA page, Settings Drawer consolidation |
 | RC 1.7.18 | March 2026 | Signage Corridor intersection fix (Layer 6) |
 | RC 1.7.17 | March 2026 | Emergency cross road detection, shared module |
 | RC 1.7.14 | March 2026 | Emergency location enhancement |
@@ -211,4 +311,4 @@ Route optimization for multi-stop signage retrieval:
 
 ---
 
-*This document is auto-generated and maintained as part of the TC Work Zone Locator documentation suite.*
+*This document is maintained as part of the TC Work Zone Locator documentation suite.*
