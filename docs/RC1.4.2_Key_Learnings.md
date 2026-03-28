@@ -40,6 +40,11 @@ This document captures all key learnings, architectural decisions, and coding pa
 28. [Speeding Alert Implementation](#28-speeding-alert-with-wa-fine-information)
 29. [Warning Banner Patterns](#29-warning-banner-patterns)
 30. [Settings Drawer Organization](#30-settings-drawer-organization)
+31. [Time/Distance Calculations](#31-timedistance-calculations-for-driver-awareness)
+32. [Traffic Counter Data Recording](#32-traffic-counter-data-recording)
+33. [Documents Library Organization](#33-documents-library-organization)
+34. [WA Traffic Law Reference](#34-wa-traffic-law-reference)
+35. [Component Consolidation Pattern](#35-component-consolidation-pattern)
 
 ---
 
@@ -1030,3 +1035,238 @@ const settingsSections = [
 ---
 
 *Document generated from RC 1.9.1 development session notes.*
+
+---
+
+## 31. Time/Distance Calculations for Driver Awareness
+
+### Concept
+
+Display time-related metrics to help drivers understand their travel efficiency.
+
+```typescript
+// Minutes per km - how long to travel 1km at current speed
+function getMinutesPerKm(speedKph: number): string {
+  if (speedKph < 1) return '--';
+  const minutes = 60 / speedKph;
+  if (minutes < 1) {
+    return `${Math.round(minutes * 60)}s/km`;
+  }
+  return `${minutes.toFixed(1)} min/km`;
+}
+
+// Time for 10km - useful for route planning
+function getTimeFor10km(speedKph: number): string {
+  if (speedKph < 1) return '--';
+  const totalMinutes = (10 / speedKph) * 60;
+  const hours = Math.floor(totalMinutes / 60);
+  const mins = Math.round(totalMinutes % 60);
+  if (hours > 0) {
+    return `${hours}h ${mins}m`;
+  }
+  return `${mins} min`;
+}
+```
+
+### Why This Matters
+
+- Drivers can estimate arrival times
+- Helps identify if driving slower/faster than expected
+- Useful for work zone timing calculations
+- Shows efficiency metric (minutes per km)
+
+---
+
+## 32. Traffic Counter Data Recording
+
+### Concept
+
+Manual traffic counting with structured data storage.
+
+```typescript
+interface TrafficCountRecord {
+  id: string;
+  road_id: string;
+  road_name: string;
+  slk: number | null;
+  lat: number | null;
+  lon: number | null;
+  region: string;
+  duration_minutes: number;
+  direction_mode: 'one-way' | 'both-ways';
+  // Vehicle counts by type and direction
+  true_left_light: number;
+  true_left_heavy: number;
+  true_right_light: number;
+  true_right_heavy: number;
+  // Calculated metrics
+  total_vehicles: number;
+  heavy_percentage: number;
+  vph_combined: number;  // Vehicles per hour
+}
+```
+
+### Calculated Fields
+
+| Field | Formula |
+|-------|---------|
+| total_light | true_left_light + true_right_light |
+| total_heavy | true_left_heavy + true_right_heavy |
+| total_vehicles | total_light + total_heavy |
+| heavy_percentage | (total_heavy / total_vehicles) × 100 |
+| vph_combined | (total_vehicles / duration_minutes) × 60 |
+
+### Use Cases
+
+- Pre-work traffic surveys
+- Lane capacity verification
+- Heavy vehicle percentage tracking
+- Historical count comparison
+
+---
+
+## 33. Documents Library Organization
+
+### Concept
+
+Organize reference documents by category with searchable access.
+
+```typescript
+const documentCategories = [
+  { id: 'tmp', name: 'Traffic Management Plans', icon: '📋' },
+  { id: 'agttm', name: 'AGTTM Parts', icon: '📕' },
+  { id: 'cop', name: 'Codes of Practice', icon: '📜' },
+  { id: 'standards', name: 'Standards & Guidelines', icon: '📘' },
+];
+```
+
+### Features
+
+- Search across all documents
+- Page-by-page navigation with TGS diagrams
+- Offline caching of viewed documents
+- Region-specific TMP organization
+- Quick access from Settings → About → Documents Library
+
+### URL Structure
+
+```
+/library                    # Main library page
+/library/[docId]            # Document viewer
+/library/[docId]/[pageNum]  # Specific page
+/library/tmp/[region]       # Regional TMPs
+/library/expanded           # Category overview
+```
+
+---
+
+## 34. WA Traffic Law Reference
+
+### Speeding Fines (Western Australia)
+
+| km/h Over Limit | Fine | Demerit Points |
+|-----------------|------|----------------|
+| 1-9 km/h | $100 | 0 |
+| 10-19 km/h | $200 | 2 |
+| 20-29 km/h | $400 | 3 |
+| 30-40 km/h | $800 | 4 |
+| 40+ km/h | $1,200+ | 6-7 |
+
+### Slow Driving Fines
+
+| Offense | Fine |
+|---------|------|
+| >20 km/h under on freeway (without reason) | $50 |
+| Obstruction of traffic | $50 |
+
+### Practical Tolerance
+
+- WA Police typically allow 2-4 km/h tolerance for speedometer variance
+- Not legislated - officer discretion
+- Do not rely on tolerance as legal protection
+
+---
+
+## 35. Component Consolidation Pattern
+
+### Problem
+
+Multiple pages with duplicate UI elements (hamburger menus, settings drawers).
+
+### Solution
+
+Extract to shared component with consistent interface.
+
+```typescript
+// Before: Each page has ~500 lines of drawer code
+// After: Single component imported where needed
+
+// src/components/SettingsDrawer.tsx
+interface SettingsDrawerProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  defaultSection?: string;  // Which section to show first
+}
+
+export function SettingsDrawer({ open, onOpenChange, defaultSection }: SettingsDrawerProps) {
+  // All drawer logic in one place
+  // 41KB component shared across pages
+}
+
+// Usage in pages
+import { SettingsDrawer } from '@/components/SettingsDrawer';
+
+<SettingsDrawer 
+  open={drawerOpen} 
+  onOpenChange={setDrawerOpen} 
+/>
+```
+
+### Benefits
+
+| Before | After |
+|--------|-------|
+| ~500 lines per page | Single import |
+| Update 2+ files for changes | Update once |
+| Inconsistent behavior | Unified experience |
+| Hard to maintain | Easy to maintain |
+
+---
+
+## Quick Reference: Architecture Patterns (Updated)
+
+| Pattern | Use Case |
+| ------- | -------- |
+| **Calculated vs Stored** | Real-time status derivation |
+| **Sign-Level Types** | Independent lifecycle per sign |
+| **Hybrid Online/Offline** | Graceful degradation |
+| **localStorage** | Client-side persistence |
+| **useMemo** | Performance optimization |
+| **Conditional Rendering** | Clean UI with relevant actions |
+| **SSR Guards** | Next.js compatibility |
+| **TypeScript Interfaces** | Type safety |
+| **Export/Import** | Data backup |
+| **Time/Distance Display** | Driver awareness metrics |
+| **Component Consolidation** | Code reuse, maintainability |
+
+---
+
+## Files Modified in RC 1.9.1 (Updated)
+
+| File | Changes |
+| ---- | ------- |
+| `src/app/aftercare/page.tsx` | Button layout, print report styling |
+| `src/app/drive/page.tsx` | Minutes per km, 10km time, speeding alert |
+| `src/app/traffic-counter/page.tsx` | New traffic counter page |
+| `src/components/SettingsDrawer.tsx` | Unified settings drawer (41KB) |
+| `src/lib/aftercare.ts` | `getUpcomingSigns()`, `getJobsForRoad()` fixes |
+| `src/lib/traffic-counter-storage.ts` | New traffic counter storage |
+| `src/lib/route-optimizer.ts` | TSP algorithm, OSRM integration |
+| `PROJECT_CONTEXT.md` | Version, changelog |
+| `README.md` | Version history |
+| `worklog.md` | Task entry |
+| `docs/*` | All documentation updated to RC 1.9.1 |
+
+---
+
+*Document updated from RC 1.9.1 development session notes.*
