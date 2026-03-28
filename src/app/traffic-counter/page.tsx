@@ -166,25 +166,29 @@ export default function TrafficCounterSetupPage() {
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Header */}
       <div className="bg-gray-800 border-b border-gray-700 sticky top-0 z-10">
-        <div className="max-w-4xl mx-auto px-4 py-3">
+        <div className="max-w-4xl mx-auto px-3 py-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <Link href="/">
-                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-gray-400 hover:text-white p-1 h-8"
+                >
                   ← Home
                 </Button>
               </Link>
               <div>
-                <h1 className="text-lg font-bold">📊 Traffic Counter</h1>
+                <h1 className="text-base font-bold">📊 Traffic Counter</h1>
                 <p className="text-xs text-gray-500">{APP_VERSION}</p>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-1">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => setShowReference(true)}
-                className="bg-gray-700 border-gray-600 text-sm"
+                className="bg-gray-700 border-gray-600 h-8 px-2 text-xs"
               >
                 📖 Ref
               </Button>
@@ -192,32 +196,32 @@ export default function TrafficCounterSetupPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => setShowHistory(true)}
-                className="bg-gray-700 border-gray-600 text-sm"
+                className="bg-gray-700 border-gray-600 h-8 px-2 text-xs"
               >
-                📜 History ({history.length})
+                📜 ({history.length})
               </Button>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-4 space-y-4">
+      <div className="max-w-4xl mx-auto px-3 py-3 space-y-3">
         {/* Duration Selection */}
         <Card className="bg-gray-800 border-gray-700">
-          <CardContent className="pt-4">
-            <label className="block text-sm font-medium text-gray-400 mb-2">⏱️ Duration</label>
-            <div className="flex gap-2 flex-wrap">
+          <CardContent className="pt-3 pb-3">
+            <label className="block text-xs font-medium text-gray-400 mb-1.5">⏱️ Duration</label>
+            <div className="flex gap-1.5 flex-wrap">
               {[3, 5, 15].map((mins) => (
                 <Button
                   key={mins}
                   onClick={() => setDuration(mins)}
-                  className={`flex-1 min-w-16 ${
+                  className={`flex-1 min-w-12 h-9 text-sm ${
                     duration === mins
                       ? 'bg-blue-600 hover:bg-blue-700'
                       : 'bg-gray-700 hover:bg-gray-600'
                   }`}
                 >
-                  {mins} min
+                  {mins}m
                 </Button>
               ))}
               <div className="flex gap-1">
@@ -228,33 +232,33 @@ export default function TrafficCounterSetupPage() {
                   placeholder="Custom"
                   value={customDuration}
                   onChange={(e) => setCustomDuration(e.target.value)}
-                  className="w-20 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-center text-sm"
+                  className="w-16 bg-gray-700 border border-gray-600 rounded px-2 py-1 text-center text-sm h-9"
                 />
                 <Button
                   onClick={handleCustomDuration}
                   disabled={!customDuration}
-                  className="bg-gray-700 hover:bg-gray-600"
+                  className="bg-gray-700 hover:bg-gray-600 h-9 px-2 text-sm"
                 >
                   Set
                 </Button>
               </div>
             </div>
-            <p className="text-xs text-gray-500 mt-2">
-              💡 3-5 min for quick estimate, 15 min for busy/arterial roads
+            <p className="text-xs text-gray-500 mt-1.5">
+              💡 3-5 min quick estimate, 15 min for busy roads
             </p>
           </CardContent>
         </Card>
 
         {/* Direction Mode */}
         <Card className="bg-gray-800 border-gray-700">
-          <CardContent className="pt-4">
-            <label className="block text-sm font-medium text-gray-400 mb-2">
+          <CardContent className="pt-3 pb-3">
+            <label className="block text-xs font-medium text-gray-400 mb-1.5">
               🚗 Direction Mode
             </label>
             <div className="flex gap-2">
               <Button
                 onClick={() => setDirectionMode('one-way')}
-                className={`flex-1 h-12 ${
+                className={`flex-1 h-9 text-sm ${
                   directionMode === 'one-way'
                     ? 'bg-blue-600 hover:bg-blue-700'
                     : 'bg-gray-700 hover:bg-gray-600'
@@ -264,7 +268,7 @@ export default function TrafficCounterSetupPage() {
               </Button>
               <Button
                 onClick={() => setDirectionMode('both-ways')}
-                className={`flex-1 h-12 ${
+                className={`flex-1 h-9 text-sm ${
                   directionMode === 'both-ways'
                     ? 'bg-blue-600 hover:bg-blue-700'
                     : 'bg-gray-700 hover:bg-gray-600'
@@ -273,44 +277,44 @@ export default function TrafficCounterSetupPage() {
                 Both Ways
               </Button>
             </div>
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-gray-500 mt-1.5">
               {directionMode === 'one-way'
-                ? '💡 Count one direction for lane capacity planning'
-                : '💡 Count both directions for shuttle flow operations'}
+                ? '💡 Count one direction for lane capacity'
+                : '💡 Count both for shuttle flow operations'}
             </p>
           </CardContent>
         </Card>
 
         {/* Location */}
         <Card className="bg-gray-800 border-gray-700">
-          <CardContent className="pt-4">
-            <div className="flex justify-between items-center mb-2">
-              <label className="text-sm font-medium text-gray-400">📍 Location</label>
+          <CardContent className="pt-3 pb-3">
+            <div className="flex justify-between items-center mb-1.5">
+              <label className="text-xs font-medium text-gray-400">📍 Location</label>
               <Button
                 onClick={fetchLocation}
                 disabled={loadingLocation}
                 size="sm"
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-blue-600 hover:bg-blue-700 h-8 px-2 text-xs"
               >
-                {loadingLocation ? '⏳ Loading...' : '📍 Get GPS Location'}
+                {loadingLocation ? '⏳' : '📍 GPS'}
               </Button>
             </div>
             {location.road_id ? (
-              <div className="text-sm bg-gray-900 rounded p-3">
+              <div className="text-sm bg-gray-900 rounded p-2">
                 <div className="flex justify-between">
-                  <span className="font-semibold text-white">{location.road_id}</span>
-                  <span className="text-gray-400">{location.road_name}</span>
+                  <span className="font-semibold text-white text-sm">{location.road_id}</span>
+                  <span className="text-gray-400 text-xs">{location.road_name}</span>
                 </div>
-                <div className="text-gray-500 text-xs mt-1">
+                <div className="text-gray-500 text-xs">
                   SLK {location.slk?.toFixed(2) || 'N/A'}
                   {location.region && ` | ${location.region}`}
                 </div>
               </div>
             ) : (
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-500 text-xs">
                 {location.lat
-                  ? '📍 Location captured (road not identified)'
-                  : '💡 Tap to capture GPS location for record keeping'}
+                  ? '📍 Location captured (road not found)'
+                  : '💡 Tap GPS to capture location'}
               </p>
             )}
           </CardContent>
@@ -318,16 +322,16 @@ export default function TrafficCounterSetupPage() {
 
         {/* Notes */}
         <Card className="bg-gray-800 border-gray-700">
-          <CardContent className="pt-4">
-            <label className="block text-sm font-medium text-gray-400 mb-2">
+          <CardContent className="pt-3 pb-3">
+            <label className="block text-xs font-medium text-gray-400 mb-1.5">
               📝 Notes (optional)
             </label>
             <input
               type="text"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g., Peak hour traffic, roadworks nearby..."
-              className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm"
+              placeholder="e.g., Peak hour, roadworks nearby..."
+              className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm h-9"
             />
           </CardContent>
         </Card>
@@ -335,7 +339,7 @@ export default function TrafficCounterSetupPage() {
         {/* Start Button */}
         <Button
           onClick={startCounting}
-          className="w-full bg-green-600 hover:bg-green-700 h-14 text-xl font-bold"
+          className="w-full bg-green-600 hover:bg-green-700 h-12 text-lg font-bold"
         >
           ▶️ START COUNTING
         </Button>
@@ -345,23 +349,23 @@ export default function TrafficCounterSetupPage() {
       {showReference && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
           <Card className="bg-gray-800 border-gray-700 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <CardHeader className="pb-2 sticky top-0 bg-gray-800 z-10">
+            <CardHeader className="pb-2 pt-3 sticky top-0 bg-gray-800 z-10">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg text-white">📖 Reference Tables</CardTitle>
+                <CardTitle className="text-base text-white">📖 Reference Tables</CardTitle>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowReference(false)}
-                  className="text-gray-400"
+                  className="text-gray-400 h-8 w-8 p-0"
                 >
                   ✕
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3 pt-0">
               {/* Lane Capacity */}
               <div>
-                <h4 className="font-semibold text-blue-400 mb-0.5">
+                <h4 className="font-semibold text-blue-400 text-sm mb-0.5">
                   Lane Capacity (One Direction)
                 </h4>
                 <p className="text-xs text-gray-500 italic mb-1">Source: AGTTM Part 2, Table 3.1</p>
@@ -369,17 +373,17 @@ export default function TrafficCounterSetupPage() {
                   <table className="w-full text-left">
                     <thead className="text-gray-400">
                       <tr>
-                        <th className="pr-2 py-1">Mid-Block VPH</th>
-                        <th className="pr-2 py-1">Near Intersection</th>
-                        <th className="py-1">Lanes</th>
+                        <th className="pr-2 py-0.5">Mid-Block</th>
+                        <th className="pr-2 py-0.5">Near Int.</th>
+                        <th className="py-0.5">Lanes</th>
                       </tr>
                     </thead>
                     <tbody className="text-gray-300">
                       {LANE_CAPACITY_TABLE.map((row, i) => (
                         <tr key={i} className="border-t border-gray-700">
-                          <td className="pr-2 py-1">{row.midBlockVph}</td>
-                          <td className="pr-2 py-1">{row.nearIntersectionVph}</td>
-                          <td className="py-1">{row.lanes}</td>
+                          <td className="pr-2 py-0.5">{row.midBlockVph}</td>
+                          <td className="pr-2 py-0.5">{row.nearIntersectionVph}</td>
+                          <td className="py-0.5">{row.lanes}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -389,8 +393,8 @@ export default function TrafficCounterSetupPage() {
 
               {/* Shuttle Flow */}
               <div>
-                <h4 className="font-semibold text-green-400 mb-0.5">
-                  Shuttle Flow Length (Both Directions)
+                <h4 className="font-semibold text-green-400 text-sm mb-0.5">
+                  Shuttle Flow (Both Directions)
                 </h4>
                 <p className="text-xs text-gray-500 italic mb-1">
                   Source: AGTTM Part 2, Table 3.5 &amp; MRWA COP Table 15
@@ -399,28 +403,28 @@ export default function TrafficCounterSetupPage() {
                   <table className="w-full text-left">
                     <thead className="text-gray-400">
                       <tr>
-                        <th className="pr-2 py-1">VPH</th>
-                        <th className="py-1">Max Single Lane</th>
+                        <th className="pr-2 py-0.5">VPH</th>
+                        <th className="py-0.5">Max Length</th>
                       </tr>
                     </thead>
                     <tbody className="text-gray-300">
                       {SHUTTLE_FLOW_TABLE.map((row, i) => (
                         <tr key={i} className="border-t border-gray-700">
-                          <td className="pr-2 py-1">{row.vph}</td>
-                          <td className="py-1">{row.maxLength}</td>
+                          <td className="pr-2 py-0.5">{row.vph}</td>
+                          <td className="py-0.5">{row.maxLength}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                  <p className="text-gray-500 mt-1">* Requires risk assessment</p>
+                  <p className="text-gray-500 mt-0.5">* Requires risk assessment</p>
                 </div>
               </div>
 
               {/* Reduction Factors */}
               <div>
-                <h4 className="font-semibold text-amber-400 mb-0.5">Volume Reduction Factors</h4>
+                <h4 className="font-semibold text-amber-400 text-sm mb-0.5">Volume Reduction</h4>
                 <p className="text-xs text-gray-500 italic mb-1">Source: MRWA Code of Practice</p>
-                <div className="text-xs space-y-1 text-gray-300">
+                <div className="text-xs space-y-0.5 text-gray-300">
                   {REDUCTION_FACTORS.map((row, i) => (
                     <div key={i} className="flex justify-between">
                       <span>{row.condition}</span>
@@ -432,25 +436,23 @@ export default function TrafficCounterSetupPage() {
 
               {/* Queue Multipliers */}
               <div>
-                <h4 className="font-semibold text-purple-400 mb-0.5">
-                  Queue Length Multipliers (5 min count)
-                </h4>
+                <h4 className="font-semibold text-purple-400 text-sm mb-0.5">Queue Multipliers</h4>
                 <p className="text-xs text-gray-500 italic mb-1">Source: AGTTM Part 3, Table 4.3</p>
                 <div className="text-xs overflow-x-auto">
                   <table className="w-full text-left">
                     <thead className="text-gray-400">
                       <tr>
-                        <th className="pr-2 py-1">Stop Time</th>
-                        <th className="pr-2 py-1">Avg Vehicle</th>
-                        <th className="py-1">Heavy Vehicle</th>
+                        <th className="pr-2 py-0.5">Stop</th>
+                        <th className="pr-2 py-0.5">Avg</th>
+                        <th className="py-0.5">Heavy</th>
                       </tr>
                     </thead>
                     <tbody className="text-gray-300">
                       {QUEUE_MULTIPLIERS.map((row, i) => (
                         <tr key={i} className="border-t border-gray-700">
-                          <td className="pr-2 py-1">{row.stoppingTime}</td>
-                          <td className="pr-2 py-1">×{row.averageMultiplier}</td>
-                          <td className="py-1">×{row.heavyMultiplier}</td>
+                          <td className="pr-2 py-0.5">{row.stoppingTime}</td>
+                          <td className="pr-2 py-0.5">×{row.averageMultiplier}</td>
+                          <td className="py-0.5">×{row.heavyMultiplier}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -466,14 +468,14 @@ export default function TrafficCounterSetupPage() {
       {showHistory && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
           <Card className="bg-gray-800 border-gray-700 w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col">
-            <CardHeader className="pb-2">
+            <CardHeader className="pb-2 pt-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg text-white">📜 Count History</CardTitle>
+                <CardTitle className="text-base text-white">📜 Count History</CardTitle>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowHistory(false)}
-                  className="text-gray-400"
+                  className="text-gray-400 h-8 w-8 p-0"
                 >
                   ✕
                 </Button>
@@ -481,36 +483,36 @@ export default function TrafficCounterSetupPage() {
             </CardHeader>
             <CardContent className="flex-1 overflow-y-auto">
               {history.length === 0 ? (
-                <p className="text-gray-400 text-center py-4">No saved counts yet</p>
+                <p className="text-gray-400 text-center py-4 text-sm">No saved counts yet</p>
               ) : (
                 <div className="space-y-2">
                   {history.map((record) => (
-                    <div key={record.id} className="bg-gray-900 rounded-lg p-3 text-sm">
-                      <div className="flex justify-between items-start mb-1">
+                    <div key={record.id} className="bg-gray-900 rounded-lg p-2 text-sm">
+                      <div className="flex justify-between items-start mb-0.5">
                         <div>
-                          <span className="font-semibold text-white">{record.road_id}</span>
-                          <span className="text-gray-400 ml-2">{record.road_name}</span>
+                          <span className="font-semibold text-white text-sm">{record.road_id}</span>
+                          <span className="text-gray-400 ml-1 text-xs">{record.road_name}</span>
                         </div>
                         <span className="text-gray-500 text-xs">{formatAusDate(record.date)}</span>
                       </div>
-                      <div className="text-gray-400 text-xs mb-1">
+                      <div className="text-gray-400 text-xs mb-0.5">
                         SLK {record.slk?.toFixed(2) || 'N/A'} | {record.duration_minutes}min |{' '}
-                        {record.direction_mode === 'both-ways' ? 'Both ways' : 'One way'}
+                        {record.direction_mode === 'both-ways' ? 'Both' : 'One way'}
                       </div>
                       <div className="flex justify-between items-center">
-                        <div className="text-sm">
-                          <span className="text-green-400">{record.total_vehicles} total</span>
-                          <span className="text-gray-500 mx-2">|</span>
-                          <span className="text-amber-400">{record.heavy_percentage}% heavy</span>
-                          <span className="text-gray-500 mx-2">|</span>
+                        <div className="text-xs">
+                          <span className="text-green-400">{record.total_vehicles}</span>
+                          <span className="text-gray-500 mx-1">|</span>
+                          <span className="text-amber-400">{record.heavy_percentage}%H</span>
+                          <span className="text-gray-500 mx-1">|</span>
                           <span className="text-blue-400">{record.vph_combined} VPH</span>
                         </div>
-                        <div className="flex gap-1">
+                        <div className="flex gap-0.5">
                           <Button
                             size="sm"
                             variant="ghost"
                             onClick={() => copyRecordText(record)}
-                            className="text-blue-400 hover:text-blue-300 h-7 w-7 p-0"
+                            className="text-blue-400 hover:text-blue-300 h-6 w-6 p-0"
                           >
                             📋
                           </Button>
@@ -518,7 +520,7 @@ export default function TrafficCounterSetupPage() {
                             size="sm"
                             variant="ghost"
                             onClick={() => deleteRecord(record.id)}
-                            className="text-red-400 hover:text-red-300 h-7 w-7 p-0"
+                            className="text-red-400 hover:text-red-300 h-6 w-6 p-0"
                           >
                             🗑️
                           </Button>
@@ -529,7 +531,7 @@ export default function TrafficCounterSetupPage() {
                 </div>
               )}
 
-              <div className="flex gap-2 mt-3">
+              <div className="flex gap-2 mt-2">
                 <Button
                   onClick={() => {
                     const text = exportAllRecords();
@@ -538,7 +540,7 @@ export default function TrafficCounterSetupPage() {
                   }}
                   variant="outline"
                   size="sm"
-                  className="flex-1 bg-gray-700 border-gray-600"
+                  className="flex-1 bg-gray-700 border-gray-600 h-8 text-xs"
                 >
                   📤 Export
                 </Button>
@@ -551,9 +553,9 @@ export default function TrafficCounterSetupPage() {
                   }}
                   variant="outline"
                   size="sm"
-                  className="flex-1 bg-gray-700 border-gray-600 text-red-400"
+                  className="flex-1 bg-gray-700 border-gray-600 text-red-400 h-8 text-xs"
                 >
-                  🗑️ Clear All
+                  🗑️ Clear
                 </Button>
               </div>
             </CardContent>

@@ -34,6 +34,7 @@ export interface TrafficCountRecord {
   vph_true_right: number;
   vph_combined: number;
   vph_one_direction: number; // For lane capacity reference
+  queue_length?: number; // Estimated queue length in meters (optional for backward compatibility)
   // Metadata
   date: string; // ISO date
   start_time: string; // HH:MM format
@@ -200,38 +201,43 @@ export function saveTrafficCountHistory(records: TrafficCountRecord[]): void {
  */
 export function getTrafficCountRecord(id: string): TrafficCountRecord | null {
   const records = getTrafficCountHistory();
-  return records.find(r => r.id === id) || null;
+  return records.find((r) => r.id === id) || null;
 }
 
 /**
  * Create a new traffic count record
  */
-export function createTrafficCountRecord(data: Omit<TrafficCountRecord, 'id' | 'created_at'>): TrafficCountRecord {
+export function createTrafficCountRecord(
+  data: Omit<TrafficCountRecord, 'id' | 'created_at'>
+): TrafficCountRecord {
   const newRecord: TrafficCountRecord = {
     ...data,
     id: generateId(),
     created_at: new Date().toISOString(),
   };
-  
+
   const records = getTrafficCountHistory();
   records.unshift(newRecord); // Add to beginning (most recent first)
   saveTrafficCountHistory(records);
-  
+
   return newRecord;
 }
 
 /**
  * Update an existing traffic count record
  */
-export function updateTrafficCountRecord(id: string, updates: Partial<TrafficCountRecord>): TrafficCountRecord | null {
+export function updateTrafficCountRecord(
+  id: string,
+  updates: Partial<TrafficCountRecord>
+): TrafficCountRecord | null {
   const records = getTrafficCountHistory();
-  const index = records.findIndex(r => r.id === id);
-  
+  const index = records.findIndex((r) => r.id === id);
+
   if (index === -1) return null;
-  
+
   records[index] = { ...records[index], ...updates };
   saveTrafficCountHistory(records);
-  
+
   return records[index];
 }
 
@@ -240,10 +246,10 @@ export function updateTrafficCountRecord(id: string, updates: Partial<TrafficCou
  */
 export function deleteTrafficCountRecord(id: string): boolean {
   const records = getTrafficCountHistory();
-  const filtered = records.filter(r => r.id !== id);
-  
+  const filtered = records.filter((r) => r.id !== id);
+
   if (filtered.length === records.length) return false;
-  
+
   saveTrafficCountHistory(filtered);
   return true;
 }
@@ -261,7 +267,7 @@ export function clearTrafficCountHistory(): void {
  */
 export function getRecordsForRoad(roadId: string): TrafficCountRecord[] {
   const records = getTrafficCountHistory();
-  return records.filter(r => r.road_id.toUpperCase() === roadId.toUpperCase());
+  return records.filter((r) => r.road_id.toUpperCase() === roadId.toUpperCase());
 }
 
 /**
@@ -271,8 +277,8 @@ export function getRecentRecords(days: number = 30): TrafficCountRecord[] {
   const records = getTrafficCountHistory();
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - days);
-  
-  return records.filter(r => new Date(r.created_at) >= cutoff);
+
+  return records.filter((r) => new Date(r.created_at) >= cutoff);
 }
 
 // ============================================
@@ -291,9 +297,11 @@ export function generateShareText(record: TrafficCountRecord): string {
   lines.push(`Date: ${formatAusDate(record.date)}`);
   lines.push(`Time: ${record.start_time} - ${record.end_time}`);
   lines.push(`Duration: ${record.duration_minutes} minutes`);
-  lines.push(`Direction: ${record.direction_mode === 'one-way' ? 'One direction' : 'Both directions'}`);
+  lines.push(
+    `Direction: ${record.direction_mode === 'one-way' ? 'One direction' : 'Both directions'}`
+  );
   lines.push(``);
-  
+
   if (record.direction_mode === 'both-ways') {
     lines.push(`TRUE LEFT (Increasing SLK):`);
     lines.push(`  Light: ${record.true_left_light} | Heavy: ${record.true_left_heavy}`);
@@ -308,17 +316,21 @@ export function generateShareText(record: TrafficCountRecord): string {
     lines.push(`  Light: ${record.total_light} | Heavy: ${record.total_heavy}`);
     lines.push(``);
   }
-  
+
   lines.push(`SUMMARY:`);
   lines.push(`  Total Vehicles: ${record.total_vehicles}`);
   lines.push(`  Heavy Vehicles: ${record.heavy_percentage}%`);
   lines.push(`  Combined VPH: ${record.vph_combined}`);
-  
+
+  if (record.queue_length) {
+    lines.push(`  Estimated Queue: ${record.queue_length}m`);
+  }
+
   if (record.notes) {
     lines.push(``);
     lines.push(`Notes: ${record.notes}`);
   }
-  
+
   return lines.join('\n');
 }
 
@@ -332,21 +344,24 @@ export function exportAllRecords(): string {
 /**
  * Import records from JSON string
  */
-export function importRecords(json: string, replace: boolean = false): { success: boolean; count: number; error?: string } {
+export function importRecords(
+  json: string,
+  replace: boolean = false
+): { success: boolean; count: number; error?: string } {
   try {
     const imported = JSON.parse(json) as TrafficCountRecord[];
-    
+
     if (!Array.isArray(imported)) {
       return { success: false, count: 0, error: 'Invalid format' };
     }
-    
+
     // Validate structure
     for (const record of imported) {
       if (!record.id || record.road_id === undefined) {
         return { success: false, count: 0, error: 'Invalid record structure' };
       }
     }
-    
+
     if (replace) {
       saveTrafficCountHistory(imported);
     } else {
@@ -354,13 +369,13 @@ export function importRecords(json: string, replace: boolean = false): { success
       // Merge, avoiding duplicates by ID
       const merged = [...existing];
       for (const record of imported) {
-        if (!merged.find(r => r.id === record.id)) {
+        if (!merged.find((r) => r.id === record.id)) {
           merged.push(record);
         }
       }
       saveTrafficCountHistory(merged);
     }
-    
+
     return { success: true, count: imported.length };
   } catch {
     return { success: false, count: 0, error: 'Failed to parse JSON' };
@@ -383,7 +398,7 @@ export interface TrafficCountStats {
  */
 export function getTrafficCountStats(): TrafficCountStats {
   const records = getTrafficCountHistory();
-  
+
   if (records.length === 0) {
     return {
       totalRecords: 0,
@@ -392,13 +407,13 @@ export function getTrafficCountStats(): TrafficCountStats {
       mostCountedRoad: null,
     };
   }
-  
+
   // Count vehicles
   const totalVehicles = records.reduce((sum, r) => sum + r.total_vehicles, 0);
-  
+
   // Average heavy percent
   const avgHeavy = records.reduce((sum, r) => sum + r.heavy_percentage, 0) / records.length;
-  
+
   // Most counted road
   const roadCounts = new Map<string, { road_name: string; count: number }>();
   for (const record of records) {
@@ -409,14 +424,14 @@ export function getTrafficCountStats(): TrafficCountStats {
       roadCounts.set(record.road_id, { road_name: record.road_name, count: 1 });
     }
   }
-  
+
   let mostCountedRoad: { road_id: string; road_name: string; count: number } | null = null;
   for (const [road_id, data] of roadCounts) {
     if (!mostCountedRoad || data.count > mostCountedRoad.count) {
       mostCountedRoad = { road_id, road_name: data.road_name, count: data.count };
     }
   }
-  
+
   return {
     totalRecords: records.length,
     totalVehiclesCounted: totalVehicles,

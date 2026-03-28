@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
-  TrafficCountRecord,
   CountDirection,
   calculateVPH,
   calculateHeavyPercentage,
@@ -13,6 +12,7 @@ import {
 } from '@/lib/traffic-counter-storage';
 
 const APP_VERSION = 'RC 1.9.6';
+const MINIMUM_DURATION_SECONDS = 180; // 3 minutes minimum
 
 // ============================================
 // TYPES
@@ -59,6 +59,58 @@ function loadSetupState(): SetupState | null {
 }
 
 // ============================================
+// QUEUE CALCULATION FUNCTIONS
+// ============================================
+
+/**
+ * Estimate stopping time based on VPH
+ * Higher VPH = shorter stopping times (more frequent cycles)
+ */
+function estimateStoppingTime(vph: number): number {
+  if (vph > 600) return 2; // High volume: short cycles
+  if (vph >= 300) return 5; // Medium volume: standard cycles
+  return 10; // Low volume: longer cycles possible
+}
+
+/**
+ * Interpolate queue multiplier based on stopping time
+ * Table values: 2min=2.4, 5min=6, 10min=12 for average vehicles
+ * Table values: 2min=8, 5min=20, 10min=N/A for heavy vehicles
+ */
+function interpolateMultiplier(stoppingTime: number, isHeavy: boolean): number {
+  if (isHeavy) {
+    // Heavy vehicle multipliers: 2min=8, 5min=20
+    if (stoppingTime <= 2) return 8;
+    if (stoppingTime >= 5) return 20;
+    // Linear interpolation between 2 and 5
+    return 8 + ((stoppingTime - 2) / 3) * 12;
+  } else {
+    // Average vehicle multipliers: 2min=2.4, 5min=6, 10min=12
+    if (stoppingTime <= 2) return 2.4;
+    if (stoppingTime <= 5) {
+      // Interpolate between 2 and 5
+      return 2.4 + ((stoppingTime - 2) / 3) * 3.6;
+    }
+    // Interpolate between 5 and 10
+    if (stoppingTime <= 10) {
+      return 6 + ((stoppingTime - 5) / 5) * 6;
+    }
+    return 12; // Cap at 10 min value
+  }
+}
+
+/**
+ * Calculate queue length
+ * Queue = (light_count × Ma) + (heavy_count × Mo)
+ */
+function calculateQueueLength(lightCount: number, heavyCount: number, vph: number): number {
+  const stoppingTime = estimateStoppingTime(vph);
+  const lightMultiplier = interpolateMultiplier(stoppingTime, false);
+  const heavyMultiplier = interpolateMultiplier(stoppingTime, true);
+  return Math.round(lightCount * lightMultiplier + heavyCount * heavyMultiplier);
+}
+
+// ============================================
 // PROGRESS RING COMPONENT
 // ============================================
 
@@ -93,7 +145,6 @@ function ProgressRing({
   return (
     <div className="relative inline-flex items-center justify-center">
       <svg height={radius * 2} width={radius * 2} className="transform -rotate-90">
-        {/* Background circle */}
         <circle
           stroke="#374151"
           fill="transparent"
@@ -102,7 +153,6 @@ function ProgressRing({
           cx={radius}
           cy={radius}
         />
-        {/* Progress circle */}
         <circle
           stroke={getColor()}
           fill="transparent"
@@ -128,14 +178,14 @@ function ProgressRing({
 // ============================================
 
 function CounterButton({
-  label,
+  vehicleType,
   count,
   onIncrement,
   onDecrement,
   color,
   disabled,
 }: {
-  label: string;
+  vehicleType: 'car' | 'truck';
   count: number;
   onIncrement: () => void;
   onDecrement: () => void;
@@ -147,12 +197,17 @@ function CounterButton({
     amber: 'bg-amber-600 hover:bg-amber-700 active:bg-amber-800',
   };
 
+  const icon = vehicleType === 'car' ? '🚗' : '🚛';
+  const label = vehicleType === 'car' ? 'Light' : 'Heavy';
+
   return (
     <div className="flex flex-col items-center">
+      <span className="text-lg mb-1">{icon}</span>
+      <span className="text-xs text-gray-400 mb-1">{label}</span>
       <button
         onClick={onIncrement}
         disabled={disabled}
-        className={`w-16 h-16 rounded-full ${colorClasses[color]} text-white text-2xl font-bold shadow-lg transition-transform active:scale-95 disabled:opacity-50 flex items-center justify-center`}
+        className={`w-16 h-14 rounded-full ${colorClasses[color]} text-white text-2xl font-bold shadow-lg transition-transform active:scale-95 disabled:opacity-50 flex items-center justify-center`}
       >
         +1
       </button>
@@ -179,7 +234,8 @@ function CounterButton({
 function CompletionOverlay({
   isOpen,
   counts,
-  duration,
+  plannedDuration,
+  actualDuration,
   directionMode,
   location,
   notes,
@@ -187,10 +243,12 @@ function CompletionOverlay({
   onSave,
   onReset,
   onCancel,
+  insufficientData,
 }: {
   isOpen: boolean;
   counts: CounterState;
-  duration: number;
+  plannedDuration: number;
+  actualDuration: number;
   directionMode: CountDirection;
   location: LocationData;
   notes: string;
@@ -198,6 +256,7 @@ function CompletionOverlay({
   onSave: () => void;
   onReset: () => void;
   onCancel: () => void;
+  insufficientData: boolean;
 }) {
   if (!isOpen) return null;
 
@@ -213,12 +272,17 @@ function CompletionOverlay({
 
   const totalVehicles = totalLight + totalHeavy;
   const heavyPercent = calculateHeavyPercentage(totalLight, totalHeavy);
-  const vph = calculateVPH(totalVehicles, duration);
+  const actualDurationMin = Math.ceil(actualDuration / 60);
+  const vph = calculateVPH(totalVehicles, actualDurationMin);
 
   // Calculate lane capacity with heavy vehicle adjustment
-  const adjustedVph = heavyPercent > 10 ? Math.round(vph * 1.2) : vph; // 20% reduction applied inversely
+  const adjustedVph = heavyPercent > 10 ? Math.round(vph * 1.2) : vph;
   const lanesNeeded =
     adjustedVph <= 1000 ? 1 : adjustedVph <= 2000 ? 2 : adjustedVph <= 3000 ? 3 : 4;
+
+  // Calculate queue length
+  const queueLength = calculateQueueLength(totalLight, totalHeavy, vph);
+  const stoppingTime = estimateStoppingTime(vph);
 
   // Calculate shuttle flow max length
   const getShuttleMax = (v: number) => {
@@ -235,38 +299,63 @@ function CompletionOverlay({
 
   return (
     <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-xl p-6 w-full max-w-sm border border-green-600">
-        <h2 className="text-xl font-bold text-green-400 text-center mb-4">✓ Count Complete!</h2>
+      <div className="bg-gray-800 rounded-xl p-5 w-full max-w-sm border border-green-600 max-h-[90vh] overflow-y-auto">
+        <h2 className="text-xl font-bold text-green-400 text-center mb-3">✓ Count Complete!</h2>
 
-        <div className="space-y-3 text-sm">
-          <div className="bg-gray-900 rounded-lg p-3">
+        {insufficientData && (
+          <div className="bg-red-900/30 border border-red-700 rounded-lg p-2 text-center mb-3">
+            <p className="text-sm text-red-400">
+              ⚠️ Count duration under 3 minutes. Record cannot be saved.
+            </p>
+          </div>
+        )}
+
+        <div className="space-y-2 text-sm">
+          <div className="bg-gray-900 rounded-lg p-2">
             <p className="text-white font-semibold">{location.road_id || 'Unknown'}</p>
             <p className="text-gray-400 text-xs">{location.road_name}</p>
             {notes && <p className="text-gray-500 text-xs mt-1 italic">{notes}</p>}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-gray-900 rounded-lg p-3 text-center">
-              <p className="text-2xl font-bold text-white">{totalVehicles}</p>
-              <p className="text-xs text-gray-500">Total Vehicles</p>
+          <div className="bg-gray-900 rounded-lg p-2 text-center">
+            <p className="text-xs text-gray-500">
+              Duration: <span className="text-white">{actualDurationMin} min</span>
+              {actualDurationMin !== plannedDuration && (
+                <span className="text-gray-500"> (planned: {plannedDuration} min)</span>
+              )}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <div className="bg-gray-900 rounded-lg p-2 text-center">
+              <p className="text-xl font-bold text-white">{totalVehicles}</p>
+              <p className="text-xs text-gray-500">Total</p>
             </div>
-            <div className="bg-gray-900 rounded-lg p-3 text-center">
-              <p className="text-2xl font-bold text-amber-400">{heavyPercent}%</p>
+            <div className="bg-gray-900 rounded-lg p-2 text-center">
+              <p className="text-xl font-bold text-amber-400">{heavyPercent}%</p>
               <p className="text-xs text-gray-500">Heavy</p>
             </div>
-            <div className="bg-gray-900 rounded-lg p-3 text-center">
-              <p className="text-2xl font-bold text-blue-400">{vph}</p>
+            <div className="bg-gray-900 rounded-lg p-2 text-center">
+              <p className="text-xl font-bold text-blue-400">{vph}</p>
               <p className="text-xs text-gray-500">VPH</p>
             </div>
-            <div className="bg-gray-900 rounded-lg p-3 text-center">
-              <p className="text-2xl font-bold text-green-400">{lanesNeeded}</p>
-              <p className="text-xs text-gray-500">Lanes Needed</p>
+            <div className="bg-gray-900 rounded-lg p-2 text-center">
+              <p className="text-xl font-bold text-green-400">{lanesNeeded}</p>
+              <p className="text-xs text-gray-500">Lanes</p>
             </div>
+          </div>
+
+          {/* Queue Length */}
+          <div className="bg-purple-900/30 border border-purple-700 rounded-lg p-2 text-center">
+            <p className="text-sm text-purple-400">
+              📏 Queue Length: <span className="text-white font-bold">{queueLength}m</span>
+            </p>
+            <p className="text-xs text-gray-500">Based on {stoppingTime} min stopping time</p>
           </div>
 
           {directionMode === 'both-ways' && (
             <div className="bg-gray-900 rounded-lg p-2 text-center">
-              <p className="text-sm text-gray-400">
+              <p className="text-xs text-gray-400">
                 🔀 Shuttle Max:{' '}
                 <span className="text-white font-semibold">{getShuttleMax(vph)}</span>
               </p>
@@ -283,20 +372,22 @@ function CompletionOverlay({
         </div>
 
         <div className="flex gap-2 mt-4">
-          <Button onClick={onSave} className="flex-1 bg-green-600 hover:bg-green-700 h-11">
-            💾 Save
-          </Button>
+          {!insufficientData && (
+            <Button onClick={onSave} className="flex-1 bg-green-600 hover:bg-green-700 h-10">
+              💾 Save
+            </Button>
+          )}
           <Button
             onClick={onReset}
             variant="outline"
-            className="flex-1 bg-gray-700 border-gray-600 h-11"
+            className="flex-1 bg-gray-700 border-gray-600 h-10"
           >
             🔄 Reset
           </Button>
           <Button
             onClick={onCancel}
             variant="outline"
-            className="flex-1 bg-gray-700 border-gray-600 h-11"
+            className="flex-1 bg-gray-700 border-gray-600 h-10"
           >
             ✕ Cancel
           </Button>
@@ -315,7 +406,7 @@ export default function TrafficCounterCountPage() {
 
   // Initialize from sessionStorage using lazy initializers
   const [setupState] = useState<SetupState | null>(() => loadSetupState());
-  const [duration] = useState<number>(() => setupState?.duration ?? 5);
+  const [plannedDuration] = useState<number>(() => setupState?.duration ?? 5);
   const [directionMode] = useState<CountDirection>(() => setupState?.directionMode ?? 'both-ways');
   const [location] = useState<LocationData>(
     () =>
@@ -330,12 +421,13 @@ export default function TrafficCounterCountPage() {
   );
   const [notes] = useState<string>(() => setupState?.notes ?? '');
 
-  // Timer state - initialize with running state
+  // Timer state
   const [timeRemaining, setTimeRemaining] = useState<number>(
     () => (setupState?.duration ?? 5) * 60
   );
   const [isComplete, setIsComplete] = useState(false);
   const [startTime] = useState<Date>(() => new Date());
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
 
   // Counter state
   const [counts, setCounts] = useState<CounterState>({
@@ -366,7 +458,6 @@ export default function TrafficCounterCountPage() {
         setTimeRemaining((prev) => {
           if (prev <= 1) {
             setIsComplete(true);
-            // Vibrate to signal completion
             if (navigator.vibrate) {
               navigator.vibrate([200, 100, 200, 100, 200]);
             }
@@ -374,6 +465,7 @@ export default function TrafficCounterCountPage() {
           }
           return prev - 1;
         });
+        setElapsedSeconds((prev) => prev + 1);
       }, 1000);
     }
 
@@ -434,9 +526,18 @@ export default function TrafficCounterCountPage() {
     haptic(50);
   };
 
+  // Check if duration is sufficient for saving
+  const isDurationSufficient = elapsedSeconds >= MINIMUM_DURATION_SECONDS;
+
   // Save handler
   const handleSave = () => {
+    if (!isDurationSufficient) {
+      alert('Count duration must be at least 3 minutes to save.');
+      return;
+    }
+
     const endTime = new Date();
+    const actualDurationMin = Math.ceil(elapsedSeconds / 60);
 
     const totalLight =
       directionMode === 'both-ways'
@@ -449,6 +550,11 @@ export default function TrafficCounterCountPage() {
         : counts.trueLeftHeavy;
 
     const totalVehicles = totalLight + totalHeavy;
+    const heavyPercent = calculateHeavyPercentage(totalLight, totalHeavy);
+    const vph = calculateVPH(totalVehicles, actualDurationMin);
+
+    // Calculate queue length
+    const queueLength = calculateQueueLength(totalLight, totalHeavy, vph);
 
     createTrafficCountRecord({
       road_id: location.road_id || 'UNKNOWN',
@@ -457,7 +563,7 @@ export default function TrafficCounterCountPage() {
       lat: location.lat,
       lon: location.lon,
       region: location.region,
-      duration_minutes: duration,
+      duration_minutes: actualDurationMin, // Use actual duration
       direction_mode: directionMode,
       true_left_light: counts.trueLeftLight,
       true_left_heavy: counts.trueLeftHeavy,
@@ -466,17 +572,21 @@ export default function TrafficCounterCountPage() {
       total_light: totalLight,
       total_heavy: totalHeavy,
       total_vehicles: totalVehicles,
-      heavy_percentage: calculateHeavyPercentage(totalLight, totalHeavy),
-      vph_true_left: calculateVPH(counts.trueLeftLight + counts.trueLeftHeavy, duration),
-      vph_true_right: calculateVPH(counts.trueRightLight + counts.trueRightHeavy, duration),
-      vph_combined: calculateVPH(totalVehicles, duration),
+      heavy_percentage: heavyPercent,
+      vph_true_left: calculateVPH(counts.trueLeftLight + counts.trueLeftHeavy, actualDurationMin),
+      vph_true_right: calculateVPH(
+        counts.trueRightLight + counts.trueRightHeavy,
+        actualDurationMin
+      ),
+      vph_combined: vph,
       vph_one_direction: calculateVPH(
         Math.max(
           counts.trueLeftLight + counts.trueLeftHeavy,
           counts.trueRightLight + counts.trueRightHeavy
         ),
-        duration
+        actualDurationMin
       ),
+      queue_length: queueLength,
       date: startTime
         ? startTime.toISOString().split('T')[0]
         : new Date().toISOString().split('T')[0],
@@ -504,8 +614,8 @@ export default function TrafficCounterCountPage() {
   };
 
   // Computed values
-  const progress = 1 - timeRemaining / (duration * 60);
-  const elapsedMinutes = duration - timeRemaining / 60;
+  const progress = 1 - timeRemaining / (plannedDuration * 60);
+  const elapsedMinutes = elapsedSeconds / 60;
 
   const totalLight =
     directionMode === 'both-ways'
@@ -519,7 +629,7 @@ export default function TrafficCounterCountPage() {
 
   const totalVehicles = totalLight + totalHeavy;
   const currentVph =
-    elapsedMinutes > 0 ? calculateVPH(totalVehicles, Math.min(elapsedMinutes, duration)) : 0;
+    elapsedMinutes > 0 ? calculateVPH(totalVehicles, Math.min(elapsedMinutes, plannedDuration)) : 0;
   const heavyPercent = calculateHeavyPercentage(totalLight, totalHeavy);
 
   // Adjusted VPH for heavy vehicles
@@ -528,6 +638,10 @@ export default function TrafficCounterCountPage() {
   // Lane capacity
   const lanesNeeded =
     adjustedVph <= 1000 ? 1 : adjustedVph <= 2000 ? 2 : adjustedVph <= 3000 ? 3 : 4;
+
+  // Queue length
+  const queueLength = calculateQueueLength(totalLight, totalHeavy, currentVph);
+  const stoppingTime = estimateStoppingTime(currentVph);
 
   // Shuttle flow max length
   const getShuttleMax = (v: number) => {
@@ -567,39 +681,43 @@ export default function TrafficCounterCountPage() {
       </div>
 
       {/* Timer Section */}
-      <div className="bg-gray-800 py-4 flex items-center justify-center gap-4 border-b border-gray-700">
-        <ProgressRing progress={progress} timeRemaining={timeRemaining} totalTime={duration * 60} />
+      <div className="bg-gray-800 py-3 flex items-center justify-center gap-4 border-b border-gray-700">
+        <ProgressRing
+          progress={progress}
+          timeRemaining={timeRemaining}
+          totalTime={plannedDuration * 60}
+        />
         <Button onClick={handleStop} className="bg-red-600 hover:bg-red-700 h-12 px-4">
           ⏹ Stop
         </Button>
       </div>
 
       {/* Location Info */}
-      <div className="bg-gray-850 px-4 py-2 border-b border-gray-700 bg-gray-800/50">
+      <div className="px-4 py-2 border-b border-gray-700 bg-gray-800/50">
         <div className="flex items-center justify-between text-xs">
           <div>
             <span className="text-white font-semibold">{location.road_id || 'No location'}</span>
             <span className="text-gray-400 ml-2">{location.road_name}</span>
           </div>
           <div className="text-gray-500">
-            {duration}min | {directionMode === 'both-ways' ? '↔️ Both' : '→ One way'}
+            {plannedDuration}min | {directionMode === 'both-ways' ? '↔️ Both' : '→ One way'}
           </div>
         </div>
       </div>
 
       {/* Counters - Side by Side */}
-      <div className="flex-1 px-2 py-3">
+      <div className="flex-1 px-2 py-2">
         <div className="grid grid-cols-2 gap-2 h-full">
           {/* True Left */}
-          <div className="bg-gray-800 rounded-lg p-3 flex flex-col">
-            <div className="text-center mb-2">
+          <div className="bg-gray-800 rounded-lg p-2 flex flex-col">
+            <div className="text-center mb-1">
               <span className="text-green-400 font-semibold text-sm">← True Left</span>
               <p className="text-xs text-gray-500">Increasing SLK</p>
             </div>
-            <div className="flex-1 flex flex-col justify-center gap-4">
-              <div className="flex justify-center gap-6">
+            <div className="flex-1 flex flex-col justify-center gap-2">
+              <div className="flex justify-center gap-4">
                 <CounterButton
-                  label="🚗"
+                  vehicleType="car"
                   count={counts.trueLeftLight}
                   onIncrement={() => incrementCount('trueLeftLight')}
                   onDecrement={() => decrementCount('trueLeftLight')}
@@ -607,7 +725,7 @@ export default function TrafficCounterCountPage() {
                   disabled={isComplete}
                 />
                 <CounterButton
-                  label="🚛"
+                  vehicleType="truck"
                   count={counts.trueLeftHeavy}
                   onIncrement={() => incrementCount('trueLeftHeavy')}
                   onDecrement={() => decrementCount('trueLeftHeavy')}
@@ -626,15 +744,15 @@ export default function TrafficCounterCountPage() {
 
           {/* True Right - only show if both-ways */}
           {directionMode === 'both-ways' ? (
-            <div className="bg-gray-800 rounded-lg p-3 flex flex-col">
-              <div className="text-center mb-2">
+            <div className="bg-gray-800 rounded-lg p-2 flex flex-col">
+              <div className="text-center mb-1">
                 <span className="text-cyan-400 font-semibold text-sm">True Right →</span>
                 <p className="text-xs text-gray-500">Decreasing SLK</p>
               </div>
-              <div className="flex-1 flex flex-col justify-center gap-4">
-                <div className="flex justify-center gap-6">
+              <div className="flex-1 flex flex-col justify-center gap-2">
+                <div className="flex justify-center gap-4">
                   <CounterButton
-                    label="🚗"
+                    vehicleType="car"
                     count={counts.trueRightLight}
                     onIncrement={() => incrementCount('trueRightLight')}
                     onDecrement={() => decrementCount('trueRightLight')}
@@ -642,7 +760,7 @@ export default function TrafficCounterCountPage() {
                     disabled={isComplete}
                   />
                   <CounterButton
-                    label="🚛"
+                    vehicleType="truck"
                     count={counts.trueRightHeavy}
                     onIncrement={() => incrementCount('trueRightHeavy')}
                     onDecrement={() => decrementCount('trueRightHeavy')}
@@ -659,7 +777,7 @@ export default function TrafficCounterCountPage() {
               </div>
             </div>
           ) : (
-            <div className="bg-gray-800 rounded-lg p-3 flex flex-col items-center justify-center">
+            <div className="bg-gray-800 rounded-lg p-2 flex flex-col items-center justify-center">
               <p className="text-gray-500 text-sm text-center">
                 One Direction Mode
                 <br />
@@ -671,32 +789,44 @@ export default function TrafficCounterCountPage() {
       </div>
 
       {/* Live Stats */}
-      <div className="bg-gray-800 border-t border-gray-700 px-4 py-3">
-        <div className="grid grid-cols-4 gap-2 text-center mb-2">
+      <div className="bg-gray-800 border-t border-gray-700 px-3 py-2">
+        <div className="grid grid-cols-5 gap-1 text-center mb-2">
           <div>
-            <p className="text-xl font-bold text-white">{totalVehicles}</p>
+            <p className="text-lg font-bold text-white">{totalVehicles}</p>
             <p className="text-xs text-gray-500">Total</p>
           </div>
           <div>
-            <p className="text-xl font-bold text-amber-400">{heavyPercent}%</p>
+            <p className="text-lg font-bold text-amber-400">{heavyPercent}%</p>
             <p className="text-xs text-gray-500">Heavy</p>
           </div>
           <div>
-            <p className="text-xl font-bold text-blue-400">{currentVph}</p>
+            <p className="text-lg font-bold text-blue-400">{currentVph}</p>
             <p className="text-xs text-gray-500">VPH</p>
           </div>
           <div>
-            <p className="text-xl font-bold text-green-400">{lanesNeeded}</p>
+            <p className="text-lg font-bold text-green-400">{lanesNeeded}</p>
             <p className="text-xs text-gray-500">Lanes</p>
+          </div>
+          <div>
+            <p className="text-lg font-bold text-purple-400">
+              {queueLength > 0 ? queueLength : '-'}
+            </p>
+            <p className="text-xs text-gray-500">Queue</p>
           </div>
         </div>
 
         {/* Quick Reference */}
         <div className="bg-gray-900 rounded-lg p-2 text-xs">
-          {directionMode === 'both-ways' && (
+          {directionMode === 'both-ways' && currentVph > 0 && (
             <div className="flex justify-between mb-1">
               <span className="text-gray-400">🔀 Shuttle Max:</span>
               <span className="text-white font-semibold">{getShuttleMax(currentVph)}</span>
+            </div>
+          )}
+          {queueLength > 0 && (
+            <div className="flex justify-between mb-1">
+              <span className="text-gray-400">📏 Queue ({stoppingTime}min stop):</span>
+              <span className="text-white font-semibold">{queueLength}m</span>
             </div>
           )}
           {heavyPercent > 10 && (
@@ -710,11 +840,18 @@ export default function TrafficCounterCountPage() {
       {/* Stop Confirmation Dialog */}
       {showStopConfirm && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-800 rounded-xl p-6 w-full max-w-xs border border-red-600">
+          <div className="bg-gray-800 rounded-xl p-5 w-full max-w-xs border border-red-600">
             <h3 className="text-lg font-bold text-white text-center mb-2">Stop Count Early?</h3>
-            <p className="text-gray-400 text-sm text-center mb-4">
+            <p className="text-gray-400 text-sm text-center mb-3">
               This will end the count before the timer finishes.
             </p>
+            {elapsedSeconds < MINIMUM_DURATION_SECONDS && (
+              <div className="bg-amber-900/30 border border-amber-700 rounded-lg p-2 text-center mb-3">
+                <p className="text-xs text-amber-400">
+                  ⚠️ Under 3 minutes - record cannot be saved
+                </p>
+              </div>
+            )}
             <div className="flex gap-2">
               <Button
                 onClick={() => setShowStopConfirm(false)}
@@ -735,7 +872,8 @@ export default function TrafficCounterCountPage() {
       <CompletionOverlay
         isOpen={isComplete}
         counts={counts}
-        duration={duration}
+        plannedDuration={plannedDuration}
+        actualDuration={elapsedSeconds}
         directionMode={directionMode}
         location={location}
         notes={notes}
@@ -743,6 +881,7 @@ export default function TrafficCounterCountPage() {
         onSave={handleSave}
         onReset={handleReset}
         onCancel={handleCancel}
+        insufficientData={!isDurationSufficient}
       />
     </div>
   );
