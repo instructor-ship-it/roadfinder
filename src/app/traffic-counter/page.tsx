@@ -419,7 +419,10 @@ export default function TrafficCounterPage() {
             <CardContent className="space-y-4">
               {/* Lane Capacity */}
               <div>
-                <h4 className="font-semibold text-blue-400 mb-1">Lane Capacity (One Direction)</h4>
+                <h4 className="font-semibold text-blue-400 mb-0.5">
+                  Lane Capacity (One Direction)
+                </h4>
+                <p className="text-xs text-gray-500 italic mb-1">Source: AGTTM Part 2, Table 3.1</p>
                 <div className="text-xs overflow-x-auto">
                   <table className="w-full text-left">
                     <thead className="text-gray-400">
@@ -444,9 +447,12 @@ export default function TrafficCounterPage() {
 
               {/* Shuttle Flow */}
               <div>
-                <h4 className="font-semibold text-green-400 mb-1">
+                <h4 className="font-semibold text-green-400 mb-0.5">
                   Shuttle Flow Length (Both Directions)
                 </h4>
+                <p className="text-xs text-gray-500 italic mb-1">
+                  Source: AGTTM Part 2, Table 3.5 &amp; MRWA COP Table 15
+                </p>
                 <div className="text-xs overflow-x-auto">
                   <table className="w-full text-left">
                     <thead className="text-gray-400">
@@ -470,7 +476,8 @@ export default function TrafficCounterPage() {
 
               {/* Reduction Factors */}
               <div>
-                <h4 className="font-semibold text-amber-400 mb-1">Volume Reduction Factors</h4>
+                <h4 className="font-semibold text-amber-400 mb-0.5">Volume Reduction Factors</h4>
+                <p className="text-xs text-gray-500 italic mb-1">Source: MRWA Code of Practice</p>
                 <div className="text-xs space-y-1 text-gray-300">
                   {REDUCTION_FACTORS.map((row, i) => (
                     <div key={i} className="flex justify-between">
@@ -483,9 +490,10 @@ export default function TrafficCounterPage() {
 
               {/* Queue Multipliers */}
               <div>
-                <h4 className="font-semibold text-purple-400 mb-1">
+                <h4 className="font-semibold text-purple-400 mb-0.5">
                   Queue Length Multipliers (5 min count)
                 </h4>
+                <p className="text-xs text-gray-500 italic mb-1">Source: AGTTM Part 3, Table 4.3</p>
                 <div className="text-xs overflow-x-auto">
                   <table className="w-full text-left">
                     <thead className="text-gray-400">
