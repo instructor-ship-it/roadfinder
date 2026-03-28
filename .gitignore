@@ -44,6 +44,7 @@ local-*
 .z-ai-config
 dev.log
 test
+!src/test/
 prompt
 
 server.log
@@ -54,6 +55,7 @@ server.log
 *.ts
 !src/**/*.ts
 !src/**/*.tsx
+!vitest.config.ts
 /download/
 /db/
 /roadfinder/
