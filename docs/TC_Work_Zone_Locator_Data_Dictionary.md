@@ -2,7 +2,7 @@
 
 **Data Dictionary**
 
-Version RC 1.7.18
+Version RC 1.9.1
 
 Comprehensive Data Structure Reference
 
@@ -16,13 +16,14 @@ Comprehensive Data Structure Reference
 4. Speed Sign Override Structures
 5. AfterCare Data Structures
 6. Signage Data Structures
-7. Emergency Location Data Structures (NEW)
+7. Emergency Location Data Structures
 8. GPS Tracking Data Structures
 9. Weather Data Structures
 10. Places and Amenities
 11. Traffic Data Structures
-12. Storage Data Structures
-13. PWA Manifest Structure
+12. Traffic Counter Data Structures
+13. Storage Data Structures
+14. PWA Manifest Structure
 
 ---
 
@@ -141,6 +142,31 @@ Comprehensive Data Structure Reference
 | speed_limit | number | Speed limit in km/h |
 | carriageway | string | Left, Right, or Single |
 | source | string | "mrwa" or "override" |
+
+### 3.3 SpeedZoneCorrection
+
+Manual correction for speed zone data:
+
+| **Field** | **Type** | **Required** | **Description** |
+|-----------|----------|--------------|-----------------|
+| road_id | string | Yes | Road identifier |
+| start_slk | number | Yes | Zone start SLK |
+| end_slk | number | Yes | Zone end SLK |
+| direction | enum | Yes | "increasing" or "decreasing" |
+| correct_speed | number | Yes | Corrected speed limit |
+| original_speed | number | Yes | Original MRWA speed |
+| notes | string | No | Correction notes |
+| created_at | string | Yes | ISO timestamp |
+
+### 3.4 SpeedSignInfo
+
+Speed sign near a specific SLK:
+
+| **Field** | **Type** | **Description** |
+|-----------|----------|-----------------|
+| slk | number | Sign location SLK |
+| carriageway | string | Left, Right, or Single |
+| sign_type | string | Type of speed sign |
 
 ---
 
@@ -341,32 +367,71 @@ Sign with distance for drive page display:
 
 ---
 
-## 7. Emergency Location Data Structures (NEW)
+## 7. Emergency Location Data Structures
 
-### 13.1 EmergencyLocation
+### 7.1 CrossRoad
 
-| **Field** | **Type** | **Description** |
-|-----------|----------|-----------------|
-| crossRoad | string | Nearest intersecting road name |
-| crossRoadDistance | number | Distance to cross road in meters |
-| crossRoadDirection | string | Direction to cross road (e.g., "at", "50m north of") |
-| locality | string | Local government area or town name |
-| nearestTown | string? | Name of nearest town/city |
-| nearestTownDistance | number? | Distance to nearest town in km |
-| nearestTownDirection | string? | Direction from town to user (e.g., "southeast of Moora") |
-
-### 13.2 EmergencyFacility
+Nearest cross road for emergency location:
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
-| name | string | Facility name |
-| type | string | "hospital", "fire_station", "police_station" |
+| name | string | Cross road name |
+| distance | string | Distance description (e.g., "50m") |
+| distanceM | number | Distance in meters |
+| direction | string | Direction (e.g., "north of") |
+
+### 7.2 NearestTown
+
+Nearest town/city for emergency location:
+
+| **Field** | **Type** | **Description** |
+|-----------|----------|-----------------|
+| name | string | Town name |
+| distance | string | Distance description (e.g., "5km") |
+| distanceM | number | Distance in meters |
+| direction | string | Direction from town |
+
+### 7.3 NearestHospital
+
+| **Field** | **Type** | **Description** |
+|-----------|----------|-----------------|
+| name | string | Hospital name |
 | distance | number | Distance in km |
 | lat | number | Latitude |
 | lon | number | Longitude |
-| phone | string? | Phone number |
+| phone | string | Phone number |
 
-### 13.3 NearestIntersection (from MRWA Layer 6)
+### 7.4 NearestFireStation
+
+| **Field** | **Type** | **Description** |
+|-----------|----------|-----------------|
+| name | string | Station name |
+| distance | number | Distance in km |
+| lat | number | Latitude |
+| lon | number | Longitude |
+
+### 7.5 NearestPoliceStation
+
+| **Field** | **Type** | **Description** |
+|-----------|----------|-----------------|
+| name | string | Station name |
+| distance | number | Distance in km |
+| lat | number | Latitude |
+| lon | number | Longitude |
+
+### 7.6 EmergencyData
+
+Complete emergency location data:
+
+| **Field** | **Type** | **Description** |
+|-----------|----------|-----------------|
+| roadName | string | Current road name |
+| lat | number | Current latitude |
+| lon | number | Current longitude |
+| crossRoad | CrossRoad? | Nearest cross road |
+| nearestTown | NearestTown? | Nearest town/city |
+
+### 7.7 NearestIntersection (from MRWA Layer 6)
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -381,7 +446,7 @@ Sign with distance for drive page display:
 
 ## 8. GPS Tracking Data Structures
 
-### 13.1 GpsReading
+### 8.1 GpsReading
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -392,7 +457,7 @@ Sign with distance for drive page display:
 | heading | number | Heading in degrees |
 | timestamp | number | Unix timestamp |
 
-### 13.2 EkfState
+### 8.2 EkfState
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -400,7 +465,7 @@ Sign with distance for drive page display:
 | P | number[][] | Covariance matrix |
 | lastUpdate | number | Last update timestamp |
 
-### 13.3 EkfOutput
+### 8.3 EkfOutput
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -410,7 +475,7 @@ Sign with distance for drive page display:
 | confidence | string | High, Medium, Low, or Predicted |
 | isPredicted | boolean | Is this a prediction? |
 
-### 13.4 GpsSettings
+### 8.4 GpsSettings
 
 | **Field** | **Type** | **Default** | **Description** |
 |-----------|----------|-------------|-----------------|
@@ -429,7 +494,7 @@ Sign with distance for drive page display:
 
 ## 9. Weather Data Structures
 
-### 13.1 WeatherData
+### 9.1 WeatherData
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -440,7 +505,7 @@ Sign with distance for drive page display:
 | warnings | WeatherWarning[] | BOM warnings (if any) |
 | cached_at | number? | Cache timestamp |
 
-### 13.2 CurrentWeather
+### 9.2 CurrentWeather
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -452,7 +517,7 @@ Sign with distance for drive page display:
 | wind_direction | number | Wind direction in degrees |
 | uv_index | number | UV index |
 
-### 13.3 SunData
+### 9.3 SunData
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -460,7 +525,7 @@ Sign with distance for drive page display:
 | sunset | string | Sunset time (HH:MM) |
 | daylight_hours | number | Hours of daylight |
 
-### 13.4 WeatherWarning
+### 9.4 WeatherWarning
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -471,11 +536,51 @@ Sign with distance for drive page display:
 | expires | string | Expiry time |
 | link | string | BOM link |
 
+### 9.5 CachedWeather
+
+Cached weather data for offline access:
+
+| **Field** | **Type** | **Description** |
+|-----------|----------|-----------------|
+| lat | number | Location latitude |
+| lon | number | Location longitude |
+| data | any | Weather data structure |
+| cached_at | string | ISO timestamp of cache |
+| location | string? | Location name |
+
 ---
 
 ## 10. Places and Amenities
 
-### 13.1 Place
+### 10.1 AmenityPlace
+
+Individual amenity location:
+
+| **Field** | **Type** | **Description** |
+|-----------|----------|-----------------|
+| name | string | Place name |
+| type | enum | "hospital", "fuel", or "toilet" |
+| lat | number | Latitude |
+| lon | number | Longitude |
+| distance | number? | Distance from current location |
+| address | string? | Street address |
+| phone | string? | Phone number |
+| opening_hours | string? | Opening hours |
+| emergency | boolean? | Is emergency facility |
+
+### 10.2 AmenitiesCache
+
+Cached amenities by region:
+
+| **Field** | **Type** | **Description** |
+|-----------|----------|-----------------|
+| region | string | MRWA region |
+| hospitals | AmenityPlace[] | Hospital locations |
+| fuelStations | AmenityPlace[] | Fuel station locations |
+| toilets | AmenityPlace[] | Public toilet locations |
+| last_updated | string | ISO timestamp of last update |
+
+### 10.3 Place (Legacy)
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -489,20 +594,11 @@ Sign with distance for drive page display:
 | googleMapsUrl | string | Google Maps link |
 | isEmergency | boolean? | Emergency facility? |
 
-### 13.2 AmenitiesData (Cached)
-
-| **Field** | **Type** | **Description** |
-|-----------|----------|-----------------|
-| region | string | MRWA region |
-| hospitals | Place[] | Hospital locations |
-| fuel_stations | Place[] | Fuel station locations |
-| toilets | Place[] | Public toilet locations |
-
 ---
 
 ## 11. Traffic Data Structures
 
-### 13.1 TrafficData
+### 11.1 TrafficData
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -513,7 +609,7 @@ Sign with distance for drive page display:
 | peak_hour_volume | number | Peak hour volume |
 | source | string | Data source |
 
-### 13.2 TrafficVolume (Cached)
+### 11.2 TrafficVolume (Cached)
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -523,21 +619,89 @@ Sign with distance for drive page display:
 | year | number | Data year |
 | heavy_percent | number | Heavy vehicle percentage |
 
+### 11.3 TrafficSite
+
+Traffic counting site data:
+
+| **Field** | **Type** | **Description** |
+|-----------|----------|-----------------|
+| site_id | string | Site identifier |
+| road_id | string | Road identifier |
+| slk | number | Location SLK |
+| lat | number | Latitude |
+| lon | number | Longitude |
+| description | string | Site description |
+
 ---
 
-## 12. Storage Data Structures
+## 12. Traffic Counter Data Structures
+
+### 12.1 TrafficCountRecord
+
+Manual traffic count record:
+
+| **Field** | **Type** | **Required** | **Description** |
+|-----------|----------|--------------|-----------------|
+| id | string | Yes | Unique record identifier |
+| road_id | string | Yes | Road identifier |
+| road_name | string | Yes | Road name |
+| slk | number | No | Location SLK |
+| lat | number | No | GPS latitude |
+| lon | number | No | GPS longitude |
+| region | string | Yes | MRWA region |
+| duration_minutes | number | Yes | Count duration in minutes |
+| direction_mode | CountDirection | Yes | "one-way" or "both-ways" |
+| true_left_light | number | Yes | Light vehicles - True Left |
+| true_left_heavy | number | Yes | Heavy vehicles - True Left |
+| true_right_light | number | Yes | Light vehicles - True Right |
+| true_right_heavy | number | Yes | Heavy vehicles - True Right |
+| total_light | number | Yes | Total light vehicles |
+| total_heavy | number | Yes | Total heavy vehicles |
+| total_vehicles | number | Yes | Total vehicles counted |
+| heavy_percentage | number | Yes | Heavy vehicle percentage |
+| vph_true_left | number | Yes | Vehicles per hour - True Left |
+| vph_true_right | number | Yes | Vehicles per hour - True Right |
+| vph_combined | number | Yes | Combined VPH |
+| vph_one_direction | number | Yes | Single direction VPH |
+| date | string | Yes | ISO date (YYYY-MM-DD) |
+| start_time | string | Yes | Start time (HH:MM) |
+| end_time | string | Yes | End time (HH:MM) |
+
+### 12.2 TrafficCountStats
+
+Statistics for traffic counting:
+
+| **Field** | **Type** | **Description** |
+|-----------|----------|-----------------|
+| totalRecords | number | Total count records |
+| totalVehiclesCounted | number | Sum of all vehicles |
+| averageHeavyPercent | number | Average heavy vehicle % |
+| mostCountedRoad | object? | { road_id, road_name, count } |
+
+### 12.3 CountDirection
+
+| **Value** | **Description** |
+|-----------|-----------------|
+| one-way | Single direction count |
+| both-ways | Both directions counted |
+
+---
+
+## 13. Storage Data Structures
 
 ### 13.1 localStorage Keys
 
 | **Key** | **Type** | **Description** |
 |---------|----------|-----------------|
 | speedSignOverrides | SpeedSignOverride[] | Speed sign overrides |
+| speedZoneCorrections | SpeedZoneCorrection[] | Speed zone corrections |
 | afterCareJobs | AfterCareJob[] | AfterCare jobs and signs |
 | signPresets | SignPreset[] | User-defined sign presets |
 | gpsSettings | GpsSettings | GPS/EKF settings |
 | windGustThreshold | number | Wind gust alert threshold |
 | defaultRegion | string | Default region selection |
 | offlineToggles | OfflineToggles | Data source toggles |
+| trafficCountHistory | TrafficCountRecord[] | Traffic count records |
 
 ### 13.2 OfflineToggles
 
@@ -550,7 +714,18 @@ Sign with distance for drive page display:
 | regulatorySigns | boolean | false | Show regulatory signs from IndexedDB |
 | warningSigns | boolean | false | Show warning signs from IndexedDB |
 
-### 13.3 IndexedDB Stores
+### 13.3 DatasetMetadata
+
+Metadata for synced datasets:
+
+| **Field** | **Type** | **Description** |
+|-----------|----------|-----------------|
+| dataset | string | Dataset name |
+| lastSync | string | ISO timestamp of last sync |
+| recordCount | number | Number of records |
+| source | enum | "static" or "mrwa" |
+
+### 13.4 IndexedDB Stores
 
 | **Store** | **Key** | **Description** |
 |-----------|---------|-----------------|
@@ -561,12 +736,13 @@ Sign with distance for drive page display:
 | warningSigns | id | Warning signage |
 | pavement | road_id + slk | Pavement and lane data |
 | trafficVolume | road_id + slk | Traffic count data |
+| datasetMeta | dataset | Dataset metadata |
 
 ---
 
-## 13. PWA Manifest Structure
+## 14. PWA Manifest Structure
 
-### 13.1 manifest.json
+### 14.1 manifest.json
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -580,7 +756,7 @@ Sign with distance for drive page display:
 | icons | Icon[] | App icons array |
 | shortcuts | Shortcut[] | Quick action shortcuts |
 
-### 13.2 Icon
+### 14.2 Icon
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -589,7 +765,7 @@ Sign with distance for drive page display:
 | type | string | "image/png" |
 | purpose | string | "any maskable" |
 
-### 13.3 Shortcut
+### 14.3 Shortcut
 
 | **Field** | **Type** | **Description** |
 |-----------|----------|-----------------|
@@ -599,7 +775,7 @@ Sign with distance for drive page display:
 | url | string | Target URL |
 | icons | Icon[] | Shortcut icons |
 
-### 13.4 Service Worker Cache
+### 14.4 Service Worker Cache
 
 | **Cache Name** | **Contents** |
 |----------------|--------------|
@@ -632,6 +808,10 @@ type Carriageway = 'Left' | 'Right' | 'Single';
 type ConfidenceLevel = 'High' | 'Medium' | 'Low' | 'Predicted';
 
 type PlaceType = 'hospital' | 'fuel' | 'toilet';
+
+type CountDirection = 'one-way' | 'both-ways';
+
+type DataSource = 'static' | 'mrwa';
 ```
 
 ### Coordinate Types
