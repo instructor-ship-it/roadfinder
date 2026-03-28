@@ -100,14 +100,42 @@ function interpolateMultiplier(stoppingTime: number, isHeavy: boolean): number {
 }
 
 /**
- * Calculate queue length
+ * Calculate queue length for a single direction
  * Queue = (light_count × Ma) + (heavy_count × Mo)
  */
-function calculateQueueLength(lightCount: number, heavyCount: number, vph: number): number {
+function calculateQueueLengthSingle(lightCount: number, heavyCount: number, vph: number): number {
   const stoppingTime = estimateStoppingTime(vph);
   const lightMultiplier = interpolateMultiplier(stoppingTime, false);
   const heavyMultiplier = interpolateMultiplier(stoppingTime, true);
   return Math.round(lightCount * lightMultiplier + heavyCount * heavyMultiplier);
+}
+
+/**
+ * Calculate queue length based on direction mode
+ * - One-way: All traffic counts toward queue
+ * - Both-ways: Use the WORST CASE (higher count direction)
+ */
+function calculateQueueLength(
+  lightCountTrueLeft: number,
+  heavyCountTrueLeft: number,
+  lightCountTrueRight: number,
+  heavyCountTrueRight: number,
+  vph: number,
+  directionMode: CountDirection
+): number {
+  if (directionMode === 'one-way') {
+    // One direction mode: all traffic is at one end
+    return calculateQueueLengthSingle(lightCountTrueLeft, heavyCountTrueLeft, vph);
+  } else {
+    // Both ways mode: calculate queue for each direction, return worst case
+    const queueTrueLeft = calculateQueueLengthSingle(lightCountTrueLeft, heavyCountTrueLeft, vph);
+    const queueTrueRight = calculateQueueLengthSingle(
+      lightCountTrueRight,
+      heavyCountTrueRight,
+      vph
+    );
+    return Math.max(queueTrueLeft, queueTrueRight);
+  }
 }
 
 // ============================================
@@ -280,8 +308,15 @@ function CompletionOverlay({
   const lanesNeeded =
     adjustedVph <= 1000 ? 1 : adjustedVph <= 2000 ? 2 : adjustedVph <= 3000 ? 3 : 4;
 
-  // Calculate queue length
-  const queueLength = calculateQueueLength(totalLight, totalHeavy, vph);
+  // Calculate queue length - use worst case for both-ways mode
+  const queueLength = calculateQueueLength(
+    counts.trueLeftLight,
+    counts.trueLeftHeavy,
+    counts.trueRightLight,
+    counts.trueRightHeavy,
+    vph,
+    directionMode
+  );
   const stoppingTime = estimateStoppingTime(vph);
 
   // Calculate shuttle flow max length
@@ -553,8 +588,15 @@ export default function TrafficCounterCountPage() {
     const heavyPercent = calculateHeavyPercentage(totalLight, totalHeavy);
     const vph = calculateVPH(totalVehicles, actualDurationMin);
 
-    // Calculate queue length
-    const queueLength = calculateQueueLength(totalLight, totalHeavy, vph);
+    // Calculate queue length - use worst case for both-ways mode
+    const queueLength = calculateQueueLength(
+      counts.trueLeftLight,
+      counts.trueLeftHeavy,
+      counts.trueRightLight,
+      counts.trueRightHeavy,
+      vph,
+      directionMode
+    );
 
     createTrafficCountRecord({
       road_id: location.road_id || 'UNKNOWN',
@@ -639,8 +681,15 @@ export default function TrafficCounterCountPage() {
   const lanesNeeded =
     adjustedVph <= 1000 ? 1 : adjustedVph <= 2000 ? 2 : adjustedVph <= 3000 ? 3 : 4;
 
-  // Queue length
-  const queueLength = calculateQueueLength(totalLight, totalHeavy, currentVph);
+  // Queue length - use worst case for both-ways mode
+  const queueLength = calculateQueueLength(
+    counts.trueLeftLight,
+    counts.trueLeftHeavy,
+    counts.trueRightLight,
+    counts.trueRightHeavy,
+    currentVph,
+    directionMode
+  );
   const stoppingTime = estimateStoppingTime(currentVph);
 
   // Shuttle flow max length
