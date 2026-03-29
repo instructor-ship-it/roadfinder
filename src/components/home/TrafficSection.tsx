@@ -1,11 +1,20 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import {
+  calculateMaxHoldTime,
+  PREPARE_TO_STOP_DISTANCE_M,
+  ADV_QUEUE_WARNING_DISTANCE_M,
+  type MaxHoldTimeResult,
+} from '@/lib/max-hold-time';
 
 interface TrafficData {
   aadt?: number;
+  aadt_weekday?: number;
   peak_hour_volume?: number;
+  peak_hour_volume_weekday?: number;
   heavy_vehicle_percent?: number;
+  heavy_vehicle_weekday_pct?: number;
   source: string;
   distance_to_site?: number;
   nearest_sites?: Array<{
@@ -20,6 +29,7 @@ interface TrafficSectionProps {
   traffic: TrafficData | null;
   showTraffic: boolean;
   onToggle: () => void;
+  tcLengthM?: number | null;
 }
 
 // Helper functions for traffic calculations
@@ -43,32 +53,35 @@ function getLaneCapacity(vph: number): string {
   return '4+ lanes';
 }
 
-export function TrafficSection({ traffic, showTraffic, onToggle }: TrafficSectionProps) {
+export function TrafficSection({ traffic, showTraffic, onToggle, tcLengthM }: TrafficSectionProps) {
   if (!traffic) return null;
 
   // Calculate shuttle flow and lane capacity from traffic data
   const peakHourOneDir = traffic.peak_hour_volume || 0;
   const peakHourBothDir = peakHourOneDir * 2;
-  
+
   // If we have AADT, estimate peak hour from typical 10% factor
-  const estimatedPeakFromAadt = traffic.aadt ? Math.round(traffic.aadt * 0.10) : 0;
+  const estimatedPeakFromAadt = traffic.aadt ? Math.round(traffic.aadt * 0.1) : 0;
   const vphBothDir = peakHourBothDir || estimatedPeakFromAadt;
   const vphOneDir = peakHourOneDir || Math.round(vphBothDir / 2);
-  
+
   // Apply reduction factor for heavy vehicles >10%
   const heavyPct = traffic.heavy_vehicle_percent || 0;
   const reductionFactor = heavyPct > 10 ? 0.8 : 1;
   const reducedVph = Math.round(vphBothDir * reductionFactor);
-  
+
   const shuttleFlow = getShuttleFlowLength(reducedVph);
   const laneCapacity = getLaneCapacity(Math.round(vphOneDir * reductionFactor));
 
+  // Maximum Hold Time calculation (use weekday data preferentially)
+  const peakVphWeekday = traffic.peak_hour_volume_weekday || traffic.peak_hour_volume || 0;
+  const heavyPctWeekday = traffic.heavy_vehicle_weekday_pct || traffic.heavy_vehicle_percent || 0;
+  const vphOneDirWeekday = peakVphWeekday ? Math.round(peakVphWeekday / 2) : vphOneDir;
+  const maxHold: MaxHoldTimeResult | null = calculateMaxHoldTime(vphOneDirWeekday, heavyPctWeekday);
+
   return (
     <div className="bg-gray-800 rounded-lg">
-      <button
-        onClick={onToggle}
-        className="w-full p-4 flex items-center justify-between text-left"
-      >
+      <button onClick={onToggle} className="w-full p-4 flex items-center justify-between text-left">
         <h3 className="text-sm font-semibold text-blue-400">
           🚗 Traffic Volume
           {traffic.aadt && (
@@ -79,7 +92,7 @@ export function TrafficSection({ traffic, showTraffic, onToggle }: TrafficSectio
         </h3>
         <span className="text-gray-400 text-lg">{showTraffic ? '−' : '+'}</span>
       </button>
-      
+
       {showTraffic && (
         <div className="px-4 pb-4">
           {/* Key Metrics */}
@@ -95,8 +108,7 @@ export function TrafficSection({ traffic, showTraffic, onToggle }: TrafficSectio
             <div>
               <p className="text-gray-400">Heavy Vehicles</p>
               <p className={`font-medium ${heavyPct > 10 ? 'text-amber-400' : ''}`}>
-                {heavyPct}%
-                {heavyPct > 10 && ' (reduced capacity)'}
+                {heavyPct}%{heavyPct > 10 && ' (reduced capacity)'}
               </p>
             </div>
             <div>
@@ -104,7 +116,7 @@ export function TrafficSection({ traffic, showTraffic, onToggle }: TrafficSectio
               <p className="font-medium">{laneCapacity}</p>
             </div>
           </div>
-          
+
           {/* Shuttle Flow Guidance */}
           <div className="bg-gray-700/30 rounded p-3 mb-4">
             <h4 className="text-sm font-medium text-cyan-400 mb-2">🚦 Shuttle Flow Max Length</h4>
@@ -121,7 +133,66 @@ export function TrafficSection({ traffic, showTraffic, onToggle }: TrafficSectio
               {heavyPct > 10 && ` (20% reduction for ${heavyPct}% heavy vehicles)`}
             </p>
           </div>
-          
+
+          {/* Maximum Hold Time */}
+          {maxHold && (
+            <div className="bg-orange-900/20 border border-orange-700/50 rounded p-3 mb-4">
+              <h4 className="text-sm font-medium text-orange-400 mb-2">⏱️ Maximum Hold Time</h4>
+              <div className="grid grid-cols-2 gap-3 text-sm mb-2">
+                <div>
+                  <p className="text-gray-400 text-xs">Max Hold</p>
+                  <p className="text-xl font-bold text-orange-300">
+                    {maxHold.maxHoldTimeMinutes} min
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-xs">Recommended Stop</p>
+                  <p className="text-xl font-bold text-white">
+                    {maxHold.recommendedStopMinutes} min
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-xs">Queue Growth</p>
+                  <p className="font-medium text-gray-200">{maxHold.queueGrowthRate} m/min</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-xs">
+                    Queue @ {maxHold.recommendedStopMinutes}min
+                  </p>
+                  <p className="font-medium text-gray-200">{maxHold.queueAtRecommendedStop}m</p>
+                </div>
+              </div>
+              {tcLengthM && tcLengthM > 0 && (
+                <div className="bg-gray-900/50 rounded p-2 mb-2">
+                  <p className="text-xs text-gray-400">
+                    📏 TC zone length:{' '}
+                    <span className="text-white font-semibold">{tcLengthM}m</span>
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    Clearance time:{' '}
+                    <span className="text-white font-semibold">
+                      ~{Math.round((tcLengthM / 40) * 60)}s
+                    </span>
+                  </p>
+                </div>
+              )}
+              {maxHold.queueAtRecommendedStop > PREPARE_TO_STOP_DISTANCE_M && (
+                <div className="bg-red-900/30 border border-red-700 rounded p-2 mb-2">
+                  <p className="text-xs text-red-400">
+                    ⚠️ Queue at {maxHold.recommendedStopMinutes}min stop (
+                    {maxHold.queueAtRecommendedStop}m) exceeds Prepare to Stop distance (
+                    {PREPARE_TO_STOP_DISTANCE_M}m)
+                  </p>
+                </div>
+              )}
+              <p className="text-xs text-gray-500">
+                Based on weekday peak {vphOneDirWeekday} VPH/direction, {heavyPctWeekday}% heavy.
+                Sign distances: Prepare to Stop {PREPARE_TO_STOP_DISTANCE_M}m, Adv Queue Warning{' '}
+                {ADV_QUEUE_WARNING_DISTANCE_M}m.
+              </p>
+            </div>
+          )}
+
           {/* Shuttle Flow Table */}
           <details className="text-sm">
             <summary className="text-cyan-400 cursor-pointer">📋 AGTTM Shuttle Flow Table</summary>
@@ -179,17 +250,15 @@ export function TrafficSection({ traffic, showTraffic, onToggle }: TrafficSectio
               <p className="text-gray-500 mt-1">* Requires risk assessment</p>
             </div>
           </details>
-          
+
           {traffic.distance_to_site !== undefined && (
             <p className="text-xs text-cyan-400 mt-2">
               📍 Nearest count site: {traffic.distance_to_site} km from work zone
             </p>
           )}
-          
-          <p className="text-xs text-gray-500 mt-2">
-            Source: {traffic.source}
-          </p>
-          
+
+          <p className="text-xs text-gray-500 mt-2">Source: {traffic.source}</p>
+
           {traffic.nearest_sites && traffic.nearest_sites.length > 1 && (
             <div className="mt-3 pt-3 border-t border-gray-700">
               <p className="text-xs text-gray-400 mb-2">Other nearby count sites:</p>
@@ -205,10 +274,8 @@ export function TrafficSection({ traffic, showTraffic, onToggle }: TrafficSectio
               </div>
             </div>
           )}
-          
-          {traffic.note && (
-            <p className="text-xs text-amber-400 mt-2">{traffic.note}</p>
-          )}
+
+          {traffic.note && <p className="text-xs text-amber-400 mt-2">{traffic.note}</p>}
         </div>
       )}
     </div>

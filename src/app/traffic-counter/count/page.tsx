@@ -10,6 +10,7 @@ import {
   calculateHeavyPercentage,
   createTrafficCountRecord,
 } from '@/lib/traffic-counter-storage';
+import { calculateMaxHoldTime, PREPARE_TO_STOP_DISTANCE_M } from '@/lib/max-hold-time';
 
 const APP_VERSION = 'RC 1.9.6';
 const MINIMUM_DURATION_SECONDS = 180; // 3 minutes minimum
@@ -39,6 +40,7 @@ interface SetupState {
   directionMode: CountDirection;
   location: LocationData;
   notes: string;
+  siteDistance: number;
 }
 
 // ============================================
@@ -284,6 +286,7 @@ function CompletionOverlay({
   onReset,
   onCancel,
   insufficientData,
+  siteDistance,
 }: {
   isOpen: boolean;
   counts: CounterState;
@@ -297,6 +300,7 @@ function CompletionOverlay({
   onReset: () => void;
   onCancel: () => void;
   insufficientData: boolean;
+  siteDistance: number;
 }) {
   if (!isOpen) return null;
 
@@ -330,6 +334,10 @@ function CompletionOverlay({
     directionMode
   );
   const stoppingTime = estimateStoppingTime(vph);
+
+  // Maximum Hold Time calculation for completion overlay
+  const vphOneDirOverlay = vph / 2; // Assume 50/50 split
+  const maxHoldOverlay = calculateMaxHoldTime(vphOneDirOverlay, heavyPercent);
 
   // Calculate shuttle flow max length
   const getShuttleMax = (v: number) => {
@@ -400,6 +408,31 @@ function CompletionOverlay({
             <p className="text-xs text-gray-500">Based on {stoppingTime} min stopping time</p>
           </div>
 
+          {/* Maximum Hold Time */}
+          {maxHoldOverlay && (
+            <div className="bg-orange-900/30 border border-orange-700 rounded-lg p-2 text-center">
+              <p className="text-sm text-orange-400">
+                ⏱️ Max Hold:{' '}
+                <span className="text-white font-bold">{maxHoldOverlay.maxHoldTimeMinutes}min</span>{' '}
+                | Recommended:{' '}
+                <span className="text-white font-bold">
+                  {maxHoldOverlay.recommendedStopMinutes}min
+                </span>
+              </p>
+              <p className="text-xs text-gray-500">
+                Queue {maxHoldOverlay.queueGrowthRate}m/min |{' '}
+                {maxHoldOverlay.queueAtRecommendedStop}m @ {maxHoldOverlay.recommendedStopMinutes}
+                min stop
+              </p>
+              {siteDistance < PREPARE_TO_STOP_DISTANCE_M && (
+                <p className="text-xs text-red-400 mt-1">
+                  ⚠️ Site distance ({siteDistance}m) &lt; Prepare to Stop distance (
+                  {PREPARE_TO_STOP_DISTANCE_M}m)
+                </p>
+              )}
+            </div>
+          )}
+
           {directionMode === 'both-ways' && (
             <div className="bg-gray-900 rounded-lg p-2 text-center">
               <p className="text-xs text-gray-400">
@@ -467,6 +500,7 @@ export default function TrafficCounterCountPage() {
       }
   );
   const [notes] = useState<string>(() => setupState?.notes ?? '');
+  const [siteDistance] = useState<number>(() => setupState?.siteDistance ?? 100);
 
   // Timer state
   const [timeRemaining, setTimeRemaining] = useState<number>(
@@ -710,6 +744,10 @@ export default function TrafficCounterCountPage() {
   );
   const stoppingTime = estimateStoppingTime(currentVph);
 
+  // Maximum Hold Time calculation
+  const vphOneDir = currentVph / 2; // Assume 50/50 split
+  const maxHold = calculateMaxHoldTime(vphOneDir, heavyPercent);
+
   // Shuttle flow max length
   const getShuttleMax = (v: number) => {
     if (v >= 701) return '70m';
@@ -858,7 +896,7 @@ export default function TrafficCounterCountPage() {
 
       {/* Live Stats */}
       <div className="bg-gray-800 border-t border-gray-700 px-3 py-2">
-        <div className="grid grid-cols-5 gap-1 text-center mb-2">
+        <div className="grid grid-cols-6 gap-1 text-center mb-2">
           <div>
             <p className="text-lg font-bold text-white">{totalVehicles}</p>
             <p className="text-xs text-gray-500">Total</p>
@@ -881,6 +919,12 @@ export default function TrafficCounterCountPage() {
             </p>
             <p className="text-xs text-gray-500">Queue</p>
           </div>
+          <div>
+            <p className="text-lg font-bold text-orange-400">
+              {maxHold ? `${maxHold.recommendedStopMinutes}m` : '-'}
+            </p>
+            <p className="text-xs text-gray-500">Hold</p>
+          </div>
         </div>
 
         {/* Quick Reference */}
@@ -900,6 +944,14 @@ export default function TrafficCounterCountPage() {
           {heavyPercent > 10 && (
             <div className="text-amber-400 flex items-center gap-1">
               ⚠️ Heavy &gt;10%: Lane capacity adjusted (+20%)
+            </div>
+          )}
+          {maxHold && (
+            <div className="flex justify-between mb-1">
+              <span className="text-gray-400">⏱️ Max Hold:</span>
+              <span className="text-white font-semibold">
+                {maxHold.maxHoldTimeMinutes}min (queue {maxHold.queueGrowthRate}m/min)
+              </span>
             </div>
           )}
         </div>
@@ -950,6 +1002,7 @@ export default function TrafficCounterCountPage() {
         onReset={handleReset}
         onCancel={handleCancel}
         insufficientData={(capturedDuration ?? elapsedSeconds) < MINIMUM_DURATION_SECONDS}
+        siteDistance={siteDistance}
       />
     </div>
   );

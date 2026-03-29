@@ -2,22 +2,24 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-const STATE_ROAD_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/24/query";
-const TRAFFIC_URL = "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/27/query";
+const STATE_ROAD_URL =
+  'https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/24/query';
+const TRAFFIC_URL =
+  'https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/27/query';
 
 // Cache for offline traffic data
 let offlineTrafficData: Map<string, any> | null = null;
 
 function loadOfflineTrafficData(): Map<string, any> {
   if (offlineTrafficData) return offlineTrafficData;
-  
+
   try {
     const filePath = path.join(process.cwd(), 'public', 'data', 'traffic-data.json');
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf-8');
       const data = JSON.parse(content);
       offlineTrafficData = new Map();
-      
+
       // Common WA road name to road_id mappings
       const roadIdMap: Record<string, string> = {
         'Great Eastern Hwy': 'H005',
@@ -76,12 +78,12 @@ function loadOfflineTrafficData(): Map<string, any> {
         'Mandurah Tce': 'H054',
         'Pinjarra Rd': 'H055',
       };
-      
+
       for (const road of data.traffic || []) {
         // Store by road_name (primary key in data)
         if (road.road_name) {
           offlineTrafficData.set(road.road_name, road);
-          
+
           // Also store by road_id if we have a mapping
           const mappedRoadId = roadIdMap[road.road_name];
           if (mappedRoadId) {
@@ -89,20 +91,24 @@ function loadOfflineTrafficData(): Map<string, any> {
           }
         }
       }
-      
+
       console.log(`Loaded ${offlineTrafficData.size} roads with offline traffic data`);
     }
   } catch (e) {
     console.error('Error loading offline traffic data:', e);
   }
-  
+
   return offlineTrafficData || new Map();
 }
 
-async function fetchArcGIS(baseUrl: string, params: Record<string, string>, timeoutMs = 5000): Promise<any> {
+async function fetchArcGIS(
+  baseUrl: string,
+  params: Record<string, string>,
+  timeoutMs = 5000
+): Promise<any> {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-  
+
   try {
     const url = new URL(baseUrl);
     Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, value));
@@ -118,18 +124,25 @@ async function fetchArcGIS(baseUrl: string, params: Record<string, string>, time
 // Calculate distance between two points in km
 function calcDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371;
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) *
-            Math.sin(dLon/2) * Math.sin(dLon/2);
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function getOfflineTrafficResponse(roadId: string, targetLat: number | null, targetLon: number | null) {
+function getOfflineTrafficResponse(
+  roadId: string,
+  targetLat: number | null,
+  targetLon: number | null
+) {
   const offlineData = loadOfflineTrafficData();
   const roadData = offlineData.get(roadId);
-  
+
   if (!roadData) {
     return {
       road_id: roadId,
@@ -140,38 +153,43 @@ function getOfflineTrafficResponse(roadId: string, targetLat: number | null, tar
       peak_hour_volume: null,
       source: 'Offline: No traffic data available',
       sites: [],
-      offline: true
+      offline: true,
     };
   }
-  
+
   // Process sites
   const sites = (roadData.sites || []).map((site: any) => {
     let distanceKm: number | null = null;
     if (targetLat && targetLon && site.lat && site.lon) {
       distanceKm = calcDistanceKm(targetLat, targetLon, site.lat, site.lon);
     }
-    
+
     return {
       site_no: site.site_no,
       location: site.location_desc,
       year: site.traffic_year,
       aadt: site.aadt || 0,
       heavy_percent: site.heavy_vehicle_pct || 0,
+      heavy_vehicle_weekday_pct: site.heavy_vehicle_weekday_pct || null,
       lat: site.lat,
       lon: site.lon,
-      distance_km: distanceKm ? Math.round(distanceKm * 10) / 10 : null
+      distance_km: distanceKm ? Math.round(distanceKm * 10) / 10 : null,
     };
   });
-  
+
   // Sort by distance if target location provided
   if (targetLat && targetLon) {
     sites.sort((a: any, b: any) => (a.distance_km || Infinity) - (b.distance_km || Infinity));
   } else {
     sites.sort((a: any, b: any) => (b.year || 0) - (a.year || 0));
   }
-  
+
   const closest = sites[0];
-  
+
+  // Weekday data for offline
+  const aadtWeekdayOffline = closest?.aadt || null;
+  const heavyWeekdayOffline = closest?.heavy_vehicle_weekday_pct || closest?.heavy_percent || null;
+
   return {
     road_id: roadId,
     road_name: roadData.road_name,
@@ -179,13 +197,20 @@ function getOfflineTrafficResponse(roadId: string, targetLat: number | null, tar
     aadt_year: closest?.year || null,
     heavy_vehicle_percent: closest ? Math.round(closest.heavy_percent * 10) / 10 : null,
     peak_hour_volume: closest?.aadt ? Math.round(closest.aadt * 0.1) : null,
-    source: closest?.location ? `Offline: MRWA Traffic (${closest.location})` : 'Offline: MRWA Traffic Data',
+    aadt_weekday: aadtWeekdayOffline,
+    peak_hour_volume_weekday: aadtWeekdayOffline ? Math.round(aadtWeekdayOffline * 0.1) : null,
+    heavy_vehicle_weekday_pct: heavyWeekdayOffline
+      ? Math.round(heavyWeekdayOffline * 10) / 10
+      : null,
+    source: closest?.location
+      ? `Offline: MRWA Traffic (${closest.location})`
+      : 'Offline: MRWA Traffic Data',
     distance_to_site: closest?.distance_km || null,
     total_sites: sites.length,
     nearest_sites: sites.slice(0, 5),
     yearly_summaries: [],
-    note: "Data loaded from offline storage.",
-    offline: true
+    note: 'Data loaded from offline storage.',
+    offline: true,
   };
 }
 
@@ -201,74 +226,77 @@ export async function GET(request: Request) {
 
   // Check if offline
   const isOffline = process.env.OFFLINE_MODE === 'true';
-  
+
   // Try online API first
   if (!isOffline) {
     try {
       // Step 1: Get road name from road ID
       const roadQuery = {
         where: `ROAD = '${roadId}'`,
-        outFields: "ROAD_NAME",
-        returnGeometry: "false",
-        f: "json",
-        resultRecordCount: "1"
+        outFields: 'ROAD_NAME',
+        returnGeometry: 'false',
+        f: 'json',
+        resultRecordCount: '1',
       };
-      
+
       const roadResult = await fetchArcGIS(STATE_ROAD_URL, roadQuery, 5000);
-      
+
       if (!roadResult.features || roadResult.features.length === 0) {
         // Fall back to offline data
         return NextResponse.json(getOfflineTrafficResponse(roadId, targetLat, targetLon));
       }
-      
+
       const roadName = roadResult.features[0].attributes.ROAD_NAME;
-      
+
       // Step 2: Search for traffic data by road name
       const trafficQuery = {
         where: `ROAD_NAME = '${roadName.replace(/'/g, "''")}'`,
-        outFields: "SITE_NO,ROAD_NAME,LOCATION_DESC,TRAFFIC_YEAR,COLLECTION_TYPE,MON_SUN,MON_FRI,PCT_HEAVY_MON_SUN",
-        returnGeometry: "true",
-        f: "json",
-        resultRecordCount: "100",
-        orderByFields: "TRAFFIC_YEAR DESC"
+        outFields:
+          'SITE_NO,ROAD_NAME,LOCATION_DESC,TRAFFIC_YEAR,COLLECTION_TYPE,MON_SUN,MON_FRI,PCT_HEAVY_MON_SUN,PCT_HEAVY_MON_FRI',
+        returnGeometry: 'true',
+        f: 'json',
+        resultRecordCount: '100',
+        orderByFields: 'TRAFFIC_YEAR DESC',
       };
-      
+
       const trafficResult = await fetchArcGIS(TRAFFIC_URL, trafficQuery, 5000);
-      
+
       if (!trafficResult.features || trafficResult.features.length === 0) {
         // Fall back to offline data
         return NextResponse.json(getOfflineTrafficResponse(roadId, targetLat, targetLon));
       }
-      
+
       // Process all sites
       const sites = trafficResult.features.map((f: any) => {
         const attrs = f.attributes;
         const geom = f.geometry;
         let distanceKm: number | null = null;
-        
+
         if (targetLat && targetLon && geom?.x && geom?.y) {
           distanceKm = calcDistanceKm(targetLat, targetLon, geom.y, geom.x);
         }
-        
+
         return {
           site_no: attrs.SITE_NO,
           location: attrs.LOCATION_DESC,
           year: attrs.TRAFFIC_YEAR,
           aadt: attrs.MON_SUN || attrs.MON_FRI || 0,
+          mon_fri: attrs.MON_FRI || null,
           heavy_percent: attrs.PCT_HEAVY_MON_SUN || 0,
+          pct_heavy_mon_fri: attrs.PCT_HEAVY_MON_FRI || null,
           lat: geom?.y || null,
           lon: geom?.x || null,
-          distance_km: distanceKm ? Math.round(distanceKm * 10) / 10 : null
+          distance_km: distanceKm ? Math.round(distanceKm * 10) / 10 : null,
         };
       });
-      
+
       // Sort by distance if target location provided
       if (targetLat && targetLon) {
         sites.sort((a: any, b: any) => (a.distance_km || Infinity) - (b.distance_km || Infinity));
       }
-      
+
       const closest = sites[0];
-      
+
       // Get latest data by year for summary
       const byYear = new Map<string, { count: number; avgAadt: number; avgHeavy: number }>();
       for (const site of sites) {
@@ -281,14 +309,21 @@ export async function GET(request: Request) {
         data.avgAadt += site.aadt;
         data.avgHeavy += site.heavy_percent;
       }
-      
-      const yearSummaries = Array.from(byYear.entries()).map(([year, data]) => ({
-        year,
-        site_count: data.count,
-        avg_aadt: Math.round(data.avgAadt / data.count),
-        avg_heavy_percent: Math.round(data.avgHeavy / data.count * 10) / 10
-      })).sort((a, b) => b.year.localeCompare(a.year));
-      
+
+      const yearSummaries = Array.from(byYear.entries())
+        .map(([year, data]) => ({
+          year,
+          site_count: data.count,
+          avg_aadt: Math.round(data.avgAadt / data.count),
+          avg_heavy_percent: Math.round((data.avgHeavy / data.count) * 10) / 10,
+        }))
+        .sort((a, b) => b.year.localeCompare(a.year));
+
+      // Weekday data (preferred for work zone planning)
+      const aadtWeekday = closest.mon_fri || closest.aadt;
+      const peakHourVolumeWeekday = Math.round(aadtWeekday * 0.1);
+      const heavyVehicleWeekdayPct = closest.pct_heavy_mon_fri || closest.heavy_percent;
+
       return NextResponse.json({
         road_id: roadId,
         road_name: roadName,
@@ -296,22 +331,26 @@ export async function GET(request: Request) {
         aadt_year: closest.year,
         heavy_vehicle_percent: Math.round(closest.heavy_percent * 10) / 10,
         peak_hour_volume: Math.round(closest.aadt * 0.1),
+        aadt_weekday: aadtWeekday,
+        peak_hour_volume_weekday: peakHourVolumeWeekday,
+        heavy_vehicle_weekday_pct: heavyVehicleWeekdayPct
+          ? Math.round(heavyVehicleWeekdayPct * 10) / 10
+          : null,
         source: `MRWA Traffic Digest (${closest.location})`,
         distance_to_site: closest.distance_km,
         total_sites: sites.length,
         nearest_sites: sites.slice(0, 5),
         yearly_summaries: yearSummaries.slice(0, 3),
-        note: "Peak hour volume is estimated at 10% of AADT.",
-        offline: false
+        note: 'Peak hour volume is estimated at 10% of AADT. Weekday data used where available.',
+        offline: false,
       });
-      
     } catch (error) {
       console.error('Traffic API error, falling back to offline:', error);
       // Fall back to offline data
       return NextResponse.json(getOfflineTrafficResponse(roadId, targetLat, targetLon));
     }
   }
-  
+
   // Offline mode
   return NextResponse.json(getOfflineTrafficResponse(roadId, targetLat, targetLon));
 }

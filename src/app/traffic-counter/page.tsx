@@ -40,6 +40,7 @@ interface SetupState {
   directionMode: CountDirection;
   location: LocationData;
   notes: string;
+  siteDistance: number;
 }
 
 // ============================================
@@ -55,6 +56,7 @@ export default function TrafficCounterSetupPage() {
   const [isCustomMode, setIsCustomMode] = useState<boolean>(false); // Track if custom duration is active
   const [directionMode, setDirectionMode] = useState<CountDirection>('both-ways');
   const [notes, setNotes] = useState('');
+  const [siteDistance, setSiteDistance] = useState<number>(100);
 
   // Location state
   const [location, setLocation] = useState<LocationData>({
@@ -191,6 +193,7 @@ export default function TrafficCounterSetupPage() {
             directionMode,
             location: finalLocation,
             notes,
+            siteDistance,
           };
           sessionStorage.setItem('trafficCounterSetup', JSON.stringify(setupState));
           router.push('/traffic-counter/count');
@@ -211,6 +214,7 @@ export default function TrafficCounterSetupPage() {
       directionMode,
       location,
       notes,
+      siteDistance,
     };
     sessionStorage.setItem('trafficCounterSetup', JSON.stringify(setupState));
     router.push('/traffic-counter/count');
@@ -363,6 +367,29 @@ export default function TrafficCounterSetupPage() {
               {directionMode === 'one-way'
                 ? '💡 Count one direction for lane capacity'
                 : '💡 Count both for shuttle flow operations'}
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Site Distance */}
+        <Card className="bg-gray-800 border-gray-700">
+          <CardContent className="pt-3 pb-3">
+            <label className="block text-xs font-medium text-gray-400 mb-1.5">
+              📏 Site Distance (TC to TC)
+            </label>
+            <input
+              type="number"
+              min={50}
+              max={5000}
+              step={10}
+              value={siteDistance}
+              onChange={(e) =>
+                setSiteDistance(Math.max(50, Math.min(5000, Number(e.target.value))))
+              }
+              className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm h-9 text-white"
+            />
+            <p className="text-xs text-gray-500 mt-1.5">
+              💡 Distance between TC positions. Defaults to 100m.
             </p>
           </CardContent>
         </Card>
