@@ -3053,7 +3053,7 @@ export default function Home() {
       }
 
       // Build source string
-      const sources = [];
+      const sources: string[] = [];
       if (hospitalSource) sources.push(`Hospital: ${hospitalSource}`);
       if (fuelSource) sources.push(`Fuel: ${fuelSource}`);
       if (toiletSource) sources.push(`Toilet: ${toiletSource}`);
