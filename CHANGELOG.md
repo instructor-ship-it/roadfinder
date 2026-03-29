@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.9.7] - 2026-03-29
+
+### Added
+
+- **Maximum Hold Time Calculator** on Work Zone Info page
+  - Displays Max Hold (min), Recommended Stop (min), Queue Growth (m/min), Queue at recommended stop (m)
+  - Uses weekday peak VPH and heavy vehicle percentage when available
+  - Shows TC zone length and clearance time from work zone geometry
+  - Warning when queue at recommended stop exceeds Prepare to Stop distance (100m)
+- **Shuttle Flow Reference Table** now shows Source column (AGTTM vs MRWA COP)
+
+### Fixed
+
+- **Shuttle Flow Risk Assessment** corrected to match AGTTM Part 2 Table 3.5 and MRWA COP Table 15
+  - VPH 251–300 no longer incorrectly flagged for risk assessment (matches AGTTM exactly)
+  - Risk assessment wording corrected: "to the satisfaction of the relevant road authority" per MRWA COP Section 6.8.7
+  - Fabricated asterisks removed (neither source document uses them)
+- **Clearance Time Unit Conversion** corrected (metres per second, not per minute)
+
+### Changed
+
+- **Heavy Vehicle Count Button** colour changed from red to blue for better visual distinction
+- **Offline Data Section** in settings shows compact single-line display with Manage button when data already downloaded
+
+---
+
 ## [1.9.6] - 2026-03-28
 
 ### Added
@@ -271,6 +297,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Key Changes                                                               |
 | ------- | ---------- | ------------------------------------------------------------------------- |
+| 1.9.7   | 2026-03-29 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements |
 | 1.9.6   | 2026-03-28 | Traffic Counter: Auto-GPS, custom duration UI, duration fixes, lint fixes |
 | 1.9.5   | 2026-03-28 | Testing, CI/CD, Best Practice 100                                         |
 | 1.9.4   | 2026-03-28 | Component extraction (Weather, Traffic, Amenities, WorkZone)              |

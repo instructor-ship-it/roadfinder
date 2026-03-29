@@ -12,7 +12,7 @@ import {
 } from '@/lib/traffic-counter-storage';
 import { calculateMaxHoldTime, PREPARE_TO_STOP_DISTANCE_M } from '@/lib/max-hold-time';
 
-const APP_VERSION = 'RC 1.9.6';
+const APP_VERSION = 'RC 1.9.7';
 const MINIMUM_DURATION_SECONDS = 180; // 3 minutes minimum
 
 // ============================================
@@ -231,12 +231,12 @@ function CounterButton({
   count: number;
   onIncrement: () => void;
   onDecrement: () => void;
-  color: 'green' | 'amber';
+  color: 'green' | 'red';
   disabled: boolean;
 }) {
   const colorClasses = {
     green: 'bg-green-600 hover:bg-green-700 active:bg-green-800',
-    amber: 'bg-amber-600 hover:bg-amber-700 active:bg-amber-800',
+    red: 'bg-blue-600 hover:bg-blue-700 active:bg-blue-800',
   };
 
   const icon = vehicleType === 'car' ? '🚗' : '🚛';
@@ -254,7 +254,7 @@ function CounterButton({
         +1
       </button>
       <span
-        className={`text-lg font-bold mt-1 ${color === 'amber' ? 'text-amber-400' : 'text-white'}`}
+        className={`text-lg font-bold mt-1 ${color === 'red' ? 'text-blue-400' : 'text-white'}`}
       >
         {count}
       </span>
@@ -835,7 +835,7 @@ export default function TrafficCounterCountPage() {
                   count={counts.trueLeftHeavy}
                   onIncrement={() => incrementCount('trueLeftHeavy')}
                   onDecrement={() => decrementCount('trueLeftHeavy')}
-                  color="amber"
+                  color="red"
                   disabled={isComplete}
                 />
               </div>
@@ -870,7 +870,7 @@ export default function TrafficCounterCountPage() {
                     count={counts.trueRightHeavy}
                     onIncrement={() => incrementCount('trueRightHeavy')}
                     onDecrement={() => decrementCount('trueRightHeavy')}
-                    color="amber"
+                    color="red"
                     disabled={isComplete}
                   />
                 </div>

@@ -1,6 +1,6 @@
 # Direction-Aware Speed Zones
 
-## Technical Addendum for RC 1.9.1
+## Technical Addendum for RC 1.9.7
 
 ### Bidirectional Speed Zone Detection and Manual Corrections
 
@@ -20,9 +20,9 @@ MRWA's speed zone data structure uses a 'carriageway' field to differentiate bet
 
 ### Example: M031 Speed Zone Data
 
-| SLK Range | MRWA Speed | Carriageway | Reality |
-| -------------- | -------------- | --------------- | --------- |
-| 67.340 - 69.180 | 90 km/h | Single | 60 Right / 90 Left |
+| SLK Range       | MRWA Speed | Carriageway | Reality            |
+| --------------- | ---------- | ----------- | ------------------ |
+| 67.340 - 69.180 | 90 km/h    | Single      | 60 Right / 90 Left |
 
 ---
 
@@ -36,10 +36,10 @@ The system tracks SLK movement to determine travel direction. When SLK values in
 
 **Direction Mapping:**
 
-| SLK Movement | Direction Terminology |
-| ----------------- | ------------------------ |
-| Increasing (SLK values go up) | True Right |
-| Decreasing (SLK values go down) | True Left |
+| SLK Movement                    | Direction Terminology |
+| ------------------------------- | --------------------- |
+| Increasing (SLK values go up)   | True Right            |
+| Decreasing (SLK values go down) | True Left             |
 
 ### 3.2 Direction-Aware Speed Zone Lookup
 
@@ -57,12 +57,12 @@ When GPS tracking is active, the system must determine which road the user is tr
 
 The fix implements a priority-based matching system that prefers State Roads over Local Roads:
 
-| Priority | Road Type | Examples |
-| -------------- | -------------- | -------------- |
-| 1 (Highest) | State Roads | M031, H005, M010, M026 |
-| 2 | Regional Roads | R-roads |
-| 3 | Local Roads | Local streets |
-| 4 (Lowest) | Miscellaneous | Unknown types |
+| Priority    | Road Type      | Examples               |
+| ----------- | -------------- | ---------------------- |
+| 1 (Highest) | State Roads    | M031, H005, M010, M026 |
+| 2           | Regional Roads | R-roads                |
+| 3           | Local Roads    | Local streets          |
+| 4 (Lowest)  | Miscellaneous  | Unknown types          |
 
 **How it works:**
 
@@ -74,6 +74,7 @@ The fix implements a priority-based matching system that prefers State Roads ove
 **Priority as Tiebreaker (RC 1.0.2 Fix):**
 
 Priority only applies as a tiebreaker when distances are within 50m:
+
 - If State Road is 100m away and Local Road is 20m away → Local Road selected (correct)
 - If State Road is 50m away and Local Road is 45m away → State Road selected (correct)
 
@@ -83,15 +84,15 @@ Priority only applies as a tiebreaker when distances are within 50m:
 
 ### 5.1 Speed Zone Functions (src/lib/offline-db.ts)
 
-| Function | Description |
-| -------------- | --------------- |
-| `getSpeedLimitForDirection()` | Get speed limit for current SLK considering travel direction |
-| `getSpeedZoneCorrections()` | Get all stored speed zone corrections from localStorage |
-| `addSpeedZoneCorrection()` | Add a new speed zone correction for a road/direction |
-| `removeSpeedZoneCorrection()` | Remove a specific speed zone correction |
-| `clearSpeedZoneCorrections()` | Clear all stored speed zone corrections |
+| Function                      | Description                                                     |
+| ----------------------------- | --------------------------------------------------------------- |
+| `getSpeedLimitForDirection()` | Get speed limit for current SLK considering travel direction    |
+| `getSpeedZoneCorrections()`   | Get all stored speed zone corrections from localStorage         |
+| `addSpeedZoneCorrection()`    | Add a new speed zone correction for a road/direction            |
+| `removeSpeedZoneCorrection()` | Remove a specific speed zone correction                         |
+| `clearSpeedZoneCorrections()` | Clear all stored speed zone corrections                         |
 | `applySpeedZoneCorrections()` | Apply corrections to speed limit for current location/direction |
-| `getRoadTypePriority()` | Get priority level for road type (State > Regional > Local) |
+| `getRoadTypePriority()`       | Get priority level for road type (State > Regional > Local)     |
 
 ---
 
@@ -99,16 +100,16 @@ Priority only applies as a tiebreaker when distances are within 50m:
 
 ### 6.1 SpeedZoneCorrection Interface
 
-| Field | Type | Description |
-| ------- | ------- | --------------- |
-| `road_id` | string | Road identifier (e.g., 'M031') |
-| `start_slk` | number | Start SLK of correction zone |
-| `end_slk` | number | End SLK of correction zone |
-| `direction` | 'increasing' \| 'decreasing' | Travel direction (increasing=True Right, decreasing=True Left) |
-| `correct_speed` | number | Correct speed limit (km/h) |
-| `original_speed` | number | Original (incorrect) MRWA speed |
-| `notes` | string (optional) | User notes about the correction |
-| `created_at` | string | ISO timestamp of creation |
+| Field            | Type                         | Description                                                    |
+| ---------------- | ---------------------------- | -------------------------------------------------------------- |
+| `road_id`        | string                       | Road identifier (e.g., 'M031')                                 |
+| `start_slk`      | number                       | Start SLK of correction zone                                   |
+| `end_slk`        | number                       | End SLK of correction zone                                     |
+| `direction`      | 'increasing' \| 'decreasing' | Travel direction (increasing=True Right, decreasing=True Left) |
+| `correct_speed`  | number                       | Correct speed limit (km/h)                                     |
+| `original_speed` | number                       | Original (incorrect) MRWA speed                                |
+| `notes`          | string (optional)            | User notes about the correction                                |
+| `created_at`     | string                       | ISO timestamp of creation                                      |
 
 ---
 
@@ -122,29 +123,29 @@ Users can add speed zone corrections through the Drive page UI. Navigate to Tool
 
 The correction form supports manual entry for any road, without requiring active GPS tracking:
 
-| Field | Description |
-| -------- | --------------- |
-| Road ID | Manual entry field (e.g., M031). Auto-converts to uppercase. |
-| Direction | Two buttons: 'True Right' or 'True Left'. No technical terms shown. |
-| Start SLK | Start of correction zone (lower SLK value) |
-| End SLK | End of correction zone (higher SLK value) |
-| MRWA Speed | The incorrect speed from MRWA data |
-| Correct Speed | The actual speed limit at this location |
-| Notes | Optional notes about the correction |
+| Field         | Description                                                         |
+| ------------- | ------------------------------------------------------------------- |
+| Road ID       | Manual entry field (e.g., M031). Auto-converts to uppercase.        |
+| Direction     | Two buttons: 'True Right' or 'True Left'. No technical terms shown. |
+| Start SLK     | Start of correction zone (lower SLK value)                          |
+| End SLK       | End of correction zone (higher SLK value)                           |
+| MRWA Speed    | The incorrect speed from MRWA data                                  |
+| Correct Speed | The actual speed limit at this location                             |
+| Notes         | Optional notes about the correction                                 |
 
 ### 7.3 Example: M031 Correction
 
 For the M031 bidirectional zone issue at SLK 67.34-67.62:
 
-| Field | Value |
-| -------- | ------- |
-| Road ID | M031 |
-| Direction | True Right (button selection) |
-| Start SLK | 67.340 |
-| End SLK | 67.620 |
-| MRWA Speed | 90 |
-| Correct Speed | 60 |
-| Notes | Double-sided sign: 60 True Right, 90 True Left |
+| Field         | Value                                          |
+| ------------- | ---------------------------------------------- |
+| Road ID       | M031                                           |
+| Direction     | True Right (button selection)                  |
+| Start SLK     | 67.340                                         |
+| End SLK       | 67.620                                         |
+| MRWA Speed    | 90                                             |
+| Correct Speed | 60                                             |
+| Notes         | Double-sided sign: 60 True Right, 90 True Left |
 
 ---
 
@@ -177,11 +178,11 @@ The speed zone lookahead feature was enhanced to work in both SLK directions. Pr
 
 ### 9.3 Visual Indicators
 
-| Border Color | Meaning |
-| ---------------- | --------- |
-| White | Current speed zone, no change ahead |
-| Yellow/Amber | Speed DECREASE approaching |
-| Green | Community-verified override zone |
+| Border Color | Meaning                             |
+| ------------ | ----------------------------------- |
+| White        | Current speed zone, no change ahead |
+| Yellow/Amber | Speed DECREASE approaching          |
+| Green        | Community-verified override zone    |
 
 ---
 
@@ -232,25 +233,30 @@ The direction detection algorithm requires a minimum speed of 5 km/h and a minim
 ## 13. Version History
 
 ### RC 1.9.1 (Current)
+
 - Updated documentation for new features
 - Added warning banner documentation
 - Added speeding alert documentation
 
 ### RC 1.7.18
+
 - Fixed Signage Corridor showing incorrect intersections in work zone reports
 - Added Direction-Aware Speed Zone documentation
 
 ### RC 1.7.17
+
 - Created shared emergency module
 - Fixed cross road detection using Layer 6
 
 ### RC 1.2.1
+
 - Added Override Zone Visual Indicator
 
 ### RC 1.2.0
+
 - Fixed double-sided sign interpretation
 - Added direction-aware speed zone lookahead
 
 ---
 
-*This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.1.*
+_This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.7._

@@ -1,6 +1,6 @@
-# RC 1.9.1 Key Learnings & Concepts
+# RC 1.9.7 Key Learnings & Concepts
 
-> **Version:** RC 1.9.1
+> **Version:** RC 1.9.7
 > **Date:** June 2025
 > **Author:** Development Session Notes
 
@@ -53,6 +53,7 @@ This document captures all key learnings, architectural decisions, and coding pa
 ### The Problem
 
 Signs have two status values that can differ:
+
 - **Stored Status** (`sign.status`) - The value saved in localStorage
 - **Calculated Status** (`calculateSignStatus(sign)`) - Real-time derivation from `retrieval_type` + time elapsed
 
@@ -75,6 +76,7 @@ if (calculatedStatus === 'retrieved') continue;
 - SLK tracking must use calculated status to properly detect signs needing attention
 
 ### Files Affected
+
 - `src/lib/aftercare.ts` - `getUpcomingSigns()`, `getJobsForRoad()`
 - `src/app/drive/page.tsx` - AfterCare indicator
 
@@ -84,14 +86,14 @@ if (calculatedStatus === 'retrieved') continue;
 
 Each sign has its own independent lifecycle based on `retrieval_type`:
 
-| Retrieval Type | Status Calculation |
-| ------------------ | ---------------------- |
-| `standard` | Due after 2 days from `placed_date` |
-| `scheduled` | Due on `retrieval_date` |
-| `maintain-daily` | Due every 1 day from `last_maintained_date` |
-| `maintain-weekly` | Due every 7 days |
-| `maintain-monthly` | Due every 30 days |
-| `tba` | Always "placed" (indefinite) |
+| Retrieval Type     | Status Calculation                          |
+| ------------------ | ------------------------------------------- |
+| `standard`         | Due after 2 days from `placed_date`         |
+| `scheduled`        | Due on `retrieval_date`                     |
+| `maintain-daily`   | Due every 1 day from `last_maintained_date` |
+| `maintain-weekly`  | Due every 7 days                            |
+| `maintain-monthly` | Due every 30 days                           |
+| `tba`              | Always "placed" (indefinite)                |
 
 ### Key Concept
 
@@ -109,32 +111,32 @@ export function solveTSPNearestNeighbor(distances: number[][], startIndex = 0): 
   const visited = new Set<number>();
   const route = [startIndex];
   visited.add(startIndex);
-  
+
   while (visited.size < distances.length) {
     // Find nearest unvisited point
     let nearestDist = Infinity;
     let nearestIdx = -1;
-    
+
     for (let i = 0; i < distances.length; i++) {
       if (!visited.has(i) && distances[current][i] < nearestDist) {
         nearestDist = distances[current][i];
         nearestIdx = i;
       }
     }
-    
+
     route.push(nearestIdx);
     visited.add(nearestIdx);
   }
-  
+
   return route;
 }
 ```
 
 ### Hybrid Distance Calculation
 
-| Mode | Method | Use Case |
-| ---- | ------ | -------- |
-| Online | OSRM API | Road distances (accurate) |
+| Mode    | Method    | Use Case                          |
+| ------- | --------- | --------------------------------- |
+| Online  | OSRM API  | Road distances (accurate)         |
 | Offline | Haversine | Straight-line distance (fallback) |
 
 ---
@@ -147,10 +149,10 @@ export function haversineDistance(lat1: number, lon1: number, lat2: number, lon2
   const R = 6371; // Earth's radius in km
   const dLat = toRadians(lat2 - lat1);
   const dLon = toRadians(lon2 - lon1);
-  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
-            Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
 
@@ -228,13 +230,13 @@ Job (container only)
 export function calculateJobStatus(job: AfterCareJob): ComputedJobStatus {
   for (const sign of job.signs) {
     const signStatus = calculateSignStatus(sign);
-    
+
     if (signStatus === 'due-retrieval') hasDueRetrieval = true;
     if (signStatus === 'due-maintenance') hasDueMaintenance = true;
     if (signStatus === 'retrieved') continue;
     else allRetrieved = false;
   }
-  
+
   // Priority: due-retrieval > due-maintenance > tba > active
   if (allRetrieved) return 'retrieved';
   if (hasDueRetrieval) return 'due-retrieval';
@@ -255,20 +257,20 @@ Users can manually override auto-calculated status, but can also undo it.
 // Marking early retrieval (manual override)
 updateSignInJob(jobId, signId, {
   status: 'due-retrieval',
-  status_manually_set: true  // Flag to prevent auto-calculation
+  status_manually_set: true, // Flag to prevent auto-calculation
 });
 
 // Undo - restore to auto-calculated status
 updateSignInJob(jobId, signId, {
-  status_manually_set: false  // Allow auto-calc again
+  status_manually_set: false, // Allow auto-calc again
 });
 ```
 
 ### The `status_manually_set` Flag
 
-| Value | Behavior |
-| ------ | -------- |
-| `true` | Use stored status, don't recalculate |
+| Value   | Behavior                                         |
+| ------- | ------------------------------------------------ |
+| `true`  | Use stored status, don't recalculate             |
 | `false` | Use `calculateSignStatus()` for real-time status |
 
 ---
@@ -282,15 +284,15 @@ For efficient route optimization with multiple points:
 export async function getOSRMDistanceMatrix(
   points: { lat: number; lon: number }[]
 ): Promise<{ distances: number[][]; durations: number[][] } | null> {
-  const coords = points.map(p => `${p.lon},${p.lat}`).join(';');
+  const coords = points.map((p) => `${p.lon},${p.lat}`).join(';');
   const response = await fetch(
     `https://router.project-osrm.org/table/v1/driving/${coords}?annotations=distance,duration`
   );
-  
+
   // Returns N×N matrix of distances and travel times
   return {
-    distances: data.distances,  // In kilometers
-    durations: data.durations    // In minutes
+    distances: data.distances, // In kilometers
+    durations: data.durations, // In minutes
   };
 }
 ```
@@ -308,9 +310,9 @@ export async function getOSRMDistanceMatrix(
 ```typescript
 export async function checkConnectivity(): Promise<boolean> {
   try {
-    const response = await fetch('https://router.project-osrm.org/', { 
+    const response = await fetch('https://router.project-osrm.org/', {
       method: 'HEAD',
-      signal: AbortSignal.timeout(3000)  // 3-second timeout
+      signal: AbortSignal.timeout(3000), // 3-second timeout
     });
     return response.ok;
   } catch {
@@ -334,7 +336,7 @@ if (isOnline) {
 ```typescript
 const handlePrintReport = () => {
   const printWindow = window.open('', '_blank');
-  
+
   const html = `
     <!DOCTYPE html>
     <html>
@@ -351,10 +353,10 @@ const handlePrintReport = () => {
     </body>
     </html>
   `;
-  
+
   printWindow.document.write(html);
   printWindow.document.close();
-  printWindow.print();  // Triggers browser print dialog
+  printWindow.print(); // Triggers browser print dialog
 };
 ```
 
@@ -371,7 +373,7 @@ const handlePrintReport = () => {
 ```typescript
 // Simple localStorage wrapper with type safety
 export function getAfterCareJobs(): AfterCareJob[] {
-  if (typeof window === 'undefined') return [];  // SSR guard
+  if (typeof window === 'undefined') return []; // SSR guard
   try {
     const data = localStorage.getItem('afterCareJobs');
     return data ? JSON.parse(data) : [];
@@ -381,19 +383,19 @@ export function getAfterCareJobs(): AfterCareJob[] {
 }
 
 export function saveAfterCareJobs(jobs: AfterCareJob[]): void {
-  if (typeof window === 'undefined') return;  // SSR guard
+  if (typeof window === 'undefined') return; // SSR guard
   localStorage.setItem('afterCareJobs', JSON.stringify(jobs));
 }
 ```
 
 ### Why localStorage
 
-| Benefit | Description |
-| -------- | ----------- |
+| Benefit           | Description                   |
+| ----------------- | ----------------------------- |
 | Vercel Compatible | Works on read-only filesystem |
-| Persists | Data survives browser close |
-| Offline | No server needed |
-| Simple | No backend required |
+| Persists          | Data survives browser close   |
+| Offline           | No server needed              |
+| Simple            | No backend required           |
 
 ---
 
@@ -402,20 +404,20 @@ export function saveAfterCareJobs(jobs: AfterCareJob[]): void {
 ```typescript
 // Always use ISO format for storage
 export function toIsoDate(date: Date): string {
-  return date.toISOString().split('T')[0];  // '2026-03-09'
+  return date.toISOString().split('T')[0]; // '2026-03-09'
 }
 
 // Display in Australian format
 export function formatAusDate(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
-  return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth()+1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+  return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
   // '09/03/2026'
 }
 
 // Calculate days until (handles timezone correctly)
 export function daysUntil(date: Date): number {
   const today = new Date();
-  today.setHours(0, 0, 0, 0);  // Reset time to midnight
+  today.setHours(0, 0, 0, 0); // Reset time to midnight
   const target = new Date(date);
   target.setHours(0, 0, 0, 0);
   return Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
@@ -469,10 +471,10 @@ const signStatusCounts = useMemo(() => {
 
 ### Performance Impact
 
-| Without useMemo | With useMemo |
-| ----------------- | ---------------- |
+| Without useMemo                        | With useMemo                          |
+| -------------------------------------- | ------------------------------------- |
 | Counts recalculated on every keystroke | Only recalculated when `jobs` changes |
-| Poor performance with large datasets | Optimized performance |
+| Poor performance with large datasets   | Optimized performance                 |
 
 ---
 
@@ -484,32 +486,31 @@ Convert GPS coordinates to road ID and SLK position.
 
 ```typescript
 export async function findRoadNearGps(
-  lat: number, 
-  lon: number, 
+  lat: number,
+  lon: number,
   maxDistanceKm: number = 0.5
 ): Promise<{ road_id: string; road_name: string; slk: number } | null> {
-  
   const roads = await getRoadsNearPoint(lat, lon, maxDistanceKm);
-  
+
   if (roads.length === 0) return null;
-  
+
   let closestRoad = null;
   let closestDistance = Infinity;
-  
+
   for (const road of roads) {
     const projection = projectPointOnRoad(lat, lon, road.geometry);
     const distance = projection.distance;
-    
+
     if (distance < closestDistance) {
       closestDistance = distance;
       closestRoad = {
         road_id: road.road_id,
         road_name: road.road_name,
-        slk: projection.slk
+        slk: projection.slk,
       };
     }
   }
-  
+
   return closestRoad;
 }
 ```
@@ -524,34 +525,38 @@ GPS gives lat/lon, but TCs need SLK. The projection algorithm interpolates along
 
 ### Australian Road Convention
 
-| Term | Meaning | SLK Direction |
-| ---- | ------- | ------------- |
-| True Left | Left Carriageway | INCREASING SLK |
+| Term       | Meaning           | SLK Direction  |
+| ---------- | ----------------- | -------------- |
+| True Left  | Left Carriageway  | INCREASING SLK |
 | True Right | Right Carriageway | DECREASING SLK |
 
 ```typescript
 function detectDirection(
-  currentSlk: number, 
-  previousSlk: number, 
+  currentSlk: number,
+  previousSlk: number,
   threshold: number = 0.001
 ): 'increasing' | 'decreasing' | 'unknown' {
   const delta = currentSlk - previousSlk;
-  
+
   if (delta > threshold) return 'increasing';
   if (delta < -threshold) return 'decreasing';
   return 'unknown';
 }
 
 // Filter signs based on travel direction
-function getUpcomingSigns(roadId: string, currentSlk: number, direction: 'increasing' | 'decreasing') {
+function getUpcomingSigns(
+  roadId: string,
+  currentSlk: number,
+  direction: 'increasing' | 'decreasing'
+) {
   for (const sign of job.signs) {
     if (direction === 'increasing' && sign.direction !== 'True Left') continue;
     if (direction === 'decreasing' && sign.direction !== 'True Right') continue;
-    
+
     // Check if sign is ahead
     if (direction === 'increasing' && sign.slk < currentSlk) continue;
     if (direction === 'decreasing' && sign.slk > currentSlk) continue;
-    
+
     signs.push(sign);
   }
 }
@@ -567,25 +572,25 @@ localStorage has ~5MB limit. We have 69,000+ roads.
 
 ### IndexedDB vs localStorage
 
-| Feature | localStorage | IndexedDB |
-| ------- | ------------ | --------- |
-| Size Limit | ~5MB | ~50MB+ |
-| Data Type | Strings only | Objects, arrays, blobs |
-| Queries | Key-value only | Indexes, ranges |
-| Async | No | Yes |
-| Simple | Yes | No |
+| Feature    | localStorage   | IndexedDB              |
+| ---------- | -------------- | ---------------------- |
+| Size Limit | ~5MB           | ~50MB+                 |
+| Data Type  | Strings only   | Objects, arrays, blobs |
+| Queries    | Key-value only | Indexes, ranges        |
+| Async      | No             | Yes                    |
+| Simple     | Yes            | No                     |
 
 ```typescript
 export async function initDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('RoadDataDB', 1);
-    
+
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
-    
+
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
-      
+
       if (!db.objectStoreNames.contains('roads')) {
         const roadStore = db.createObjectStore('roads', { keyPath: 'road_id' });
         roadStore.createIndex('region', 'region', { unique: false });
@@ -604,18 +609,18 @@ export async function initDB(): Promise<IDBDatabase> {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const action = searchParams.get('action');
-  
+
   switch (action) {
     case 'locate':
       const roadId = searchParams.get('road_id');
       const slk = parseFloat(searchParams.get('slk') || '0');
       const coords = await getCoordinatesFromSlk(roadId, slk);
       return Response.json({ latitude: coords.lat, longitude: coords.lon });
-      
+
     case 'regions':
       const regions = await getRegions();
       return Response.json({ regions });
-      
+
     default:
       return Response.json({ error: 'Invalid action' }, { status: 400 });
   }
@@ -658,8 +663,19 @@ export interface AfterCareSign {
 // Union types for constrained values
 export type SignCategory = 'surface' | 'speed' | 'hazard';
 export type SignDirection = 'True Left' | 'True Right';
-export type RetrievalType = 'standard' | 'scheduled' | 'maintain-daily' | 'maintain-weekly' | 'maintain-monthly' | 'tba';
-export type SignStatus = 'placed' | 'due-retrieval' | 'due-maintenance' | 'maintained' | 'retrieved';
+export type RetrievalType =
+  | 'standard'
+  | 'scheduled'
+  | 'maintain-daily'
+  | 'maintain-weekly'
+  | 'maintain-monthly'
+  | 'tba';
+export type SignStatus =
+  | 'placed'
+  | 'due-retrieval'
+  | 'due-maintenance'
+  | 'maintained'
+  | 'retrieved';
 ```
 
 ### Benefits
@@ -678,21 +694,24 @@ export function exportAllJobs(): string {
   return JSON.stringify(getAfterCareJobs(), null, 2);
 }
 
-export function importJobs(json: string, replace: boolean = false): { success: boolean; count: number; error?: string } {
+export function importJobs(
+  json: string,
+  replace: boolean = false
+): { success: boolean; count: number; error?: string } {
   try {
     const imported = JSON.parse(json) as AfterCareJob[];
-    
+
     if (!Array.isArray(imported)) {
       return { success: false, count: 0, error: 'Invalid format' };
     }
-    
+
     // Validate structure
     for (const job of imported) {
       if (!job.id || !job.road_id || !Array.isArray(job.signs)) {
         return { success: false, count: 0, error: 'Invalid job structure' };
       }
     }
-    
+
     if (replace) {
       saveAfterCareJobs(imported);
     } else {
@@ -700,13 +719,13 @@ export function importJobs(json: string, replace: boolean = false): { success: b
       const existing = getAfterCareJobs();
       const merged = [...existing];
       for (const job of imported) {
-        if (!merged.find(j => j.id === job.id)) {
+        if (!merged.find((j) => j.id === job.id)) {
           merged.push(job);
         }
       }
       saveAfterCareJobs(merged);
     }
-    
+
     return { success: true, count: imported.length };
   } catch (e) {
     return { success: false, count: 0, error: 'Failed to parse JSON' };
@@ -723,7 +742,7 @@ export function importJobs(json: string, replace: boolean = false): { success: b
 export function getAfterCareJobs(): AfterCareJob[] {
   // Guard for SSR
   if (typeof window === 'undefined') return [];
-  
+
   try {
     const data = localStorage.getItem('afterCareJobs');
     return data ? JSON.parse(data) : [];
@@ -736,7 +755,7 @@ export function getAfterCareJobs(): AfterCareJob[] {
 export async function initDB(): Promise<IDBDatabase | null> {
   // Guard for SSR
   if (typeof window === 'undefined') return null;
-  
+
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('RoadDataDB', 1);
     // ...
@@ -759,19 +778,19 @@ function AddJobView() {
   const [roadName, setRoadName] = useState('');
   const [notes, setNotes] = useState('');
   const [signs, setSigns] = useState<AfterCareSign[]>([]);
-  
+
   // Sign entry state
   const [signSlk, setSignSlk] = useState('');
   const [signCategory, setSignCategory] = useState<SignCategory>('surface');
   const [signType, setSignType] = useState('');
-  
+
   // Add sign to list
   const handleAddSign = () => {
     if (!signSlk || !signType) {
       alert('Please enter SLK and sign type');
       return;
     }
-    
+
     const newSign: AfterCareSign = {
       id: generateId(),
       slk: parseFloat(signSlk),
@@ -779,9 +798,9 @@ function AddJobView() {
       sign_type: signType,
       // ... other fields
     };
-    
+
     setSigns([...signs, newSign]);
-    setSignType('');  // Reset for next entry
+    setSignType(''); // Reset for next entry
   };
 }
 ```
@@ -806,11 +825,11 @@ export function generateId(): string {
 
 ### Why This Works
 
-| Component | Purpose |
-| --------- | ------- |
-| `Date.now()` | Temporal uniqueness (milliseconds) |
+| Component       | Purpose                                  |
+| --------------- | ---------------------------------------- |
+| `Date.now()`    | Temporal uniqueness (milliseconds)       |
 | `Math.random()` | Collision safety within same millisecond |
-| No dependencies | Simple, no external libraries |
+| No dependencies | Simple, no external libraries            |
 
 ---
 
@@ -818,17 +837,18 @@ export function generateId(): string {
 
 ```typescript
 // SLK precision (2 decimal places = ~10 meters)
-const slkDisplay = roadInfo.slk.toFixed(2);  // "64.64"
+const slkDisplay = roadInfo.slk.toFixed(2); // "64.64"
 
 // GPS precision (6 decimal places = ~0.1 meters)
-const latDisplay = coords.lat.toFixed(6);  // "-32.099427"
-const lonDisplay = coords.lon.toFixed(6);  // "116.907960"
+const latDisplay = coords.lat.toFixed(6); // "-32.099427"
+const lonDisplay = coords.lon.toFixed(6); // "116.907960"
 
 // Distance rounding for display
 const distanceKm = haversineDistance(lat1, lon1, lat2, lon2);
-const displayDistance = distanceKm < 1 
-  ? `${Math.round(distanceKm * 1000)}m`   // Show meters if < 1km
-  : `${distanceKm.toFixed(2)}km`;        // Show km otherwise
+const displayDistance =
+  distanceKm < 1
+    ? `${Math.round(distanceKm * 1000)}m` // Show meters if < 1km
+    : `${distanceKm.toFixed(2)}km`; // Show km otherwise
 ```
 
 ---
@@ -859,17 +879,25 @@ const html = `
   <h1>🚧 AfterCare Signs Report</h1>
   <p>Generated: ${formatAusDate(new Date())}</p>
   
-  ${report.jobsByStatus.dueRetrieval.map(job => `
+  ${report.jobsByStatus.dueRetrieval
+    .map(
+      (job) => `
     <div class="job">
       <h3>${job.road_id} - ${job.road_name}</h3>
-      ${job.signs.map(s => `
+      ${job.signs
+        .map(
+          (s) => `
         <div class="sign">
           SLK ${s.slk.toFixed(2)} - ${s.sign_type}
           <span class="badge badge-retrieval">${s.retrieval_type}</span>
         </div>
-      `).join('')}
+      `
+        )
+        .join('')}
     </div>
-  `).join('')}
+  `
+    )
+    .join('')}
 </body>
 </html>
 `;
@@ -884,13 +912,13 @@ const html = `
 
 ## 27. Data Persistence Strategy Summary
 
-| Data Type | Storage | Size | Why |
-| -------------- | --------- | ---- | --- |
-| AfterCare Jobs | localStorage | Small | User-editable, simple |
-| Speed Overrides | localStorage | Small | User-editable, simple |
-| Road Data (69K+) | IndexedDB | Large | Read-only, bulk queries |
-| Speed Zones | IndexedDB | Large | Read-only, spatial queries |
-| App Preferences | localStorage | Tiny | Key-value pairs |
+| Data Type        | Storage      | Size  | Why                        |
+| ---------------- | ------------ | ----- | -------------------------- |
+| AfterCare Jobs   | localStorage | Small | User-editable, simple      |
+| Speed Overrides  | localStorage | Small | User-editable, simple      |
+| Road Data (69K+) | IndexedDB    | Large | Read-only, bulk queries    |
+| Speed Zones      | IndexedDB    | Large | Read-only, spatial queries |
+| App Preferences  | localStorage | Tiny  | Key-value pairs            |
 
 ---
 
@@ -997,31 +1025,31 @@ const settingsSections = [
 
 ## Quick Reference: Architecture Patterns
 
-| Pattern | Use Case |
-| ------- | -------- |
-| **Calculated vs Stored** | Real-time status derivation |
-| **Sign-Level Types** | Independent lifecycle per sign |
-| **Hybrid Online/Offline** | Graceful degradation |
-| **localStorage** | Client-side persistence |
-| **useMemo** | Performance optimization |
+| Pattern                   | Use Case                       |
+| ------------------------- | ------------------------------ |
+| **Calculated vs Stored**  | Real-time status derivation    |
+| **Sign-Level Types**      | Independent lifecycle per sign |
+| **Hybrid Online/Offline** | Graceful degradation           |
+| **localStorage**          | Client-side persistence        |
+| **useMemo**               | Performance optimization       |
 | **Conditional Rendering** | Clean UI with relevant actions |
-| **SSR Guards** | Next.js compatibility |
-| **TypeScript Interfaces** | Type safety |
-| **Export/Import** | Data backup |
+| **SSR Guards**            | Next.js compatibility          |
+| **TypeScript Interfaces** | Type safety                    |
+| **Export/Import**         | Data backup                    |
 
 ---
 
 ## Files Modified in RC 1.9.1
 
-| File | Changes |
-| ---- | ------- |
-| `src/app/aftercare/page.tsx` | Button layout, print report styling |
-| `src/lib/aftercare.ts` | `getUpcomingSigns()`, `getJobsForRoad()` fixes |
-| `src/lib/route-optimizer.ts` | TSP algorithm, OSRM integration |
-| `PROJECT_CONTEXT.md` | Version, changelog |
-| `README.md` | Version history |
-| `worklog.md` | Task entry |
-| `docs/*` | All documentation updated to RC 1.9.1 |
+| File                         | Changes                                        |
+| ---------------------------- | ---------------------------------------------- |
+| `src/app/aftercare/page.tsx` | Button layout, print report styling            |
+| `src/lib/aftercare.ts`       | `getUpcomingSigns()`, `getJobsForRoad()` fixes |
+| `src/lib/route-optimizer.ts` | TSP algorithm, OSRM integration                |
+| `PROJECT_CONTEXT.md`         | Version, changelog                             |
+| `README.md`                  | Version history                                |
+| `worklog.md`                 | Task entry                                     |
+| `docs/*`                     | All documentation updated to RC 1.9.1          |
 
 ---
 
@@ -1034,7 +1062,7 @@ const settingsSections = [
 
 ---
 
-*Document generated from RC 1.9.1 development session notes.*
+_Document generated from RC 1.9.1 development session notes._
 
 ---
 
@@ -1102,19 +1130,19 @@ interface TrafficCountRecord {
   // Calculated metrics
   total_vehicles: number;
   heavy_percentage: number;
-  vph_combined: number;  // Vehicles per hour
+  vph_combined: number; // Vehicles per hour
 }
 ```
 
 ### Calculated Fields
 
-| Field | Formula |
-|-------|---------|
-| total_light | true_left_light + true_right_light |
-| total_heavy | true_left_heavy + true_right_heavy |
-| total_vehicles | total_light + total_heavy |
-| heavy_percentage | (total_heavy / total_vehicles) × 100 |
-| vph_combined | (total_vehicles / duration_minutes) × 60 |
+| Field            | Formula                                  |
+| ---------------- | ---------------------------------------- |
+| total_light      | true_left_light + true_right_light       |
+| total_heavy      | true_left_heavy + true_right_heavy       |
+| total_vehicles   | total_light + total_heavy                |
+| heavy_percentage | (total_heavy / total_vehicles) × 100     |
+| vph_combined     | (total_vehicles / duration_minutes) × 60 |
 
 ### Use Cases
 
@@ -1164,20 +1192,20 @@ const documentCategories = [
 
 ### Speeding Fines (Western Australia)
 
-| km/h Over Limit | Fine | Demerit Points |
-|-----------------|------|----------------|
-| 1-9 km/h | $100 | 0 |
-| 10-19 km/h | $200 | 2 |
-| 20-29 km/h | $400 | 3 |
-| 30-40 km/h | $800 | 4 |
-| 40+ km/h | $1,200+ | 6-7 |
+| km/h Over Limit | Fine    | Demerit Points |
+| --------------- | ------- | -------------- |
+| 1-9 km/h        | $100    | 0              |
+| 10-19 km/h      | $200    | 2              |
+| 20-29 km/h      | $400    | 3              |
+| 30-40 km/h      | $800    | 4              |
+| 40+ km/h        | $1,200+ | 6-7            |
 
 ### Slow Driving Fines
 
-| Offense | Fine |
-|---------|------|
-| >20 km/h under on freeway (without reason) | $50 |
-| Obstruction of traffic | $50 |
+| Offense                                    | Fine |
+| ------------------------------------------ | ---- |
+| >20 km/h under on freeway (without reason) | $50  |
+| Obstruction of traffic                     | $50  |
 
 ### Practical Tolerance
 
@@ -1216,57 +1244,57 @@ export function SettingsDrawer({ open, onOpenChange, defaultSection }: SettingsD
 // Usage in pages
 import { SettingsDrawer } from '@/components/SettingsDrawer';
 
-<SettingsDrawer 
-  open={drawerOpen} 
-  onOpenChange={setDrawerOpen} 
+<SettingsDrawer
+  open={drawerOpen}
+  onOpenChange={setDrawerOpen}
 />
 ```
 
 ### Benefits
 
-| Before | After |
-|--------|-------|
-| ~500 lines per page | Single import |
-| Update 2+ files for changes | Update once |
-| Inconsistent behavior | Unified experience |
-| Hard to maintain | Easy to maintain |
+| Before                      | After              |
+| --------------------------- | ------------------ |
+| ~500 lines per page         | Single import      |
+| Update 2+ files for changes | Update once        |
+| Inconsistent behavior       | Unified experience |
+| Hard to maintain            | Easy to maintain   |
 
 ---
 
 ## Quick Reference: Architecture Patterns (Updated)
 
-| Pattern | Use Case |
-| ------- | -------- |
-| **Calculated vs Stored** | Real-time status derivation |
-| **Sign-Level Types** | Independent lifecycle per sign |
-| **Hybrid Online/Offline** | Graceful degradation |
-| **localStorage** | Client-side persistence |
-| **useMemo** | Performance optimization |
-| **Conditional Rendering** | Clean UI with relevant actions |
-| **SSR Guards** | Next.js compatibility |
-| **TypeScript Interfaces** | Type safety |
-| **Export/Import** | Data backup |
-| **Time/Distance Display** | Driver awareness metrics |
-| **Component Consolidation** | Code reuse, maintainability |
+| Pattern                     | Use Case                       |
+| --------------------------- | ------------------------------ |
+| **Calculated vs Stored**    | Real-time status derivation    |
+| **Sign-Level Types**        | Independent lifecycle per sign |
+| **Hybrid Online/Offline**   | Graceful degradation           |
+| **localStorage**            | Client-side persistence        |
+| **useMemo**                 | Performance optimization       |
+| **Conditional Rendering**   | Clean UI with relevant actions |
+| **SSR Guards**              | Next.js compatibility          |
+| **TypeScript Interfaces**   | Type safety                    |
+| **Export/Import**           | Data backup                    |
+| **Time/Distance Display**   | Driver awareness metrics       |
+| **Component Consolidation** | Code reuse, maintainability    |
 
 ---
 
 ## Files Modified in RC 1.9.1 (Updated)
 
-| File | Changes |
-| ---- | ------- |
-| `src/app/aftercare/page.tsx` | Button layout, print report styling |
-| `src/app/drive/page.tsx` | Minutes per km, 10km time, speeding alert |
-| `src/app/traffic-counter/page.tsx` | New traffic counter page |
-| `src/components/SettingsDrawer.tsx` | Unified settings drawer (41KB) |
-| `src/lib/aftercare.ts` | `getUpcomingSigns()`, `getJobsForRoad()` fixes |
-| `src/lib/traffic-counter-storage.ts` | New traffic counter storage |
-| `src/lib/route-optimizer.ts` | TSP algorithm, OSRM integration |
-| `PROJECT_CONTEXT.md` | Version, changelog |
-| `README.md` | Version history |
-| `worklog.md` | Task entry |
-| `docs/*` | All documentation updated to RC 1.9.1 |
+| File                                 | Changes                                        |
+| ------------------------------------ | ---------------------------------------------- |
+| `src/app/aftercare/page.tsx`         | Button layout, print report styling            |
+| `src/app/drive/page.tsx`             | Minutes per km, 10km time, speeding alert      |
+| `src/app/traffic-counter/page.tsx`   | New traffic counter page                       |
+| `src/components/SettingsDrawer.tsx`  | Unified settings drawer (41KB)                 |
+| `src/lib/aftercare.ts`               | `getUpcomingSigns()`, `getJobsForRoad()` fixes |
+| `src/lib/traffic-counter-storage.ts` | New traffic counter storage                    |
+| `src/lib/route-optimizer.ts`         | TSP algorithm, OSRM integration                |
+| `PROJECT_CONTEXT.md`                 | Version, changelog                             |
+| `README.md`                          | Version history                                |
+| `worklog.md`                         | Task entry                                     |
+| `docs/*`                             | All documentation updated to RC 1.9.1          |
 
 ---
 
-*Document updated from RC 1.9.1 development session notes.*
+_Document updated from RC 1.9.1 development session notes._

@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 
 // App version constant - single source of truth
-export const APP_VERSION = 'RC 1.9.6';
+export const APP_VERSION = 'RC 1.9.7';
 
 // Offline toggles type - shared with page.tsx
 export interface OfflineToggles {
@@ -169,7 +169,7 @@ export function SettingsDrawer({
   const [showTcTools, setShowTcTools] = useState(false);
   const [showAdminSync, setShowAdminSync] = useState(false);
   const [showGpsTracking, setShowGpsTracking] = useState(false);
-  const [showOfflineData, setShowOfflineData] = useState(!offlineStats);
+  const [showOfflineData, setShowOfflineData] = useState(!offlineStats); // Collapsed when data already downloaded
 
   // Page-specific info
   const pageName = variant === 'home' ? 'TC Work Zone Locator' : 'SLK Tracking';
@@ -683,45 +683,92 @@ export function SettingsDrawer({
           {/* OFFLINE DATA Section */}
           {onDownloadData && (
             <div className="mb-3">
-              <button
-                onClick={() => setShowOfflineData(!showOfflineData)}
-                className="w-full text-left text-sm font-semibold text-blue-400 py-2 flex items-center gap-2 border-b border-gray-700/50"
-              >
-                <span
-                  className={`transition-transform duration-200 ${showOfflineData ? 'rotate-90' : ''}`}
-                >
-                  ›
-                </span>
-                📦 Offline Data
-              </button>
+              {offlineStats ? (
+                /* Downloaded: compact single-line display */
+                <div className="flex items-center justify-between py-2 border-b border-gray-700/50">
+                  <span className="text-sm text-gray-400">
+                    📦 Offline Data
+                    <span className="ml-2 text-xs text-green-400">
+                      ✓ {offlineStats.total_roads.toLocaleString()} roads
+                    </span>
+                    <span className="ml-2 text-xs text-gray-500">
+                      (updated {new Date(offlineStats.download_date).toLocaleDateString()})
+                    </span>
+                  </span>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => setShowOfflineData(true)}
+                      className="text-xs h-6 px-2 bg-gray-700 hover:bg-gray-600"
+                    >
+                      Manage
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                /* Not downloaded: full expandable section */
+                <>
+                  <button
+                    onClick={() => setShowOfflineData(!showOfflineData)}
+                    className="w-full text-left text-sm font-semibold text-blue-400 py-2 flex items-center gap-2 border-b border-gray-700/50"
+                  >
+                    <span
+                      className={`transition-transform duration-200 ${showOfflineData ? 'rotate-90' : ''}`}
+                    >
+                      ›
+                    </span>
+                    📦 Offline Data
+                  </button>
 
-              {showOfflineData && (
-                <div className="space-y-3 mt-2 pl-3 border-l-4 border-blue-500/60">
-                  {offlineStats ? (
-                    <div className="text-sm">
-                      <p className="text-green-400">✓ Offline data downloaded</p>
-                      <p className="text-gray-400">
-                        {offlineStats.total_roads.toLocaleString()} roads
+                  {showOfflineData && (
+                    <div className="space-y-3 mt-2 pl-3 border-l-4 border-blue-500/60">
+                      <p className="text-gray-400 text-sm">
+                        Download road data for offline SLK tracking without internet.
                       </p>
-                      {offlineStats.pavement_roads && (
-                        <p className="text-gray-400">
-                          {offlineStats.pavement_roads.toLocaleString()} roads with pavement data
+
+                      {downloadProgress && (
+                        <p
+                          className={`text-sm ${downloadProgress.startsWith('✓') ? 'text-green-400' : downloadProgress.startsWith('Error') ? 'text-red-400' : 'text-blue-400'}`}
+                        >
+                          {downloadProgress}
                         </p>
                       )}
-                      {offlineStats.traffic_roads && (
-                        <p className="text-gray-400">
-                          {offlineStats.traffic_roads.toLocaleString()} roads with traffic data
-                        </p>
-                      )}
-                      <p className="text-gray-500 text-xs">
-                        Downloaded: {new Date(offlineStats.download_date).toLocaleDateString()}
-                      </p>
+
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={onDownloadData}
+                          disabled={downloading}
+                          className="flex-1 bg-green-600 hover:bg-green-700"
+                        >
+                          {downloading ? 'Downloading...' : 'Download Data'}
+                        </Button>
+                      </div>
                     </div>
-                  ) : (
-                    <p className="text-gray-400 text-sm">
-                      Download road data for offline SLK tracking without internet.
-                    </p>
                   )}
+                </>
+              )}
+
+              {/* Manage panel (opens from compact view or remains accessible) */}
+              {showOfflineData && offlineStats && (
+                <div className="space-y-3 mt-2 pl-3 border-l-4 border-blue-500/60">
+                  <div className="text-sm">
+                    <p className="text-green-400">✓ Offline data downloaded</p>
+                    <p className="text-gray-400">
+                      {offlineStats.total_roads.toLocaleString()} roads
+                    </p>
+                    {offlineStats.pavement_roads && (
+                      <p className="text-gray-400">
+                        {offlineStats.pavement_roads.toLocaleString()} roads with pavement data
+                      </p>
+                    )}
+                    {offlineStats.traffic_roads && (
+                      <p className="text-gray-400">
+                        {offlineStats.traffic_roads.toLocaleString()} roads with traffic data
+                      </p>
+                    )}
+                    <p className="text-gray-500 text-xs">
+                      Downloaded: {new Date(offlineStats.download_date).toLocaleDateString()}
+                    </p>
+                  </div>
 
                   {downloadProgress && (
                     <p
@@ -737,15 +784,14 @@ export function SettingsDrawer({
                       disabled={downloading}
                       className="flex-1 bg-green-600 hover:bg-green-700"
                     >
-                      {downloading
-                        ? 'Downloading...'
-                        : offlineStats
-                          ? 'Update Data'
-                          : 'Download Data'}
+                      {downloading ? 'Downloading...' : 'Update Data'}
                     </Button>
-                    {offlineStats && onClearData && (
+                    {onClearData && (
                       <Button
-                        onClick={onClearData}
+                        onClick={() => {
+                          onClearData();
+                          setShowOfflineData(false);
+                        }}
                         className="bg-red-600 hover:bg-red-700"
                         disabled={downloading}
                       >
@@ -755,7 +801,7 @@ export function SettingsDrawer({
                   </div>
 
                   {/* Offline Data Source Toggles */}
-                  {offlineStats && offlineToggles && onUpdateOfflineToggle && (
+                  {offlineToggles && onUpdateOfflineToggle && (
                     <div className="mt-4 pt-3 border-t border-gray-700">
                       <div className="flex items-center justify-between mb-2">
                         <p className="text-sm font-semibold text-amber-400">

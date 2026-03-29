@@ -1,13 +1,15 @@
 # Work Zone Report Feature - Implementation Guide
 
 ## Overview
+
 This document explains how the Work Zone Report Generator feature was implemented in the TC Work Zone Locator app. The feature allows users to generate a comprehensive text report of all work zone information with a visual ASCII graphic for road width breakdown.
 
-**Version: RC 1.9.1**
+**Version: RC 1.9.7**
 
 ---
 
 ## File Location
+
 **Main file:** `src/app/page.tsx`
 
 ---
@@ -15,10 +17,11 @@ This document explains how the Work Zone Report Generator feature was implemente
 ## Key Components
 
 ### 1. State Variables (around line 100-150)
+
 ```typescript
-const [reportGenerating, setReportGenerating] = useState(false)
-const [reportContent, setReportContent] = useState('')
-const [showReportModal, setShowReportModal] = useState(false)
+const [reportGenerating, setReportGenerating] = useState(false);
+const [reportContent, setReportContent] = useState('');
+const [showReportModal, setShowReportModal] = useState(false);
 ```
 
 ### 2. Generate Report Function (starts around line 747)
@@ -27,30 +30,36 @@ The main function `generateWorkZoneReport()` creates a comprehensive text report
 
 ```typescript
 const generateWorkZoneReport = () => {
-  setReportGenerating(true)
-  
-  const lines: string[] = []
-  const timestamp = new Date().toLocaleDateString('en-AU', { 
-    dateStyle: 'full', 
-    timeStyle: 'short' 
-  })
-  
+  setReportGenerating(true);
+
+  const lines: string[] = [];
+  const timestamp = new Date().toLocaleDateString('en-AU', {
+    dateStyle: 'full',
+    timeStyle: 'short',
+  });
+
   // Header
-  lines.push('╔══════════════════════════════════════════════════════════════════════════════════╗')
-  lines.push('║     TC WORK ZONE LOCATOR - WORK ZONE REPORT                                        ║')
-  lines.push('╚══════════════════════════════════════════════════════════════════════════════════╝')
-  lines.push('')
-  lines.push(`Generated: ${timestamp}`)
-  lines.push(`Report Version: 1.0`)
-  lines.push('')
-  
+  lines.push(
+    '╔══════════════════════════════════════════════════════════════════════════════════╗'
+  );
+  lines.push(
+    '║     TC WORK ZONE LOCATOR - WORK ZONE REPORT                                        ║'
+  );
+  lines.push(
+    '╚══════════════════════════════════════════════════════════════════════════════════╝'
+  );
+  lines.push('');
+  lines.push(`Generated: ${timestamp}`);
+  lines.push(`Report Version: 1.0`);
+  lines.push('');
+
   // ... add all sections ...
-  
+
   // Set the report content and show modal
-  setReportContent(lines.join('\n'))
-  setShowReportModal(true)
-  setReportGenerating(false)
-}
+  setReportContent(lines.join('\n'));
+  setShowReportModal(true);
+  setReportGenerating(false);
+};
 ```
 
 ---
@@ -58,18 +67,19 @@ const generateWorkZoneReport = () => {
 ## Report Sections
 
 ### Section 1: Work Zone Summary
+
 ```typescript
-lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-lines.push('🗺️ WORK ZONE SUMMARY')
-lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+lines.push('🗺️ WORK ZONE SUMMARY');
+lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
 if (result) {
-  lines.push(`Road ID:           ${result.road_id}`)
-  lines.push(`Road Name:         ${result.road_name}`)
-  lines.push(`Network Type:      ${result.network_type}`)
-  lines.push(`Carriageway:       ${result.carriageway}`)
-  lines.push(`Start SLK:         ${result.work_zone.start_slk.toFixed(3)} km`)
-  lines.push(`End SLK:           ${result.work_zone.end_slk.toFixed(3)} km`)
-  lines.push(`Zone Length:       ${result.work_zone.length_m} m`)
+  lines.push(`Road ID:           ${result.road_id}`);
+  lines.push(`Road Name:         ${result.road_name}`);
+  lines.push(`Network Type:      ${result.network_type}`);
+  lines.push(`Carriageway:       ${result.carriageway}`);
+  lines.push(`Start SLK:         ${result.work_zone.start_slk.toFixed(3)} km`);
+  lines.push(`End SLK:           ${result.work_zone.end_slk.toFixed(3)} km`);
+  lines.push(`Zone Length:       ${result.work_zone.length_m} m`);
 }
 ```
 
@@ -79,82 +89,86 @@ This is the key feature - the ASCII visual bar:
 
 ```typescript
 if (result.pavement) {
-  lines.push(`Lanes:             ${result.pavement.lanes || 'Unknown'}`)
-  lines.push('')
-  
+  lines.push(`Lanes:             ${result.pavement.lanes || 'Unknown'}`);
+  lines.push('');
+
   // Get pavement measurements
-  const p = result.pavement
-  const unsealedL = p.unsealed_shoulder_l || 0
-  const sealedL = p.sealed_shoulder_l || 0
-  const trafficable = p.width_m || 0
-  const sealedR = p.sealed_shoulder_r || 0
-  const unsealedR = p.unsealed_shoulder_r || 0
-  const kerbL = p.kerb_l || 0
-  const kerbR = p.kerb_r || 0
-  const totalWidth = p.total_pave_width || (kerbL + unsealedL + sealedL + trafficable + sealedR + unsealedR + kerbR)
-  
-  lines.push('Road Width Breakdown:')
-  lines.push('')
-  
+  const p = result.pavement;
+  const unsealedL = p.unsealed_shoulder_l || 0;
+  const sealedL = p.sealed_shoulder_l || 0;
+  const trafficable = p.width_m || 0;
+  const sealedR = p.sealed_shoulder_r || 0;
+  const unsealedR = p.unsealed_shoulder_r || 0;
+  const kerbL = p.kerb_l || 0;
+  const kerbR = p.kerb_r || 0;
+  const totalWidth =
+    p.total_pave_width || kerbL + unsealedL + sealedL + trafficable + sealedR + unsealedR + kerbR;
+
+  lines.push('Road Width Breakdown:');
+  lines.push('');
+
   // Create visual bar (50 characters wide)
-  const barWidth = 50
-  const segments: { width: number; char: string; label: string; color: string }[] = []
-  
+  const barWidth = 50;
+  const segments: { width: number; char: string; label: string; color: string }[] = [];
+
   // Build segments from left to right
-  if (kerbL > 0) segments.push({ width: kerbL, char: '▒', label: 'Kerb L', color: 'gray' })
-  if (unsealedL > 0) segments.push({ width: unsealedL, char: '░', label: 'Unsealed L', color: 'brown' })
-  if (sealedL > 0) segments.push({ width: sealedL, char: '▓', label: 'Sealed L', color: 'gray' })
-  segments.push({ width: trafficable, char: '█', label: 'Trafficable', color: 'blue' })
-  if (sealedR > 0) segments.push({ width: sealedR, char: '▓', label: 'Sealed R', color: 'gray' })
-  if (unsealedR > 0) segments.push({ width: unsealedR, char: '░', label: 'Unsealed R', color: 'brown' })
-  if (kerbR > 0) segments.push({ width: kerbR, char: '▒', label: 'Kerb R', color: 'gray' })
-  
+  if (kerbL > 0) segments.push({ width: kerbL, char: '▒', label: 'Kerb L', color: 'gray' });
+  if (unsealedL > 0)
+    segments.push({ width: unsealedL, char: '░', label: 'Unsealed L', color: 'brown' });
+  if (sealedL > 0) segments.push({ width: sealedL, char: '▓', label: 'Sealed L', color: 'gray' });
+  segments.push({ width: trafficable, char: '█', label: 'Trafficable', color: 'blue' });
+  if (sealedR > 0) segments.push({ width: sealedR, char: '▓', label: 'Sealed R', color: 'gray' });
+  if (unsealedR > 0)
+    segments.push({ width: unsealedR, char: '░', label: 'Unsealed R', color: 'brown' });
+  if (kerbR > 0) segments.push({ width: kerbR, char: '▒', label: 'Kerb R', color: 'gray' });
+
   // Build the visual bar string
-  let visualBar = '│'
+  let visualBar = '│';
   for (const seg of segments) {
-    const charCount = Math.max(1, Math.round((seg.width / totalWidth) * barWidth))
-    visualBar += seg.char.repeat(charCount)
+    const charCount = Math.max(1, Math.round((seg.width / totalWidth) * barWidth));
+    visualBar += seg.char.repeat(charCount);
   }
-  visualBar += '│'
-  
+  visualBar += '│';
+
   // Add bar to report
-  lines.push('  ' + visualBar)
-  lines.push('  └' + '─'.repeat(barWidth + 2) + '┘')
-  lines.push('')
-  
+  lines.push('  ' + visualBar);
+  lines.push('  └' + '─'.repeat(barWidth + 2) + '┘');
+  lines.push('');
+
   // Legend
-  lines.push(' Legend: ░ = Unsealed  ▒ = Kerb  ▓ = Sealed Shoulder  █ = Trafficable')
-  lines.push('')
-  
+  lines.push(' Legend: ░ = Unsealed  ▒ = Kerb  ▓ = Sealed Shoulder  █ = Trafficable');
+  lines.push('');
+
   // Numeric values
-  if (kerbL > 0) lines.push(`  Kerb (Left):             ${kerbL.toFixed(1)} m`)
-  if (unsealedL > 0) lines.push(`  Unsealed Shoulder (L): ${unsealedL.toFixed(1)} m`)
-  if (sealedL > 0) lines.push(`  Sealed Shoulder (L):   ${sealedL.toFixed(1)} m`)
-  lines.push(`  Trafficable Width:      ${trafficable.toFixed(1)} m`)
-  if (sealedR > 0) lines.push(`  Sealed Shoulder (R):   ${sealedR.toFixed(1)} m`)
-  if (unsealedR > 0) lines.push(`  Unsealed Shoulder (R): ${unsealedR.toFixed(1)} m`)
-  if (kerbR > 0) lines.push(`  Kerb (Right):            ${kerbR.toFixed(1)} m`)
-  
+  if (kerbL > 0) lines.push(`  Kerb (Left):             ${kerbL.toFixed(1)} m`);
+  if (unsealedL > 0) lines.push(`  Unsealed Shoulder (L): ${unsealedL.toFixed(1)} m`);
+  if (sealedL > 0) lines.push(`  Sealed Shoulder (L):   ${sealedL.toFixed(1)} m`);
+  lines.push(`  Trafficable Width:      ${trafficable.toFixed(1)} m`);
+  if (sealedR > 0) lines.push(`  Sealed Shoulder (R):   ${sealedR.toFixed(1)} m`);
+  if (unsealedR > 0) lines.push(`  Unsealed Shoulder (R): ${unsealedR.toFixed(1)} m`);
+  if (kerbR > 0) lines.push(`  Kerb (Right):            ${kerbR.toFixed(1)} m`);
+
   // Totals
-  if (p.total_pave_width) lines.push(`  Total Pave Width: ${p.total_pave_width.toFixed(1)} m`)
-  if (p.total_seal_width) lines.push(`  Total Seal Width: ${p.total_seal_width.toFixed(1)} m`)
+  if (p.total_pave_width) lines.push(`  Total Pave Width: ${p.total_pave_width.toFixed(1)} m`);
+  if (p.total_seal_width) lines.push(`  Total Seal Width: ${p.total_seal_width.toFixed(1)} m`);
 }
 ```
 
 ### Visual Bar Characters Explained
 
-| Character | Name | Usage |
-| --------- | ---- | ----- |
-| `░` | Light shade | Unsealed shoulder |
-| `▒` | Medium shade | Kerb |
-| `▓` | Dark shade | Sealed shoulder |
-| `█` | Full block | Trafficable road width |
-| `│` | Vertical bar | End caps |
-| `└` | Corner | Bottom left corner |
-| `┘` | Corner | Bottom right corner |
-| `─` | Horizontal bar | Bottom line |
+| Character | Name           | Usage                  |
+| --------- | -------------- | ---------------------- |
+| `░`       | Light shade    | Unsealed shoulder      |
+| `▒`       | Medium shade   | Kerb                   |
+| `▓`       | Dark shade     | Sealed shoulder        |
+| `█`       | Full block     | Trafficable road width |
+| `│`       | Vertical bar   | End caps               |
+| `└`       | Corner         | Bottom left corner     |
+| `┘`       | Corner         | Bottom right corner    |
+| `─`       | Horizontal bar | Bottom line            |
 
 ### Example Output:
+
 ```
 Road Width Breakdown:
 
@@ -177,131 +191,146 @@ Road Width Breakdown:
 ## Other Report Sections
 
 ### Speed Zones
+
 ```typescript
-lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
-lines.push('🚗 SPEED ZONES')
+lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+lines.push('🚗 SPEED ZONES');
 if (result?.speed_zones) {
-  lines.push(`Approach Start:    ${result.speed_zones.approach_start}`)
-  lines.push(`TC Start:             ${result.speed_zones.tc_start}`)
-  lines.push(`Work Zone Start:   ${result.speed_zones.work_zone_start}`)
-  lines.push(`Work Zone End:     ${result.speed_zones.work_zone_end}`)
-  lines.push(`TC End:                ${result.speed_zones.tc_end}`)
-  lines.push(`Approach End:       ${result.speed_zones.approach_end}`)
+  lines.push(`Approach Start:    ${result.speed_zones.approach_start}`);
+  lines.push(`TC Start:             ${result.speed_zones.tc_start}`);
+  lines.push(`Work Zone Start:   ${result.speed_zones.work_zone_start}`);
+  lines.push(`Work Zone End:     ${result.speed_zones.work_zone_end}`);
+  lines.push(`TC End:                ${result.speed_zones.tc_end}`);
+  lines.push(`Approach End:       ${result.speed_zones.approach_end}`);
 }
 ```
 
 ### TC Positions
+
 ```typescript
-lines.push('🗺️ TC POSITIONS (±100m from work zone)')
+lines.push('🗺️ TC POSITIONS (±100m from work zone)');
 if (result?.tc_positions) {
-  lines.push('TC START:')
-  lines.push(`  SLK:                 ${result.tc_positions.start_slk.toFixed(3)} km`)
-  lines.push(`  Coordinates:    ${result.tc_positions.start.lat.toFixed(6)}, ${result.tc_positions.start.lon.toFixed(6)}`)
-  lines.push(`  Speed:             ${result.tc_positions.start.speed}`)
-  lines.push(`  Google Maps:    ${result.google_maps.tc_start}`)
-  
-  lines.push('TC END:')
-  lines.push(`  SLK:                 ${result.tc_positions.end_slk.toFixed(3)} km`)
-  lines.push(`  Coordinates:    ${result.tc_positions.end.lat.toFixed(6)}, ${result.tc_positions.end.lon.toFixed(6)}`)
-  lines.push(`  Speed:             ${result.tc_positions.end.speed}`)
-  lines.push(`  Google Maps:    ${result.google_maps.tc_end}`)
+  lines.push('TC START:');
+  lines.push(`  SLK:                 ${result.tc_positions.start_slk.toFixed(3)} km`);
+  lines.push(
+    `  Coordinates:    ${result.tc_positions.start.lat.toFixed(6)}, ${result.tc_positions.start.lon.toFixed(6)}`
+  );
+  lines.push(`  Speed:             ${result.tc_positions.start.speed}`);
+  lines.push(`  Google Maps:    ${result.google_maps.tc_start}`);
+
+  lines.push('TC END:');
+  lines.push(`  SLK:                 ${result.tc_positions.end_slk.toFixed(3)} km`);
+  lines.push(
+    `  Coordinates:    ${result.tc_positions.end.lat.toFixed(6)}, ${result.tc_positions.end.lon.toFixed(6)}`
+  );
+  lines.push(`  Speed:             ${result.tc_positions.end.speed}`);
+  lines.push(`  Google Maps:    ${result.google_maps.tc_end}`);
 }
 ```
 
 ### Signage Corridor
+
 ```typescript
-lines.push('🚧 SIGNAGE CORRIDOR')
+lines.push('🚧 SIGNAGE CORRIDOR');
 if (result?.signage) {
   // Speed signs
   if (result.signage.speed_signs?.length > 0) {
-    lines.push('Speed Signs:')
+    lines.push('Speed Signs:');
     result.signage.speed_signs.forEach((sign, i) => {
-      lines.push(`   ${i + 1}. SLK ${sign.slk.toFixed(3)} - ${sign.speed} km/h (${sign.direction})`)
-    })
+      lines.push(
+        `   ${i + 1}. SLK ${sign.slk.toFixed(3)} - ${sign.speed} km/h (${sign.direction})`
+      );
+    });
   }
   // Warning signs, rail crossings, intersections...
 }
 ```
 
 ### Weather
+
 ```typescript
-lines.push('🌦️ WEATHER')
+lines.push('🌦️ WEATHER');
 if (weather) {
-  lines.push(`Temperature:       ${weather.temperature}°C`)
-  lines.push(`Condition:          ${weather.condition}`)
-  lines.push(`Humidity:          ${weather.humidity}%`)
-  lines.push(`Wind:                 ${weather.wind_speed} km/h ${weather.wind_direction}`)
-  lines.push(`Gusts:               ${weather.gusts} km/h`)
-  lines.push(`Sunrise:            ${weather.sunrise}`)
-  lines.push(`Sunset:               ${weather.sunset}`)
-  lines.push(`UV Index:           ${weather.uv_index}`)
+  lines.push(`Temperature:       ${weather.temperature}°C`);
+  lines.push(`Condition:          ${weather.condition}`);
+  lines.push(`Humidity:          ${weather.humidity}%`);
+  lines.push(`Wind:                 ${weather.wind_speed} km/h ${weather.wind_direction}`);
+  lines.push(`Gusts:               ${weather.gusts} km/h`);
+  lines.push(`Sunrise:            ${weather.sunrise}`);
+  lines.push(`Sunset:               ${weather.sunset}`);
+  lines.push(`UV Index:           ${weather.uv_index}`);
 }
 ```
 
 ### Weather Warnings (BOM)
+
 ```typescript
-lines.push('⚠️ WEATHER WARNINGS')
+lines.push('⚠️ WEATHER WARNINGS');
 if (weather?.warnings && weather.warnings.length > 0) {
   weather.warnings.forEach((warning, i) => {
-    lines.push(`   ${i + 1}. ${warning.title}`)
-    lines.push(`       ${warning.description}`)
-  })
+    lines.push(`   ${i + 1}. ${warning.title}`);
+    lines.push(`       ${warning.description}`);
+  });
 }
 ```
 
 ### Traffic Volume
+
 ```typescript
-lines.push('📊 TRAFFIC VOLUME')
+lines.push('📊 TRAFFIC VOLUME');
 if (traffic) {
-  lines.push(`AADT:                  ${traffic.aadt?.toLocaleString() || 'N/A'}`)
-  lines.push(`Peak Hour:          ${traffic.peak_hour?.toLocaleString() || 'N/A'}`)
-  lines.push(`Heavy Vehicles:  ${traffic.heavy_vehicles}%`)
-  lines.push(`Data Year:          ${traffic.data_year || 'N/A'}`)
+  lines.push(`AADT:                  ${traffic.aadt?.toLocaleString() || 'N/A'}`);
+  lines.push(`Peak Hour:          ${traffic.peak_hour?.toLocaleString() || 'N/A'}`);
+  lines.push(`Heavy Vehicles:  ${traffic.heavy_vehicles}%`);
+  lines.push(`Data Year:          ${traffic.data_year || 'N/A'}`);
 }
 ```
 
 ### Nearby Amenities
+
 ```typescript
-lines.push('📍 NEARBY AMENITIES')
+lines.push('📍 NEARBY AMENITIES');
 if (places) {
   if (places.hospital) {
-    lines.push('Hospital:')
-    lines.push(`  Name:           ${places.hospital.name}`)
-    lines.push(`  Distance:       ${places.hospital.distance} km`)
-    if (places.hospital.phone) lines.push(`  Phone:           ${places.hospital.phone}`)
-    if (places.hospital.isEmergency) lines.push(`  Emergency:      Yes`)
+    lines.push('Hospital:');
+    lines.push(`  Name:           ${places.hospital.name}`);
+    lines.push(`  Distance:       ${places.hospital.distance} km`);
+    if (places.hospital.phone) lines.push(`  Phone:           ${places.hospital.phone}`);
+    if (places.hospital.isEmergency) lines.push(`  Emergency:      Yes`);
   }
   if (places.fuelStation) {
-    lines.push('Fuel Station:')
-    lines.push(`  Name:           ${places.fuelStation.name}`)
-    lines.push(`  Distance:       ${places.fuelStation.distance} km`)
+    lines.push('Fuel Station:');
+    lines.push(`  Name:           ${places.fuelStation.name}`);
+    lines.push(`  Distance:       ${places.fuelStation.distance} km`);
   }
   if (places.toilet) {
-    lines.push('Public Toilet:')
-    lines.push(`  Name:           ${places.toilet.name}`)
-    lines.push(`  Distance:       ${places.toilet.distance} km`)
+    lines.push('Public Toilet:');
+    lines.push(`  Name:           ${places.toilet.name}`);
+    lines.push(`  Distance:       ${places.toilet.distance} km`);
   }
 }
 ```
 
 ### Intersecting Roads
+
 ```typescript
-lines.push('🔀 INTERSECTING ROADS IN TC ZONE')
+lines.push('🔀 INTERSECTING ROADS IN TC ZONE');
 if (result?.intersecting_roads && result.intersecting_roads.length > 0) {
   result.intersecting_roads.forEach((road, i) => {
-    lines.push(`   ${i + 1}. ${road.name} - ${road.distance} from work zone`)
-  })
+    lines.push(`   ${i + 1}. ${road.name} - ${road.distance} from work zone`);
+  });
 }
 ```
 
 ### Google Maps Links
+
 ```typescript
-lines.push('🗺️ GOOGLE MAPS LINKS')
+lines.push('🗺️ GOOGLE MAPS LINKS');
 if (result?.google_maps) {
-  lines.push(`Work Zone Start: ${result.google_maps.work_zone_start}`)
-  lines.push(`Work Zone End:   ${result.google_maps.work_zone_end}`)
-  lines.push(`TC Start:            ${result.google_maps.tc_start}`)
-  lines.push(`TC End:              ${result.google_maps.tc_end}`)
+  lines.push(`Work Zone Start: ${result.google_maps.work_zone_start}`);
+  lines.push(`Work Zone End:   ${result.google_maps.work_zone_end}`);
+  lines.push(`TC Start:            ${result.google_maps.tc_start}`);
+  lines.push(`TC End:              ${result.google_maps.tc_end}`);
 }
 ```
 
@@ -310,6 +339,7 @@ if (result?.google_maps) {
 ## UI Components
 
 ### Generate Report Button (around line 3574)
+
 ```tsx
 {/* Generate Report Button */}
 {result && (
@@ -333,6 +363,7 @@ if (result?.google_maps) {
 ```
 
 ### Report Modal (around line 3597)
+
 ```tsx
 {/* Report Modal */}
 {showReportModal && (
@@ -345,14 +376,14 @@ if (result?.google_maps) {
           ✕
         </button>
       </div>
-      
+
       {/* Content */}
       <div className="flex-1 overflow-auto p-4">
         <pre className="text-sm text-gray-300 whitespace-pre-wrap font-mono bg-gray-800 p-4 rounded-lg">
           {reportContent}
         </pre>
       </div>
-      
+
       {/* Actions */}
       <div className="p-4 border-t border-gray-700 space-y-2">
         <div className="flex gap-2">
@@ -370,29 +401,30 @@ if (result?.google_maps) {
 ```
 
 ### Copy and Download Functions
+
 ```typescript
 const copyReportToClipboard = async () => {
   try {
-    await navigator.clipboard.writeText(reportContent)
-    alert('Report copied to clipboard!')
+    await navigator.clipboard.writeText(reportContent);
+    alert('Report copied to clipboard!');
   } catch (err) {
-    console.error('Failed to copy:', err)
+    console.error('Failed to copy:', err);
   }
-}
+};
 
 const downloadReport = () => {
-  const roadId = result?.road_id || 'unknown'
-  const date = new Date().toISOString().split('T')[0]
-  const filename = `work-zone-report-${roadId}-${date}.txt`
-  
-  const blob = new Blob([reportContent], { type: 'text/plain' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = filename
-  a.click()
-  URL.revokeObjectURL(url)
-}
+  const roadId = result?.road_id || 'unknown';
+  const date = new Date().toISOString().split('T')[0];
+  const filename = `work-zone-report-${roadId}-${date}.txt`;
+
+  const blob = new Blob([reportContent], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+};
 ```
 
 ---
@@ -401,30 +433,31 @@ const downloadReport = () => {
 
 The report uses data from these state variables:
 
-| Variable | Source | Content |
-| --------- | ------ | ------- |
-| `result` | `/api/roads` | Work zone info, pavement, TC positions, speed zones |
-| `weather` | `/api/weather` | Temperature, conditions, UV, wind, warnings |
-| `traffic` | `/api/traffic` | AADT, peak hour, heavy vehicles |
-| `places` | `/api/places` | Nearby hospital, fuel, toilet |
-| `signage` | IndexedDB | Speed signs, warning signs, rail crossings |
-| `intersecting_roads` | Overpass API | Cross roads in work zone |
+| Variable             | Source         | Content                                             |
+| -------------------- | -------------- | --------------------------------------------------- |
+| `result`             | `/api/roads`   | Work zone info, pavement, TC positions, speed zones |
+| `weather`            | `/api/weather` | Temperature, conditions, UV, wind, warnings         |
+| `traffic`            | `/api/traffic` | AADT, peak hour, heavy vehicles                     |
+| `places`             | `/api/places`  | Nearby hospital, fuel, toilet                       |
+| `signage`            | IndexedDB      | Speed signs, warning signs, rail crossings          |
+| `intersecting_roads` | Overpass API   | Cross roads in work zone                            |
 
 ---
 
 ## Version History
 
-| Version | Date | Changes |
-| --------- | ------ | -------- |
-| RC 1.9.1 | 2025-06 | Updated for new features, added warning banners |
-| RC 1.5.3 | 2026-03-09 | Added work zone report generator with visual road width bar |
-| Build Fix | 2026-03-09 | Fixed `emergency` → `isEmergency` property name |
+| Version   | Date       | Changes                                                     |
+| --------- | ---------- | ----------------------------------------------------------- |
+| RC 1.9.7  | 2025-06    | Updated for new features, added warning banners             |
+| RC 1.5.3  | 2026-03-09 | Added work zone report generator with visual road width bar |
+| Build Fix | 2026-03-09 | Fixed `emergency` → `isEmergency` property name             |
 
 ---
 
 ## Summary
 
 The work zone report is a text-based comprehensive summary that:
+
 1. Gathers all available work zone data
 2. Formats it with Unicode box-drawing characters for visual appeal
 3. Includes an ASCII visual bar for road width breakdown
