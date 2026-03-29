@@ -169,7 +169,11 @@ export function SettingsDrawer({
   const [showTcTools, setShowTcTools] = useState(false);
   const [showAdminSync, setShowAdminSync] = useState(false);
   const [showGpsTracking, setShowGpsTracking] = useState(false);
-  const [showOfflineData, setShowOfflineData] = useState(!offlineStats); // Collapsed when data already downloaded
+  const [showOfflineData, setShowOfflineData] = useState(false); // Always start collapsed
+  // Keep in sync: when data is downloaded, collapse; when cleared, also collapse
+  useEffect(() => {
+    if (offlineStats) setShowOfflineData(false);
+  }, [offlineStats]);
 
   // Page-specific info
   const pageName = variant === 'home' ? 'TC Work Zone Locator' : 'SLK Tracking';

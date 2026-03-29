@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -49,6 +49,7 @@ interface SetupState {
 
 export default function TrafficCounterSetupPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Setup state
   const [duration, setDuration] = useState<number>(5);
@@ -78,6 +79,25 @@ export default function TrafficCounterSetupPage() {
   useEffect(() => {
     setHistory(getTrafficCountHistory());
   }, []);
+
+  // Read URL params and pre-fill location (from Work Zone Info "Count Traffic" button)
+  useEffect(() => {
+    const roadIdParam = searchParams.get('road_id');
+    const roadNameParam = searchParams.get('road_name');
+    const slkParam = searchParams.get('slk');
+    const regionParam = searchParams.get('region');
+
+    if (roadIdParam) {
+      setLocation({
+        road_id: roadIdParam,
+        road_name: roadNameParam || '',
+        slk: slkParam ? parseFloat(slkParam) : null,
+        lat: null,
+        lon: null,
+        region: regionParam || '',
+      });
+    }
+  }, [searchParams]);
 
   // Fetch location
   const fetchLocation = useCallback(async () => {

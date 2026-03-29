@@ -271,6 +271,28 @@ export function getRecordsForRoad(roadId: string): TrafficCountRecord[] {
 }
 
 /**
+ * Get records for a specific road near a given SLK (±maxDistanceKm)
+ * Returns records sorted by proximity to the target SLK
+ */
+export function getRecordsForRoadNearSlk(
+  roadId: string,
+  slk: number,
+  maxDistanceKm: number = 2
+): TrafficCountRecord[] {
+  const records = getRecordsForRoad(roadId);
+  return records
+    .filter((r) => {
+      if (!r.slk) return false;
+      return Math.abs(r.slk - slk) <= maxDistanceKm;
+    })
+    .sort((a, b) => {
+      const aDiff = a.slk ? Math.abs(a.slk - slk) : Infinity;
+      const bDiff = b.slk ? Math.abs(b.slk - slk) : Infinity;
+      return aDiff - bDiff;
+    });
+}
+
+/**
  * Get recent records (last N days)
  */
 export function getRecentRecords(days: number = 30): TrafficCountRecord[] {

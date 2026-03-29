@@ -68,6 +68,7 @@ import {
   type ParsedSpeedZone,
 } from '@/lib/offline-db';
 import { loadStaticData, checkStaticData } from '@/lib/download-roads';
+import { getRecordsForRoadNearSlk, type TrafficCountRecord } from '@/lib/traffic-counter-storage';
 
 // Helper function to format distance for emergency messages
 // Rounds to nearest 100m when under 1km for easier communication
@@ -274,6 +275,7 @@ export default function Home() {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [warnings, setWarnings] = useState<WarningData | null>(null);
   const [traffic, setTraffic] = useState<TrafficData | null>(null);
+  const [userTrafficCounts, setUserTrafficCounts] = useState<TrafficCountRecord[]>([]);
   const [places, setPlaces] = useState<PlacesData | null>(null);
   const [crossRoads, setCrossRoads] = useState<CrossRoad[]>([]);
   const [corridorIntersections, setCorridorIntersections] = useState<CrossRoad[]>([]); // For signage corridor (±700m)
@@ -2368,6 +2370,7 @@ export default function Home() {
     setWeather(null);
     setWarnings(null);
     setTraffic(null);
+    setUserTrafficCounts([]);
     setPlaces(null);
     setCrossRoads([]);
 
@@ -2460,6 +2463,14 @@ export default function Home() {
         fetchTraffic(roadId, data.midpoint.lat, data.midpoint.lon);
         fetchPlaces(data.midpoint.lat, data.midpoint.lon);
       }
+      // Look up user-saved traffic counts for this road near the work zone
+      try {
+        const startSlkNum = parseFloat(startSlkVal);
+        const nearCounts = getRecordsForRoadNearSlk(roadId, startSlkNum);
+        setUserTrafficCounts(nearCounts);
+      } catch {
+        setUserTrafficCounts([]);
+      }
       // Fetch cross roads using TC corridor
       fetchCrossRoads(data);
     } catch (err) {
@@ -2485,6 +2496,7 @@ export default function Home() {
     setWeather(null);
     setWarnings(null);
     setTraffic(null);
+    setUserTrafficCounts([]);
     setPlaces(null);
     setCrossRoads([]);
     setError('');
@@ -4530,47 +4542,13 @@ export default function Home() {
             {/* Traffic Volume */}
             {traffic &&
               (() => {
-                // Calculate shuttle flow and lane capacity from traffic data
-                // Peak hour volume is typically one direction, so double for both directions
-                const peakHourOneDir = traffic.peak_hour_volume || 0;
-                const peakHourBothDir = peakHourOneDir * 2;
+                // Determine if traffic data has real values (API always returns object, may have null values)
+                const hasRealTrafficData = traffic && (traffic.aadt || traffic.peak_hour_volume);
 
-                // If we have AADT, estimate peak hour from typical 10% factor
-                const estimatedPeakFromAadt = traffic.aadt ? Math.round(traffic.aadt * 0.1) : 0;
-                const vphBothDir = peakHourBothDir || estimatedPeakFromAadt;
-                const vphOneDir = peakHourOneDir || Math.round(vphBothDir / 2);
-
-                // Shuttle flow max length (AGTTM Part 2, Table 3.5 & MRWA COP Table 15)
-                // Based on BOTH directions VPH
-                const getShuttleFlowLength = (vph: number): { length: string; risk: boolean } => {
-                  if (vph >= 701) return { length: '70m', risk: false };
-                  if (vph >= 601) return { length: '100m', risk: false };
-                  if (vph >= 501) return { length: '150m', risk: false };
-                  if (vph >= 401) return { length: '250m', risk: false };
-                  if (vph >= 351) return { length: '400m', risk: false };
-                  if (vph >= 301) return { length: '600m', risk: false };
-                  if (vph >= 251) return { length: '800m', risk: false }; // AGTTM Table 3.5: ≤300 VPH → 800m
-                  if (vph >= 201) return { length: '1200m', risk: true }; // MRWA COP Table 15: exceeds AGTTM
-                  if (vph >= 151) return { length: '1600m', risk: true }; // MRWA COP Table 15: exceeds AGTTM
-                  return { length: '2200m', risk: true }; // MRWA COP Table 15: exceeds AGTTM
-                };
-
-                // Lane capacity (AGTTM Part 2, Table 3.1)
-                // Based on ONE direction VPH
-                const getLaneCapacity = (vph: number): string => {
-                  if (vph <= 1000) return '1 lane';
-                  if (vph <= 2000) return '2 lanes';
-                  if (vph <= 3000) return '3 lanes';
-                  return '4+ lanes';
-                };
-
-                // Apply reduction factor for heavy vehicles >10%
-                const heavyPct = traffic.heavy_vehicle_percent || 0;
-                const reductionFactor = heavyPct > 10 ? 0.8 : 1; // 20% reduction if >10% heavy
-                const reducedVph = Math.round(vphBothDir * reductionFactor);
-
-                const shuttleFlow = getShuttleFlowLength(reducedVph);
-                const laneCapacity = getLaneCapacity(Math.round(vphOneDir * reductionFactor));
+                // Build the "Count Traffic" button URL with pre-filled params
+                const countTrafficUrl = selectedRoad
+                  ? `/traffic-counter?road_id=${selectedRoad}&road_name=${encodeURIComponent(result?.road_name || '')}&slk=${startSlk}&region=${encodeURIComponent(selectedRegion)}`
+                  : '/traffic-counter';
 
                 return (
                   <div className="bg-gray-800 rounded-lg">
@@ -4593,323 +4571,514 @@ export default function Home() {
                     </button>
                     {showTraffic && (
                       <div className="px-4 pb-4">
-                        {/* Raw Traffic Data */}
-                        <div className="grid grid-cols-2 gap-3 text-sm">
+                        {!hasRealTrafficData ? (
+                          /* No MRWA traffic data available */
                           <div>
-                            <p className="text-gray-400">AADT</p>
-                            <p className="font-medium text-lg">
-                              {traffic.aadt?.toLocaleString() || 'N/A'}
-                            </p>
-                            <p className="text-xs text-gray-500">vehicles/day</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-400">Peak Hour (est.)</p>
-                            <p className="font-medium text-lg">
-                              {traffic.peak_hour_volume || 'N/A'}
-                            </p>
-                            <p className="text-xs text-gray-500">vehicles/hour (one dir)</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-400">Heavy Vehicles</p>
-                            <p className="font-medium text-lg">{traffic.heavy_vehicle_percent}%</p>
-                          </div>
-                          <div>
-                            <p className="text-gray-400">Data Year</p>
-                            <p className="font-medium text-lg">{traffic.aadt_year}</p>
-                          </div>
-                        </div>
-
-                        {/* Calculated Values */}
-                        {vphBothDir > 0 && (
-                          <div className="mt-4 pt-3 border-t border-gray-700">
-                            <h4 className="text-xs font-semibold text-green-400 mb-2">
-                              📊 Calculated Values
-                            </h4>
-                            <div className="grid grid-cols-2 gap-3 text-sm">
-                              <div className="bg-gray-900 rounded p-2">
-                                <p className="text-gray-400 text-xs">Est. VPH (both dir)</p>
-                                <p className="font-medium text-white">
-                                  {vphBothDir.toLocaleString()}
-                                </p>
-                                {heavyPct > 10 && (
-                                  <p className="text-xs text-amber-400">
-                                    → {reducedVph.toLocaleString()} (reduced)
-                                  </p>
-                                )}
-                              </div>
-                              <div className="bg-gray-900 rounded p-2">
-                                <p className="text-gray-400 text-xs">Lane Capacity</p>
-                                <p className="font-medium text-white">{laneCapacity}</p>
-                                <p className="text-xs text-gray-500">one direction</p>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Shuttle Flow Guide */}
-                        {vphBothDir > 0 && (
-                          <div className="mt-3 pt-3 border-t border-gray-700">
-                            <h4 className="text-xs font-semibold text-purple-400 mb-2">
-                              🚦 Shuttle Flow Max Length
-                            </h4>
-                            <div className="bg-gray-900 rounded p-3">
-                              <div className="flex items-center justify-between">
-                                <span className="text-gray-300">Max single lane section:</span>
-                                <span
-                                  className={`font-bold text-lg ${shuttleFlow.risk ? 'text-amber-400' : 'text-green-400'}`}
-                                >
-                                  {shuttleFlow.length}
-                                </span>
-                              </div>
-                              {shuttleFlow.risk && (
-                                <p className="text-xs text-amber-400 mt-1">
-                                  ⚠️ Exceeds AGTTM limits — risk assessment required to the
-                                  satisfaction of the relevant road authority (MRWA COP Section
-                                  6.8.7)
-                                </p>
-                              )}
-                              {heavyPct > 10 && (
-                                <p className="text-xs text-amber-400 mt-1">
-                                  ⚠️ Heavy vehicles &gt;10%: 20% volume reduction applied
-                                </p>
-                              )}
-                              <p className="text-xs text-gray-500 mt-2">
-                                Based on {reducedVph.toLocaleString()} VPH (both directions)
+                            <div className="text-center py-4">
+                              <p className="text-gray-400 text-sm mb-1">
+                                No traffic data available
                               </p>
+                              <p className="text-gray-500 text-xs mb-3">
+                                {traffic.source || 'No MRWA data for this road'}
+                              </p>
+                              <Link href={countTrafficUrl}>
+                                <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm">
+                                  📊 Count Traffic
+                                </Button>
+                              </Link>
                             </div>
 
-                            {/* Quick Reference */}
-                            <details className="mt-2">
-                              <summary className="text-xs text-gray-400 cursor-pointer hover:text-gray-300">
-                                📖 Reference Table (AGTTM Part 2, Table 3.5 & MRWA COP Table 15)
-                              </summary>
-                              <div className="mt-2 text-xs bg-gray-900 rounded p-2 max-h-32 overflow-y-auto">
-                                <table className="w-full">
-                                  <thead className="text-gray-400">
-                                    <tr>
-                                      <th className="text-left pr-2">VPH (both dir)</th>
-                                      <th className="text-left">Max Length</th>
-                                      <th className="text-left">Source</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody className="text-gray-300">
-                                    <tr className={reducedVph >= 701 ? 'bg-blue-900/30' : ''}>
-                                      <td className="pr-2 py-0.5">701-800</td>
-                                      <td>70m</td>
-                                      <td className="text-gray-500">AGTTM</td>
-                                    </tr>
-                                    <tr
-                                      className={
-                                        reducedVph >= 601 && reducedVph <= 700
-                                          ? 'bg-blue-900/30'
-                                          : ''
-                                      }
+                            {/* User counted data (primary when no MRWA data) */}
+                            {userTrafficCounts.length > 0 && (
+                              <div className="mt-3 pt-3 border-t border-gray-700">
+                                <div className="bg-green-900/20 border border-green-700/50 rounded p-3">
+                                  <h4 className="text-sm font-medium text-green-400 mb-2">
+                                    📊 User Counted Data
+                                    <span className="ml-1 text-xs text-gray-400">
+                                      ({userTrafficCounts.length}{' '}
+                                      {userTrafficCounts.length === 1 ? 'count' : 'counts'} found)
+                                    </span>
+                                  </h4>
+                                  {userTrafficCounts.slice(0, 3).map((record) => (
+                                    <div
+                                      key={record.id}
+                                      className="bg-gray-900/50 rounded p-2 mb-2 text-xs"
                                     >
-                                      <td className="pr-2 py-0.5">601-700</td>
-                                      <td>100m</td>
-                                      <td className="text-gray-500">AGTTM</td>
-                                    </tr>
-                                    <tr
-                                      className={
-                                        reducedVph >= 501 && reducedVph <= 600
-                                          ? 'bg-blue-900/30'
-                                          : ''
-                                      }
-                                    >
-                                      <td className="pr-2 py-0.5">501-600</td>
-                                      <td>150m</td>
-                                      <td className="text-gray-500">AGTTM</td>
-                                    </tr>
-                                    <tr
-                                      className={
-                                        reducedVph >= 401 && reducedVph <= 500
-                                          ? 'bg-blue-900/30'
-                                          : ''
-                                      }
-                                    >
-                                      <td className="pr-2 py-0.5">401-500</td>
-                                      <td>250m</td>
-                                      <td className="text-gray-500">AGTTM</td>
-                                    </tr>
-                                    <tr
-                                      className={
-                                        reducedVph >= 351 && reducedVph <= 400
-                                          ? 'bg-blue-900/30'
-                                          : ''
-                                      }
-                                    >
-                                      <td className="pr-2 py-0.5">351-400</td>
-                                      <td>400m</td>
-                                      <td className="text-gray-500">AGTTM</td>
-                                    </tr>
-                                    <tr
-                                      className={
-                                        reducedVph >= 301 && reducedVph <= 350
-                                          ? 'bg-blue-900/30'
-                                          : ''
-                                      }
-                                    >
-                                      <td className="pr-2 py-0.5">301-350</td>
-                                      <td>600m</td>
-                                      <td className="text-gray-500">AGTTM</td>
-                                    </tr>
-                                    <tr
-                                      className={
-                                        reducedVph >= 251 && reducedVph <= 300
-                                          ? 'bg-blue-900/30'
-                                          : ''
-                                      }
-                                    >
-                                      <td className="pr-2 py-0.5">≤300</td>
-                                      <td>800m</td>
-                                      <td className="text-gray-500">AGTTM</td>
-                                    </tr>
-                                    <tr
-                                      className={
-                                        reducedVph >= 201 && reducedVph <= 250
-                                          ? 'bg-blue-900/30'
-                                          : ''
-                                      }
-                                    >
-                                      <td className="pr-2 py-0.5">201-250</td>
-                                      <td>1200m</td>
-                                      <td className="text-amber-500">MRWA COP</td>
-                                    </tr>
-                                    <tr
-                                      className={
-                                        reducedVph >= 151 && reducedVph <= 200
-                                          ? 'bg-blue-900/30'
-                                          : ''
-                                      }
-                                    >
-                                      <td className="pr-2 py-0.5">151-200</td>
-                                      <td>1600m</td>
-                                      <td className="text-amber-500">MRWA COP</td>
-                                    </tr>
-                                    <tr className={reducedVph < 151 ? 'bg-blue-900/30' : ''}>
-                                      <td className="pr-2 py-0.5">≤150</td>
-                                      <td>2200m</td>
-                                      <td className="text-amber-500">MRWA COP</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                                <p className="text-gray-500 mt-1">
-                                  MRWA COP rows exceed AGTTM limits — risk assessment required to
-                                  the satisfaction of the relevant road authority
+                                      <div className="flex justify-between items-center mb-1">
+                                        <span className="text-white font-medium">
+                                          {record.vph_one_direction} VPH (one dir) |{' '}
+                                          {record.heavy_percentage}% heavy
+                                        </span>
+                                        <span className="text-gray-500">
+                                          {new Date(record.date).toLocaleDateString('en-AU')}
+                                        </span>
+                                      </div>
+                                      <div className="text-gray-400">
+                                        SLK {record.slk?.toFixed(2) || 'N/A'} •{' '}
+                                        {record.duration_minutes}min
+                                        {record.slk && startSlk && (
+                                          <span className="text-green-400 ml-1">
+                                            (
+                                            {Math.abs(record.slk - parseFloat(startSlk)).toFixed(1)}{' '}
+                                            km from work zone)
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div className="text-gray-500">
+                                        {record.direction_mode === 'both-ways'
+                                          ? 'Both directions'
+                                          : 'One direction'}{' '}
+                                        •{record.total_vehicles} vehicles
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ) : (
+                          /* Has real MRWA traffic data — show existing content */
+                          <div>
+                            {/* Raw Traffic Data */}
+                            <div className="grid grid-cols-2 gap-3 text-sm">
+                              <div>
+                                <p className="text-gray-400">AADT</p>
+                                <p className="font-medium text-lg">
+                                  {traffic.aadt?.toLocaleString() || 'N/A'}
+                                </p>
+                                <p className="text-xs text-gray-500">vehicles/day</p>
+                              </div>
+                              <div>
+                                <p className="text-gray-400">Peak Hour (est.)</p>
+                                <p className="font-medium text-lg">
+                                  {traffic.peak_hour_volume || 'N/A'}
+                                </p>
+                                <p className="text-xs text-gray-500">vehicles/hour (one dir)</p>
+                              </div>
+                              <div>
+                                <p className="text-gray-400">Heavy Vehicles</p>
+                                <p className="font-medium text-lg">
+                                  {traffic.heavy_vehicle_percent}%
                                 </p>
                               </div>
-                            </details>
-                          </div>
-                        )}
+                              <div>
+                                <p className="text-gray-400">Data Year</p>
+                                <p className="font-medium text-lg">{traffic.aadt_year}</p>
+                              </div>
+                            </div>
 
-                        {/* Maximum Hold Time */}
-                        {(() => {
-                          const peakVphWeekday =
-                            traffic.peak_hour_volume_weekday || traffic.peak_hour_volume || 0;
-                          const heavyPctWeekday =
-                            traffic.heavy_vehicle_weekday_pct || traffic.heavy_vehicle_percent || 0;
-                          const vphOneDirWeekday = peakVphWeekday
-                            ? Math.round(peakVphWeekday / 2)
-                            : vphOneDir;
-                          const maxHold = calculateMaxHoldTime(vphOneDirWeekday, heavyPctWeekday);
-                          const tcLengthM = result?.tc_positions?.tc_length_m;
+                            {/* Calculated Values */}
+                            {(() => {
+                              const peakHourOneDir = traffic.peak_hour_volume || 0;
+                              const peakHourBothDir = peakHourOneDir * 2;
+                              const estimatedPeakFromAadt = traffic.aadt
+                                ? Math.round(traffic.aadt * 0.1)
+                                : 0;
+                              const vphBothDir = peakHourBothDir || estimatedPeakFromAadt;
+                              const vphOneDir = peakHourOneDir || Math.round(vphBothDir / 2);
 
-                          if (!maxHold) return null;
+                              const getShuttleFlowLength = (
+                                vph: number
+                              ): { length: string; risk: boolean } => {
+                                if (vph >= 701) return { length: '70m', risk: false };
+                                if (vph >= 601) return { length: '100m', risk: false };
+                                if (vph >= 501) return { length: '150m', risk: false };
+                                if (vph >= 401) return { length: '250m', risk: false };
+                                if (vph >= 351) return { length: '400m', risk: false };
+                                if (vph >= 301) return { length: '600m', risk: false };
+                                if (vph >= 251) return { length: '800m', risk: false };
+                                if (vph >= 201) return { length: '1200m', risk: true };
+                                if (vph >= 151) return { length: '1600m', risk: true };
+                                return { length: '2200m', risk: true };
+                              };
 
-                          return (
-                            <div className="mt-3 pt-3 border-t border-gray-700">
-                              <div className="bg-orange-900/20 border border-orange-700/50 rounded p-3">
-                                <h4 className="text-sm font-medium text-orange-400 mb-2">
-                                  ⏱️ Maximum Hold Time
-                                </h4>
-                                <div className="grid grid-cols-2 gap-3 text-sm mb-2">
-                                  <div>
-                                    <p className="text-gray-400 text-xs">Max Hold</p>
-                                    <p className="text-xl font-bold text-orange-300">
-                                      {maxHold.maxHoldTimeMinutes} min
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <p className="text-gray-400 text-xs">Recommended Stop</p>
-                                    <p className="text-xl font-bold text-white">
-                                      {maxHold.recommendedStopMinutes} min
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <p className="text-gray-400 text-xs">Queue Growth</p>
-                                    <p className="font-medium text-gray-200">
-                                      {maxHold.queueGrowthRate} m/min
-                                    </p>
-                                  </div>
-                                  <div>
-                                    <p className="text-gray-400 text-xs">
-                                      Queue @ {maxHold.recommendedStopMinutes}min
-                                    </p>
-                                    <p className="font-medium text-gray-200">
-                                      {maxHold.queueAtRecommendedStop}m
-                                    </p>
-                                  </div>
-                                </div>
-                                {tcLengthM && tcLengthM > 0 && (
-                                  <div className="bg-gray-900/50 rounded p-2 mb-2">
-                                    <p className="text-xs text-gray-400">
-                                      📏 TC zone length:{' '}
-                                      <span className="text-white font-semibold">{tcLengthM}m</span>
-                                    </p>
-                                    <p className="text-xs text-gray-400">
-                                      Clearance time:{' '}
-                                      <span className="text-white font-semibold">
-                                        ~{Math.round((tcLengthM / 40) * 3.6)}s
+                              const getLaneCapacity = (vph: number): string => {
+                                if (vph <= 1000) return '1 lane';
+                                if (vph <= 2000) return '2 lanes';
+                                if (vph <= 3000) return '3 lanes';
+                                return '4+ lanes';
+                              };
+
+                              const heavyPct = traffic.heavy_vehicle_percent || 0;
+                              const reductionFactor = heavyPct > 10 ? 0.8 : 1;
+                              const reducedVph = Math.round(vphBothDir * reductionFactor);
+                              const shuttleFlow = getShuttleFlowLength(reducedVph);
+                              const laneCapacity = getLaneCapacity(
+                                Math.round(vphOneDir * reductionFactor)
+                              );
+
+                              return (
+                                <>
+                                  {vphBothDir > 0 && (
+                                    <div className="mt-4 pt-3 border-t border-gray-700">
+                                      <h4 className="text-xs font-semibold text-green-400 mb-2">
+                                        📊 Calculated Values
+                                      </h4>
+                                      <div className="grid grid-cols-2 gap-3 text-sm">
+                                        <div className="bg-gray-900 rounded p-2">
+                                          <p className="text-gray-400 text-xs">
+                                            Est. VPH (both dir)
+                                          </p>
+                                          <p className="font-medium text-white">
+                                            {vphBothDir.toLocaleString()}
+                                          </p>
+                                          {heavyPct > 10 && (
+                                            <p className="text-xs text-amber-400">
+                                              → {reducedVph.toLocaleString()} (reduced)
+                                            </p>
+                                          )}
+                                        </div>
+                                        <div className="bg-gray-900 rounded p-2">
+                                          <p className="text-gray-400 text-xs">Lane Capacity</p>
+                                          <p className="font-medium text-white">{laneCapacity}</p>
+                                          <p className="text-xs text-gray-500">one direction</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Shuttle Flow Guide */}
+                                  {vphBothDir > 0 && (
+                                    <div className="mt-3 pt-3 border-t border-gray-700">
+                                      <h4 className="text-xs font-semibold text-purple-400 mb-2">
+                                        🚦 Shuttle Flow Max Length
+                                      </h4>
+                                      <div className="bg-gray-900 rounded p-3">
+                                        <div className="flex items-center justify-between">
+                                          <span className="text-gray-300">
+                                            Max single lane section:
+                                          </span>
+                                          <span
+                                            className={`font-bold text-lg ${shuttleFlow.risk ? 'text-amber-400' : 'text-green-400'}`}
+                                          >
+                                            {shuttleFlow.length}
+                                          </span>
+                                        </div>
+                                        {shuttleFlow.risk && (
+                                          <p className="text-xs text-amber-400 mt-1">
+                                            ⚠️ Exceeds AGTTM limits — risk assessment required to
+                                            the satisfaction of the relevant road authority (MRWA
+                                            COP Section 6.8.7)
+                                          </p>
+                                        )}
+                                        {heavyPct > 10 && (
+                                          <p className="text-xs text-amber-400 mt-1">
+                                            ⚠️ Heavy vehicles &gt;10%: 20% volume reduction applied
+                                          </p>
+                                        )}
+                                        <p className="text-xs text-gray-500 mt-2">
+                                          Based on {reducedVph.toLocaleString()} VPH (both
+                                          directions)
+                                        </p>
+                                      </div>
+
+                                      {/* Quick Reference */}
+                                      <details className="mt-2">
+                                        <summary className="text-xs text-gray-400 cursor-pointer hover:text-gray-300">
+                                          📖 Reference Table (AGTTM Part 2, Table 3.5 & MRWA COP
+                                          Table 15)
+                                        </summary>
+                                        <div className="mt-2 text-xs bg-gray-900 rounded p-2 max-h-32 overflow-y-auto">
+                                          <table className="w-full">
+                                            <thead className="text-gray-400">
+                                              <tr>
+                                                <th className="text-left pr-2">VPH (both dir)</th>
+                                                <th className="text-left">Max Length</th>
+                                                <th className="text-left">Source</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody className="text-gray-300">
+                                              <tr
+                                                className={
+                                                  reducedVph >= 701 ? 'bg-blue-900/30' : ''
+                                                }
+                                              >
+                                                <td className="pr-2 py-0.5">701-800</td>
+                                                <td>70m</td>
+                                                <td className="text-gray-500">AGTTM</td>
+                                              </tr>
+                                              <tr
+                                                className={
+                                                  reducedVph >= 601 && reducedVph <= 700
+                                                    ? 'bg-blue-900/30'
+                                                    : ''
+                                                }
+                                              >
+                                                <td className="pr-2 py-0.5">601-700</td>
+                                                <td>100m</td>
+                                                <td className="text-gray-500">AGTTM</td>
+                                              </tr>
+                                              <tr
+                                                className={
+                                                  reducedVph >= 501 && reducedVph <= 600
+                                                    ? 'bg-blue-900/30'
+                                                    : ''
+                                                }
+                                              >
+                                                <td className="pr-2 py-0.5">501-600</td>
+                                                <td>150m</td>
+                                                <td className="text-gray-500">AGTTM</td>
+                                              </tr>
+                                              <tr
+                                                className={
+                                                  reducedVph >= 401 && reducedVph <= 500
+                                                    ? 'bg-blue-900/30'
+                                                    : ''
+                                                }
+                                              >
+                                                <td className="pr-2 py-0.5">401-500</td>
+                                                <td>250m</td>
+                                                <td className="text-gray-500">AGTTM</td>
+                                              </tr>
+                                              <tr
+                                                className={
+                                                  reducedVph >= 351 && reducedVph <= 400
+                                                    ? 'bg-blue-900/30'
+                                                    : ''
+                                                }
+                                              >
+                                                <td className="pr-2 py-0.5">351-400</td>
+                                                <td>400m</td>
+                                                <td className="text-gray-500">AGTTM</td>
+                                              </tr>
+                                              <tr
+                                                className={
+                                                  reducedVph >= 301 && reducedVph <= 350
+                                                    ? 'bg-blue-900/30'
+                                                    : ''
+                                                }
+                                              >
+                                                <td className="pr-2 py-0.5">301-350</td>
+                                                <td>600m</td>
+                                                <td className="text-gray-500">AGTTM</td>
+                                              </tr>
+                                              <tr
+                                                className={
+                                                  reducedVph >= 251 && reducedVph <= 300
+                                                    ? 'bg-blue-900/30'
+                                                    : ''
+                                                }
+                                              >
+                                                <td className="pr-2 py-0.5">≤300</td>
+                                                <td>800m</td>
+                                                <td className="text-gray-500">AGTTM</td>
+                                              </tr>
+                                              <tr
+                                                className={
+                                                  reducedVph >= 201 && reducedVph <= 250
+                                                    ? 'bg-blue-900/30'
+                                                    : ''
+                                                }
+                                              >
+                                                <td className="pr-2 py-0.5">201-250</td>
+                                                <td>1200m</td>
+                                                <td className="text-amber-500">MRWA COP</td>
+                                              </tr>
+                                              <tr
+                                                className={
+                                                  reducedVph >= 151 && reducedVph <= 200
+                                                    ? 'bg-blue-900/30'
+                                                    : ''
+                                                }
+                                              >
+                                                <td className="pr-2 py-0.5">151-200</td>
+                                                <td>1600m</td>
+                                                <td className="text-amber-500">MRWA COP</td>
+                                              </tr>
+                                              <tr
+                                                className={reducedVph < 151 ? 'bg-blue-900/30' : ''}
+                                              >
+                                                <td className="pr-2 py-0.5">≤150</td>
+                                                <td>2200m</td>
+                                                <td className="text-amber-500">MRWA COP</td>
+                                              </tr>
+                                            </tbody>
+                                          </table>
+                                          <p className="text-gray-500 mt-1">
+                                            MRWA COP rows exceed AGTTM limits — risk assessment
+                                            required to the satisfaction of the relevant road
+                                            authority
+                                          </p>
+                                        </div>
+                                      </details>
+                                    </div>
+                                  )}
+
+                                  {/* Maximum Hold Time */}
+                                  {(() => {
+                                    const peakVphWeekday =
+                                      traffic.peak_hour_volume_weekday ||
+                                      traffic.peak_hour_volume ||
+                                      0;
+                                    const heavyPctWeekday =
+                                      traffic.heavy_vehicle_weekday_pct ||
+                                      traffic.heavy_vehicle_percent ||
+                                      0;
+                                    const vphOneDirWeekday = peakVphWeekday
+                                      ? Math.round(peakVphWeekday / 2)
+                                      : vphOneDir;
+                                    const maxHold = calculateMaxHoldTime(
+                                      vphOneDirWeekday,
+                                      heavyPctWeekday
+                                    );
+                                    const tcLengthM = result?.tc_positions?.tc_length_m;
+
+                                    if (!maxHold) return null;
+
+                                    return (
+                                      <div className="mt-3 pt-3 border-t border-gray-700">
+                                        <div className="bg-orange-900/20 border border-orange-700/50 rounded p-3">
+                                          <h4 className="text-sm font-medium text-orange-400 mb-2">
+                                            ⏱️ Maximum Hold Time
+                                          </h4>
+                                          <div className="grid grid-cols-2 gap-3 text-sm mb-2">
+                                            <div>
+                                              <p className="text-gray-400 text-xs">Max Hold</p>
+                                              <p className="text-xl font-bold text-orange-300">
+                                                {maxHold.maxHoldTimeMinutes} min
+                                              </p>
+                                            </div>
+                                            <div>
+                                              <p className="text-gray-400 text-xs">
+                                                Recommended Stop
+                                              </p>
+                                              <p className="text-xl font-bold text-white">
+                                                {maxHold.recommendedStopMinutes} min
+                                              </p>
+                                            </div>
+                                            <div>
+                                              <p className="text-gray-400 text-xs">Queue Growth</p>
+                                              <p className="font-medium text-gray-200">
+                                                {maxHold.queueGrowthRate} m/min
+                                              </p>
+                                            </div>
+                                            <div>
+                                              <p className="text-gray-400 text-xs">
+                                                Queue @ {maxHold.recommendedStopMinutes}min
+                                              </p>
+                                              <p className="font-medium text-gray-200">
+                                                {maxHold.queueAtRecommendedStop}m
+                                              </p>
+                                            </div>
+                                          </div>
+                                          {tcLengthM && tcLengthM > 0 && (
+                                            <div className="bg-gray-900/50 rounded p-2 mb-2">
+                                              <p className="text-xs text-gray-400">
+                                                📏 TC zone length:{' '}
+                                                <span className="text-white font-semibold">
+                                                  {tcLengthM}m
+                                                </span>
+                                              </p>
+                                              <p className="text-xs text-gray-400">
+                                                Clearance time:{' '}
+                                                <span className="text-white font-semibold">
+                                                  ~{Math.round((tcLengthM / 40) * 3.6)}s
+                                                </span>
+                                              </p>
+                                            </div>
+                                          )}
+                                          {maxHold.queueAtRecommendedStop >
+                                            PREPARE_TO_STOP_DISTANCE_M && (
+                                            <div className="bg-red-900/30 border border-red-700 rounded p-2 mb-2">
+                                              <p className="text-xs text-red-400">
+                                                ⚠️ Queue at {maxHold.recommendedStopMinutes}min stop
+                                                ({maxHold.queueAtRecommendedStop}m) exceeds Prepare
+                                                to Stop distance ({PREPARE_TO_STOP_DISTANCE_M}m)
+                                              </p>
+                                            </div>
+                                          )}
+                                          <p className="text-xs text-gray-500">
+                                            Based on weekday peak {vphOneDirWeekday} VPH/direction,{' '}
+                                            {heavyPctWeekday}% heavy. Sign distances: Prepare to
+                                            Stop {PREPARE_TO_STOP_DISTANCE_M}m, Adv Queue Warning{' '}
+                                            {ADV_QUEUE_WARNING_DISTANCE_M}m.
+                                          </p>
+                                        </div>
+                                      </div>
+                                    );
+                                  })()}
+                                </>
+                              );
+                            })()}
+
+                            {traffic.distance_to_site !== undefined && (
+                              <p className="text-xs text-cyan-400 mt-2">
+                                📍 Nearest count site: {traffic.distance_to_site} km from work zone
+                              </p>
+                            )}
+
+                            <p className="text-xs text-gray-500 mt-2">Source: {traffic.source}</p>
+
+                            {traffic.nearest_sites && traffic.nearest_sites.length > 1 && (
+                              <div className="mt-3 pt-3 border-t border-gray-700">
+                                <p className="text-xs text-gray-400 mb-2">
+                                  Other nearby count sites:
+                                </p>
+                                <div className="text-xs space-y-1">
+                                  {traffic.nearest_sites.slice(1, 4).map((site, i) => (
+                                    <div key={i} className="flex justify-between text-gray-300">
+                                      <span>{site.location}</span>
+                                      <span className="text-gray-500">
+                                        {site.aadt?.toLocaleString()} v/d ({site.distance_km} km)
                                       </span>
-                                    </p>
-                                  </div>
-                                )}
-                                {maxHold.queueAtRecommendedStop > PREPARE_TO_STOP_DISTANCE_M && (
-                                  <div className="bg-red-900/30 border border-red-700 rounded p-2 mb-2">
-                                    <p className="text-xs text-red-400">
-                                      ⚠️ Queue at {maxHold.recommendedStopMinutes}min stop (
-                                      {maxHold.queueAtRecommendedStop}m) exceeds Prepare to Stop
-                                      distance ({PREPARE_TO_STOP_DISTANCE_M}m)
-                                    </p>
-                                  </div>
-                                )}
-                                <p className="text-xs text-gray-500">
-                                  Based on weekday peak {vphOneDirWeekday} VPH/direction,{' '}
-                                  {heavyPctWeekday}% heavy. Sign distances: Prepare to Stop{' '}
-                                  {PREPARE_TO_STOP_DISTANCE_M}m, Adv Queue Warning{' '}
-                                  {ADV_QUEUE_WARNING_DISTANCE_M}m.
-                                </p>
-                              </div>
-                            </div>
-                          );
-                        })()}
-
-                        {traffic.distance_to_site !== undefined && (
-                          <p className="text-xs text-cyan-400 mt-2">
-                            📍 Nearest count site: {traffic.distance_to_site} km from work zone
-                          </p>
-                        )}
-
-                        <p className="text-xs text-gray-500 mt-2">Source: {traffic.source}</p>
-
-                        {traffic.nearest_sites && traffic.nearest_sites.length > 1 && (
-                          <div className="mt-3 pt-3 border-t border-gray-700">
-                            <p className="text-xs text-gray-400 mb-2">Other nearby count sites:</p>
-                            <div className="text-xs space-y-1">
-                              {traffic.nearest_sites.slice(1, 4).map((site, i) => (
-                                <div key={i} className="flex justify-between text-gray-300">
-                                  <span>{site.location}</span>
-                                  <span className="text-gray-500">
-                                    {site.aadt?.toLocaleString()} v/d ({site.distance_km} km)
-                                  </span>
+                                    </div>
+                                  ))}
                                 </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
+                              </div>
+                            )}
 
-                        {traffic.note && (
-                          <p className="text-xs text-amber-400 mt-2">{traffic.note}</p>
+                            {traffic.note && (
+                              <p className="text-xs text-amber-400 mt-2">{traffic.note}</p>
+                            )}
+
+                            {/* User Counted Data (supplementary when MRWA data exists) */}
+                            {userTrafficCounts.length > 0 && (
+                              <div className="mt-3 pt-3 border-t border-gray-700">
+                                <div className="bg-green-900/20 border border-green-700/50 rounded p-3">
+                                  <h4 className="text-sm font-medium text-green-400 mb-2">
+                                    📊 User Counted Data
+                                    <span className="ml-1 text-xs text-gray-400">
+                                      ({userTrafficCounts.length}{' '}
+                                      {userTrafficCounts.length === 1 ? 'count' : 'counts'} found)
+                                    </span>
+                                  </h4>
+                                  {userTrafficCounts.slice(0, 3).map((record) => (
+                                    <div
+                                      key={record.id}
+                                      className="bg-gray-900/50 rounded p-2 mb-2 text-xs"
+                                    >
+                                      <div className="flex justify-between items-center mb-1">
+                                        <span className="text-white font-medium">
+                                          {record.vph_one_direction} VPH (one dir) |{' '}
+                                          {record.heavy_percentage}% heavy
+                                        </span>
+                                        <span className="text-gray-500">
+                                          {new Date(record.date).toLocaleDateString('en-AU')}
+                                        </span>
+                                      </div>
+                                      <div className="text-gray-400">
+                                        SLK {record.slk?.toFixed(2) || 'N/A'} •{' '}
+                                        {record.duration_minutes}min
+                                        {record.slk && startSlk && (
+                                          <span className="text-green-400 ml-1">
+                                            (
+                                            {Math.abs(record.slk - parseFloat(startSlk)).toFixed(1)}{' '}
+                                            km from work zone)
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div className="text-gray-500">
+                                        {record.direction_mode === 'both-ways'
+                                          ? 'Both directions'
+                                          : 'One direction'}{' '}
+                                        •{record.total_vehicles} vehicles
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+                          </div>
                         )}
                       </div>
                     )}
