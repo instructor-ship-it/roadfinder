@@ -7,6 +7,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.9.8] - 2026-03-29
+
+### Added
+
+- **FuelWatch WA Integration** for fuel station data
+  - Daily updated diesel prices from WA Government FuelWatch RSS feed
+  - Station name, brand, address, phone, site features (24hr, toilets, ATM, etc.)
+  - Fuel price badge showing dollars per litre on amenities card
+  - Server-side 30-minute cache for performance
+  - New `/api/fuel-stations` endpoint with Overpass merge for complete coverage
+- **WA Health SLIP Services** for hospital data (replacing Overpass for hospitals)
+  - Accurate Emergency Department status (from official government data)
+  - Hospital type badges: Public, Private, Nursing Post
+  - Bed counts, suburb, address, phone number
+  - Nursing posts included for remote/regional work zones
+  - Connected existing `/api/nearest-hospital` endpoint to main amenities section
+- **Three-Source Amenity Architecture** with smart fallback chain
+  - Hospital: WA Health SLIP → Overpass fallback
+  - Fuel: FuelWatch WA + Overpass merge (deduplication within 200m)
+  - Toilet: Overpass API (no better alternative)
+  - Source tracking per amenity type displayed in UI
+- **Hospital Display Enhancements**
+  - ED badge (red), Public badge (blue), Private badge (gray), Nursing Post badge (amber)
+  - Address line, phone number, bed count shown beneath hospital name
+- **Fuel Station Display Enhancements**
+  - Diesel price badge (green) with "Diesel" label
+  - "No price today" badge (gray) for Overpass-only stations
+  - Site features line: e.g. "Open 24 hours · Toilets · ATM · EFTPOS"
+  - Address and phone shown beneath station name
+
+### Changed
+
+- **Amenities Section** now uses three separate API calls in parallel instead of single Overpass call
+- **Text Report** includes diesel price, hospital type, bed count, address, phone, site features
+- **HTML Report** includes hospital type badge, fuel price badge, site features
+- **AmenitiesSection component** updated with extended Place interface
+- **Fuel type default** changed from U91 (unleaded) to DL (diesel) for work zone use case
+
+### Fixed
+
+- **Missing nearby fuel stations**: FuelWatch only returns stations that submitted prices today. Nearby stations without price submissions were invisible. Fixed by merging Overpass fuel station data to fill gaps.
+- **TypeScript inference error**: `const sources = []` inferred as `never[]`, causing Vercel build failure. Fixed with explicit `string[]` type annotation.
+
+---
+
 ## [1.9.7] - 2026-03-29
 
 ### Added
@@ -297,6 +342,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Key Changes                                                               |
 | ------- | ---------- | ------------------------------------------------------------------------- |
+| 1.9.8   | 2026-03-29 | FuelWatch WA + WA Health SLIP amenities, fuel prices, hospital ED/badges  |
 | 1.9.7   | 2026-03-29 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements |
 | 1.9.6   | 2026-03-28 | Traffic Counter: Auto-GPS, custom duration UI, duration fixes, lint fixes |
 | 1.9.5   | 2026-03-28 | Testing, CI/CD, Best Practice 100                                         |

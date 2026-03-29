@@ -20,7 +20,7 @@ import {
   QUEUE_MULTIPLIERS,
 } from '@/lib/traffic-counter-storage';
 
-const APP_VERSION = 'RC 1.9.7';
+const APP_VERSION = 'RC 1.9.8';
 
 // ============================================
 // TYPES

@@ -12,7 +12,7 @@ import {
 } from '@/lib/traffic-counter-storage';
 import { calculateMaxHoldTime, PREPARE_TO_STOP_DISTANCE_M } from '@/lib/max-hold-time';
 
-const APP_VERSION = 'RC 1.9.7';
+const APP_VERSION = 'RC 1.9.8';
 const MINIMUM_DURATION_SECONDS = 180; // 3 minutes minimum
 
 // ============================================

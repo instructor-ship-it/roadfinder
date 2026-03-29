@@ -1,7 +1,7 @@
 # TC Work Zone Locator
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-RC%201.9.7-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
+[![Version](https://img.shields.io/badge/version-RC%201.9.8-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)

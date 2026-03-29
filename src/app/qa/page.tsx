@@ -18,7 +18,7 @@ import {
   type QaEntry,
 } from '@/lib/qa-storage';
 
-const APP_VERSION = 'RC 1.9.7';
+const APP_VERSION = 'RC 1.9.8';
 
 // Types
 interface SearchableDocument {
