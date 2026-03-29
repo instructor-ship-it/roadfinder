@@ -4844,7 +4844,7 @@ export default function Home() {
                                     <p className="text-xs text-gray-400">
                                       Clearance time:{' '}
                                       <span className="text-white font-semibold">
-                                        ~{Math.round((tcLengthM / 40) * 60)}s
+                                        ~{Math.round((tcLengthM / 40) * 3.6)}s
                                       </span>
                                     </p>
                                   </div>
