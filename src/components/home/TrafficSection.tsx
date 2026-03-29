@@ -40,10 +40,10 @@ function getShuttleFlowLength(vph: number): { length: string; risk: boolean } {
   if (vph >= 401) return { length: '250m', risk: false };
   if (vph >= 351) return { length: '400m', risk: false };
   if (vph >= 301) return { length: '600m', risk: false };
-  if (vph >= 251) return { length: '800m', risk: true };
-  if (vph >= 201) return { length: '1200m', risk: true };
-  if (vph >= 151) return { length: '1600m', risk: true };
-  return { length: '2200m', risk: true };
+  if (vph >= 251) return { length: '800m', risk: false }; // AGTTM Table 3.5: ≤300 VPH → 800m
+  if (vph >= 201) return { length: '1200m', risk: true }; // MRWA COP Table 15: exceeds AGTTM
+  if (vph >= 151) return { length: '1600m', risk: true }; // MRWA COP Table 15: exceeds AGTTM
+  return { length: '2200m', risk: true }; // MRWA COP Table 15: exceeds AGTTM
 }
 
 function getLaneCapacity(vph: number): string {
@@ -195,59 +195,75 @@ export function TrafficSection({ traffic, showTraffic, onToggle, tcLengthM }: Tr
 
           {/* Shuttle Flow Table */}
           <details className="text-sm">
-            <summary className="text-cyan-400 cursor-pointer">📋 AGTTM Shuttle Flow Table</summary>
+            <summary className="text-cyan-400 cursor-pointer">
+              📋 AGTTM & MRWA COP Shuttle Flow Table
+            </summary>
             <div className="mt-2 bg-gray-700/30 rounded p-2 overflow-x-auto">
               <table className="text-xs">
                 <thead>
                   <tr className="text-gray-400">
                     <th className="text-left pr-2 py-0.5">VPH (both dir)</th>
                     <th className="text-left py-0.5">Max Length</th>
+                    <th className="text-left py-0.5">Source</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className={reducedVph >= 701 ? 'bg-blue-900/30' : ''}>
-                    <td className="pr-2 py-0.5">700+</td>
+                    <td className="pr-2 py-0.5">701-800</td>
                     <td>70m</td>
+                    <td className="text-gray-500">AGTTM</td>
                   </tr>
                   <tr className={reducedVph >= 601 && reducedVph <= 700 ? 'bg-blue-900/30' : ''}>
                     <td className="pr-2 py-0.5">601-700</td>
                     <td>100m</td>
+                    <td className="text-gray-500">AGTTM</td>
                   </tr>
                   <tr className={reducedVph >= 501 && reducedVph <= 600 ? 'bg-blue-900/30' : ''}>
                     <td className="pr-2 py-0.5">501-600</td>
                     <td>150m</td>
+                    <td className="text-gray-500">AGTTM</td>
                   </tr>
                   <tr className={reducedVph >= 401 && reducedVph <= 500 ? 'bg-blue-900/30' : ''}>
                     <td className="pr-2 py-0.5">401-500</td>
                     <td>250m</td>
+                    <td className="text-gray-500">AGTTM</td>
                   </tr>
                   <tr className={reducedVph >= 351 && reducedVph <= 400 ? 'bg-blue-900/30' : ''}>
                     <td className="pr-2 py-0.5">351-400</td>
                     <td>400m</td>
+                    <td className="text-gray-500">AGTTM</td>
                   </tr>
                   <tr className={reducedVph >= 301 && reducedVph <= 350 ? 'bg-blue-900/30' : ''}>
                     <td className="pr-2 py-0.5">301-350</td>
                     <td>600m</td>
+                    <td className="text-gray-500">AGTTM</td>
                   </tr>
                   <tr className={reducedVph >= 251 && reducedVph <= 300 ? 'bg-blue-900/30' : ''}>
-                    <td className="pr-2 py-0.5">251-300*</td>
+                    <td className="pr-2 py-0.5">≤300</td>
                     <td>800m</td>
+                    <td className="text-gray-500">AGTTM</td>
                   </tr>
                   <tr className={reducedVph >= 201 && reducedVph <= 250 ? 'bg-blue-900/30' : ''}>
-                    <td className="pr-2 py-0.5">201-250*</td>
+                    <td className="pr-2 py-0.5">201-250</td>
                     <td>1200m</td>
+                    <td className="text-amber-500">MRWA COP</td>
                   </tr>
                   <tr className={reducedVph >= 151 && reducedVph <= 200 ? 'bg-blue-900/30' : ''}>
-                    <td className="pr-2 py-0.5">151-200*</td>
+                    <td className="pr-2 py-0.5">151-200</td>
                     <td>1600m</td>
+                    <td className="text-amber-500">MRWA COP</td>
                   </tr>
                   <tr className={reducedVph < 151 ? 'bg-blue-900/30' : ''}>
-                    <td className="pr-2 py-0.5">&lt;150*</td>
+                    <td className="pr-2 py-0.5">≤150</td>
                     <td>2200m</td>
+                    <td className="text-amber-500">MRWA COP</td>
                   </tr>
                 </tbody>
               </table>
-              <p className="text-gray-500 mt-1">* Requires risk assessment</p>
+              <p className="text-gray-500 mt-1">
+                MRWA COP rows exceed AGTTM limits — risk assessment required to the satisfaction of
+                the relevant road authority
+              </p>
             </div>
           </details>
 

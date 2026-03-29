@@ -141,10 +141,10 @@ export const SHUTTLE_FLOW_TABLE = [
   { vph: '401-500', maxLength: '250m', vphMax: 500 },
   { vph: '351-400', maxLength: '400m', vphMax: 400 },
   { vph: '301-350', maxLength: '600m', vphMax: 350 },
-  { vph: '251-300*', maxLength: '800m', vphMax: 300 },
-  { vph: '201-250*', maxLength: '1200m', vphMax: 250 },
-  { vph: '151-200*', maxLength: '1600m', vphMax: 200 },
-  { vph: '<150*', maxLength: '2200m', vphMax: 150 },
+  { vph: '≤300', maxLength: '800m', vphMax: 300 }, // AGTTM Table 3.5
+  { vph: '201-250', maxLength: '1200m', vphMax: 250 }, // MRWA COP Table 15: exceeds AGTTM
+  { vph: '151-200', maxLength: '1600m', vphMax: 200 }, // MRWA COP Table 15: exceeds AGTTM
+  { vph: '≤150', maxLength: '2200m', vphMax: 150 }, // MRWA COP Table 15: exceeds AGTTM
 ];
 
 /**

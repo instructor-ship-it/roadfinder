@@ -339,7 +339,7 @@ function CompletionOverlay({
   const vphOneDirOverlay = vph / 2; // Assume 50/50 split
   const maxHoldOverlay = calculateMaxHoldTime(vphOneDirOverlay, heavyPercent);
 
-  // Calculate shuttle flow max length
+  // Calculate shuttle flow max length (AGTTM Part 2, Table 3.5 & MRWA COP Table 15)
   const getShuttleMax = (v: number) => {
     if (v >= 701) return '70m';
     if (v >= 601) return '100m';
@@ -347,9 +347,9 @@ function CompletionOverlay({
     if (v >= 401) return '250m';
     if (v >= 351) return '400m';
     if (v >= 301) return '600m';
-    if (v >= 251) return '800m*';
-    if (v >= 201) return '1200m*';
-    return '2200m*';
+    if (v >= 251) return '800m'; // AGTTM Table 3.5: ≤300 VPH → 800m
+    if (v >= 201) return '1200m'; // MRWA COP Table 15: exceeds AGTTM
+    return '2200m'; // MRWA COP Table 15: exceeds AGTTM
   };
 
   return (
@@ -748,7 +748,7 @@ export default function TrafficCounterCountPage() {
   const vphOneDir = currentVph / 2; // Assume 50/50 split
   const maxHold = calculateMaxHoldTime(vphOneDir, heavyPercent);
 
-  // Shuttle flow max length
+  // Shuttle flow max length (AGTTM Part 2, Table 3.5 & MRWA COP Table 15)
   const getShuttleMax = (v: number) => {
     if (v >= 701) return '70m';
     if (v >= 601) return '100m';
@@ -756,9 +756,9 @@ export default function TrafficCounterCountPage() {
     if (v >= 401) return '250m';
     if (v >= 351) return '400m';
     if (v >= 301) return '600m';
-    if (v >= 251) return '800m*';
-    if (v >= 201) return '1200m*';
-    return '2200m*';
+    if (v >= 251) return '800m'; // AGTTM Table 3.5: ≤300 VPH → 800m
+    if (v >= 201) return '1200m'; // MRWA COP Table 15: exceeds AGTTM
+    return '2200m'; // MRWA COP Table 15: exceeds AGTTM
   };
 
   // Loading state

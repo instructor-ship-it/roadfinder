@@ -526,7 +526,10 @@ export default function TrafficCounterSetupPage() {
                       ))}
                     </tbody>
                   </table>
-                  <p className="text-gray-500 mt-0.5">* Requires risk assessment</p>
+                  <p className="text-gray-500 mt-0.5">
+                    MRWA COP rows exceed AGTTM limits — risk assessment required to the satisfaction
+                    of the relevant road authority
+                  </p>
                 </div>
               </div>
 

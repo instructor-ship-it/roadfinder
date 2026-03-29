@@ -4549,10 +4549,10 @@ export default function Home() {
                   if (vph >= 401) return { length: '250m', risk: false };
                   if (vph >= 351) return { length: '400m', risk: false };
                   if (vph >= 301) return { length: '600m', risk: false };
-                  if (vph >= 251) return { length: '800m', risk: true };
-                  if (vph >= 201) return { length: '1200m', risk: true };
-                  if (vph >= 151) return { length: '1600m', risk: true };
-                  return { length: '2200m', risk: true };
+                  if (vph >= 251) return { length: '800m', risk: false }; // AGTTM Table 3.5: ≤300 VPH → 800m
+                  if (vph >= 201) return { length: '1200m', risk: true }; // MRWA COP Table 15: exceeds AGTTM
+                  if (vph >= 151) return { length: '1600m', risk: true }; // MRWA COP Table 15: exceeds AGTTM
+                  return { length: '2200m', risk: true }; // MRWA COP Table 15: exceeds AGTTM
                 };
 
                 // Lane capacity (AGTTM Part 2, Table 3.1)
@@ -4663,8 +4663,9 @@ export default function Home() {
                               </div>
                               {shuttleFlow.risk && (
                                 <p className="text-xs text-amber-400 mt-1">
-                                  ⚠️ Requires risk assessment approved by Road Infrastructure
-                                  Manager
+                                  ⚠️ Exceeds AGTTM limits — risk assessment required to the
+                                  satisfaction of the relevant road authority (MRWA COP Section
+                                  6.8.7)
                                 </p>
                               )}
                               {heavyPct > 10 && (
@@ -4680,20 +4681,22 @@ export default function Home() {
                             {/* Quick Reference */}
                             <details className="mt-2">
                               <summary className="text-xs text-gray-400 cursor-pointer hover:text-gray-300">
-                                📖 Reference Table (AGTTM Part 2, Table 3.5)
+                                📖 Reference Table (AGTTM Part 2, Table 3.5 & MRWA COP Table 15)
                               </summary>
                               <div className="mt-2 text-xs bg-gray-900 rounded p-2 max-h-32 overflow-y-auto">
                                 <table className="w-full">
                                   <thead className="text-gray-400">
                                     <tr>
-                                      <th className="text-left pr-2">VPH</th>
+                                      <th className="text-left pr-2">VPH (both dir)</th>
                                       <th className="text-left">Max Length</th>
+                                      <th className="text-left">Source</th>
                                     </tr>
                                   </thead>
                                   <tbody className="text-gray-300">
                                     <tr className={reducedVph >= 701 ? 'bg-blue-900/30' : ''}>
                                       <td className="pr-2 py-0.5">701-800</td>
                                       <td>70m</td>
+                                      <td className="text-gray-500">AGTTM</td>
                                     </tr>
                                     <tr
                                       className={
@@ -4704,6 +4707,7 @@ export default function Home() {
                                     >
                                       <td className="pr-2 py-0.5">601-700</td>
                                       <td>100m</td>
+                                      <td className="text-gray-500">AGTTM</td>
                                     </tr>
                                     <tr
                                       className={
@@ -4714,6 +4718,7 @@ export default function Home() {
                                     >
                                       <td className="pr-2 py-0.5">501-600</td>
                                       <td>150m</td>
+                                      <td className="text-gray-500">AGTTM</td>
                                     </tr>
                                     <tr
                                       className={
@@ -4724,6 +4729,7 @@ export default function Home() {
                                     >
                                       <td className="pr-2 py-0.5">401-500</td>
                                       <td>250m</td>
+                                      <td className="text-gray-500">AGTTM</td>
                                     </tr>
                                     <tr
                                       className={
@@ -4734,6 +4740,7 @@ export default function Home() {
                                     >
                                       <td className="pr-2 py-0.5">351-400</td>
                                       <td>400m</td>
+                                      <td className="text-gray-500">AGTTM</td>
                                     </tr>
                                     <tr
                                       className={
@@ -4744,6 +4751,7 @@ export default function Home() {
                                     >
                                       <td className="pr-2 py-0.5">301-350</td>
                                       <td>600m</td>
+                                      <td className="text-gray-500">AGTTM</td>
                                     </tr>
                                     <tr
                                       className={
@@ -4752,8 +4760,9 @@ export default function Home() {
                                           : ''
                                       }
                                     >
-                                      <td className="pr-2 py-0.5">251-300*</td>
+                                      <td className="pr-2 py-0.5">≤300</td>
                                       <td>800m</td>
+                                      <td className="text-gray-500">AGTTM</td>
                                     </tr>
                                     <tr
                                       className={
@@ -4762,8 +4771,9 @@ export default function Home() {
                                           : ''
                                       }
                                     >
-                                      <td className="pr-2 py-0.5">201-250*</td>
+                                      <td className="pr-2 py-0.5">201-250</td>
                                       <td>1200m</td>
+                                      <td className="text-amber-500">MRWA COP</td>
                                     </tr>
                                     <tr
                                       className={
@@ -4772,16 +4782,21 @@ export default function Home() {
                                           : ''
                                       }
                                     >
-                                      <td className="pr-2 py-0.5">151-200*</td>
+                                      <td className="pr-2 py-0.5">151-200</td>
                                       <td>1600m</td>
+                                      <td className="text-amber-500">MRWA COP</td>
                                     </tr>
                                     <tr className={reducedVph < 151 ? 'bg-blue-900/30' : ''}>
-                                      <td className="pr-2 py-0.5">&lt;150*</td>
+                                      <td className="pr-2 py-0.5">≤150</td>
                                       <td>2200m</td>
+                                      <td className="text-amber-500">MRWA COP</td>
                                     </tr>
                                   </tbody>
                                 </table>
-                                <p className="text-gray-500 mt-1">* Requires risk assessment</p>
+                                <p className="text-gray-500 mt-1">
+                                  MRWA COP rows exceed AGTTM limits — risk assessment required to
+                                  the satisfaction of the relevant road authority
+                                </p>
                               </div>
                             </details>
                           </div>
