@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -47,7 +47,15 @@ interface SetupState {
 // MAIN COMPONENT
 // ============================================
 
-export default function TrafficCounterSetupPage() {
+export default function TrafficCounterPage() {
+  return (
+    <Suspense>
+      <TrafficCounterSetupPage />
+    </Suspense>
+  );
+}
+
+function TrafficCounterSetupPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
