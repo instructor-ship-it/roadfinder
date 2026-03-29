@@ -1,7 +1,57 @@
 # TC Work Zone Locator - Work Log
 
 > **Last Updated:** 2026-03-29
-> **Current Version:** RC 1.9.6
+> **Current Version:** RC 1.9.7
+
+---
+
+## Task ID: 2026-03-29-002
+
+**Agent:** Sub Agent (Docs Update)
+**Task:** RC 1.9.7 - Maximum Hold Time, Shuttle Flow Corrections, UI Improvements
+
+### Work Log:
+
+- **Version Bump**: Updated all version strings from 1.9.6 to 1.9.7
+  - package.json: 1.9.6 → 1.9.7
+  - SettingsDrawer.tsx: RC 1.9.6 → RC 1.9.7
+  - qa/page.tsx: RC 1.9.6 → RC 1.9.7
+  - traffic-counter/count/page.tsx: RC 1.9.6 → RC 1.9.7
+  - traffic-counter/page.tsx: RC 1.9.6 → RC 1.9.7
+  - aftercare/page.tsx: RC 1.9.6 → RC 1.9.7
+
+- **Documentation Updates**:
+  - CHANGELOG.md: Added RC 1.9.7 entry with all changes, updated Version History Summary table
+  - README.md: Updated version badge, added RC 1.9.7 section to Version History
+  - worklog.md: Updated header version, added this task entry
+
+### Release Notes:
+
+- Added Maximum Hold Time calculator to Work Zone Info page
+- Fixed shuttle flow risk assessment to match AGTTM Part 2 Table 3.5 and MRWA COP Table 15
+- Corrected clearance time unit conversion (seconds not minutes)
+- Changed heavy vehicle count button colour from amber to red for better visibility
+- Offline Data section in settings collapsed by default when data already downloaded
+
+### Files Changed:
+
+- `package.json` (version 1.9.7)
+- `src/components/SettingsDrawer.tsx` (version RC 1.9.7)
+- `src/app/qa/page.tsx` (version RC 1.9.7)
+- `src/app/traffic-counter/count/page.tsx` (version RC 1.9.7)
+- `src/app/traffic-counter/page.tsx` (version RC 1.9.7)
+- `src/app/aftercare/page.tsx` (version RC 1.9.7)
+- `CHANGELOG.md` (RC 1.9.7 entry, summary table)
+- `README.md` (version badge, version history)
+- `worklog.md` (header version, this entry)
+
+### Stage Summary:
+
+- Version: RC 1.9.7
+- All version strings synchronized across codebase
+- CHANGELOG.md and README.md updated with release notes
+- No changes needed in docs/ folder (no 1.9.6 references found)
+- Ready for push to GitHub
 
 ---
 

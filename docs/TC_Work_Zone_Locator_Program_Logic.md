@@ -2,7 +2,7 @@
 
 ## Program Logic Documentation
 
-**Version RC 1.9.1**
+**Version RC 1.9.7**
 
 **Western Australia Traffic Controllers**
 
@@ -750,4 +750,4 @@ The current implementation has several areas identified for future improvement:
 
 ---
 
-_This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.1._
+_This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.7._

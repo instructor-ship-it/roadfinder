@@ -37,11 +37,11 @@ Complete this checklist before every release to production.
 
 ## Version Increment Guide
 
-| Change Type | Increment | Example |
-|-------------|-----------|---------|
-| Bug fix | Patch | 1.9.1 → 1.9.2 |
-| New feature | Minor | 1.9.1 → 1.10.0 |
-| Breaking change | Major | 1.9.1 → 2.0.0 |
+| Change Type     | Increment | Example        |
+| --------------- | --------- | -------------- |
+| Bug fix         | Patch     | 1.9.1 → 1.9.2  |
+| New feature     | Minor     | 1.9.1 → 1.10.0 |
+| Breaking change | Major     | 1.9.1 → 2.0.0  |
 
 ---
 
@@ -56,6 +56,7 @@ Ask AI: "Run documentation sync check: verify version consistency, check for TOD
 ### Step 2: Update Version
 
 Update these files with new version number:
+
 1. `package.json` - "version" field
 2. `README.md` - badge URL
 3. `CHANGELOG.md` - add new section
@@ -83,6 +84,7 @@ Ask AI: "Push to main and master branches, and push the new tag"
 ## Core Features Test Checklist
 
 ### Work Zone Lookup (`/`)
+
 - [ ] Region dropdown loads
 - [ ] Road dropdown populates based on region
 - [ ] SLK input works
@@ -90,17 +92,20 @@ Ask AI: "Push to main and master branches, and push the new tag"
 - [ ] Google Maps links work
 
 ### GPS Tracking (`/drive`)
+
 - [ ] GPS acquires position
 - [ ] SLK updates in real-time
 - [ ] Speed limit displays
 - [ ] Direction indicator works
 
 ### Offline Mode
+
 - [ ] Data download works
 - [ ] App functions without internet
 - [ ] Data persists after reload
 
 ### AfterCare (`/aftercare`)
+
 - [ ] Job creation works
 - [ ] Sign management works
 - [ ] Status calculations correct
@@ -116,6 +121,7 @@ Ask AI: "Rollback to previous version: git reset --hard vX.X.X and force push"
 ```
 
 Or manually:
+
 ```bash
 git checkout main
 git reset --hard <previous-tag>
@@ -134,6 +140,6 @@ git push origin master --force
 
 ---
 
-**Current Version: 1.9.1**
+**Current Version: 1.9.7**
 
-**Last Updated: 2026-03-28**
+**Last Updated: 2026-03-29**

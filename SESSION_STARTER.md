@@ -33,21 +33,25 @@ AFTER changes are complete:
 ## Quick Prompts for Manual Checks
 
 ### Before Release
+
 ```
 Run documentation sync check: verify version consistency between package.json and README, check for TODOs in code, verify all doc files exist.
 ```
 
 ### After Major Feature
+
 ```
 Check best practice score: run lint, test, typecheck, and report any issues. Calculate the best practice score out of 100.
 ```
 
 ### Monthly Security
+
 ```
 Run security audit: check for vulnerable dependencies using bun audit, check for outdated packages using bun outdated, and report findings.
 ```
 
 ### Before Version Increment
+
 ```
 Prepare release for version X.X.X: update package.json, README.md badge, CHANGELOG.md, and create git tag.
 ```
@@ -56,11 +60,11 @@ Prepare release for version X.X.X: update package.json, README.md badge, CHANGEL
 
 ## Version Increment Quick Reference
 
-| Change Type | Increment | Example |
-|-------------|-----------|---------|
-| Bug fix | Patch | 1.9.1 → 1.9.2 |
-| New feature | Minor | 1.9.1 → 1.10.0 |
-| Breaking change | Major | 1.9.1 → 2.0.0 |
+| Change Type     | Increment | Example        |
+| --------------- | --------- | -------------- |
+| Bug fix         | Patch     | 1.9.1 → 1.9.2  |
+| New feature     | Minor     | 1.9.1 → 1.10.0 |
+| Breaking change | Major     | 1.9.1 → 2.0.0  |
 
 ---
 
@@ -75,10 +79,10 @@ Prepare release for version X.X.X: update package.json, README.md badge, CHANGEL
 
 ## Current Project State
 
-- **Version**: 1.9.1
+- **Version**: 1.9.7
 - **Best Practice Score**: 100/100
 - **CI Status**: Active (GitHub Actions)
-- **Test Coverage**: 45 tests passing
+- **Test Coverage**: 55 tests passing
 
 ---
 

@@ -1,7 +1,7 @@
 # TC Work Zone Locator
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-RC%201.9.6-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
+[![Version](https://img.shields.io/badge/version-RC%201.9.7-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
@@ -241,7 +241,15 @@ src/
 
 ## Version History
 
-### RC 1.9.6 (Current) - Version Synchronization
+### RC 1.9.7 (Current) - Maximum Hold Time, Shuttle Flow Corrections, UI Improvements
+
+- **Maximum Hold Time Calculator** added to Work Zone Info page
+- **Shuttle Flow Risk Assessment** fixed to match AGTTM Part 2 Table 3.5 and MRWA COP Table 15
+- **Clearance Time** unit conversion corrected (seconds not minutes)
+- **Heavy Vehicle Count Button** colour changed from amber to red
+- **Offline Data Section** collapsed by default when data already downloaded
+
+### RC 1.9.6 - Version Synchronization
 
 - **Version Synchronization**: All version numbers now consistent across codebase
 - **Documentation**: Added missing changelog entries for 1.9.2-1.9.5

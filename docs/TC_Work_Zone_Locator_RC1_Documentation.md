@@ -1,13 +1,13 @@
 # TC Work Zone Locator
 
-## Release Candidate 1.9.1
+## Release Candidate 1.9.7
 
 **Complete Layout & Functionality Documentation**
 
-| Field | Value |
-| -------- | --------- |
-| **Version** | RC 1.9.1 |
-| **Date** | June 2025 |
+| Field          | Value                                            |
+| -------------- | ------------------------------------------------ |
+| **Version**    | RC 1.9.7                                         |
+| **Date**       | June 2025                                        |
 | **Repository** | https://github.com/instructor-ship-it/roadfinder |
 
 ---
@@ -63,14 +63,14 @@ TC Work Zone Locator is a mobile-first Progressive Web Application (PWA) designe
 
 ### 1.2 Technology Stack
 
-| Technology | Description |
-| ------------ | ----------------- |
-| Framework | Next.js 15 with App Router |
-| Language | TypeScript |
-| Styling | Tailwind CSS with shadcn/ui |
-| Offline Storage | IndexedDB + localStorage |
-| GPS Filtering | Extended Kalman Filter (EKF) |
-| Maps | Google Maps Links + OpenStreetMap (Leaflet) |
+| Technology      | Description                                 |
+| --------------- | ------------------------------------------- |
+| Framework       | Next.js 15 with App Router                  |
+| Language        | TypeScript                                  |
+| Styling         | Tailwind CSS with shadcn/ui                 |
+| Offline Storage | IndexedDB + localStorage                    |
+| GPS Filtering   | Extended Kalman Filter (EKF)                |
+| Maps            | Google Maps Links + OpenStreetMap (Leaflet) |
 
 ---
 
@@ -78,20 +78,20 @@ TC Work Zone Locator is a mobile-first Progressive Web Application (PWA) designe
 
 The application has twelve main pages:
 
-| Page | Route | Purpose |
-| --------- | ---------- | ----------------------- |
-| Home | `/` | Work zone lookup interface |
-| Drive | `/drive` | Real-time GPS tracking |
-| AfterCare | `/aftercare` | Signage tracking for retrieval |
-| AfterCare Map | `/aftercare/map` | Map view of all signs |
-| Overrides | `/overrides` | Speed sign override management |
-| Overrides Layout | `/overrides/layout` | Visual overview of overrides |
-| Overrides Map | `/overrides/map` | Map view of speed overrides |
-| Calibrate | `/calibrate` | GPS lag measurement |
-| Library | `/library` | Documentation and resources |
-| Traffic Counter | `/traffic-counter` | Vehicle counting tool |
-| QA | `/qa` | AI Q&A assistant |
-| Offline | `/offline` | Offline status and data management |
+| Page             | Route               | Purpose                            |
+| ---------------- | ------------------- | ---------------------------------- |
+| Home             | `/`                 | Work zone lookup interface         |
+| Drive            | `/drive`            | Real-time GPS tracking             |
+| AfterCare        | `/aftercare`        | Signage tracking for retrieval     |
+| AfterCare Map    | `/aftercare/map`    | Map view of all signs              |
+| Overrides        | `/overrides`        | Speed sign override management     |
+| Overrides Layout | `/overrides/layout` | Visual overview of overrides       |
+| Overrides Map    | `/overrides/map`    | Map view of speed overrides        |
+| Calibrate        | `/calibrate`        | GPS lag measurement                |
+| Library          | `/library`          | Documentation and resources        |
+| Traffic Counter  | `/traffic-counter`  | Vehicle counting tool              |
+| QA               | `/qa`               | AI Q&A assistant                   |
+| Offline          | `/offline`          | Offline status and data management |
 
 ---
 
@@ -99,38 +99,38 @@ The application has twelve main pages:
 
 ### 3.1 Primary Colors
 
-| Element | Tailwind Class | Hex Color |
-| ----------- | ------------------ | ------------- |
-| Background | `bg-gray-900` | #111827 |
-| Cards | `bg-gray-800` | #1F2937 |
-| Primary Buttons | `bg-blue-600` | #2563EB |
-| Dark Buttons | `bg-blue-800` | #1E40AF |
-| Section Headers | `text-blue-400` | #60A5FA |
-| Warning Text | `text-amber-400` | #FBBF24 |
-| Success Text | `text-green-400` | #4ADE80 |
-| Cyan (AfterCare) | `text-cyan-400` | #22D3EE |
+| Element          | Tailwind Class   | Hex Color |
+| ---------------- | ---------------- | --------- |
+| Background       | `bg-gray-900`    | #111827   |
+| Cards            | `bg-gray-800`    | #1F2937   |
+| Primary Buttons  | `bg-blue-600`    | #2563EB   |
+| Dark Buttons     | `bg-blue-800`    | #1E40AF   |
+| Section Headers  | `text-blue-400`  | #60A5FA   |
+| Warning Text     | `text-amber-400` | #FBBF24   |
+| Success Text     | `text-green-400` | #4ADE80   |
+| Cyan (AfterCare) | `text-cyan-400`  | #22D3EE   |
 
 ### 3.2 Status Colors
 
-| Status | Color | Meaning |
-| ---------- | -------- | -------------- |
-| Direction: Towards | Green | Moving towards destination |
-| Direction: Away | Red pulsing | Moving away from destination |
-| Direction: Static | Yellow | Stationary |
-| Speed: Normal | Green | At or below limit |
-| Speed: Speeding | Red pulsing | Exceeding limit |
-| Override Zone | Green border + ✓ | Community-verified zone |
-| Speed Decrease Ahead | Amber border | Approaching lower limit |
+| Status               | Color            | Meaning                      |
+| -------------------- | ---------------- | ---------------------------- |
+| Direction: Towards   | Green            | Moving towards destination   |
+| Direction: Away      | Red pulsing      | Moving away from destination |
+| Direction: Static    | Yellow           | Stationary                   |
+| Speed: Normal        | Green            | At or below limit            |
+| Speed: Speeding      | Red pulsing      | Exceeding limit              |
+| Override Zone        | Green border + ✓ | Community-verified zone      |
+| Speed Decrease Ahead | Amber border     | Approaching lower limit      |
 
 ### 3.3 AfterCare Status Colors
 
-| Status | Color | Marker | Meaning |
-| ---------- | -------- | -------- | -------------- |
-| Active | Green | 🟢 | Not yet due for retrieval |
-| Due Maintenance | Yellow | 🟡 | Maintenance interval passed |
-| Due Retrieval | Red | 🔴 | Past scheduled/standard date |
-| Retrieved | Blue | ✓ | All signs collected |
-| TBA | Gray | ⏸ | Awaiting instruction |
+| Status          | Color  | Marker | Meaning                      |
+| --------------- | ------ | ------ | ---------------------------- |
+| Active          | Green  | 🟢     | Not yet due for retrieval    |
+| Due Maintenance | Yellow | 🟡     | Maintenance interval passed  |
+| Due Retrieval   | Red    | 🔴     | Past scheduled/standard date |
+| Retrieved       | Blue   | ✓      | All signs collected          |
+| TBA             | Gray   | ⏸      | Awaiting instruction         |
 
 ---
 
@@ -139,7 +139,7 @@ The application has twelve main pages:
 ### 4.1 Header Section
 
 - Application title: "TC Work Zone Locator"
-- Version display: "vRC 1.9.1"
+- Version display: "vRC 1.9.7"
 - Offline status indicator (green when data downloaded)
 - Hamburger menu (☰) - Opens Settings drawer
 
@@ -200,6 +200,7 @@ The application has twelve main pages:
 ### 5.4 Speeding Alert
 
 When exceeding the speed limit, a warning banner displays:
+
 - Current speed vs limit
 - Amount over the limit
 - **WA Fine Information**:
@@ -232,12 +233,13 @@ When exceeding the speed limit, a warning banner displays:
 ### 6.1 Header
 
 - Title: "AfterCare Signs"
-- Version display: "vRC 1.9.1"
+- Version display: "vRC 1.9.7"
 - Back to Work Zone Locator link
 
 ### 6.2 Job List
 
 Grouped by status:
+
 - 🔴 Due for Retrieval
 - 🟡 Due for Maintenance
 - ⏸ TBA
@@ -287,12 +289,12 @@ Grouped by status:
 
 ### 7.2 Filter Buttons
 
-| Button | Filter | Color |
-| --------- | -------------- | -------- |
-| All | Show all signs | Gray |
-| 🔴 | Due for retrieval only | Red |
-| 🟡 | Due for maintenance only | Yellow |
-| 🟢 | Active signs only | Green |
+| Button | Filter                   | Color  |
+| ------ | ------------------------ | ------ |
+| All    | Show all signs           | Gray   |
+| 🔴     | Due for retrieval only   | Red    |
+| 🟡     | Due for maintenance only | Yellow |
+| 🟢     | Active signs only        | Green  |
 
 ### 7.3 Map Display
 
@@ -312,6 +314,7 @@ Grouped by status:
 ### 7.5 Legend Bar
 
 Fixed at bottom-left of map:
+
 - 🟢 Active
 - 🟡 Maintenance
 - 🔴 Retrieval
@@ -322,7 +325,7 @@ Fixed at bottom-left of map:
 
 ### 8.1 Header
 
-- Version: "vRC 1.9.1"
+- Version: "vRC 1.9.7"
 - Storage mode: "Local Storage"
 - Back to Work Zone Locator button
 
@@ -360,12 +363,12 @@ Columns: ID, Road, SLK, Direction, Sign Type, Front Speed, Back Speed, Actions
 
 ### 9.2 Document Categories
 
-| Category | Contents |
-| ---------- | ----------- |
-| Manuals | User manual, quick reference guides |
-| Technical | Architecture docs, API references |
-| Data | Data dictionary, source documentation |
-| Forms | Work zone report templates |
+| Category  | Contents                              |
+| --------- | ------------------------------------- |
+| Manuals   | User manual, quick reference guides   |
+| Technical | Architecture docs, API references     |
+| Data      | Data dictionary, source documentation |
+| Forms     | Work zone report templates            |
 
 ### 9.3 Document List
 
@@ -477,6 +480,7 @@ Columns: ID, Road, SLK, Direction, Sign Type, Front Speed, Back Speed, Actions
 ### 12.3 Offline Capabilities List
 
 Shows which features work offline:
+
 - Work zone lookup
 - GPS tracking
 - Speed zones
@@ -492,27 +496,27 @@ Accessed via hamburger menu (☰) in header. Opens as bottom sheet drawer.
 
 ### 13.1 Settings Sections (Alphabetical)
 
-| Section | Contents |
-| --------- | ----------- |
-| About | App info, contact, user manual link |
-| Admin Data Sync | MRWA sync options, data status |
-| GPS & Tracking | EKF settings, speed display, calibration |
-| Offline Data | Download/clear data, offline toggles |
-| Preferences | Default region, wind gust threshold |
-| Speed Zone Overrides | Override management link |
-| TC Tools | AfterCare, Set Distance links |
+| Section              | Contents                                 |
+| -------------------- | ---------------------------------------- |
+| About                | App info, contact, user manual link      |
+| Admin Data Sync      | MRWA sync options, data status           |
+| GPS & Tracking       | EKF settings, speed display, calibration |
+| Offline Data         | Download/clear data, offline toggles     |
+| Preferences          | Default region, wind gust threshold      |
+| Speed Zone Overrides | Override management link                 |
+| TC Tools             | AfterCare, Set Distance links            |
 
 ### 13.2 GPS Settings
 
-| Setting | Default | Description |
-| ---------- | --------- | --------------- |
-| EKF Filtering | On | Extended Kalman Filter for GPS |
-| Road Constraint | On | Snap predictions to road |
-| Max Prediction Time | 30s | GPS outage prediction limit |
-| Show Uncertainty | On | Display ±Xm accuracy |
-| Early Warnings | On | Alert earlier at higher speeds |
-| Speed Lookahead | 5s | Lookahead time for warnings |
-| GPS Lag Compensation | 0s | Measured lag offset |
+| Setting              | Default | Description                    |
+| -------------------- | ------- | ------------------------------ |
+| EKF Filtering        | On      | Extended Kalman Filter for GPS |
+| Road Constraint      | On      | Snap predictions to road       |
+| Max Prediction Time  | 30s     | GPS outage prediction limit    |
+| Show Uncertainty     | On      | Display ±Xm accuracy           |
+| Early Warnings       | On      | Alert earlier at higher speeds |
+| Speed Lookahead      | 5s      | Lookahead time for warnings    |
+| GPS Lag Compensation | 0s      | Measured lag offset            |
 
 ### 13.3 Wind Gust Alert
 
@@ -520,11 +524,11 @@ Threshold buttons: 40, 50, 60, 80 km/h. Default is 60 km/h.
 
 ### 13.4 Speeding Alert Settings
 
-| Setting | Default | Description |
-| ---------- | --------- | --------------- |
-| Show Speeding Alert | On | Display warning when speeding |
-| Show WA Fines | On | Display WA fine information |
-| Alert Threshold | 5 km/h | km/h over limit to trigger |
+| Setting             | Default | Description                   |
+| ------------------- | ------- | ----------------------------- |
+| Show Speeding Alert | On      | Display warning when speeding |
+| Show WA Fines       | On      | Display WA fine information   |
+| Alert Threshold     | 5 km/h  | km/h over limit to trigger    |
 
 ---
 
@@ -564,53 +568,61 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 
 ### 15.2 Sign Data Fields
 
-| Field | Description |
-| ------- | --------------- |
-| direction | True Left (INCREASING SLK) or True Right (DECREASING SLK) |
-| sign_type | Single or Double sided |
-| replicated | Matching sign on opposite side? |
-| front_speed | Speed on face pointing in direction |
-| back_speed | Speed on opposite face (double only) |
+| Field       | Description                                               |
+| ----------- | --------------------------------------------------------- |
+| direction   | True Left (INCREASING SLK) or True Right (DECREASING SLK) |
+| sign_type   | Single or Double sided                                    |
+| replicated  | Matching sign on opposite side?                           |
+| front_speed | Speed on face pointing in direction                       |
+| back_speed  | Speed on opposite face (double only)                      |
 
 ### 15.3 Zone Generation
 
-| Sign Type | Replicated | Zones Created |
-| ------------ | -------------- | ----------------- |
-| Single | No | None (repeater only) |
-| Single | Yes | One directional zone |
-| Double | Same speeds | One Single carriageway zone |
-| Double | Diff speeds | Two directional zones |
+| Sign Type | Replicated  | Zones Created               |
+| --------- | ----------- | --------------------------- |
+| Single    | No          | None (repeater only)        |
+| Single    | Yes         | One directional zone        |
+| Double    | Same speeds | One Single carriageway zone |
+| Double    | Diff speeds | Two directional zones       |
 
 ---
 
 ## 16. API Endpoints
 
-| Endpoint | Method | Description |
-| ------------ | -------- | --------------- |
-| `/api/roads` | GET/POST | Road data, SLK coordinates |
-| `/api/gps` | GET | GPS to SLK conversion |
-| `/api/weather` | GET | Weather data (Open-Meteo) |
-| `/api/warnings` | GET | BOM weather warnings |
-| `/api/traffic` | GET | Traffic volume data |
-| `/api/places` | GET | Nearby amenities |
-| `/api/intersections` | GET | Cross road detection |
-| `/api/admin-sync` | GET/POST | MRWA direct sync |
-| `/api/overrides` | GET/POST | Override storage |
-| `/api/speed-compare` | GET | MRWA vs OSM comparison |
-| `/api/osm-speed` | GET | OSM speed limits |
-| `/api/speed-verify` | GET | Speed verification |
-| `/api/speedlimit` | GET | Speed limit lookup |
-| `/api/download-signs` | GET | Sign data download |
-| `/api/export-pdf` | POST | Report export |
-| `/api/sync-data` | POST | Offline data sync |
-| `/api/qa` | POST | Q&A AI assistant |
-| `/api/library` | GET | Library documents |
+| Endpoint              | Method   | Description                |
+| --------------------- | -------- | -------------------------- |
+| `/api/roads`          | GET/POST | Road data, SLK coordinates |
+| `/api/gps`            | GET      | GPS to SLK conversion      |
+| `/api/weather`        | GET      | Weather data (Open-Meteo)  |
+| `/api/warnings`       | GET      | BOM weather warnings       |
+| `/api/traffic`        | GET      | Traffic volume data        |
+| `/api/places`         | GET      | Nearby amenities           |
+| `/api/intersections`  | GET      | Cross road detection       |
+| `/api/admin-sync`     | GET/POST | MRWA direct sync           |
+| `/api/overrides`      | GET/POST | Override storage           |
+| `/api/speed-compare`  | GET      | MRWA vs OSM comparison     |
+| `/api/osm-speed`      | GET      | OSM speed limits           |
+| `/api/speed-verify`   | GET      | Speed verification         |
+| `/api/speedlimit`     | GET      | Speed limit lookup         |
+| `/api/download-signs` | GET      | Sign data download         |
+| `/api/export-pdf`     | POST     | Report export              |
+| `/api/sync-data`      | POST     | Offline data sync          |
+| `/api/qa`             | POST     | Q&A AI assistant           |
+| `/api/library`        | GET      | Library documents          |
 
 ---
 
 ## 17. Version History
 
-### RC 1.9.1 (Current) - Speeding Alert & UI Enhancements
+### RC 1.9.7 (Current) - Maximum Hold Time, Shuttle Flow Corrections, UI Improvements
+
+- **Maximum Hold Time Calculator** added to Work Zone Info page
+- **Shuttle Flow Risk Assessment** fixed to match AGTTM Part 2 Table 3.5 and MRWA COP Table 15
+- **Clearance Time** unit conversion corrected (seconds not minutes)
+- **Heavy Vehicle Count Button** colour changed to blue for better visual distinction
+- **Offline Data Section** collapsed by default when data already downloaded
+
+### RC 1.9.1 - Speeding Alert & UI Enhancements
 
 - **Added Speeding Alert feature** with WA fine information display
   - Real-time speed vs limit comparison

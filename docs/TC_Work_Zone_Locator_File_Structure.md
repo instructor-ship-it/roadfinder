@@ -2,7 +2,7 @@
 
 ## File Structure Documentation
 
-**Version RC 1.9.1**
+**Version RC 1.9.7**
 
 ---
 
@@ -319,20 +319,21 @@ Route optimization for multi-stop signage retrieval:
 
 ## 9. Version History
 
-| Version   | Date       | Key Changes                                                  |
-| --------- | ---------- | ------------------------------------------------------------ |
-| RC 1.9.1  | March 2026 | Speeding alerts with WA fine info, minutes per km, 10km time |
-| RC 1.9.0  | March 2026 | Traffic Counter feature, Documents Library                   |
-| RC 1.8.0  | March 2026 | QA page, Settings Drawer consolidation                       |
-| RC 1.7.18 | March 2026 | Signage Corridor intersection fix (Layer 6)                  |
-| RC 1.7.17 | March 2026 | Emergency cross road detection, shared module                |
-| RC 1.7.14 | March 2026 | Emergency location enhancement                               |
-| RC 1.6.0  | March 2026 | AfterCare Map View, Leaflet integration                      |
-| RC 1.5.0  | March 2026 | Nearby Signs page, filtered view                             |
-| RC 1.4.0  | March 2026 | AfterCare signage tracking system                            |
-| RC 1.2.1  | March 2026 | Override zone visual indicator                               |
-| RC 1.2.0  | March 2026 | Speed sign override system                                   |
-| RC 1.0    | March 2026 | Official release candidate                                   |
+| Version   | Date       | Key Changes                                                               |
+| --------- | ---------- | ------------------------------------------------------------------------- |
+| RC 1.9.7  | March 2026 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements |
+| RC 1.9.1  | March 2026 | Speeding alerts with WA fine info, minutes per km, 10km time              |
+| RC 1.9.0  | March 2026 | Traffic Counter feature, Documents Library                                |
+| RC 1.8.0  | March 2026 | QA page, Settings Drawer consolidation                                    |
+| RC 1.7.18 | March 2026 | Signage Corridor intersection fix (Layer 6)                               |
+| RC 1.7.17 | March 2026 | Emergency cross road detection, shared module                             |
+| RC 1.7.14 | March 2026 | Emergency location enhancement                                            |
+| RC 1.6.0  | March 2026 | AfterCare Map View, Leaflet integration                                   |
+| RC 1.5.0  | March 2026 | Nearby Signs page, filtered view                                          |
+| RC 1.4.0  | March 2026 | AfterCare signage tracking system                                         |
+| RC 1.2.1  | March 2026 | Override zone visual indicator                                            |
+| RC 1.2.0  | March 2026 | Speed sign override system                                                |
+| RC 1.0    | March 2026 | Official release candidate                                                |
 
 ---
 
