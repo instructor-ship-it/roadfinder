@@ -85,7 +85,7 @@ function parseSiteFeatures(description: string, siteFeatures: string): string[] 
   return features;
 }
 
-async function fetchFuelWatchRSS(fuelType: string = 'U91'): Promise<ParsedStation[]> {
+async function fetchFuelWatchRSS(fuelType: string = 'DL'): Promise<ParsedStation[]> {
   // Check cache
   if (
     fuelCache[fuelType] &&
@@ -183,7 +183,7 @@ export async function GET(request: Request) {
   const lat = parseFloat(searchParams.get('lat') || '');
   const lon = parseFloat(searchParams.get('lon') || '');
   const radiusKm = parseFloat(searchParams.get('radius') || '100');
-  const fuelType = searchParams.get('fuelType') || 'U91';
+  const fuelType = searchParams.get('fuelType') || 'DL';
   const surrounding = searchParams.get('surrounding') === 'true';
 
   if (isNaN(lat) || isNaN(lon)) {
