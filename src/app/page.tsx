@@ -1378,6 +1378,8 @@ export default function Home() {
           lines.push(
             `  Diesel Price:   ${places.fuelStation.fuelPrice.toFixed(1)} c/L ($${(places.fuelStation.fuelPrice / 100).toFixed(2)})`
           );
+        } else {
+          lines.push(`  Diesel Price:   No price reported today`);
         }
         if (places.fuelStation.fuelDate) {
           lines.push(`  Price Date:     ${places.fuelStation.fuelDate}`);
@@ -2984,7 +2986,7 @@ export default function Home() {
         console.log('WA Health SLIP hospital query failed, will try Overpass fallback:', e);
       }
 
-      // 2. Fuel station from FuelWatch WA
+      // 2. Fuel station from FuelWatch WA + Overpass merge
       try {
         const fuelRes = await fetch(`/api/fuel-stations?lat=${lat}&lon=${lon}&radius=100`);
         if (fuelRes.ok) {
@@ -2997,18 +2999,18 @@ export default function Home() {
               lat: f.lat,
               lon: f.lon,
               phone: f.phone || undefined,
-              address: f.address ? `${f.address}, ${f.location}` : undefined,
+              address: [f.address, f.location].filter(Boolean).join(', ') || undefined,
               googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${f.lat},${f.lon}`,
               fuelBrand: f.brand || undefined,
               fuelPrice: f.price || undefined,
               fuelDate: f.date || undefined,
               siteFeatures: f.siteFeatures || [],
             };
-            fuelSource = 'FuelWatch WA';
+            fuelSource = f.source === 'OpenStreetMap' ? 'OpenStreetMap' : 'FuelWatch WA';
           }
         }
       } catch (e) {
-        console.log('FuelWatch fuel station query failed, will try Overpass fallback:', e);
+        console.log('Fuel station query failed:', e);
       }
 
       // 3. Toilets from Overpass API (no better source available)
@@ -3024,11 +3026,6 @@ export default function Home() {
           if (!hospital && placesData.hospital) {
             hospital = placesData.hospital;
             hospitalSource = 'OpenStreetMap';
-          }
-          // Use Overpass as fallback for fuel if FuelWatch failed
-          if (!fuelStation && placesData.fuelStation) {
-            fuelStation = placesData.fuelStation;
-            fuelSource = 'OpenStreetMap';
           }
         }
       } catch (e) {
@@ -5874,7 +5871,12 @@ export default function Home() {
                             </span>
                             {places.fuelStation.fuelPrice && (
                               <span className="text-xs bg-green-700 text-white px-1.5 py-0.5 rounded ml-1">
-                                ${places.fuelStation.fuelPrice.toFixed(1)}/L
+                                ${places.fuelStation.fuelPrice.toFixed(1)}/L Diesel
+                              </span>
+                            )}
+                            {!places.fuelStation.fuelPrice && (
+                              <span className="text-xs bg-gray-600 text-gray-300 px-1.5 py-0.5 rounded ml-1">
+                                No price today
                               </span>
                             )}
                           </p>

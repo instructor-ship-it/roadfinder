@@ -1,11 +1,15 @@
 /**
  * API Route: /api/fuel-stations
  *
- * Find nearest fuel stations using FuelWatch WA RSS feed.
- * Returns station name, address, brand, price, coordinates, phone, and site features.
+ * Find nearest fuel stations by merging two data sources:
+ * 1. FuelWatch WA RSS feed (daily diesel prices, site features, all WA stations)
+ * 2. OpenStreetMap Overpass API (complete station coverage, no prices)
  *
- * Data Source: FuelWatch WA (WA Government, daily updated)
- * Endpoint: https://www.fuelwatch.wa.gov.au/fuelwatch/fuelWatchRSS
+ * Stations within 200m of each other are deduplicated, keeping FuelWatch data
+ * (which includes pricing). Overpass-only stations fill gaps where FuelWatch
+ * has no price submission for the day.
+ *
+ * Sort: nearest first. Nearest station is the primary result.
  */
 
 import { NextResponse } from 'next/server';
@@ -17,14 +21,15 @@ interface FuelStation {
   location: string;
   address: string;
   phone: string | null;
-  price: number | null; // cents per litre (null if not available)
+  price: number | null; // cents per litre (null if from Overpass, no price available)
   fuelType: string;
   date: string;
   lat: number;
   lon: number;
   distanceKm: number;
   googleMapsUrl: string;
-  siteFeatures: string[]; // e.g. ["Open 24 hours", "Toilets", "ATM"]
+  siteFeatures: string[];
+  source: 'FuelWatch' | 'OpenStreetMap'; // which data source this station came from
 }
 
 interface ParsedStation {
@@ -41,6 +46,15 @@ interface ParsedStation {
   siteFeatures: string;
 }
 
+interface OverpassStation {
+  name: string;
+  brand: string;
+  address: string;
+  lat: number;
+  lon: number;
+  phone: string;
+}
+
 // In-memory cache for FuelWatch data (refreshed every 30 minutes)
 interface FuelCache {
   stations: ParsedStation[];
@@ -50,6 +64,7 @@ interface FuelCache {
 
 const fuelCache: Record<string, FuelCache> = {};
 const CACHE_DURATION_MS = 30 * 60 * 1000; // 30 minutes
+const DEDUP_DISTANCE_M = 200; // stations within 200m treated as the same
 
 function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371;
@@ -68,7 +83,6 @@ function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 function parseSiteFeatures(description: string, siteFeatures: string): string[] {
   const features: string[] = [];
 
-  // Parse from site-features element
   if (siteFeatures) {
     const parts = siteFeatures
       .split(',')
@@ -77,7 +91,6 @@ function parseSiteFeatures(description: string, siteFeatures: string): string[] 
     features.push(...parts);
   }
 
-  // Check description for "Open 24 hours" (sometimes only there)
   if (description.includes('Open 24 hours') && !features.includes('Open 24 hours')) {
     features.unshift('Open 24 hours');
   }
@@ -85,8 +98,9 @@ function parseSiteFeatures(description: string, siteFeatures: string): string[] 
   return features;
 }
 
+// ─── FuelWatch WA RSS Feed ─────────────────────────────────────────────
+
 async function fetchFuelWatchRSS(fuelType: string = 'DL'): Promise<ParsedStation[]> {
-  // Check cache
   if (
     fuelCache[fuelType] &&
     fuelCache[fuelType].stations.length > 0 &&
@@ -122,26 +136,19 @@ async function fetchFuelWatchRSS(fuelType: string = 'DL'): Promise<ParsedStation
     const stations = parseFuelWatchXML(xml);
 
     if (stations.length > 0) {
-      fuelCache[fuelType] = {
-        stations,
-        loadedAt: Date.now(),
-        fuelType,
-      };
+      fuelCache[fuelType] = { stations, loadedAt: Date.now(), fuelType };
       console.log(`Cached ${stations.length} FuelWatch stations for ${fuelType}`);
     }
 
     return stations;
   } catch (error) {
     console.error('FuelWatch fetch error:', error);
-    // Return stale cache if available
     return fuelCache[fuelType]?.stations || [];
   }
 }
 
 function parseFuelWatchXML(xml: string): ParsedStation[] {
   const stations: ParsedStation[] = [];
-
-  // Simple XML parser for RSS items
   const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
   let match;
 
@@ -177,6 +184,163 @@ function parseFuelWatchXML(xml: string): ParsedStation[] {
   return stations;
 }
 
+// ─── Overpass API (for complete fuel station coverage) ─────────────────
+
+async function fetchOverpassFuelStations(
+  lat: number,
+  lon: number,
+  radiusM: number = 20000 // 20 km default for Overpass
+): Promise<OverpassStation[]> {
+  const overpassQuery = `
+    [out:json][timeout:25];
+    (
+      node["amenity"="fuel"](around:${radiusM},${lat},${lon});
+      way["amenity"="fuel"](around:${radiusM},${lat},${lon});
+    );
+    out center;
+  `;
+
+  const servers = [
+    'https://overpass-api.de/api/interpreter',
+    'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter',
+  ];
+
+  for (const server of servers) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+      const response = await fetch(server, {
+        method: 'POST',
+        body: `data=${encodeURIComponent(overpassQuery)}`,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+      if (!response.ok) continue;
+
+      const data = await response.json();
+      const elements = data.elements || [];
+
+      const stations: OverpassStation[] = [];
+      for (const el of elements) {
+        const coords =
+          el.lat && el.lon
+            ? { lat: el.lat, lon: el.lon }
+            : el.center?.lat && el.center?.lon
+              ? { lat: el.center.lat, lon: el.center.lon }
+              : null;
+        if (!coords) continue;
+
+        const tags = el.tags || {};
+        const name =
+          tags.name || tags.operator || tags.brand || tags['trading-name'] || 'Service Station';
+
+        stations.push({
+          name,
+          brand: tags.brand || '',
+          address: [tags['addr:housenumber'], tags['addr:street'], tags['addr:suburb']]
+            .filter(Boolean)
+            .join(' '),
+          lat: coords.lat,
+          lon: coords.lon,
+          phone: tags.phone || tags['contact:phone'] || '',
+        });
+      }
+
+      console.log(
+        `Overpass returned ${stations.length} fuel stations (server: ${server.split('//')[1].split('/')[0]})`
+      );
+      return stations;
+    } catch {
+      continue;
+    }
+  }
+
+  return [];
+}
+
+// ─── Merge: FuelWatch + Overpass ───────────────────────────────────────
+
+function mergeStations(
+  fuelWatch: { station: ParsedStation; distanceKm: number }[],
+  overpass: { station: OverpassStation; distanceKm: number }[]
+): FuelStation[] {
+  const merged: FuelStation[] = [];
+
+  // Track which Overpass stations have been matched (deduped with FuelWatch)
+  const overpassMatched = new Set<number>();
+
+  // 1. Add all FuelWatch stations (they have price data)
+  for (const fw of fuelWatch) {
+    merged.push({
+      name: fw.station.tradingName || fw.station.brand || 'Service Station',
+      brand: fw.station.brand,
+      tradingName: fw.station.tradingName,
+      location: fw.station.location,
+      address: fw.station.address,
+      phone: fw.station.phone || null,
+      price: fw.station.price > 0 ? fw.station.price : null,
+      fuelType: '',
+      date: fw.station.date,
+      lat: fw.station.lat,
+      lon: fw.station.lon,
+      distanceKm: Math.round(fw.distanceKm * 10) / 10,
+      googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${fw.station.lat},${fw.station.lon}`,
+      siteFeatures: parseSiteFeatures(fw.station.description, fw.station.siteFeatures),
+      source: 'FuelWatch',
+    });
+  }
+
+  // 2. Add Overpass stations that aren't duplicates of FuelWatch stations
+  for (let i = 0; i < overpass.length; i++) {
+    const os = overpass[i];
+    let isDuplicate = false;
+
+    for (const fw of fuelWatch) {
+      const dist = haversineDistance(
+        os.station.lat,
+        os.station.lon,
+        fw.station.lat,
+        fw.station.lon
+      );
+      if (dist * 1000 < DEDUP_DISTANCE_M) {
+        isDuplicate = true;
+        break;
+      }
+    }
+
+    if (!isDuplicate) {
+      merged.push({
+        name: os.station.name,
+        brand: os.station.brand,
+        tradingName: os.station.name,
+        location: '',
+        address: os.station.address || '',
+        phone: os.station.phone || null,
+        price: null, // no price from Overpass
+        fuelType: '',
+        date: '',
+        lat: os.station.lat,
+        lon: os.station.lon,
+        distanceKm: Math.round(os.distanceKm * 10) / 10,
+        googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${os.station.lat},${os.station.lon}`,
+        siteFeatures: [],
+        source: 'OpenStreetMap',
+      });
+    }
+  }
+
+  // 3. Sort by distance (nearest first)
+  merged.sort((a, b) => a.distanceKm - b.distanceKm);
+
+  return merged;
+}
+
+// ─── GET Handler ────────────────────────────────────────────────────────
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
@@ -184,7 +348,6 @@ export async function GET(request: Request) {
   const lon = parseFloat(searchParams.get('lon') || '');
   const radiusKm = parseFloat(searchParams.get('radius') || '100');
   const fuelType = searchParams.get('fuelType') || 'DL';
-  const surrounding = searchParams.get('surrounding') === 'true';
 
   if (isNaN(lat) || isNaN(lon)) {
     return NextResponse.json(
@@ -194,46 +357,47 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Fetch from FuelWatch
-    const allStations = await fetchFuelWatchRSS(fuelType);
+    // Fetch both data sources in parallel
+    const [fuelWatchStations, overpassStations] = await Promise.all([
+      fetchFuelWatchRSS(fuelType).then((stations) =>
+        stations
+          .map((s) => ({
+            station: s,
+            distanceKm: haversineDistance(lat, lon, s.lat, s.lon),
+          }))
+          .filter((s) => s.distanceKm <= radiusKm)
+          .sort((a, b) => a.distanceKm - b.distanceKm)
+      ),
+      fetchOverpassFuelStations(lat, lon, Math.min(radiusKm, 50) * 1000).then((stations) =>
+        stations
+          .map((s) => ({
+            station: s,
+            distanceKm: haversineDistance(lat, lon, s.lat, s.lon),
+          }))
+          .filter((s) => s.distanceKm <= radiusKm)
+          .sort((a, b) => a.distanceKm - b.distanceKm)
+      ),
+    ]);
 
-    // Filter by distance
-    const nearby = allStations
-      .map((s) => ({
-        ...s,
-        distanceKm: haversineDistance(lat, lon, s.lat, s.lon),
-      }))
-      .filter((s) => s.distanceKm <= radiusKm)
-      .sort((a, b) => a.distanceKm - b.distanceKm);
+    // Merge and deduplicate
+    const allStations = mergeStations(fuelWatchStations, overpassStations);
 
-    // Convert to response format
-    const stations: FuelStation[] = nearby.slice(0, 20).map((s) => ({
-      name: s.tradingName || s.brand || 'Service Station',
-      brand: s.brand,
-      tradingName: s.tradingName,
-      location: s.location,
-      address: s.address,
-      phone: s.phone || null,
-      price: s.price > 0 ? s.price : null,
-      fuelType,
-      date: s.date,
-      lat: s.lat,
-      lon: s.lon,
-      distanceKm: Math.round(s.distanceKm * 10) / 10,
-      googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}`,
-      siteFeatures: parseSiteFeatures(s.description, s.siteFeatures),
-    }));
-
-    const nearest = stations[0] || null;
+    const nearest = allStations[0] || null;
+    const withPrice = allStations.filter((s) => s.price !== null);
+    const cheapest =
+      withPrice.length > 0 ? withPrice.sort((a, b) => (a.price ?? 0) - (b.price ?? 0))[0] : null;
 
     return NextResponse.json({
       searchCenter: { lat, lon },
       searchRadiusKm: radiusKm,
       fuelType,
-      totalStations: nearby.length,
+      totalStations: allStations.length,
+      fuelWatchCount: fuelWatchStations.length,
+      overpassCount: overpassStations.length,
       nearest,
-      stations,
-      source: 'FuelWatch WA (Government)',
+      cheapest: cheapest && cheapest !== nearest ? cheapest : null, // only if different from nearest
+      stations: allStations.slice(0, 20),
+      source: `FuelWatch (${fuelWatchStations.length}) + OpenStreetMap (${overpassStations.length})`,
       cachedAt: fuelCache[fuelType]?.loadedAt,
     });
   } catch (error) {

@@ -162,6 +162,11 @@ export function AmenitiesSection({
                       ${places.fuelStation.fuelPrice.toFixed(1)}/L
                     </span>
                   )}
+                  {!places.fuelStation.fuelPrice && (
+                    <span className="text-xs bg-gray-600 text-gray-300 px-1.5 py-0.5 rounded ml-1">
+                      No price today
+                    </span>
+                  )}
                 </p>
                 <div className="flex gap-1">
                   <Button
