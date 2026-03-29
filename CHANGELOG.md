@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **FuelWatch WA Integration** for fuel station data
-  - Daily updated diesel prices from WA Government FuelWatch RSS feed
+  - Daily updated diesel prices from WA Government FuelWatch JSON API (`/api/sites?fuelType=DSL`)
   - Station name, brand, address, phone, site features (24hr, toilets, ATM, etc.)
   - Fuel price badge showing dollars per litre on amenities card
   - Server-side 30-minute cache for performance
@@ -36,6 +36,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - "No price today" badge (gray) for Overpass-only stations
   - Site features line: e.g. "Open 24 hours · Toilets · ATM · EFTPOS"
   - Address and phone shown beneath station name
+- **Pace Rate Indicator** on SLK tracking drive page
+  - Shows time delta vs posted speed for 1km, 10km, 100km intervals
+  - Colour coded: grey (under posted), green (at posted ±2 km/h), red (over posted)
+  - Hidden when speed <60 km/h or no speed limit
+  - Displayed under GPS confidence accuracy line in both landscape and portrait
+  - Replaced previous minutes-per-km and 10km travel time displays
 
 ### Changed
 
@@ -49,6 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Missing nearby fuel stations**: FuelWatch only returns stations that submitted prices today. Nearby stations without price submissions were invisible. Fixed by merging Overpass fuel station data to fill gaps.
 - **TypeScript inference error**: `const sources = []` inferred as `never[]`, causing Vercel build failure. Fixed with explicit `string[]` type annotation.
+- **FuelWatch RSS diesel bug**: RSS feed silently ignored diesel product code and returned ULP prices. Switched to FuelWatch JSON API which properly supports diesel.
+- **Fuel price display bug**: 3 UI locations showed raw cents as dollars (e.g., $299.2/L instead of $2.99/L). Fixed price formatting in page.tsx (email HTML + UI badge) and AmenitiesSection.tsx.
 
 ---
 

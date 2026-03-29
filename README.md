@@ -241,7 +241,15 @@ src/
 
 ## Version History
 
-### RC 1.9.7 (Current) - Maximum Hold Time, Shuttle Flow Corrections, UI Improvements
+### RC 1.9.8 (Current) - FuelWatch Diesel Fix, Pace Rate Indicator, Amenities Upgrades
+
+- **FuelWatch WA JSON API** replacing broken RSS feed for accurate diesel prices
+- **Pace Rate Indicator** showing time delta vs posted speed (1km/10km/100km)
+- **Fuel price display fix** (was showing cents as dollars)
+- **WA Health SLIP** for authoritative hospital data
+- **Multi-source amenity architecture** with smart fallback chains
+
+### RC 1.9.7 - Maximum Hold Time, Shuttle Flow Corrections, UI Improvements
 
 - **Maximum Hold Time Calculator** added to Work Zone Info page
 - **Shuttle Flow Risk Assessment** fixed to match AGTTM Part 2 Table 3.5 and MRWA COP Table 15

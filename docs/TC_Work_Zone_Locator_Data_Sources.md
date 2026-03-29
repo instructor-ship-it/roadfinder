@@ -340,7 +340,7 @@ The application provides internal API routes that aggregate data from multiple s
 
 **Merge/Dedup Logic:**
 
-- FuelWatch WA provides price data for ~700 stations (updated daily)
+- FuelWatch WA JSON API provides diesel price data for ~459 stations (updated daily)
 - Overpass API fills coverage gaps for stations not in FuelWatch
 - Deduplication: stations within 200m proximity are merged (FuelWatch data takes priority)
 - Source tracking: each station includes `source` field ('FuelWatch' or 'OpenStreetMap')
@@ -425,38 +425,65 @@ For offline capability, MRWA data is stored in IndexedDB on the client device. T
 
 ### 7.1.1 FuelWatch WA
 
-FuelWatch WA is a service provided by the WA Government (Department of Local Government, Industry Regulation and Safety) that publishes daily updated fuel prices for all service stations in Western Australia.
+FuelWatch WA is a service provided by the WA Government (Department of Local Government, Industry Regulation and Safety) that publishes daily updated fuel prices for all service stations in Western Australia. The application uses FuelWatch's JSON API endpoint, which properly supports diesel fuel pricing. The older RSS feed (`fuelWatchRSS`) is not used because it silently ignores the diesel fuel type parameter and always returns ULP (unleaded petrol) prices regardless of the requested fuel type.
 
-**RSS Feed Endpoint:**
+**JSON API Endpoint:**
 
 ```
-https://www.fuelwatch.wa.gov.au/fuelwatch/fuelWatchRSS?fuelType=DL
+https://www.fuelwatch.wa.gov.au/api/sites?fuelType=DSL&effectiveAt=YYYY-MM-DD
 ```
 
 | Property         | Value                                                                   |
 | ---------------- | ----------------------------------------------------------------------- |
 | Provider         | WA Government, Dept of Local Government, Industry Regulation and Safety |
-| Data Type        | RSS/XML feed                                                            |
-| Fuel Type        | DL (Diesel)                                                             |
-| Authentication   | None required (free)                                                    |
-| Update Frequency | Daily                                                                   |
-| Coverage         | 700+ service stations statewide                                         |
-| Cache Duration   | 30 minutes (server-side)                                                |
+| Data Type        | JSON REST API                                                           |
+| Fuel Type        | DSL (Diesel), BDL (Brand Diesel), ULP, PUP, 98R, LPG, E85               |
+| Authentication   | None required (free, no API key)                                        |
+| Update Frequency | Daily (~2:30pm WST)                                                     |
+| Coverage         | 459 diesel stations statewide                                           |
+| Cache Duration   | 30 minutes (server-side in-app), 60s (FuelWatch CDN)                    |
+| CORS             | Server-side only (no browser-side access)                               |
 
-**RSS Feed Data Fields:**
+**JSON API Query Parameters:**
 
-- `name` — Station name
-- `brand` — Brand name (e.g., BP, Caltex, Shell)
-- `trading-name` — Full trading name
-- `location` — Town/suburb
-- `address` — Street address
-- `phone` — Phone number
-- `price` — Price in cents per litre
-- `fuel-type` — Fuel type code
-- `date` — Price date
-- `latitude` — Latitude coordinate
-- `longitude` — Longitude coordinate
-- `site-features` — Station features (pipe-delimited)
+| Parameter   | Type   | Description                              |
+| ----------- | ------ | ---------------------------------------- |
+| fuelType    | string | Fuel type code (DSL, BDL, ULP, etc.)     |
+| effectiveAt | string | Date in YYYY-MM-DD format                |
+| siteIdCsv   | string | Optional comma-separated site IDs filter |
+
+**JSON API Response Fields:**
+
+- `id` — Site ID (numeric)
+- `siteName` — Station name
+- `brandName` — Brand name (e.g., BP, Caltex, Shell)
+- `address.line1` — Street address
+- `address.location` — Town/suburb
+- `address.postCode` — Post code
+- `address.latitude` — Latitude coordinate
+- `address.longitude` — Longitude coordinate
+- `product.shortName` — Fuel type code (DSL)
+- `product.priceToday` — Price in cents per litre (e.g., 299.2 = $2.992/L)
+- `operates247` — Boolean, 24-hour operation
+- `drivewayService` — Driveway service type
+- `manned` — Boolean, manned station
+- `membershipRequired` — Boolean, membership card needed
+- `isClosedNow` — Boolean, currently closed
+- `isClosedAllDayTomorrow` — Boolean, closed tomorrow
+
+**Fuel Type Code Mapping:**
+
+| App Code | FuelWatch API Code | Description             |
+| -------- | ------------------ | ----------------------- |
+| DL       | DSL                | Diesel                  |
+| BDL      | BDL                | Brand Diesel            |
+| ULP      | ULP                | Unleaded Petrol         |
+| PULP     | PUP                | Premium Unleaded Petrol |
+| 98R      | 98R                | 98 RON                  |
+| LPG      | LPG                | LPG                     |
+| E85      | E85                | E85                     |
+
+**Note on RSS Feed (Deprecated):** The RSS feed at `fuelwatch.wa.gov.au/fuelwatch/fuelWatchRSS` silently ignores the `Product=DL` and `fuelType=DL` parameters. Regardless of the fuel type requested, it always returns ULP (Product 1) prices. This was discovered during testing and is why the JSON API is used instead.
 
 ### 7.1.2 WA Health SLIP Services
 
@@ -496,7 +523,7 @@ The home page (`fetchPlaces()` in `src/app/page.tsx`) uses a **3-source parallel
 | MRWA ArcGIS    | 2000 records/request | Client-side IndexedDB             |
 | Open-Meteo     | None (free)          | Per-request, 30-min offline cache |
 | BOM RSS        | Reasonable use       | 5-minute server cache             |
-| FuelWatch WA   | None (free RSS)      | 30-min server cache               |
+| FuelWatch WA   | None (free JSON API) | 30-min server cache, 60s CDN      |
 | WA Health SLIP | Per API terms        | Per-request, no client cache      |
 | Overpass       | Varies by server     | No caching, fallback servers      |
 | Nominatim      | 1 req/sec            | No caching, used once per lookup  |

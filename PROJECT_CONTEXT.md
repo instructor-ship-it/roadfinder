@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
 > **Last Updated:** 2026-03-26
-> **Current Version:** RC 1.9.1
+> **Current Version:** RC 1.9.8
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -31,11 +31,12 @@ Apply the domain expertise from this file, then tell me what you understand abou
 ### ✅ This workflow was tested and confirmed working on 2026-02-28
 
 ### Why this is needed:
-| What Persists | What Doesn't |
-|---------------|--------------|
+
+| What Persists         | What Doesn't              |
+| --------------------- | ------------------------- |
 | Code pushed to GitHub | Local file system changes |
-| Git history | Uncommitted work |
-| PROJECT_CONTEXT.md | Session memory |
+| Git history           | Uncommitted work          |
+| PROJECT_CONTEXT.md    | Session memory            |
 
 **GitHub is the only true persistence.** Always push changes before ending a session.
 
@@ -60,39 +61,46 @@ You are an expert in Australian road systems, specifically Western Australian ro
 ## 📖 Key Terminology (Australian Road System)
 
 ### Carriageway & Direction
-| Term | Definition | Also Known As |
-|------|------------|---------------|
-| **True Left** | Traffic travelling INCREASING SLK | Left Carriageway |
-| **True Right** | Traffic travelling DECREASING SLK | Right Carriageway |
-| **Left Carriageway** | Used by INCREASING SLK traffic | True Left |
-| **Right Carriageway** | Used by DECREASING SLK traffic | True Right |
+
+| Term                  | Definition                        | Also Known As     |
+| --------------------- | --------------------------------- | ----------------- |
+| **True Left**         | Traffic travelling INCREASING SLK | Left Carriageway  |
+| **True Right**        | Traffic travelling DECREASING SLK | Right Carriageway |
+| **Left Carriageway**  | Used by INCREASING SLK traffic    | True Left         |
+| **Right Carriageway** | Used by DECREASING SLK traffic    | True Right        |
 
 **Important:** When facing INCREASING SLK direction:
+
 - Left side of road = Left Carriageway = True Left
 - Right side of road = Right Carriageway = True Right
 
 ### SLK (Straight Line Kilometre)
+
 - Road distance marker used in WA
 - Increases in one direction along the road
 - Used to locate signs, zones, work areas
 
 ### Speed Signs
-| Type | Description | Zone Created |
-|------|-------------|--------------|
-| **Single + Not Replicated** | Repeater sign (informational) | None |
-| **Single + Replicated** | One-sided, paired with opposite sign | 1 directional zone |
-| **Double + Replicated** | Two-sided sign (most common) | 2 zones if speeds differ |
+
+| Type                        | Description                          | Zone Created             |
+| --------------------------- | ------------------------------------ | ------------------------ |
+| **Single + Not Replicated** | Repeater sign (informational)        | None                     |
+| **Single + Replicated**     | One-sided, paired with opposite sign | 1 directional zone       |
+| **Double + Replicated**     | Two-sided sign (most common)         | 2 zones if speeds differ |
 
 ### Double-Sided Sign Fields
+
 - **front_speed**: Speed shown on the face pointing in `direction` field
 - **back_speed**: Speed shown on opposite face (for opposite traffic)
 - **direction**: Which way the front face points (True Left or True Right)
 
 **Example:** Sign at SLK 64.81, direction="True Left", front_speed=80, back_speed=110:
+
 - Left Carriageway (increasing SLK) sees 80 km/h ← front_speed
 - Right Carriageway (decreasing SLK) sees 110 km/h ← back_speed
 
 ### Speed Sign Override Data Structure
+
 ```json
 {
   "id": "M031-S001",
@@ -114,7 +122,7 @@ You are an expert in Australian road systems, specifically Western Australian ro
   "verified_date": "2026-03-02",
   "note": "110→80 zone boundary.",
   "source": "community_verified",
-  "mrwa_slk": 64.80,
+  "mrwa_slk": 64.8,
   "discrepancy_m": 10
 }
 ```
@@ -124,19 +132,22 @@ You are an expert in Australian road systems, specifically Western Australian ro
 ## Architecture Decisions
 
 ### Data Storage
-| Data Type | Storage | Why |
-|-----------|---------|-----|
-| Road geometry, MRWA data | IndexedDB | Large datasets, offline access |
-| Speed sign overrides | localStorage | User-editable, works on Vercel (read-only filesystem) |
-| AfterCare jobs & signs | localStorage | User-editable, offline tracking of signage retrieval |
-| App preferences | localStorage | Simple key-value |
+
+| Data Type                | Storage      | Why                                                   |
+| ------------------------ | ------------ | ----------------------------------------------------- |
+| Road geometry, MRWA data | IndexedDB    | Large datasets, offline access                        |
+| Speed sign overrides     | localStorage | User-editable, works on Vercel (read-only filesystem) |
+| AfterCare jobs & signs   | localStorage | User-editable, offline tracking of signage retrieval  |
+| App preferences          | localStorage | Simple key-value                                      |
 
 ### File Downloads on Mobile
+
 **Problem:** Programmatic file downloads (Blob URLs) create empty files on some mobile browsers due to security restrictions.
 
 **Solution:** Display data in a textarea for copy/paste. Export shows content on screen with "Copy" button.
 
 ### Sign-to-Zone Conversion Logic
+
 Located in `/src/lib/offline-db.ts` → `signsToSpeedZones()` function:
 
 1. Double sign with different front/back speeds → Creates TWO zones
@@ -157,6 +168,7 @@ Located in `/src/lib/offline-db.ts` → `signsToSpeedZones()` function:
 ## Overview
 
 A mobile-first web application for Traffic Controllers (TC) in Western Australia to:
+
 - Locate work zones by road ID and SLK (Straight Line Kilometre)
 - Track real-time GPS position with EKF filtering
 - Display speed limits with lookahead warnings
@@ -165,6 +177,7 @@ A mobile-first web application for Traffic Controllers (TC) in Western Australia
 ## Target Users
 
 Traffic Controllers working on WA roads who need to:
+
 - Find work zone coordinates for setup
 - Navigate to work zone start/end points
 - Track their position in real-time while driving
@@ -176,6 +189,7 @@ Traffic Controllers working on WA roads who need to:
 ## Architecture
 
 ### Tech Stack
+
 - **Framework:** Next.js 15 with App Router
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
@@ -207,6 +221,8 @@ src/
 │       ├── osm-speed/route.ts     # OpenStreetMap speed limit data
 │       ├── speed-verify/route.ts  # Speed verification
 │       ├── speedlimit/route.ts    # Speed limit lookup
+│       ├── fuel-stations/route.ts # FuelWatch WA + Overpass fuel data
+│       ├── hospitals/route.ts    # WA Health SLIP hospital data
 │       ├── download-signs/route.ts# Sign data download
 │       ├── export-pdf/route.ts    # Work zone report export
 │       └── sync-data/route.ts     # Offline data sync
@@ -226,30 +242,35 @@ src/
 ## Data Sources
 
 ### Main Roads WA ArcGIS
-| Layer | Data | URL Variable |
-|-------|------|--------------|
-| 17 | Road Network (has SLK geometry, region) | STATE_ROAD_URL |
-| 8 | Speed Zones | SPEED_ZONE_URL |
-| 15 | Rail Crossings | RAIL_CROSSING_URL |
-| 22 | Regulatory Signs | REGULATORY_SIGNS_URL |
-| 23 | Warning Signs | WARNING_SIGNS_URL |
-| 18 | All Roads (for local roads) | ALL_ROADS_URL |
+
+| Layer | Data                                    | URL Variable         |
+| ----- | --------------------------------------- | -------------------- |
+| 17    | Road Network (has SLK geometry, region) | STATE_ROAD_URL       |
+| 8     | Speed Zones                             | SPEED_ZONE_URL       |
+| 15    | Rail Crossings                          | RAIL_CROSSING_URL    |
+| 22    | Regulatory Signs                        | REGULATORY_SIGNS_URL |
+| 23    | Warning Signs                           | WARNING_SIGNS_URL    |
+| 18    | All Roads (for local roads)             | ALL_ROADS_URL        |
 
 **Base URL:** `https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/Projects/RoadInfo/MapServer`
 
 ### External APIs
-| Data | Source | Notes |
-|------|--------|-------|
-| Weather | Open-Meteo | Free, no API key |
-| Weather Warnings | BOM RSS (IDZ00067) | WA land warnings, 5-min cache |
-| Places/Amenities | Overpass API | OpenStreetMap |
-| Traffic Volume | Static MRWA data | Pre-downloaded |
+
+| Data             | Source                  | Notes                                          |
+| ---------------- | ----------------------- | ---------------------------------------------- |
+| Weather          | Open-Meteo              | Free, no API key                               |
+| Weather Warnings | BOM RSS (IDZ00067)      | WA land warnings, 5-min cache                  |
+| Fuel Prices      | FuelWatch WA JSON API   | `/api/sites?fuelType=DSL`, daily diesel prices |
+| Hospital Data    | WA Health SLIP Services | SLIP API key (server-side), Layers 6 & 7       |
+| Places/Amenities | Overpass API            | OpenStreetMap (fallback for hospitals/fuel)    |
+| Traffic Volume   | Static MRWA data        | Pre-downloaded                                 |
 
 ---
 
 ## Key Features
 
 ### GPS Calibration Tool (v5.3.0)
+
 - New `/calibrate` page for measuring GPS lag
 - Capture target position (stationary)
 - Capture pass position (moving)
@@ -258,6 +279,7 @@ src/
 - Apply lag compensation to speed zone lookahead
 
 ### Speed Zone Lookahead
+
 - Shows upcoming speed zone changes BEFORE reaching the sign
 - **Yellow border**: Speed DECREASE ahead (warning shown)
 - **White border**: Current speed (no warning for increases)
@@ -266,6 +288,7 @@ src/
 - Configurable lookahead time (default 5 seconds)
 
 ### Work Zone Lookup (`/` route)
+
 1. Select region → road → SLK range
 2. Get work zone coordinates
 3. See TC positions (±100m from work zone)
@@ -274,6 +297,7 @@ src/
 6. Navigate to Google Maps / Street View
 
 ### SLK Tracking (`/drive` route)
+
 1. GPS tracking with EKF filtering
 2. Real-time SLK display
 3. Current speed vs speed limit
@@ -287,22 +311,25 @@ src/
 ## Settings (⚙️)
 
 ### GPS Calibration
+
 - **Lag Compensation:** Applied to speed lookahead calculations
 - Measured using calibration tool
 - Stored in localStorage
 
 ### GPS Filtering (EKF)
-| Setting | Default | Description |
-|---------|---------|-------------|
-| EKF Filtering | On | Kalman filter for smoother GPS |
-| Road Constraint | On | Snap predictions to road geometry |
-| Max Prediction Time | 30s | How long to predict during GPS outage |
-| Show Uncertainty | On | Display ±Xm accuracy |
-| Early Warnings | On | Alert earlier at higher speeds |
+
+| Setting             | Default | Description                           |
+| ------------------- | ------- | ------------------------------------- |
+| EKF Filtering       | On      | Kalman filter for smoother GPS        |
+| Road Constraint     | On      | Snap predictions to road geometry     |
+| Max Prediction Time | 30s     | How long to predict during GPS outage |
+| Show Uncertainty    | On      | Display ±Xm accuracy                  |
+| Early Warnings      | On      | Alert earlier at higher speeds        |
 
 ### Wind Gust Alert
-| Setting | Default | Description |
-|---------|---------|-------------|
+
+| Setting   | Default | Description                  |
+| --------- | ------- | ---------------------------- |
 | Threshold | 60 km/h | Alert when gusts exceed this |
 
 ---
@@ -318,6 +345,7 @@ bun run version-check
 ```
 
 Checks version consistency across:
+
 - `src/app/page.tsx` - App header version display
 - `src/app/drive/page.tsx` - Drive page version display
 - `src/app/overrides/page.tsx` - Overrides page version display
@@ -329,6 +357,7 @@ Checks version consistency across:
 ### Updating Versions
 
 When bumping version, update ALL of these files:
+
 1. Code files (page.tsx, drive/page.tsx, overrides/page.tsx)
 2. PROJECT_CONTEXT.md "Current Version:" header
 3. README.md - Add new entry to Version History with "(Current)", remove "(Current)" from previous
@@ -358,31 +387,34 @@ See `scripts/README.md` for full documentation of available scripts.
 **The core features work 100% offline after downloading data.** This is essential for Traffic Controllers working in remote areas of Western Australia where cell coverage is unreliable.
 
 ### What Works Offline
-| Feature | Storage | Notes |
-|---------|---------|-------|
-| Work Zone Lookup | IndexedDB | All 69,000+ roads |
-| GPS Tracking | Device + IndexedDB | EKF filtering works offline |
-| SLK Position | Computed locally | Direction detection works offline |
-| Speed Zones | IndexedDB + localStorage | Includes override zones |
-| Speed Sign Overrides | localStorage | Full CRUD operations |
-| AfterCare Jobs | localStorage | Full job and sign tracking |
-| Signage Corridor | IndexedDB | Signs, intersections, rail crossings |
-| TC Position Calculation | Computed locally | ±100m from work zone |
-| Direction Detection | Computed from GPS | True Left/True Right |
-| Google Maps Links | Generated URLs | Opens Maps app |
-| Pavement Data | JSON file | Lanes, widths, shoulders |
-| Traffic Volume | JSON file | AADT, peak hour, heavy % |
-| Nearby Amenities | JSON file | Hospitals, fuel, toilets |
-| Weather (cached) | In-memory | 30-minute cache with timestamp |
+
+| Feature                 | Storage                  | Notes                                |
+| ----------------------- | ------------------------ | ------------------------------------ |
+| Work Zone Lookup        | IndexedDB                | All 69,000+ roads                    |
+| GPS Tracking            | Device + IndexedDB       | EKF filtering works offline          |
+| SLK Position            | Computed locally         | Direction detection works offline    |
+| Speed Zones             | IndexedDB + localStorage | Includes override zones              |
+| Speed Sign Overrides    | localStorage             | Full CRUD operations                 |
+| AfterCare Jobs          | localStorage             | Full job and sign tracking           |
+| Signage Corridor        | IndexedDB                | Signs, intersections, rail crossings |
+| TC Position Calculation | Computed locally         | ±100m from work zone                 |
+| Direction Detection     | Computed from GPS        | True Left/True Right                 |
+| Google Maps Links       | Generated URLs           | Opens Maps app                       |
+| Pavement Data           | JSON file                | Lanes, widths, shoulders             |
+| Traffic Volume          | JSON file                | AADT, peak hour, heavy %             |
+| Nearby Amenities        | JSON file                | Hospitals, fuel, toilets             |
+| Weather (cached)        | In-memory                | 30-minute cache with timestamp       |
 
 ### What Requires Internet
-| Feature | Source |
-|---------|--------|
+
+| Feature              | Source         |
+| -------------------- | -------------- |
 | Live Weather Updates | Open-Meteo API |
-| BOM Weather Warnings | RSS Feed |
-| Street View Images | Google Maps |
+| BOM Weather Warnings | RSS Feed       |
+| Street View Images   | Google Maps    |
 
 ### Tips for Remote Work
+
 1. Download data before leaving coverage area
 2. Run download scripts: `node scripts/download-additional-data.js` and `node scripts/download-amenities.js`
 3. Weather shows "cached" timestamp when offline
@@ -392,7 +424,35 @@ See `scripts/README.md` for full documentation of available scripts.
 
 ## Recent Changes (v5.x)
 
-### RC 1.9.1 (Current) - Traffic Counter Tool
+### RC 1.9.8 (Current) - Amenities Data Source Upgrades, Pace Rate Indicator
+
+- **FuelWatch WA JSON API** (replacing broken RSS feed)
+  - Diesel prices from `/api/sites?fuelType=DSL` endpoint
+  - RSS feed silently ignored diesel (returned ULP prices instead)
+  - 459 diesel stations statewide with accurate daily pricing
+  - Fuel type code mapping: DL→DSL, ULP, PULP, BDL, 98R, LPG, E85
+- **WA Health SLIP Services** for hospital data (replacing Overpass for hospitals)
+  - Accurate ED status, hospital type, bed counts, addresses
+  - Nursing posts included for remote/regional work zones
+- **Three-Source Amenity Architecture** with smart fallback chain
+  - Hospital: WA Health SLIP → Overpass fallback
+  - Fuel: FuelWatch WA JSON API + Overpass merge (200m dedup)
+  - Toilet: Overpass API only
+- **Pace Rate Indicator** on drive page
+  - Time delta vs posted speed for 1km, 10km, 100km
+  - Colour coded: grey (under posted), green (at posted ±2 km/h), red (over posted)
+  - Hidden when speed <60 km/h or no speed limit
+  - Displayed under GPS confidence accuracy line (both landscape and portrait)
+- **Fuel Price Display Bug Fix**
+  - Fixed 3 UI locations showing cents as dollars ($299.2/L → $2.99/L)
+- **Files Changed**
+  - `src/app/api/fuel-stations/route.ts` (rewritten: RSS → JSON API)
+  - `src/app/page.tsx` (fuel price display fix)
+  - `src/components/home/AmenitiesSection.tsx` (fuel price display fix)
+  - `src/app/drive/page.tsx` (pace rate indicator, removed getMinutesPerKm/getTimeFor10km)
+
+### RC 1.9.1 - Traffic Counter Tool
+
 - **New Traffic Counter Tool** (`/traffic-counter`)
   - Count light and heavy vehicles separately
   - Timer with presets (3, 5, 15 minutes) or custom duration
@@ -425,6 +485,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - `src/app/drive/page.tsx` (added Traffic Counter to TC Tools)
 
 ### RC 1.9.0 - AI Q&A Assistant
+
 - **New AI Q&A Assistant** (`/qa`)
   - Ask questions about traffic management, WHS, and road work documents
   - AI searches document abstracts for relevant information
@@ -452,6 +513,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - `src/app/page.tsx` (added Q&A link to Library section)
 
 ### RC 1.8.0 - Library Offline Status Indicators
+
 - **Updated Offline Status Indicators**
   - 📥 (green) = Cached in browser storage - Available offline
   - 💾 (blue) = Downloaded to device - Permanently saved
@@ -474,6 +536,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - `src/app/library/page.tsx` (updated indicators, cache deleted warning)
 
 ### RC 1.7.28 - Geometry-Based Intersection Verification
+
 - **TMP Viewer Mobile Responsiveness Fix**
   - Fixed TMP viewer not working well on mobile phones
   - Replaced fixed-width TOC sidebar (320px) with mobile-friendly drawer
@@ -497,6 +560,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Duplicate intersection deduplication
 
 ### RC 1.7.17 - Emergency Location Cross Road Detection Fix
+
 - **Created shared emergency module** (`src/lib/emergency.ts`)
   - Consolidated ~200 lines of duplicated code from page.tsx and drive/page.tsx
   - Functions: findCrossRoad(), findNearestTown(), findNearestHospital(), findNearestFireStation(), findNearestPoliceStation()
@@ -511,6 +575,7 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Fixed distance display bug** - was showing "100mm" instead of "100m"
 
 ### RC 1.7.14 - Emergency Location Enhancement
+
 - **Added locality (town) name to emergency location**
   - GPS API now returns LG_NAME field from MRWA data
   - Shows town name (e.g., "Moora") instead of just region ("Wheatbelt")
@@ -525,6 +590,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Direction now correctly shows where user is relative to town
 
 ### RC 1.6.0 - AfterCare Map View
+
 - **New AfterCare Map Page** (`/aftercare/map`)
   - Full-screen OpenStreetMap with colored pins for all signs
   - Filter buttons: All / 🔴 Retrieval / 🟡 Maintenance / 🟢 Active
@@ -541,6 +607,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Auto-centers on signs, defaults to Perth if no signs
 
 ### RC 1.5.9 - Expanded Offline Data Support
+
 - **Added offline support for additional data types**
   - Pavement data (MRWA Layer 12) - lanes, widths, shoulders
   - Traffic volume (MRWA Layer 27) - AADT, peak hour, heavy vehicles
@@ -555,6 +622,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - `scripts/download-amenities.js` - OpenStreetMap amenities
 
 ### RC 1.5.8 - Report Signage Fix
+
 - **Fixed signage corridor report showing wrong items**
   - Intersections now filtered to ±100m from work zone (was showing ±700m)
   - All signage now explicitly filtered to ±700m corridor bounds
@@ -564,6 +632,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Intersections shown separately with correct label
 
 ### RC 1.5.7 - Offline Startup Fix
+
 - **Fixed app hanging on startup without internet**
   - Added `navigator.onLine` check in `fetchRegions()` before attempting API call
   - If offline, skip API entirely and load from static `metadata.json`
@@ -573,6 +642,7 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Result**: App now opens instantly (< 1 second) regardless of internet status
 
 ### RC 1.5.6 - Offline Data Source Toggles
+
 - **New Offline Data Source Toggles**
   - 6 toggles to switch between online API and offline IndexedDB data
   - Toggles appear in Settings → Offline Data section after downloading data
@@ -591,6 +661,7 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Safe incremental testing**: Each component can be tested independently
 
 ### RC 1.5.3 - Work Zone Report Feature
+
 - **New Work Zone Report Generator**
   - Added "Generate Work Zone Report" button at bottom of work zone info page
   - Creates comprehensive report including:
@@ -608,6 +679,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Downloadable as timestamped .txt file
 
 ### RC 1.5.2 - Multi-Region Roads Fix
+
 - **Fixed roads missing from regions they should be in**
   - Download script was only storing each road in its first-seen region
   - Roads like H005 (Great Eastern Hwy) span multiple regions but were only in Metropolitan
@@ -617,6 +689,7 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Wheatbelt now has 23 M-roads** (was 17)
 
 ### RC 1.5.1 - State Roads Filter Fix
+
 - **Fixed road dropdown showing local roads instead of state roads**
   - `getRoadsForRegion()` now filters to only return H-prefix and M-prefix roads
   - Static data files contain all roads (local + state), but dropdown should only show state roads
@@ -626,6 +699,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Better error handling in `fetchRegions()` function
 
 ### RC 1.5.0 - Nearby Signs Page & Filtered View
+
 - **New Nearby Signs Page** (`/drive/nearby-signs`)
   - Dedicated page for viewing only signs requiring action
   - Shows only due-retrieval and due-maintenance signs
@@ -652,6 +726,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Moved above import/export buttons, consolidated with route buttons
 
 ### RC 1.4.0 - AfterCare Signage Tracking System
+
 - **New AfterCare Module** (`/aftercare`)
   - Track signage placed on roads awaiting retrieval
   - Job-based organization with multiple signs per job
@@ -678,6 +753,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Works offline with localStorage persistence
 
 ### RC 1.3.0 - Set Distance & Lane Naming
+
 - **Set Distance Feature** (renamed from SLK Meter)
   - Full screen modal display for distance tracking
   - Text link in TC Tools (not button), auto-closes settings drawer
@@ -697,6 +773,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - DECREASING: L1 = rightmost lane (reversed numbering)
 
 ### RC 1.2.26 - SLK Meter 10m Increments & Live Total
+
 - **Distance Display Improvements**
   - Changed from 3 decimal precision (0.000m) to 10m increments (0, 10, 20, 30...)
   - Easier to read while driving
@@ -709,6 +786,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Total distance = sum of all marked distances + current distance
 
 ### RC 1.2.25 - SLK Meter Feature
+
 - **SLK Meter in TC Tools Section**
   - GPS-based distance measurement from reference point
   - Current SLK and road name display via /api/gps
@@ -722,6 +800,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Collapsible, minimized by default
 
 ### RC 1.2.20 - UI Simplification & Pavement Data
+
 - **Removed color indication from hamburger menu (☰)**
   - Previously showed green (offline ready) or gray (not ready)
   - Now shows consistent gray background
@@ -734,6 +813,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Lane count interpretation varies by carriageway type
 
 ### RC 1.2.17 - Landscape Mode Optimization
+
 - **Landscape layout for in-vehicle phone mounts**
   - Automatic orientation detection
   - 2-column side-by-side layout when in landscape
@@ -747,6 +827,7 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Portrait layout preserved** as default
 
 ### RC 1.2.16 - Navigation Cleanup
+
 - **Removed 3-dot menu from drive page**
   - Menu was confusing as it returned to home page
   - Clean header layout with centered title
@@ -759,6 +840,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - User manual updated for hamburger menu
 
 ### RC 1.2.15 - UI Consistency & Navigation
+
 - **Settings Menu Icon Changed**
   - Replaced ⚙️ gear icon with ⋮ (three-dot menu)
   - Retained green/gray color coding for offline status
@@ -768,12 +850,14 @@ See `scripts/README.md` for full documentation of available scripts.
   - Version number left-justified
 
 ### RC 1.2.14 - Settings Restructure
+
 - **Settings Sections Reorganized Alphabetically**
 - **User Manual moved into About section**
 - **New About Section** with contact, contributors, built with info
 - **SLK Color Logic Updated** (White = no destination)
 
 ### RC 1.2.13 - GPS Indicator Refinement
+
 - **Moved GPS signal strength indicator**
   - Relocated from header to SLK Tracking status position
   - Replaced redundant "Active" text indicator with signal bars
@@ -782,6 +866,7 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Version:** RC 1.2.13
 
 ### RC 1.2.12 - UI/UX Refinements
+
 - **Settings Drawer Visual Hierarchy**
   - Replaced +/- with rotating chevron icons (›) for expand/collapse
   - Added 4px colored left border accent on expanded sections
@@ -795,18 +880,21 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Version:** RC 1.2.12
 
 ### RC 1.2.11 - Settings Cleanup
+
 - **Moved Debug button to Admin Data Sync section**
   - Debug button now inside minimized Admin Data Sync section
   - Cleaner Settings drawer with less clutter
 - **Version:** RC 1.2.11
 
 ### RC 1.2.10 - User Manual Cleanup
+
 - **Removed distracting sticky Quick Reference footer**
   - Footer was always visible at bottom and distracting
   - Quick Reference info still available in Section 10 of manual
 - **Version:** RC 1.2.10
 
 ### RC 1.2.9 - User Manual Hybrid Approach
+
 - **User Manual redesigned with Hybrid Approach**
   - **Search functionality** - Filter sections by keyword, title, or content
   - **Quick nav chips** - One-tap access to common sections (Intro, Offline, GPS, Settings, Fix)
@@ -815,6 +903,7 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Version:** RC 1.2.9
 
 ### RC 1.2.8 - Settings Bottom Sheet Drawer
+
 - **Settings converted to Bottom Sheet Drawer**
   - Replaced inline settings dialog with mobile-friendly bottom sheet drawer
   - Swipe down to close, tap outside to dismiss
@@ -825,6 +914,7 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Version:** RC 1.2.8
 
 ### RC 1.2.7 - Settings Reorganization Fix
+
 - **FIXED: Implemented documented RC 1.2.6 changes that were not applied to code**
 - **Tools Menu Removed**
   - Removed Tools menu (🔧) from /drive page header
@@ -839,10 +929,12 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Version:** RC 1.2.7
 
 ### RC 1.2.6 - Settings Reorganization (Documentation Only)
+
 - **Documented but not implemented** - Changes were added to PROJECT_CONTEXT.md but code was not updated
 - See RC 1.2.7 for actual implementation
 
 ### RC 1.2.4 - Unified SLK Tracking Display
+
 - **Speed Display Toggle**
   - Moved speed display toggle from home page to SLK tracking page
   - Toggle in Settings controls visibility of speed/limit during tracking
@@ -863,12 +955,14 @@ See `scripts/README.md` for full documentation of available scripts.
   - Navigation buttons at bottom
 
 ### RC 1.2.3 - Speed Display Toggle (Superseded)
+
 - **Speed Display on Home Page**
   - Initial implementation on home page (moved to /drive in RC 1.2.4)
   - Toggle in Settings to show current speed and posted speed
   - Defaults to OFF
 
 ### RC 1.2.2 - User Manual Page
+
 - **User Manual Page** (`/manual`)
   - Added comprehensive HTML-based user manual
   - Mobile-friendly, collapsible sections
@@ -880,6 +974,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - No download required (HTML format)
 
 ### 2026-03-04 - Documentation Sync & PDF Generation
+
 - **Documentation Audit**
   - Identified version drift: worklog.md showed RC 1.0.4, code was RC 1.2.1
   - Updated README.md with missing RC 1.2.1 entry
@@ -902,6 +997,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Saved to `/home/z/my-project/download/`
 
 ### RC 1.2.1 - Override Zone Visual Indicator
+
 - **Pulsating icon for override zones**
   - When driving through a community-verified speed zone, a pulsating ✓ icon appears
   - Green border around speed limit circle indicates override zone
@@ -916,6 +1012,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Validated `signsToSpeedZones()` correctly processes double-sided signs
 
 ### RC 1.2.0 - Speed Sign Override System
+
 - **Fixed double-sided sign interpretation**
   - Issue: `signsToSpeedZones()` only used `front_speed`, ignored `back_speed`
   - Fix: Double signs with different speeds now create TWO zones (one per direction)
@@ -938,6 +1035,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Clear all data option
 
 ### RC 1.0.2 - Bug Fix Release
+
 - **Fixed road priority causing opposite problem**
   - Issue: RC 1.0.1 was preferring State Roads even when far away (e.g., 103m)
   - Fix: Priority now only applies as tiebreaker when distances are within 50m
@@ -949,6 +1047,7 @@ See `scripts/README.md` for full documentation of available scripts.
 - Root cause of original issue was corrupt IndexedDB data, not priority logic
 
 ### RC 1.0.1 - Bug Fix Release
+
 - **Fixed GPS tracking prioritizing Local Roads over State Roads**
   - Issue: GPS tracking was incorrectly matching nearby Local Roads instead of State Roads (M-roads, H-roads)
   - Root cause: `findRoadNearGps()` simply returned the closest road without considering road importance
@@ -959,31 +1058,36 @@ See `scripts/README.md` for full documentation of available scripts.
 - Updated documentation with road priority system details
 
 ### RC 1.0 - Release Candidate
+
 - **Official Release Candidate for production deployment**
 - All UI/UX finalized and documented
 - Complete feature set for Traffic Controller work zone operations
-- Documentation: 
+- Documentation:
   - TC_Work_Zone_Locator_RC1_Documentation.docx (Layout & Functionality)
   - TC_Work_Zone_Locator_Data_Sources.docx (Data Query Sources)
 
 ### v5.3.7
+
 - **UI Improvements**
   - Local roads: Added manual road ID entry (no longer requires GPS lookup)
   - Drive page: Removed lookahead compensation message
   - Drive page: Removed Accuracy display from Current Location dialog
 
 ### v5.3.6
+
 - **UI Improvements**
   - Changed "Back to Work Zone Locator" button from red to dark blue (consistency)
   - Updated on both drive and calibrate pages
 
 ### v5.3.5
+
 - **UI Improvements**
   - Amenities dialog: Navigate/Street View buttons converted to small icon buttons
   - Signage Corridor: Intersections now filtered to ±100m from work zone (previously ±700m)
   - Signage Corridor: Removed Regulatory Signs section (clutter reduction)
 
 ### v5.3.4
+
 - **UI Cosmetic Updates**
   - Changed "Start SLK Tracking" buttons from orange to dark blue
   - Work Zone Summary: Moved large buttons to small icon buttons right-justified
@@ -991,6 +1095,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Cleaner, more compact layout
 
 ### v5.3.3
+
 - **BOM Weather Warnings RSS Integration** (RESTORED)
   - Created `/api/warnings/route.ts` for BOM RSS feed fetching
   - Real-time WA land warnings from BOM RSS feed (IDZ00067)
@@ -1010,6 +1115,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Better visual feedback for hazardous wind conditions
 
 ### v5.3.2
+
 - **Bidirectional Speed Zone Detection**
   - Fixed speed zone lookahead to work in both SLK directions
   - Previously only detected speed decreases when traveling increasing SLK
@@ -1022,6 +1128,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Lookahead calculation uses appropriate zone boundary based on direction
 
 ### v5.3.1
+
 - **Removed SLK Calibration Feature**
   - Removed per-road SLK offset calibration from drive page
   - SLK now displays raw GPS values without manual offset
@@ -1032,6 +1139,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - This feature remains and is accessible from Settings menu
 
 ### v5.3.0
+
 - **GPS Calibration Tool**
   - New `/calibrate` page for measuring GPS lag
   - Set target (stationary) and mark pass (moving)
@@ -1044,17 +1152,20 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Version Display** in app header
 
 ### v5.2.1
+
 - **Manual Road ID Entry for Local Roads**
   - Local roads can now have road ID entered manually
   - No longer requires GPS lookup to use local roads
 
 ### v5.2.0
+
 - **BOM Weather Warnings RSS Integration**
   - Real-time WA land warnings from BOM RSS feed (IDZ00067)
   - Warnings displayed inline in Weather section
   - Warning count badge in section header
 
 ### v5.1.x
+
 - Track button color changes
 - Intersection filtering fixes
 - Speed zone lookahead feature
@@ -1079,27 +1190,28 @@ Branches: `master` and `main` (kept in sync)
 
 ## Documentation Files
 
-| File | Description | Location |
-|------|-------------|----------|
-| PROJECT_CONTEXT.md | Single source of truth (this file) | `/home/z/my-project/` |
-| README.md | Project overview, version history | `/home/z/my-project/` |
-| worklog.md | Development history | `/home/z/my-project/` |
-| RC1_Test_Checklist.md | Testing checklist | `/home/z/my-project/` |
-| TC_Work_Zone_Locator_User_Manual.pdf | End-user documentation | `/home/z/my-project/download/` |
-| TC_Work_Zone_Locator_User_Manual.docx | End-user documentation (Word) | `/home/z/my-project/download/` |
-| TC_Work_Zone_Locator_RC1_Documentation.docx | Layout & Functionality | `/home/z/my-project/docs/` |
-| TC_Work_Zone_Locator_Data_Dictionary.docx | Data structures | `/home/z/my-project/docs/` |
-| TC_Work_Zone_Locator_File_Structure.docx | Project structure | `/home/z/my-project/docs/` |
-| TC_Work_Zone_Locator_Direction_Aware_Zones.docx | Bidirectional zones | `/home/z/my-project/docs/` |
-| TC_Work_Zone_Locator_Data_Sources.docx | API sources | `/home/z/my-project/docs/` |
-| TC_Work_Zone_Locator_Program_Logic.docx | Function reference | `/home/z/my-project/docs/` |
-| TC_Work_Zone_Locator_RC1.2.1_Supplement.docx | RC 1.2.1 additions | `/home/z/my-project/docs/` |
+| File                                            | Description                        | Location                       |
+| ----------------------------------------------- | ---------------------------------- | ------------------------------ |
+| PROJECT_CONTEXT.md                              | Single source of truth (this file) | `/home/z/my-project/`          |
+| README.md                                       | Project overview, version history  | `/home/z/my-project/`          |
+| worklog.md                                      | Development history                | `/home/z/my-project/`          |
+| RC1_Test_Checklist.md                           | Testing checklist                  | `/home/z/my-project/`          |
+| TC_Work_Zone_Locator_User_Manual.pdf            | End-user documentation             | `/home/z/my-project/download/` |
+| TC_Work_Zone_Locator_User_Manual.docx           | End-user documentation (Word)      | `/home/z/my-project/download/` |
+| TC_Work_Zone_Locator_RC1_Documentation.docx     | Layout & Functionality             | `/home/z/my-project/docs/`     |
+| TC_Work_Zone_Locator_Data_Dictionary.docx       | Data structures                    | `/home/z/my-project/docs/`     |
+| TC_Work_Zone_Locator_File_Structure.docx        | Project structure                  | `/home/z/my-project/docs/`     |
+| TC_Work_Zone_Locator_Direction_Aware_Zones.docx | Bidirectional zones                | `/home/z/my-project/docs/`     |
+| TC_Work_Zone_Locator_Data_Sources.docx          | API sources                        | `/home/z/my-project/docs/`     |
+| TC_Work_Zone_Locator_Program_Logic.docx         | Function reference                 | `/home/z/my-project/docs/`     |
+| TC_Work_Zone_Locator_RC1.2.1_Supplement.docx    | RC 1.2.1 additions                 | `/home/z/my-project/docs/`     |
 
 ---
 
 ## How to Update This File
 
 After each development session:
+
 1. Update version number if changed
 2. Add entry to Recent Changes
 3. Update any new features or settings

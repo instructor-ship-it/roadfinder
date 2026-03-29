@@ -7,7 +7,7 @@
 | Field          | Value                                            |
 | -------------- | ------------------------------------------------ |
 | **Version**    | RC 1.9.8                                         |
-| **Date**       | June 2025                                        |
+| **Date**       | March 2026                                       |
 | **Repository** | https://github.com/instructor-ship-it/roadfinder |
 
 ---
@@ -56,7 +56,7 @@ TC Work Zone Locator is a mobile-first Progressive Web Application (PWA) designe
 - **Traffic Counter** integration for vehicle counting
 - **Q&A Assistant** with AI-powered document search
 - **Speeding Alert** with WA fine information display
-- **Minutes per km** and **10km travel time** displays
+- **Pace Rate Indicator** showing time delta vs posted speed (1km/10km/100km)
 - **Settings Drawer** with organized configuration options
 - **Weather Warning Banner** for BOM alerts
 - **Incident Warning Banner** for road incidents
@@ -183,8 +183,7 @@ The application has twelve main pages:
   - **Amber**: Approaching speed decrease
   - **Green + pulsing ✓**: In override zone
 - EKF status indicator with confidence level
-- **Minutes per km** display showing travel time efficiency
-- **10km travel time** display for route planning
+- **Pace Rate Indicator** showing time gained/lost vs posted speed for 1km, 10km, 100km
 
 ### 5.2 Current Location Section
 
@@ -627,6 +626,9 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 - **Site features** for fuel stations (e.g., Fuel Cards, ATM, Toilets, EFTPOS)
 - **Multi-source amenity data** from WA Health SLIP + FuelWatch WA + Overpass
 - **Report fuel station output** includes diesel price, brand, features, address, phone
+- **Pace Rate Indicator** showing time delta vs posted speed (1km/10km/100km intervals)
+- **FuelWatch JSON API** (replacing broken RSS feed for diesel prices)
+- **Fuel price display fix** (cents were shown as dollars)
 
 ### RC 1.9.7 - Maximum Hold Time, Shuttle Flow Corrections, UI Improvements
 

@@ -177,38 +177,40 @@ const getSpeedingFine = (speedKph: number, limitKph: number) => {
 };
 ```
 
-### 3.6 Time/Distance Calculations
+### 3.6 Pace Rate Indicator
 
-The drive page calculates and displays time-based metrics for driver awareness:
+The drive page implements a pace rate indicator that shows time gained or lost relative to the posted speed limit. This replaces the previous minutes-per-km and 10km travel time displays with a more useful delta format.
 
-**Minutes per Kilometer (`getMinutesPerKm`):**
-
-```typescript
-const getMinutesPerKm = (speedKph: number): string => {
-  if (speedKph < 1) return '--';
-  const minutesPerKm = 60 / speedKph;
-  if (minutesPerKm < 1) {
-    const seconds = Math.round(minutesPerKm * 60);
-    return `${seconds}s/km`;
-  }
-  return `${minutesPerKm.toFixed(1)} min/km`;
-};
-```
-
-**Time for 10km (`getTimeFor10km`):**
+**Pace Delta Formula:**
 
 ```typescript
-const getTimeFor10km = (speedKph: number): string => {
-  if (speedKph < 1) return '--';
-  const totalMinutes = (10 / speedKph) * 60;
-  const hours = Math.floor(totalMinutes / 60);
-  const mins = Math.round(totalMinutes % 60);
-  if (hours > 0) {
-    return `${hours}h ${mins}m for 10km`;
-  }
-  return `${mins} min for 10km`;
-};
+const deltaSec = (distanceKm / actualSpeed - distanceKm / postedSpeed) * 3600;
 ```
+
+- Positive delta = losing time (slower than posted)
+- Negative delta = gaining time (faster than posted)
+
+**Display Format:**
+
+Three distance intervals are shown simultaneously: 1km, 10km, and 100km. The format adapts based on the distance:
+
+- 1km: `+0:30` (minutes:seconds)
+- 10km: `+5:00` (minutes:seconds)
+- 100km: `+0:50:00` (hours:minutes:seconds)
+
+**Colour Coding:**
+
+| Condition           | Colour | Meaning                       |
+| ------------------- | ------ | ----------------------------- |
+| Speed ≥ limit - 2   | Green  | At or near posted speed       |
+| Speed > limit + 2   | Red    | Over posted speed             |
+| Speed < limit - 2   | Grey   | Under posted speed            |
+| Speed < 60 km/h     | Hidden | Too slow for meaningful delta |
+| No speed limit data | Hidden | Cannot calculate delta        |
+
+**Placement:**
+
+The pace rate indicator is displayed under the GPS confidence accuracy line (e.g., "High Confidence ±5.00m accuracy") in both landscape and portrait modes. It uses a compact layout with the "PACE RATE" label in `text-xs` and delta values in `text-sm` with `font-mono` styling.
 
 ---
 
@@ -330,7 +332,7 @@ Provides diesel fuel station data by merging FuelWatch WA (daily prices) with Op
 
 **Merge/Dedup Logic:**
 
-1. Fetch all diesel stations from FuelWatch WA RSS feed (~700 stations)
+1. Fetch all diesel stations from FuelWatch WA JSON API (`/api/sites?fuelType=DSL`, ~459 stations)
 2. Fetch all fuel stations from Overpass API within radius
 3. Deduplicate stations within 200m proximity — FuelWatch data takes priority (has pricing)
 4. Sort by distance, return top 20
@@ -640,7 +642,7 @@ The home page follows a mobile-first responsive design optimized for 400px maxim
 
 ### 10.2 Drive Page Layout
 
-The drive page is designed for in-vehicle use with large, high-contrast displays. The speed display uses a 5xl font size with color coding (green for compliant, red for speeding with pulsing alert). The speed limit indicator uses a circular badge with border styling that changes color based on status: white for normal, amber for approaching speed decrease, green for verified override zone. Trip progress shows current SLK with direction indicator and destination information when on the same road as the target. Additional displays include minutes per km and 10km travel time.
+The drive page is designed for in-vehicle use with large, high-contrast displays. The speed display uses a 5xl font size with color coding (green for compliant, red for speeding with pulsing alert). The speed limit indicator uses a circular badge with border styling that changes color based on status: white for normal, amber for approaching speed decrease, green for verified override zone. Trip progress shows current SLK with direction indicator and destination information when on the same road as the target. A pace rate indicator shows time gained or lost versus the posted speed limit for 1km, 10km, and 100km intervals, displayed under the GPS confidence accuracy line.
 
 ### 10.3 AfterCare Page Layout
 
