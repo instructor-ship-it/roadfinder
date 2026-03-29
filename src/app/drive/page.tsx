@@ -21,7 +21,7 @@ import {
   removeSpeedZoneCorrection,
   clearSpeedZoneCorrections,
   type ParsedSpeedZone,
-  type SpeedZoneCorrection
+  type SpeedZoneCorrection,
 } from '@/lib/offline-db';
 import {
   getJobsForRoad,
@@ -34,8 +34,8 @@ import {
 } from '@/lib/aftercare';
 import { useGpsTracking, useGpsSettings, type GpsTrackingConfig } from '@/hooks/useGpsTracking';
 import { useOrientation } from '@/hooks/useOrientation';
-import { IncidentWarningBanner } from '@/components/IncidentWarningBanner'
-import { WeatherWarningBanner } from '@/components/WeatherWarningBanner'
+import { IncidentWarningBanner } from '@/components/IncidentWarningBanner';
+import { WeatherWarningBanner } from '@/components/WeatherWarningBanner';
 
 // GPS lag compensation from localStorage
 interface GpsLagSettings {
@@ -137,60 +137,71 @@ function DriveContent() {
   // Check if currently in an override zone
   const currentOverrideZone = useMemo(() => {
     if (!roadInfo || speedZones.length === 0) return null;
-    
+
     const currentSlk = roadInfo.slk;
-    
+
     // Find zones that contain this SLK
-    const matchingZones = speedZones.filter(z => currentSlk >= z.start_slk && currentSlk <= z.end_slk);
-    
+    const matchingZones = speedZones.filter(
+      (z) => currentSlk >= z.start_slk && currentSlk <= z.end_slk
+    );
+
     if (matchingZones.length === 0) return null;
-    
+
     // Check for directional zones based on travel direction
     if (slkDirection === 'increasing') {
       // INCREASING SLK = Left carriageway
-      const leftZone = matchingZones.find(z => z.carriageway === 'Left');
-      const singleZone = matchingZones.find(z => z.carriageway === 'Single');
+      const leftZone = matchingZones.find((z) => z.carriageway === 'Left');
+      const singleZone = matchingZones.find((z) => z.carriageway === 'Single');
       const activeZone = leftZone || singleZone || matchingZones[0];
       return activeZone?.is_override ? activeZone : null;
     } else if (slkDirection === 'decreasing') {
       // DECREASING SLK = Right carriageway
-      const rightZone = matchingZones.find(z => z.carriageway === 'Right');
-      const singleZone = matchingZones.find(z => z.carriageway === 'Single');
+      const rightZone = matchingZones.find((z) => z.carriageway === 'Right');
+      const singleZone = matchingZones.find((z) => z.carriageway === 'Single');
       const activeZone = rightZone || singleZone || matchingZones[0];
       return activeZone?.is_override ? activeZone : null;
     }
-    
+
     // No direction known yet - check if any matching zone is an override
-    const overrideZone = matchingZones.find(z => z.is_override);
+    const overrideZone = matchingZones.find((z) => z.is_override);
     return overrideZone || null;
   }, [roadInfo, speedZones, slkDirection]);
 
   // AfterCare nearby signs - get jobs for current road
   const nearbyAfterCare = useMemo(() => {
     if (!roadInfo) return { jobs: [], nearbySigns: [], hasSigns: false };
-    
+
     const jobs = getJobsForRoad(roadInfo.road_id);
-    
+
     // Filter to only jobs with signs awaiting retrieval
-    const activeJobs = jobs.filter(job => {
+    const activeJobs = jobs.filter((job) => {
       const status = calculateJobStatus(job);
       return status !== 'archived' && status !== 'retrieved';
     });
-    
+
     // Get nearby signs - use direction if available, otherwise default to 'increasing'
     const directionToUse = slkDirection || 'increasing';
-    const allNearbySigns = getNearbySigns(roadInfo.road_id, roadInfo.slk, directionToUse, afterCareLookaheadKm);
-    
+    const allNearbySigns = getNearbySigns(
+      roadInfo.road_id,
+      roadInfo.slk,
+      directionToUse,
+      afterCareLookaheadKm
+    );
+
     // Filter to only show signs due for retrieval or maintenance
-    const nearbySigns = allNearbySigns.filter(sign => {
-      const status = calculateSignStatus(sign);
-      return status === 'due-retrieval' || status === 'due-maintenance' || status === 'maintained';
-    }).slice(0, 10);
-    
-    return { 
-      jobs: activeJobs, 
+    const nearbySigns = allNearbySigns
+      .filter((sign) => {
+        const status = calculateSignStatus(sign);
+        return (
+          status === 'due-retrieval' || status === 'due-maintenance' || status === 'maintained'
+        );
+      })
+      .slice(0, 10);
+
+    return {
+      jobs: activeJobs,
       nearbySigns: nearbySigns,
-      hasSigns: nearbySigns.length > 0 
+      hasSigns: nearbySigns.length > 0,
     };
   }, [roadInfo, slkDirection, afterCareLookaheadKm]);
 
@@ -208,9 +219,11 @@ function DriveContent() {
     const lookaheadDistanceKm = (speedMs * effectiveLookahead) / 1000;
 
     // slkDirection is now from state
-    
+
     // Find current zone
-    const currentZone = speedZones.find(z => currentSlk >= z.start_slk && currentSlk <= z.end_slk);
+    const currentZone = speedZones.find(
+      (z) => currentSlk >= z.start_slk && currentSlk <= z.end_slk
+    );
     const currentSpeedLimit = currentZone?.speed_limit || speedLimit;
 
     if (slkDirection === 'increasing') {
@@ -220,7 +233,7 @@ function DriveContent() {
         if (zone.start_slk > currentSlk && zone.start_slk <= currentSlk + lookaheadDistanceKm * 2) {
           const distanceToZone = (zone.start_slk - currentSlk) * 1000;
           const isDecrease = zone.speed_limit < currentSpeedLimit;
-          
+
           if (isDecrease) {
             return {
               speedLimit: zone.speed_limit,
@@ -236,14 +249,14 @@ function DriveContent() {
       // Look for zone boundaries ahead (zone.end_slk < currentSlk)
       // When decreasing SLK, we're approaching the END of higher-SLK zones
       // which is the START of lower-SLK zones
-      
+
       for (const zone of speedZones) {
         // We're looking for a zone that ENDS ahead of us (lower SLK)
         // This means we're entering this zone from its end_slk side
         if (zone.end_slk < currentSlk && zone.end_slk >= currentSlk - lookaheadDistanceKm * 2) {
           const distanceToZone = (currentSlk - zone.end_slk) * 1000;
           const isDecrease = zone.speed_limit < currentSpeedLimit;
-          
+
           if (isDecrease) {
             return {
               speedLimit: zone.speed_limit,
@@ -289,7 +302,7 @@ function DriveContent() {
     direction: '' as 'increasing' | 'decreasing' | '',
     correct_speed: '',
     original_speed: '',
-    notes: ''
+    notes: '',
   });
 
   // Destination coordinates state
@@ -344,7 +357,9 @@ function DriveContent() {
     };
     init();
 
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Clear old SLK calibration data from localStorage (deprecated feature)
@@ -423,7 +438,9 @@ function DriveContent() {
       if (!destRoadId || !destSlk) return;
 
       try {
-        const response = await fetch(`/api/roads?action=locate&road_id=${encodeURIComponent(destRoadId)}&slk=${destSlk}`);
+        const response = await fetch(
+          `/api/roads?action=locate&road_id=${encodeURIComponent(destRoadId)}&slk=${destSlk}`
+        );
         if (response.ok) {
           const data = await response.json();
           if (data.latitude && data.longitude) {
@@ -491,7 +508,9 @@ function DriveContent() {
     lines.push(`Current speed limit: ${speedLimit} km/h`);
     lines.push(`Is speeding: ${isSpeeding}`);
     if (upcomingZone) {
-      lines.push(`Upcoming zone: ${upcomingZone.speedLimit} km/h in ${Math.round(upcomingZone.distance)}m (${upcomingZone.direction})`);
+      lines.push(
+        `Upcoming zone: ${upcomingZone.speedLimit} km/h in ${Math.round(upcomingZone.distance)}m (${upcomingZone.direction})`
+      );
     }
     lines.push('');
     lines.push('=== GPS Lag Compensation ===');
@@ -524,36 +543,33 @@ function DriveContent() {
     return `${hours}h ${mins}m`;
   };
 
-  // Calculate minutes per km for current speed
-  const getMinutesPerKm = (speedKph: number): string => {
-    if (speedKph <= 0) return '--';
-    const minutesPerKm = 60 / speedKph;
-    if (minutesPerKm < 1) {
-      // Show seconds if less than 1 minute
-      const seconds = Math.round(minutesPerKm * 60);
-      return `${seconds}s/km`;
+  // Pace Rate: delta between actual travel time and posted speed time
+  // + = losing time (slower than posted), − = gaining time (faster than posted)
+  const getPaceDelta = (actualKph: number, postedKph: number, distanceKm: number): string => {
+    if (actualKph <= 0 || postedKph <= 0) return '0:00';
+    const actualSeconds = (distanceKm / actualKph) * 3600;
+    const postedSeconds = (distanceKm / postedKph) * 3600;
+    const deltaSeconds = Math.round(actualSeconds - postedSeconds);
+    if (deltaSeconds === 0) return '0:00';
+    const sign = deltaSeconds > 0 ? '+' : '';
+    const abs = Math.abs(deltaSeconds);
+    if (abs < 60) return `${sign}0:${String(abs).padStart(2, '0')}`;
+    const m = Math.floor(abs / 60);
+    const s = abs % 60;
+    if (distanceKm >= 100) {
+      const h = Math.floor(m / 60);
+      const rm = m % 60;
+      return `${sign}${h}:${String(rm).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
     }
-    // Show minutes with 1 decimal place
-    return `${minutesPerKm.toFixed(1)} min/km`;
+    return `${sign}${m}:${String(s).padStart(2, '0')}`;
   };
 
-  // Calculate time to travel 10km at current speed
-  const getTimeFor10km = (speedKph: number): string => {
-    if (speedKph <= 0) return '--';
-    const totalMinutes = (60 / speedKph) * 10; // 10km time in minutes
-    if (totalMinutes < 1) {
-      // Less than 1 minute - show seconds
-      const seconds = Math.round(totalMinutes * 60);
-      return `${seconds}s / 10km`;
-    }
-    if (totalMinutes < 60) {
-      // Less than 1 hour - show minutes
-      return `${Math.round(totalMinutes)}m / 10km`;
-    }
-    // 1 hour or more
-    const hours = Math.floor(totalMinutes / 60);
-    const mins = Math.round(totalMinutes % 60);
-    return mins > 0 ? `${hours}h ${mins}m / 10km` : `${hours}h / 10km`;
+  // Pace rate colour: grey (under posted), green (at posted ±2), red (over posted)
+  const getPaceColor = (): string => {
+    if (currentSpeed < 60 || speedLimit <= 0) return 'hidden';
+    if (currentSpeed > speedLimit + 2) return 'text-red-400';
+    if (currentSpeed >= speedLimit - 2) return 'text-green-400';
+    return 'text-gray-400';
   };
 
   // WA Speeding Fines Data (current as of 2025)
@@ -567,12 +583,15 @@ function DriveContent() {
   ];
 
   // Get speeding fine info based on current speed and limit
-  const getSpeedingFine = (speedKph: number, limitKph: number): { fine: number; demerits: number; label: string; kmOver: number } | null => {
+  const getSpeedingFine = (
+    speedKph: number,
+    limitKph: number
+  ): { fine: number; demerits: number; label: string; kmOver: number } | null => {
     if (limitKph <= 0) return null;
     const kmOver = Math.round(speedKph - limitKph);
     if (kmOver <= 0) return null;
-    
-    const fineInfo = WA_SPEEDING_FINES.find(tier => kmOver <= tier.maxOver);
+
+    const fineInfo = WA_SPEEDING_FINES.find((tier) => kmOver <= tier.maxOver);
     return {
       fine: fineInfo?.fine ?? 1200,
       demerits: fineInfo?.demerits ?? 7,
@@ -584,32 +603,38 @@ function DriveContent() {
   // Open Google Maps navigation to destination
   const openGoogleMaps = () => {
     if (destCoords) {
-      window.open(`https://www.google.com/maps/dir/?api=1&destination=${destCoords.lat},${destCoords.lon}`, '_blank')
+      window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${destCoords.lat},${destCoords.lon}`,
+        '_blank'
+      );
     }
-  }
+  };
 
   // Open Street View at destination
   const openStreetView = () => {
     if (destCoords) {
-      window.open(`https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${destCoords.lat},${destCoords.lon}`, '_blank')
+      window.open(
+        `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${destCoords.lat},${destCoords.lon}`,
+        '_blank'
+      );
     }
-  }
+  };
 
   // Format emergency distance
   const formatEmergencyDistance = (distanceStr: string): string => {
     if (distanceStr.endsWith('km')) {
-      return distanceStr
+      return distanceStr;
     }
-    const meters = parseInt(distanceStr)
-    if (isNaN(meters)) return distanceStr
-    const rounded = Math.round(meters / 100) * 100
-    return `${rounded}m`
-  }
+    const meters = parseInt(distanceStr);
+    if (isNaN(meters)) return distanceStr;
+    const rounded = Math.round(meters / 100) * 100;
+    return `${rounded}m`;
+  };
 
   // Get emergency location
   const getEmergencyLocation = async () => {
-    setEmergencyLoading(true)
-    setShowEmergencyModal(true)
+    setEmergencyLoading(true);
+    setShowEmergencyModal(true);
 
     // Use current GPS position if available, otherwise get new position
     const getPosition = (): Promise<GeolocationPosition> => {
@@ -619,35 +644,36 @@ function DriveContent() {
             coords: {
               latitude: position.lat,
               longitude: position.lon,
-              accuracy: uncertainty
-            }
-          } as GeolocationPosition)
+              accuracy: uncertainty,
+            },
+          } as GeolocationPosition);
         } else {
           navigator.geolocation.getCurrentPosition(resolve, reject, {
             enableHighAccuracy: true,
-            timeout: 10000
-          })
+            timeout: 10000,
+          });
         }
-      })
-    }
+      });
+    };
 
     try {
-      const pos = await getPosition()
-      const lat = pos.coords.latitude
-      const lon = pos.coords.longitude
+      const pos = await getPosition();
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
 
       // Get road info from GPS
-      const gpsResponse = await fetch(`/api/gps?lat=${lat}&lon=${lon}&radius=1000`)
-      const gpsData = await gpsResponse.json()
+      const gpsResponse = await fetch(`/api/gps?lat=${lat}&lon=${lon}&radius=1000`);
+      const gpsData = await gpsResponse.json();
 
       // Use shared functions for all emergency data lookups (runs in parallel for speed)
-      const [crossRoad, nearestTown, nearestHospital, nearestFireStation, nearestPoliceStation] = await Promise.all([
-        findCrossRoad(lat, lon, gpsData.road_name || gpsData.road_id),
-        findNearestTown(lat, lon, gpsData.locality || gpsData.region),
-        findNearestHospital(lat, lon),
-        findNearestFireStation(lat, lon),
-        findNearestPoliceStation(lat, lon)
-      ])
+      const [crossRoad, nearestTown, nearestHospital, nearestFireStation, nearestPoliceStation] =
+        await Promise.all([
+          findCrossRoad(lat, lon, gpsData.road_name || gpsData.road_id),
+          findNearestTown(lat, lon, gpsData.locality || gpsData.region),
+          findNearestHospital(lat, lon),
+          findNearestFireStation(lat, lon),
+          findNearestPoliceStation(lat, lon),
+        ]);
 
       setEmergencyData({
         roadName: gpsData.road_name || 'Unknown Road',
@@ -655,70 +681,86 @@ function DriveContent() {
         nearestTown,
         lat,
         lon,
-        nearestHospital: nearestHospital ? {
-          name: nearestHospital.name,
-          distanceM: nearestHospital.distanceM,
-          type: nearestHospital.type,
-          hasED: nearestHospital.hasED,
-          phone: nearestHospital.phone || undefined,
-          address: nearestHospital.address,
-          suburb: nearestHospital.suburb
-        } : undefined,
-        nearestFireStation: nearestFireStation ? {
-          name: nearestFireStation.name,
-          distanceM: nearestFireStation.distanceM,
-          type: nearestFireStation.type,
-          typeDescription: nearestFireStation.typeDescription
-        } : undefined,
-        nearestPoliceStation: nearestPoliceStation ? {
-          name: nearestPoliceStation.name,
-          distanceM: nearestPoliceStation.distanceM,
-          address: nearestPoliceStation.address,
-          suburb: nearestPoliceStation.suburb
-        } : undefined
-      })
+        nearestHospital: nearestHospital
+          ? {
+              name: nearestHospital.name,
+              distanceM: nearestHospital.distanceM,
+              type: nearestHospital.type,
+              hasED: nearestHospital.hasED,
+              phone: nearestHospital.phone || undefined,
+              address: nearestHospital.address,
+              suburb: nearestHospital.suburb,
+            }
+          : undefined,
+        nearestFireStation: nearestFireStation
+          ? {
+              name: nearestFireStation.name,
+              distanceM: nearestFireStation.distanceM,
+              type: nearestFireStation.type,
+              typeDescription: nearestFireStation.typeDescription,
+            }
+          : undefined,
+        nearestPoliceStation: nearestPoliceStation
+          ? {
+              name: nearestPoliceStation.name,
+              distanceM: nearestPoliceStation.distanceM,
+              address: nearestPoliceStation.address,
+              suburb: nearestPoliceStation.suburb,
+            }
+          : undefined,
+      });
     } catch (error) {
-      console.error('Error getting emergency location:', error)
+      console.error('Error getting emergency location:', error);
     } finally {
-      setEmergencyLoading(false)
+      setEmergencyLoading(false);
     }
-  }
+  };
 
   // Get confidence color
   const getConfidenceColor = (): string => {
     switch (confidence) {
-      case 'high': return 'text-green-400';
-      case 'medium': return 'text-yellow-400';
-      case 'low': return 'text-orange-400';
-      case 'predicted': return 'text-cyan-400';
-      default: return 'text-gray-400';
+      case 'high':
+        return 'text-green-400';
+      case 'medium':
+        return 'text-yellow-400';
+      case 'low':
+        return 'text-orange-400';
+      case 'predicted':
+        return 'text-cyan-400';
+      default:
+        return 'text-gray-400';
     }
   };
 
   // Get confidence badge
   const getConfidenceBadge = (): string => {
     switch (confidence) {
-      case 'high': return '●';
-      case 'medium': return '◐';
-      case 'low': return '○';
-      case 'predicted': return '◈';
-      default: return '?';
+      case 'high':
+        return '●';
+      case 'medium':
+        return '◐';
+      case 'low':
+        return '○';
+      case 'predicted':
+        return '◈';
+      default:
+        return '?';
     }
   };
 
   // Handle adding a speed zone correction
   const handleAddCorrection = () => {
     if (!newCorrection.road_id || !newCorrection.direction) return;
-    
+
     const startSlk = parseFloat(newCorrection.start_slk);
     const endSlk = parseFloat(newCorrection.end_slk);
     const correctSpeed = parseInt(newCorrection.correct_speed);
     const originalSpeed = parseInt(newCorrection.original_speed) || speedLimit;
-    
+
     if (isNaN(startSlk) || isNaN(endSlk) || isNaN(correctSpeed)) {
       return;
     }
-    
+
     addSpeedZoneCorrection({
       road_id: newCorrection.road_id.toUpperCase(),
       start_slk: Math.min(startSlk, endSlk),
@@ -726,12 +768,20 @@ function DriveContent() {
       direction: newCorrection.direction as 'increasing' | 'decreasing',
       correct_speed: correctSpeed,
       original_speed: originalSpeed,
-      notes: newCorrection.notes
+      notes: newCorrection.notes,
     });
-    
+
     // Refresh corrections list
     setCorrections(getSpeedZoneCorrections());
-    setNewCorrection({ road_id: '', start_slk: '', end_slk: '', direction: '', correct_speed: '', original_speed: '', notes: '' });
+    setNewCorrection({
+      road_id: '',
+      start_slk: '',
+      end_slk: '',
+      direction: '',
+      correct_speed: '',
+      original_speed: '',
+      notes: '',
+    });
   };
 
   // Handle removing a correction
@@ -768,8 +818,13 @@ function DriveContent() {
   };
 
   // Check if we have a destination on the same road
-  const hasDestinationOnSameRoad = destRoadId && roadInfo && roadInfo.road_id === destRoadId && distanceToDest !== null && distanceToDest >= 0.1;
-  
+  const hasDestinationOnSameRoad =
+    destRoadId &&
+    roadInfo &&
+    roadInfo.road_id === destRoadId &&
+    distanceToDest !== null &&
+    distanceToDest >= 0.1;
+
   // Check if we have a destination on a different road
   const hasDestinationOnDifferentRoad = destRoadId && roadInfo && roadInfo.road_id !== destRoadId;
 
@@ -811,7 +866,10 @@ function DriveContent() {
               🆘
             </button>
             {/* GPS Signal */}
-            <div className="flex items-center gap-1" title={`GPS Accuracy: ±${uncertainty.toFixed(1)}m`}>
+            <div
+              className="flex items-center gap-1"
+              title={`GPS Accuracy: ±${uncertainty.toFixed(1)}m`}
+            >
               {[1, 2, 3, 4, 5].map((bar) => {
                 const filledBars = getSignalBars(uncertainty);
                 const isFilled = bar <= filledBars;
@@ -834,16 +892,18 @@ function DriveContent() {
           {/* Left Column - SLK & Road Info */}
           <div className="flex-1 flex flex-col justify-center items-center bg-gray-800 rounded-lg p-4">
             {/* SLK Display - Large */}
-            <div className={`text-8xl font-bold font-mono leading-none ${
-              destRoadId && roadInfo.road_id === destRoadId && direction === 'away'
-                ? 'text-red-500 animate-pulse'
-                : destRoadId && roadInfo.road_id === destRoadId && direction === 'towards'
-                  ? 'text-green-400'
-                  : 'text-white'
-            }`}>
+            <div
+              className={`text-8xl font-bold font-mono leading-none ${
+                destRoadId && roadInfo.road_id === destRoadId && direction === 'away'
+                  ? 'text-red-500 animate-pulse'
+                  : destRoadId && roadInfo.road_id === destRoadId && direction === 'towards'
+                    ? 'text-green-400'
+                    : 'text-white'
+              }`}
+            >
               {roadInfo?.slk?.toFixed(2)}
             </div>
-            
+
             {/* SLK Direction */}
             <div className="flex items-center gap-2 mt-2">
               <span className="text-gray-400 text-lg">SLK (km)</span>
@@ -852,26 +912,27 @@ function DriveContent() {
                   {slkDirection === 'increasing' ? '↑' : '↓'}
                 </span>
               )}
-              {isPredicted && (
-                <span className="text-purple-400 text-lg">◈</span>
-              )}
+              {isPredicted && <span className="text-purple-400 text-lg">◈</span>}
             </div>
 
             {/* Arrived indicator */}
-            {destRoadId && roadInfo.road_id === destRoadId && distanceToDest !== null && distanceToDest < 0.1 && (
-              <div className="text-green-400 font-bold text-2xl mt-2">🎯 ARRIVED!</div>
-            )}
+            {destRoadId &&
+              roadInfo.road_id === destRoadId &&
+              distanceToDest !== null &&
+              distanceToDest < 0.1 && (
+                <div className="text-green-400 font-bold text-2xl mt-2">🎯 ARRIVED!</div>
+              )}
 
             {/* Road Info */}
             <div className="mt-4 text-center">
               <p className="font-mono text-green-400 text-2xl">{roadInfo.road_id}</p>
               <p className="text-gray-300 text-lg truncate max-w-xs">{roadInfo.road_name}</p>
             </div>
-            
+
             {/* AfterCare Indicator */}
             {showAfterCareOnDrive && nearbyAfterCare.hasSigns && (
-              <a 
-                href={`/drive/nearby-signs?road_id=${encodeURIComponent(roadInfo.road_id)}&slk=${roadInfo.slk}&direction=${slkDirection || 'increasing'}&lookahead=${afterCareLookaheadKm}`} 
+              <a
+                href={`/drive/nearby-signs?road_id=${encodeURIComponent(roadInfo.road_id)}&slk=${roadInfo.slk}&direction=${slkDirection || 'increasing'}&lookahead=${afterCareLookaheadKm}`}
                 className="mt-4 w-full bg-cyan-900/40 border border-cyan-700/50 rounded-lg px-3 py-2 hover:bg-cyan-900/60 transition-colors"
               >
                 <div className="flex items-center justify-center gap-2">
@@ -884,16 +945,23 @@ function DriveContent() {
                   <div className="mt-1.5 space-y-1">
                     {nearbyAfterCare.nearbySigns.slice(0, 3).map((sign, idx) => {
                       const status = calculateSignStatus(sign);
-                      const dotColor = status === 'due-retrieval' ? 'bg-red-500' : status === 'due-maintenance' ? 'bg-yellow-500' : 'bg-transparent';
+                      const dotColor =
+                        status === 'due-retrieval'
+                          ? 'bg-red-500'
+                          : status === 'due-maintenance'
+                            ? 'bg-yellow-500'
+                            : 'bg-transparent';
                       const distanceM = Math.abs(sign.slk - roadInfo.slk) * 1000;
                       return (
                         <div key={idx} className="text-sm flex items-center justify-center gap-2">
                           <span className={`w-2.5 h-2.5 rounded-full ${dotColor}`}></span>
                           <span className="text-gray-300">
-                            {sign.position === 'ahead' ? '↑' : '↓'}
-                            {' '}<span className="text-white font-medium">{sign.sign_type}</span>
-                            {' '}({sign.direction === 'True Left' ? 'TL' : 'TR'})
-                            {' '}<span className="text-cyan-300 font-medium">{distanceM.toFixed(0)}m</span>
+                            {sign.position === 'ahead' ? '↑' : '↓'}{' '}
+                            <span className="text-white font-medium">{sign.sign_type}</span> (
+                            {sign.direction === 'True Left' ? 'TL' : 'TR'}){' '}
+                            <span className="text-cyan-300 font-medium">
+                              {distanceM.toFixed(0)}m
+                            </span>
                           </span>
                         </div>
                       );
@@ -911,27 +979,37 @@ function DriveContent() {
               <div className="flex flex-col items-center justify-center h-full">
                 {/* Current Speed */}
                 <div className="text-center mb-4">
-                  <div className={`text-7xl font-bold font-mono leading-none ${isSpeeding ? 'text-red-500' : 'text-green-400'}`}>
+                  <div
+                    className={`text-7xl font-bold font-mono leading-none ${isSpeeding ? 'text-red-500' : 'text-green-400'}`}
+                  >
                     {Math.round(currentSpeed)}
                   </div>
                   <p className="text-gray-400 text-lg">km/h</p>
-                  <p className="text-blue-300 text-base font-medium">{getMinutesPerKm(currentSpeed)}</p>
-                  <p className="text-cyan-300 text-sm">{getTimeFor10km(currentSpeed)}</p>
-                  {isSpeeding && (() => {
-                    const fineInfo = getSpeedingFine(currentSpeed, speedLimit);
-                    return fineInfo && (
-                      <div className="mt-2 bg-red-900/60 border border-red-500 rounded-lg px-3 py-2 animate-pulse" style={{ animationDuration: '2s' }}>
-                        <p className="text-red-300 text-sm font-bold">⚠️ {fineInfo.kmOver} km/h OVER LIMIT</p>
-                        <p className="text-red-200 text-lg font-bold">${fineInfo.fine} FINE</p>
-                        {fineInfo.demerits > 0 && (
-                          <p className="text-red-300 text-xs">{fineInfo.demerits} demerit points</p>
-                        )}
-                        {fineInfo.demerits === 0 && (
-                          <p className="text-red-300 text-xs">No demerit points</p>
-                        )}
-                      </div>
-                    );
-                  })()}
+                  {isSpeeding &&
+                    (() => {
+                      const fineInfo = getSpeedingFine(currentSpeed, speedLimit);
+                      return (
+                        fineInfo && (
+                          <div
+                            className="mt-2 bg-red-900/60 border border-red-500 rounded-lg px-3 py-2 animate-pulse"
+                            style={{ animationDuration: '2s' }}
+                          >
+                            <p className="text-red-300 text-sm font-bold">
+                              ⚠️ {fineInfo.kmOver} km/h OVER LIMIT
+                            </p>
+                            <p className="text-red-200 text-lg font-bold">${fineInfo.fine} FINE</p>
+                            {fineInfo.demerits > 0 && (
+                              <p className="text-red-300 text-xs">
+                                {fineInfo.demerits} demerit points
+                              </p>
+                            )}
+                            {fineInfo.demerits === 0 && (
+                              <p className="text-red-300 text-xs">No demerit points</p>
+                            )}
+                          </div>
+                        )
+                      );
+                    })()}
                 </div>
 
                 {/* Divider */}
@@ -942,8 +1020,8 @@ function DriveContent() {
                   <div className="flex items-center justify-center gap-3">
                     {currentOverrideZone && (
                       <div className="flex flex-col items-center">
-                        <span 
-                          className="text-2xl animate-pulse" 
+                        <span
+                          className="text-2xl animate-pulse"
                           style={{ animationDuration: '1s' }}
                           title="Community Verified Override Zone"
                         >
@@ -952,30 +1030,38 @@ function DriveContent() {
                         <span className="text-xs text-green-400 font-medium">VERIFIED</span>
                       </div>
                     )}
-                    <div className={`rounded-full w-24 h-24 flex items-center justify-center ${
-                      isSpeeding
-                        ? 'bg-red-900 border-4 border-red-500 animate-pulse'
-                        : upcomingZone && upcomingZone.isDecrease
-                          ? 'bg-black border-4 border-amber-400'
-                          : currentOverrideZone
-                            ? 'bg-black border-4 border-green-400'
-                            : 'bg-black border-4 border-white'
-                    }`}>
-                      <span className={`font-bold text-3xl ${
-                        isSpeeding 
-                          ? 'text-red-400' 
+                    <div
+                      className={`rounded-full w-24 h-24 flex items-center justify-center ${
+                        isSpeeding
+                          ? 'bg-red-900 border-4 border-red-500 animate-pulse'
                           : upcomingZone && upcomingZone.isDecrease
-                            ? 'text-amber-400'
+                            ? 'bg-black border-4 border-amber-400'
                             : currentOverrideZone
-                              ? 'text-green-400'
-                              : 'text-white'
-                      }`}>
-                        {upcomingZone && upcomingZone.isDecrease ? upcomingZone.speedLimit : speedLimit}
+                              ? 'bg-black border-4 border-green-400'
+                              : 'bg-black border-4 border-white'
+                      }`}
+                    >
+                      <span
+                        className={`font-bold text-3xl ${
+                          isSpeeding
+                            ? 'text-red-400'
+                            : upcomingZone && upcomingZone.isDecrease
+                              ? 'text-amber-400'
+                              : currentOverrideZone
+                                ? 'text-green-400'
+                                : 'text-white'
+                        }`}
+                      >
+                        {upcomingZone && upcomingZone.isDecrease
+                          ? upcomingZone.speedLimit
+                          : speedLimit}
                       </span>
                     </div>
                   </div>
                   <p className="text-gray-400 text-lg mt-2">
-                    {upcomingZone && upcomingZone.isDecrease ? '↓ ' + Math.round(upcomingZone.distance) + 'm' : 'km/h LIMIT'}
+                    {upcomingZone && upcomingZone.isDecrease
+                      ? '↓ ' + Math.round(upcomingZone.distance) + 'm'
+                      : 'km/h LIMIT'}
                   </p>
                   {upcomingZone && upcomingZone.isDecrease && (
                     <p className="text-sm text-amber-400">Slow down ahead</p>
@@ -984,7 +1070,9 @@ function DriveContent() {
                     <div className="text-center">
                       <p className="text-sm text-green-400">Community Verified Zone</p>
                       {currentOverrideZone.override_id && (
-                        <p className="text-xs text-green-300 font-mono mt-1">{currentOverrideZone.override_id}</p>
+                        <p className="text-xs text-green-300 font-mono mt-1">
+                          {currentOverrideZone.override_id}
+                        </p>
                       )}
                     </div>
                   )}
@@ -996,7 +1084,9 @@ function DriveContent() {
                     <div className="flex items-center justify-center gap-2 text-xs">
                       <span className={getConfidenceColor()}>{getConfidenceBadge()}</span>
                       <span className="text-gray-400">
-                        {isPredicted ? 'Predicted' : confidence.charAt(0).toUpperCase() + confidence.slice(1)}
+                        {isPredicted
+                          ? 'Predicted'
+                          : confidence.charAt(0).toUpperCase() + confidence.slice(1)}
                       </span>
                     </div>
                   </div>
@@ -1010,17 +1100,19 @@ function DriveContent() {
                     {/* Target SLK */}
                     <div className="text-center mb-4">
                       <p className="text-gray-400 text-sm">🎯 Target</p>
-                      <p className="text-5xl font-bold font-mono text-cyan-400">{destSlk.toFixed(2)}</p>
+                      <p className="text-5xl font-bold font-mono text-cyan-400">
+                        {destSlk.toFixed(2)}
+                      </p>
                       <p className="text-gray-400 text-sm">SLK (km)</p>
                     </div>
 
                     {/* Distance */}
                     <div className="w-full h-px bg-gray-600 my-4"></div>
-                    
+
                     <div className="text-center mb-4">
                       <div className="text-5xl font-bold font-mono text-white">
-                        {distanceToDest < 1 
-                          ? `${Math.round(distanceToDest * 1000)} m` 
+                        {distanceToDest < 1
+                          ? `${Math.round(distanceToDest * 1000)} m`
                           : `${distanceToDest.toFixed(2)} km`}
                       </div>
                       <p className="text-gray-400 text-sm">to target</p>
@@ -1028,10 +1120,12 @@ function DriveContent() {
 
                     {/* ETA */}
                     <div className="w-full h-px bg-gray-600 my-4"></div>
-                    
+
                     <div className="text-center">
                       <p className="text-gray-400 text-sm">ETA</p>
-                      <p className="text-3xl font-bold text-white">{eta ? formatTime(eta) : '--:--'}</p>
+                      <p className="text-3xl font-bold text-white">
+                        {eta ? formatTime(eta) : '--:--'}
+                      </p>
                     </div>
 
                     {/* Navigation Buttons */}
@@ -1059,7 +1153,9 @@ function DriveContent() {
                     <div className="text-center">
                       <p className="font-mono text-purple-400 text-3xl">{destRoadId}</p>
                       <p className="text-white text-lg truncate max-w-xs">{destRoadName}</p>
-                      <p className="font-mono text-yellow-400 text-2xl mt-2">{destSlk.toFixed(2)} SLK</p>
+                      <p className="font-mono text-yellow-400 text-2xl mt-2">
+                        {destSlk.toFixed(2)} SLK
+                      </p>
                     </div>
                     {destCoords && (
                       <div className="flex gap-2 mt-4">
@@ -1083,17 +1179,36 @@ function DriveContent() {
                   <div className="text-center">
                     <p className="text-gray-400 text-lg">No destination set</p>
                     <p className="text-gray-500 text-sm mt-2">Set a target SLK to track progress</p>
-                    
+
                     {/* EKF Status when no destination */}
                     {settings.ekfEnabled && settings.showUncertainty && (
                       <div className="mt-6 pt-3 border-t border-gray-700">
                         <div className="flex items-center justify-center gap-2">
                           <span className={getConfidenceColor()}>{getConfidenceBadge()}</span>
                           <span className="text-gray-400">
-                            {isPredicted ? 'Predicted' : confidence.charAt(0).toUpperCase() + confidence.slice(1)} Confidence
+                            {isPredicted
+                              ? 'Predicted'
+                              : confidence.charAt(0).toUpperCase() + confidence.slice(1)}{' '}
+                            Confidence
                           </span>
                         </div>
-                        <p className="text-gray-500 text-sm mt-1">±{uncertainty.toFixed(2)}m accuracy</p>
+                        <p className="text-gray-500 text-sm mt-1">
+                          ±{uncertainty.toFixed(2)}m accuracy
+                        </p>
+                      </div>
+                    )}
+                    {/* Pace Rate */}
+                    {showSpeedDisplay && currentSpeed >= 60 && speedLimit > 0 && (
+                      <div className={`mt-4 pt-3 border-t border-gray-700 ${getPaceColor()}`}>
+                        <p className="text-[10px] font-medium opacity-70 mb-1">PACE RATE</p>
+                        <div className="flex justify-between font-mono text-xs">
+                          <span className="opacity-60">1km</span>
+                          <span>{getPaceDelta(currentSpeed, speedLimit, 1)}</span>
+                          <span className="opacity-60">10km</span>
+                          <span>{getPaceDelta(currentSpeed, speedLimit, 10)}</span>
+                          <span className="opacity-60">100km</span>
+                          <span>{getPaceDelta(currentSpeed, speedLimit, 100)}</span>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -1114,8 +1229,8 @@ function DriveContent() {
             <div className="text-center">
               <p className="text-xs text-gray-500">Distance</p>
               <p className="font-bold text-white">
-                {distanceToDest < 1 
-                  ? `${Math.round(distanceToDest * 1000)} m` 
+                {distanceToDest < 1
+                  ? `${Math.round(distanceToDest * 1000)} m`
                   : `${distanceToDest.toFixed(2)} km`}
               </p>
             </div>
@@ -1156,9 +1271,11 @@ function DriveContent() {
         )}
 
         {/* Exit button - minimal */}
-        <a 
-          href="/" 
-          onClick={() => { stopTracking(); }} 
+        <a
+          href="/"
+          onClick={() => {
+            stopTracking();
+          }}
           className="fixed top-2 left-2 text-gray-500 text-sm hover:text-gray-300 z-10"
         >
           ← Exit
@@ -1170,12 +1287,34 @@ function DriveContent() {
             <div className="bg-gray-800 rounded-lg p-4 max-w-md w-full max-h-[80vh] overflow-hidden flex flex-col">
               <div className="flex justify-between items-center mb-3">
                 <h3 className="text-sm font-semibold text-blue-400">🔧 Debug Info</h3>
-                <Button onClick={() => setShowDebug(false)} className="h-8 w-8 p-0 bg-gray-700 hover:bg-gray-600">✕</Button>
+                <Button
+                  onClick={() => setShowDebug(false)}
+                  className="h-8 w-8 p-0 bg-gray-700 hover:bg-gray-600"
+                >
+                  ✕
+                </Button>
               </div>
-              <textarea readOnly value={debugInfo} className="flex-1 w-full bg-gray-900 text-gray-300 text-xs font-mono p-3 rounded border border-gray-700 resize-none min-h-[200px]" onClick={(e) => (e.target as HTMLTextAreaElement).select()} />
+              <textarea
+                readOnly
+                value={debugInfo}
+                className="flex-1 w-full bg-gray-900 text-gray-300 text-xs font-mono p-3 rounded border border-gray-700 resize-none min-h-[200px]"
+                onClick={(e) => (e.target as HTMLTextAreaElement).select()}
+              />
               <div className="flex gap-2 mt-3">
-                <Button onClick={() => { navigator.clipboard.writeText(debugInfo); }} className="flex-1 bg-blue-600 hover:bg-blue-700">📋 Copy</Button>
-                <Button onClick={() => setShowDebug(false)} className="bg-gray-600 hover:bg-gray-500">Close</Button>
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(debugInfo);
+                  }}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                >
+                  📋 Copy
+                </Button>
+                <Button
+                  onClick={() => setShowDebug(false)}
+                  className="bg-gray-600 hover:bg-gray-500"
+                >
+                  Close
+                </Button>
               </div>
             </div>
           </div>
@@ -1186,11 +1325,21 @@ function DriveContent() {
             <div className="bg-gray-800 rounded-lg p-4 max-w-md w-full max-h-[80vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-sm font-semibold text-amber-400">🚦 Speed Zone Corrections</h3>
-                <Button onClick={() => setShowCorrections(false)} className="h-8 w-8 p-0 bg-gray-700 hover:bg-gray-600">✕</Button>
+                <Button
+                  onClick={() => setShowCorrections(false)}
+                  className="h-8 w-8 p-0 bg-gray-700 hover:bg-gray-600"
+                >
+                  ✕
+                </Button>
               </div>
               {/* Simplified corrections content */}
               <p className="text-gray-400 text-sm">Corrections: {corrections.length}</p>
-              <Button onClick={() => setShowCorrections(false)} className="w-full mt-4 bg-gray-600 hover:bg-gray-500">Close</Button>
+              <Button
+                onClick={() => setShowCorrections(false)}
+                className="w-full mt-4 bg-gray-600 hover:bg-gray-500"
+              >
+                Close
+              </Button>
             </div>
           </div>
         )}
@@ -1205,7 +1354,10 @@ function DriveContent() {
     <div className="min-h-screen bg-gray-900 text-white p-4 max-w-lg mx-auto">
       {/* Back Link - only show when not tracking */}
       {!isTracking && (
-        <a href="/" className="inline-flex items-center text-blue-400 text-sm mb-4 hover:text-blue-300">
+        <a
+          href="/"
+          className="inline-flex items-center text-blue-400 text-sm mb-4 hover:text-blue-300"
+        >
           ← Back to Work Zone Locator
         </a>
       )}
@@ -1221,7 +1373,14 @@ function DriveContent() {
         </button>
         <div className="text-center flex-1">
           <h1 className="text-xl font-bold text-blue-400">SLK Tracking</h1>
-          <p className="text-xs text-gray-400">v{APP_VERSION} EKF {offlineReady ? <span className="text-green-400">• Offline Ready</span> : <span className="text-gray-500">• Offline Not Ready</span>}</p>
+          <p className="text-xs text-gray-400">
+            v{APP_VERSION} EKF{' '}
+            {offlineReady ? (
+              <span className="text-green-400">• Offline Ready</span>
+            ) : (
+              <span className="text-gray-500">• Offline Not Ready</span>
+            )}
+          </p>
           {settings.ekfEnabled && (
             <p className="text-xs text-purple-400">📡 EKF Filtering Active</p>
           )}
@@ -1279,7 +1438,10 @@ function DriveContent() {
           </div>
           {/* Right side: GPS signal */}
           {isTracking && position ? (
-            <div className="flex items-center gap-1" title={`GPS Accuracy: ±${uncertainty.toFixed(1)}m`}>
+            <div
+              className="flex items-center gap-1"
+              title={`GPS Accuracy: ±${uncertainty.toFixed(1)}m`}
+            >
               <span className="text-xs text-gray-400">GPS</span>
               {[1, 2, 3, 4, 5].map((bar) => {
                 const filledBars = getSignalBars(uncertainty);
@@ -1302,23 +1464,34 @@ function DriveContent() {
         </div>
 
         {!isTracking ? (
-          <Button onClick={startTracking} className="w-full bg-blue-800 hover:bg-blue-900 h-12 text-base">
+          <Button
+            onClick={startTracking}
+            className="w-full bg-blue-800 hover:bg-blue-900 h-12 text-base"
+          >
             📍 Start SLK Tracking
           </Button>
         ) : (
-          <a href="/" onClick={() => { stopTracking(); }} className="block w-full text-center bg-blue-800 hover:bg-blue-900 h-12 text-base rounded-lg leading-[48px] font-medium cursor-pointer">
+          <a
+            href="/"
+            onClick={() => {
+              stopTracking();
+            }}
+            className="block w-full text-center bg-blue-800 hover:bg-blue-900 h-12 text-base rounded-lg leading-[48px] font-medium cursor-pointer"
+          >
             ← Back to Work Zone Locator
           </a>
         )}
 
-        {error && (
-          <p className="text-red-400 text-sm mt-2">{error}</p>
-        )}
+        {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
       </div>
 
       {/* Incident Warning Banner - Shows nearby incidents from WebEOC */}
-      <IncidentWarningBanner roadId={roadInfo?.road_id} currentSlk={roadInfo?.slk} enabled={isTracking && !!roadInfo} />
-      
+      <IncidentWarningBanner
+        roadId={roadInfo?.road_id}
+        currentSlk={roadInfo?.slk}
+        enabled={isTracking && !!roadInfo}
+      />
+
       {/* Weather Warning Banner - Shows BOM weather warnings */}
       <WeatherWarningBanner state="WA" enabled={isTracking && !!roadInfo} />
 
@@ -1328,22 +1501,32 @@ function DriveContent() {
           <div className="flex items-center justify-between">
             {/* Current Speed */}
             <div className="text-center flex-1">
-              <div className={`text-5xl font-bold font-mono ${isSpeeding ? 'text-red-500' : 'text-green-400'}`}>
+              <div
+                className={`text-5xl font-bold font-mono ${isSpeeding ? 'text-red-500' : 'text-green-400'}`}
+              >
                 {Math.round(currentSpeed)}
               </div>
               <p className="text-gray-400 text-sm">km/h</p>
-              <p className="text-blue-300 text-xs font-medium">{getMinutesPerKm(currentSpeed)}</p>
-              <p className="text-cyan-300 text-[10px]">{getTimeFor10km(currentSpeed)}</p>
-              {isSpeeding && (() => {
-                const fineInfo = getSpeedingFine(currentSpeed, speedLimit);
-                return fineInfo && (
-                  <div className="mt-1 bg-red-900/60 border border-red-500 rounded px-2 py-1 animate-pulse" style={{ animationDuration: '2s' }}>
-                    <p className="text-red-300 text-[10px] font-bold">⚠️ {fineInfo.kmOver} km/h OVER</p>
-                    <p className="text-red-200 text-xs font-bold">${fineInfo.fine}</p>
-                    <p className="text-red-300 text-[9px]">{fineInfo.demerits > 0 ? `${fineInfo.demerits} pts` : '0 pts'}</p>
-                  </div>
-                );
-              })()}
+              {isSpeeding &&
+                (() => {
+                  const fineInfo = getSpeedingFine(currentSpeed, speedLimit);
+                  return (
+                    fineInfo && (
+                      <div
+                        className="mt-1 bg-red-900/60 border border-red-500 rounded px-2 py-1 animate-pulse"
+                        style={{ animationDuration: '2s' }}
+                      >
+                        <p className="text-red-300 text-[10px] font-bold">
+                          ⚠️ {fineInfo.kmOver} km/h OVER
+                        </p>
+                        <p className="text-red-200 text-xs font-bold">${fineInfo.fine}</p>
+                        <p className="text-red-300 text-[9px]">
+                          {fineInfo.demerits > 0 ? `${fineInfo.demerits} pts` : '0 pts'}
+                        </p>
+                      </div>
+                    )
+                  );
+                })()}
             </div>
 
             {/* Divider */}
@@ -1355,8 +1538,8 @@ function DriveContent() {
                 {/* Override indicator - pulsating icon */}
                 {currentOverrideZone && (
                   <div className="flex flex-col items-center">
-                    <span 
-                      className="text-lg animate-pulse" 
+                    <span
+                      className="text-lg animate-pulse"
                       style={{ animationDuration: '1s' }}
                       title="Community Verified Override Zone"
                     >
@@ -1365,30 +1548,36 @@ function DriveContent() {
                     <span className="text-[10px] text-green-400 font-medium">VERIFIED</span>
                   </div>
                 )}
-                <div className={`rounded-full w-16 h-16 flex items-center justify-center ${
-                  isSpeeding
-                    ? 'bg-red-900 border-4 border-red-500 animate-pulse'
-                    : upcomingZone && upcomingZone.isDecrease
-                      ? 'bg-black border-4 border-amber-400'  // Yellow/amber for approaching decrease
-                      : currentOverrideZone
-                        ? 'bg-black border-4 border-green-400'  // Green border for override zone
-                        : 'bg-black border-4 border-white'     // White for current
-                }`}>
-                  <span className={`font-bold text-xl ${
-                    isSpeeding 
-                      ? 'text-red-400' 
+                <div
+                  className={`rounded-full w-16 h-16 flex items-center justify-center ${
+                    isSpeeding
+                      ? 'bg-red-900 border-4 border-red-500 animate-pulse'
                       : upcomingZone && upcomingZone.isDecrease
-                        ? 'text-amber-400'
+                        ? 'bg-black border-4 border-amber-400' // Yellow/amber for approaching decrease
                         : currentOverrideZone
-                          ? 'text-green-400'
-                          : 'text-white'
-                  }`}>
+                          ? 'bg-black border-4 border-green-400' // Green border for override zone
+                          : 'bg-black border-4 border-white' // White for current
+                  }`}
+                >
+                  <span
+                    className={`font-bold text-xl ${
+                      isSpeeding
+                        ? 'text-red-400'
+                        : upcomingZone && upcomingZone.isDecrease
+                          ? 'text-amber-400'
+                          : currentOverrideZone
+                            ? 'text-green-400'
+                            : 'text-white'
+                    }`}
+                  >
                     {upcomingZone && upcomingZone.isDecrease ? upcomingZone.speedLimit : speedLimit}
                   </span>
                 </div>
               </div>
               <p className="text-gray-400 text-sm mt-1">
-                {upcomingZone && upcomingZone.isDecrease ? '↓ ' + Math.round(upcomingZone.distance) + 'm' : 'Posted Limit'}
+                {upcomingZone && upcomingZone.isDecrease
+                  ? '↓ ' + Math.round(upcomingZone.distance) + 'm'
+                  : 'Posted Limit'}
               </p>
               {upcomingZone && upcomingZone.isDecrease && (
                 <p className="text-xs text-amber-400">Slow down ahead</p>
@@ -1397,7 +1586,9 @@ function DriveContent() {
                 <div>
                   <p className="text-xs text-green-400">Community Verified Zone</p>
                   {currentOverrideZone.override_id && (
-                    <p className="text-xs text-green-300 font-mono">{currentOverrideZone.override_id}</p>
+                    <p className="text-xs text-green-300 font-mono">
+                      {currentOverrideZone.override_id}
+                    </p>
                   )}
                 </div>
               )}
@@ -1414,7 +1605,10 @@ function DriveContent() {
                 <div className="flex items-center gap-2">
                   <span className={getConfidenceColor()}>{getConfidenceBadge()}</span>
                   <span className="text-gray-400">
-                    {isPredicted ? 'Predicted' : confidence.charAt(0).toUpperCase() + confidence.slice(1)} Confidence
+                    {isPredicted
+                      ? 'Predicted'
+                      : confidence.charAt(0).toUpperCase() + confidence.slice(1)}{' '}
+                    Confidence
                   </span>
                 </div>
                 <div className="text-gray-400">
@@ -1428,6 +1622,20 @@ function DriveContent() {
               </div>
             </div>
           )}
+          {/* Pace Rate */}
+          {showSpeedDisplay && currentSpeed >= 60 && speedLimit > 0 && (
+            <div className={`mt-4 pt-3 border-t border-gray-700 ${getPaceColor()}`}>
+              <p className="text-[10px] font-medium opacity-70 mb-1">PACE RATE</p>
+              <div className="flex justify-between font-mono text-xs">
+                <span className="opacity-60">1km</span>
+                <span>{getPaceDelta(currentSpeed, speedLimit, 1)}</span>
+                <span className="opacity-60">10km</span>
+                <span>{getPaceDelta(currentSpeed, speedLimit, 10)}</span>
+                <span className="opacity-60">100km</span>
+                <span>{getPaceDelta(currentSpeed, speedLimit, 100)}</span>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -1436,18 +1644,23 @@ function DriveContent() {
         <div className="bg-gray-800 rounded-lg p-4 mb-4">
           {/* Main SLK Display */}
           <div className="text-center">
-            <div className={`text-6xl font-bold font-mono ${
-              destRoadId && roadInfo.road_id === destRoadId && direction === 'away'
-                ? 'text-red-500 animate-pulse'
-                : destRoadId && roadInfo.road_id === destRoadId && direction === 'towards'
-                  ? 'text-green-400'
-                  : 'text-white'
-            }`}>
+            <div
+              className={`text-6xl font-bold font-mono ${
+                destRoadId && roadInfo.road_id === destRoadId && direction === 'away'
+                  ? 'text-red-500 animate-pulse'
+                  : destRoadId && roadInfo.road_id === destRoadId && direction === 'towards'
+                    ? 'text-green-400'
+                    : 'text-white'
+              }`}
+            >
               {roadInfo?.slk?.toFixed(2)}
             </div>
-            
+
             <p className="text-gray-400 text-sm mt-2">
-              {destRoadId && roadInfo.road_id === destRoadId && distanceToDest !== null && distanceToDest < 0.1 ? (
+              {destRoadId &&
+              roadInfo.road_id === destRoadId &&
+              distanceToDest !== null &&
+              distanceToDest < 0.1 ? (
                 <span className="text-green-400 font-bold">🎯 ARRIVED!</span>
               ) : (
                 'Current SLK (km)'
@@ -1457,18 +1670,19 @@ function DriveContent() {
                   ({slkDirection === 'increasing' ? '↑' : '↓'} SLK)
                 </span>
               )}
-              {isPredicted && (
-                <span className="text-purple-400 ml-2">◈</span>
-              )}
+              {isPredicted && <span className="text-purple-400 ml-2">◈</span>}
             </p>
           </div>
 
           {/* Target SLK - Only when target on same road */}
-          {destRoadId && roadInfo.road_id === destRoadId && distanceToDest !== null && distanceToDest >= 0.1 && (
-            <p className="text-sm text-cyan-300 text-center mt-1">
-              Target: {destSlk.toFixed(2)} SLK
-            </p>
-          )}
+          {destRoadId &&
+            roadInfo.road_id === destRoadId &&
+            distanceToDest !== null &&
+            distanceToDest >= 0.1 && (
+              <p className="text-sm text-cyan-300 text-center mt-1">
+                Target: {destSlk.toFixed(2)} SLK
+              </p>
+            )}
 
           {/* Current Road Info */}
           <div className="mt-3 pt-3 border-t border-gray-700 text-center">
@@ -1479,8 +1693,8 @@ function DriveContent() {
           {/* AfterCare Signs Nearby Indicator */}
           {showAfterCareOnDrive && nearbyAfterCare.hasSigns && (
             <div className="mt-3 pt-3 border-t border-gray-700">
-              <a 
-                href={`/drive/nearby-signs?road_id=${encodeURIComponent(roadInfo.road_id)}&slk=${roadInfo.slk}&direction=${slkDirection || 'increasing'}&lookahead=${afterCareLookaheadKm}`} 
+              <a
+                href={`/drive/nearby-signs?road_id=${encodeURIComponent(roadInfo.road_id)}&slk=${roadInfo.slk}&direction=${slkDirection || 'increasing'}&lookahead=${afterCareLookaheadKm}`}
                 className="block bg-cyan-900/40 border border-cyan-700/50 rounded-lg p-3 hover:bg-cyan-900/60 transition-colors"
               >
                 <div className="flex items-center justify-between">
@@ -1499,11 +1713,17 @@ function DriveContent() {
                     {nearbyAfterCare.nearbySigns.slice(0, 5).map((sign, idx) => {
                       const distanceM = Math.abs(sign.slk - roadInfo.slk) * 1000;
                       const positionLabel = sign.position === 'ahead' ? '↑' : '↓';
-                      const positionColor = sign.position === 'ahead' ? 'text-green-400' : 'text-yellow-400';
+                      const positionColor =
+                        sign.position === 'ahead' ? 'text-green-400' : 'text-yellow-400';
                       const dirLabel = sign.direction === 'True Left' ? 'TL' : 'TR';
                       const status = calculateSignStatus(sign);
-                      const dotColor = status === 'due-retrieval' ? 'bg-red-500' : status === 'due-maintenance' ? 'bg-yellow-500' : 'bg-transparent';
-                      
+                      const dotColor =
+                        status === 'due-retrieval'
+                          ? 'bg-red-500'
+                          : status === 'due-maintenance'
+                            ? 'bg-yellow-500'
+                            : 'bg-transparent';
+
                       return (
                         <div key={idx} className="text-sm flex items-center gap-2">
                           <span className={`w-2.5 h-2.5 rounded-full ${dotColor}`}></span>
@@ -1521,44 +1741,54 @@ function DriveContent() {
           )}
 
           {/* Distance Display - Only when target on same road */}
-          {destRoadId && roadInfo.road_id === destRoadId && distanceToDest !== null && distanceToDest >= 0.1 && (
-            <div className="mt-3 pt-3 border-t border-gray-700 text-center">
-              <div className="text-5xl font-bold font-mono text-white">
-                {distanceToDest < 1 
-                  ? `${Math.round(distanceToDest * 1000)} m` 
-                  : `${distanceToDest.toFixed(2)} km`}
+          {destRoadId &&
+            roadInfo.road_id === destRoadId &&
+            distanceToDest !== null &&
+            distanceToDest >= 0.1 && (
+              <div className="mt-3 pt-3 border-t border-gray-700 text-center">
+                <div className="text-5xl font-bold font-mono text-white">
+                  {distanceToDest < 1
+                    ? `${Math.round(distanceToDest * 1000)} m`
+                    : `${distanceToDest.toFixed(2)} km`}
+                </div>
+                <p className="text-gray-400 text-sm mt-1">to target</p>
               </div>
-              <p className="text-gray-400 text-sm mt-1">to target</p>
-            </div>
-          )}
+            )}
 
           {/* ETA - Only when target on same road */}
-          {destRoadId && roadInfo.road_id === destRoadId && distanceToDest !== null && distanceToDest >= 0.1 && (
-            <div className="mt-3 pt-3 border-t border-gray-700">
-              <div className="bg-gray-700 rounded-lg p-3 text-center">
-                <p className="text-xs text-gray-400">ETA</p>
-                <p className="text-2xl font-bold text-white">{eta ? formatTime(eta) : '--:--'}</p>
+          {destRoadId &&
+            roadInfo.road_id === destRoadId &&
+            distanceToDest !== null &&
+            distanceToDest >= 0.1 && (
+              <div className="mt-3 pt-3 border-t border-gray-700">
+                <div className="bg-gray-700 rounded-lg p-3 text-center">
+                  <p className="text-xs text-gray-400">ETA</p>
+                  <p className="text-2xl font-bold text-white">{eta ? formatTime(eta) : '--:--'}</p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
           {/* Navigation Buttons - Only when target on same road */}
-          {destRoadId && roadInfo.road_id === destRoadId && destCoords && distanceToDest !== null && distanceToDest >= 0.1 && (
-            <div className="flex gap-2 mt-3">
-              <Button
-                onClick={openGoogleMaps}
-                className="flex-1 h-8 text-xs bg-green-600 hover:bg-green-700"
-              >
-                🗺️ Navigate
-              </Button>
-              <Button
-                onClick={openStreetView}
-                className="flex-1 h-8 text-xs bg-blue-600 hover:bg-blue-700"
-              >
-                🏠 Street View
-              </Button>
-            </div>
-          )}
+          {destRoadId &&
+            roadInfo.road_id === destRoadId &&
+            destCoords &&
+            distanceToDest !== null &&
+            distanceToDest >= 0.1 && (
+              <div className="flex gap-2 mt-3">
+                <Button
+                  onClick={openGoogleMaps}
+                  className="flex-1 h-8 text-xs bg-green-600 hover:bg-green-700"
+                >
+                  🗺️ Navigate
+                </Button>
+                <Button
+                  onClick={openStreetView}
+                  className="flex-1 h-8 text-xs bg-blue-600 hover:bg-blue-700"
+                >
+                  🏠 Street View
+                </Button>
+              </div>
+            )}
 
           {/* Destination Section - Only when target on different road */}
           {destRoadId && roadInfo.road_id !== destRoadId && (
@@ -1634,10 +1864,7 @@ function DriveContent() {
               >
                 📋 Copy to Clipboard
               </Button>
-              <Button
-                onClick={() => setShowDebug(false)}
-                className="bg-gray-600 hover:bg-gray-500"
-              >
+              <Button onClick={() => setShowDebug(false)} className="bg-gray-600 hover:bg-gray-500">
                 Close
               </Button>
             </div>
@@ -1666,7 +1893,12 @@ function DriveContent() {
                 <p className="font-mono text-green-400">{roadInfo.road_id}</p>
                 <p className="text-sm text-white">{roadInfo.road_name}</p>
                 <p className="text-xs text-gray-400 mt-1">
-                  SLK: {roadInfo.slk?.toFixed(3)} | Direction: {slkDirection === 'increasing' ? 'True Right' : slkDirection === 'decreasing' ? 'True Left' : 'unknown'}
+                  SLK: {roadInfo.slk?.toFixed(3)} | Direction:{' '}
+                  {slkDirection === 'increasing'
+                    ? 'True Right'
+                    : slkDirection === 'decreasing'
+                      ? 'True Left'
+                      : 'unknown'}
                 </p>
                 <p className="text-xs text-gray-400">
                   Current Limit: <span className="text-amber-400 font-bold">{speedLimit} km/h</span>
@@ -1677,29 +1909,31 @@ function DriveContent() {
             {/* Add new correction form - always visible */}
             <div className="bg-gray-700 rounded-lg p-3 mb-4">
               <p className="text-sm font-semibold text-white mb-3">Add New Correction</p>
-              
+
               {/* Road ID */}
               <div className="mb-2">
                 <label className="text-xs text-gray-400">Road ID (e.g., M031)</label>
                 <input
                   type="text"
                   value={newCorrection.road_id}
-                  onChange={(e) => setNewCorrection({...newCorrection, road_id: e.target.value.toUpperCase()})}
+                  onChange={(e) =>
+                    setNewCorrection({ ...newCorrection, road_id: e.target.value.toUpperCase() })
+                  }
                   placeholder="M031"
                   className="w-full bg-gray-800 text-white text-sm p-2 rounded border border-gray-600"
                 />
               </div>
-              
+
               {/* Direction selector */}
               <div className="mb-2">
                 <label className="text-xs text-gray-400">Direction of Travel</label>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     type="button"
-                    onClick={() => setNewCorrection({...newCorrection, direction: 'increasing'})}
+                    onClick={() => setNewCorrection({ ...newCorrection, direction: 'increasing' })}
                     className={`p-2 rounded text-sm font-medium ${
-                      newCorrection.direction === 'increasing' 
-                        ? 'bg-blue-600 text-white' 
+                      newCorrection.direction === 'increasing'
+                        ? 'bg-blue-600 text-white'
                         : 'bg-gray-800 text-gray-400 border border-gray-600'
                     }`}
                   >
@@ -1707,10 +1941,10 @@ function DriveContent() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setNewCorrection({...newCorrection, direction: 'decreasing'})}
+                    onClick={() => setNewCorrection({ ...newCorrection, direction: 'decreasing' })}
                     className={`p-2 rounded text-sm font-medium ${
-                      newCorrection.direction === 'decreasing' 
-                        ? 'bg-blue-600 text-white' 
+                      newCorrection.direction === 'decreasing'
+                        ? 'bg-blue-600 text-white'
                         : 'bg-gray-800 text-gray-400 border border-gray-600'
                     }`}
                   >
@@ -1718,7 +1952,7 @@ function DriveContent() {
                   </button>
                 </div>
               </div>
-              
+
               {/* SLK Range */}
               <div className="grid grid-cols-2 gap-2 mb-2">
                 <div>
@@ -1727,7 +1961,9 @@ function DriveContent() {
                     type="number"
                     step="0.001"
                     value={newCorrection.start_slk}
-                    onChange={(e) => setNewCorrection({...newCorrection, start_slk: e.target.value})}
+                    onChange={(e) =>
+                      setNewCorrection({ ...newCorrection, start_slk: e.target.value })
+                    }
                     placeholder="67.340"
                     className="w-full bg-gray-800 text-white text-sm p-2 rounded border border-gray-600"
                   />
@@ -1738,13 +1974,15 @@ function DriveContent() {
                     type="number"
                     step="0.001"
                     value={newCorrection.end_slk}
-                    onChange={(e) => setNewCorrection({...newCorrection, end_slk: e.target.value})}
+                    onChange={(e) =>
+                      setNewCorrection({ ...newCorrection, end_slk: e.target.value })
+                    }
                     placeholder="67.620"
                     className="w-full bg-gray-800 text-white text-sm p-2 rounded border border-gray-600"
                   />
                 </div>
               </div>
-              
+
               {/* Speed fields */}
               <div className="grid grid-cols-2 gap-2 mb-2">
                 <div>
@@ -1752,7 +1990,9 @@ function DriveContent() {
                   <input
                     type="number"
                     value={newCorrection.original_speed}
-                    onChange={(e) => setNewCorrection({...newCorrection, original_speed: e.target.value})}
+                    onChange={(e) =>
+                      setNewCorrection({ ...newCorrection, original_speed: e.target.value })
+                    }
                     placeholder="90"
                     className="w-full bg-gray-800 text-white text-sm p-2 rounded border border-gray-600"
                   />
@@ -1762,29 +2002,37 @@ function DriveContent() {
                   <input
                     type="number"
                     value={newCorrection.correct_speed}
-                    onChange={(e) => setNewCorrection({...newCorrection, correct_speed: e.target.value})}
+                    onChange={(e) =>
+                      setNewCorrection({ ...newCorrection, correct_speed: e.target.value })
+                    }
                     placeholder="60"
                     className="w-full bg-gray-800 text-white text-sm p-2 rounded border border-gray-600"
                   />
                 </div>
               </div>
-              
+
               {/* Notes */}
               <div className="mb-3">
                 <label className="text-xs text-gray-400">Notes (optional)</label>
                 <input
                   type="text"
                   value={newCorrection.notes}
-                  onChange={(e) => setNewCorrection({...newCorrection, notes: e.target.value})}
+                  onChange={(e) => setNewCorrection({ ...newCorrection, notes: e.target.value })}
                   placeholder="Double-sided sign: 60 True Right, 90 True Left"
                   className="w-full bg-gray-800 text-white text-sm p-2 rounded border border-gray-600"
                 />
               </div>
-              
+
               <Button
                 onClick={handleAddCorrection}
                 className="w-full bg-amber-600 hover:bg-amber-700"
-                disabled={!newCorrection.road_id || !newCorrection.direction || !newCorrection.start_slk || !newCorrection.end_slk || !newCorrection.correct_speed}
+                disabled={
+                  !newCorrection.road_id ||
+                  !newCorrection.direction ||
+                  !newCorrection.start_slk ||
+                  !newCorrection.end_slk ||
+                  !newCorrection.correct_speed
+                }
               >
                 ➕ Add Correction
               </Button>
@@ -1855,11 +2103,13 @@ function DriveContent() {
           <div className="bg-gray-900 rounded-lg w-full max-w-lg max-h-[90vh] flex flex-col">
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-gray-700 bg-red-900/20">
-              <h2 className="text-lg font-bold text-red-400">🆘 EMERGENCY LOCATION - READ TO 000</h2>
+              <h2 className="text-lg font-bold text-red-400">
+                🆘 EMERGENCY LOCATION - READ TO 000
+              </h2>
               <button
                 onClick={() => {
-                  setShowEmergencyModal(false)
-                  setEmergencyData(null)
+                  setShowEmergencyModal(false);
+                  setEmergencyData(null);
                 }}
                 className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-600 hover:bg-gray-500 text-white font-bold"
               >
@@ -1879,13 +2129,43 @@ function DriveContent() {
                   {/* Main message to read */}
                   <div className="bg-gray-800 rounded-lg p-4 border border-red-600">
                     <p className="text-white text-lg leading-relaxed">
-                      "Emergency on <span className="font-bold text-yellow-400">{emergencyData.roadName}</span>
+                      "Emergency on{' '}
+                      <span className="font-bold text-yellow-400">{emergencyData.roadName}</span>
                       {emergencyData.crossRoad && (
-                        <>, approximately <span className="font-bold text-yellow-400">{formatEmergencyDistance(emergencyData.crossRoad.distance)}</span> <span className="font-bold text-yellow-400">{emergencyData.crossRoad.direction}</span> of <span className="font-bold text-yellow-400">{emergencyData.crossRoad.name}</span></>
-                      )}{emergencyData.nearestTown && (
-                        <>, about <span className="font-bold text-yellow-400">{formatEmergencyDistance(emergencyData.nearestTown.distance)}</span> <span className="font-bold text-yellow-400">{emergencyData.nearestTown.direction}</span> of <span className="font-bold text-yellow-400">{emergencyData.nearestTown.name}</span></>
-                      )}.
-                      GPS coordinates: <span className="font-bold text-green-400">{emergencyData.lat.toFixed(6)}, {emergencyData.lon.toFixed(6)}</span>."
+                        <>
+                          , approximately{' '}
+                          <span className="font-bold text-yellow-400">
+                            {formatEmergencyDistance(emergencyData.crossRoad.distance)}
+                          </span>{' '}
+                          <span className="font-bold text-yellow-400">
+                            {emergencyData.crossRoad.direction}
+                          </span>{' '}
+                          of{' '}
+                          <span className="font-bold text-yellow-400">
+                            {emergencyData.crossRoad.name}
+                          </span>
+                        </>
+                      )}
+                      {emergencyData.nearestTown && (
+                        <>
+                          , about{' '}
+                          <span className="font-bold text-yellow-400">
+                            {formatEmergencyDistance(emergencyData.nearestTown.distance)}
+                          </span>{' '}
+                          <span className="font-bold text-yellow-400">
+                            {emergencyData.nearestTown.direction}
+                          </span>{' '}
+                          of{' '}
+                          <span className="font-bold text-yellow-400">
+                            {emergencyData.nearestTown.name}
+                          </span>
+                        </>
+                      )}
+                      . GPS coordinates:{' '}
+                      <span className="font-bold text-green-400">
+                        {emergencyData.lat.toFixed(6)}, {emergencyData.lon.toFixed(6)}
+                      </span>
+                      ."
                     </p>
                   </div>
 
@@ -1897,28 +2177,37 @@ function DriveContent() {
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-green-400">🏥</span>
                           <span className="text-green-400 font-semibold">
-                            {emergencyData.nearestHospital.type === 'Nursing Post' ? 'Nearest Medical Facility' : 'Nearest Hospital with Emergency Dept'}
+                            {emergencyData.nearestHospital.type === 'Nursing Post'
+                              ? 'Nearest Medical Facility'
+                              : 'Nearest Hospital with Emergency Dept'}
                           </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Name:</span>
-                          <span className="text-white font-semibold">{emergencyData.nearestHospital.name}</span>
+                          <span className="text-white font-semibold">
+                            {emergencyData.nearestHospital.name}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Distance:</span>
                           <span className="text-white">
                             {(() => {
-                              const d = emergencyData.nearestHospital.distanceM
+                              const d = emergencyData.nearestHospital.distanceM;
                               if (d >= 1000) {
-                                return `${(d / 1000).toFixed(1)} km`
+                                return `${(d / 1000).toFixed(1)} km`;
                               }
-                              return `${Math.round(d / 100) * 100} m`
+                              return `${Math.round(d / 100) * 100} m`;
                             })()}
                           </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Type:</span>
-                          <span className="text-white">{emergencyData.nearestHospital.type} {emergencyData.nearestHospital.hasED && <span className="text-green-400">(has ED)</span>}</span>
+                          <span className="text-white">
+                            {emergencyData.nearestHospital.type}{' '}
+                            {emergencyData.nearestHospital.hasED && (
+                              <span className="text-green-400">(has ED)</span>
+                            )}
+                          </span>
                         </div>
                         {emergencyData.nearestHospital.phone && (
                           <div className="flex justify-between items-center">
@@ -1934,14 +2223,18 @@ function DriveContent() {
                         {emergencyData.nearestHospital.address && (
                           <div className="flex justify-between">
                             <span className="text-gray-400">Address:</span>
-                            <span className="text-white text-sm">{emergencyData.nearestHospital.address}{emergencyData.nearestHospital.suburb && `, ${emergencyData.nearestHospital.suburb}`}</span>
+                            <span className="text-white text-sm">
+                              {emergencyData.nearestHospital.address}
+                              {emergencyData.nearestHospital.suburb &&
+                                `, ${emergencyData.nearestHospital.suburb}`}
+                            </span>
                           </div>
                         )}
                         <div className="mt-2 flex gap-2">
                           {emergencyData.nearestHospital.phone && (
                             <Button
                               onClick={() => {
-                                window.location.href = `tel:${emergencyData.nearestHospital!.phone?.replace(/[^0-9+]/g, '')}`
+                                window.location.href = `tel:${emergencyData.nearestHospital!.phone?.replace(/[^0-9+]/g, '')}`;
                               }}
                               className="flex-1 bg-blue-700 hover:bg-blue-600 text-sm py-1"
                             >
@@ -1951,7 +2244,10 @@ function DriveContent() {
                           <Button
                             onClick={() => {
                               if (emergencyData.nearestHospital) {
-                                window.open(`https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestHospital.name + ' hospital ' + emergencyData.nearestHospital.suburb)}`, '_blank')
+                                window.open(
+                                  `https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestHospital.name + ' hospital ' + emergencyData.nearestHospital.suburb)}`,
+                                  '_blank'
+                                );
                               }
                             }}
                             className="flex-1 bg-green-700 hover:bg-green-600 text-sm py-1"
@@ -1967,33 +2263,45 @@ function DriveContent() {
                       <div className="bg-orange-900/30 rounded-lg p-3 border border-orange-600">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-orange-400">🚒</span>
-                          <span className="text-orange-400 font-semibold">Nearest Fire/Emergency Station</span>
+                          <span className="text-orange-400 font-semibold">
+                            Nearest Fire/Emergency Station
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Name:</span>
-                          <span className="text-white font-semibold">{emergencyData.nearestFireStation.name}</span>
+                          <span className="text-white font-semibold">
+                            {emergencyData.nearestFireStation.name}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Distance:</span>
                           <span className="text-white">
                             {(() => {
-                              const d = emergencyData.nearestFireStation.distanceM
+                              const d = emergencyData.nearestFireStation.distanceM;
                               if (d >= 1000) {
-                                return `${(d / 1000).toFixed(1)} km`
+                                return `${(d / 1000).toFixed(1)} km`;
                               }
-                              return `${Math.round(d / 100) * 100} m`
+                              return `${Math.round(d / 100) * 100} m`;
                             })()}
                           </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Type:</span>
-                          <span className="text-white">{emergencyData.nearestFireStation.typeDescription} <span className="text-orange-400">({emergencyData.nearestFireStation.type})</span></span>
+                          <span className="text-white">
+                            {emergencyData.nearestFireStation.typeDescription}{' '}
+                            <span className="text-orange-400">
+                              ({emergencyData.nearestFireStation.type})
+                            </span>
+                          </span>
                         </div>
                         <div className="mt-2">
                           <Button
                             onClick={() => {
                               if (emergencyData.nearestFireStation) {
-                                window.open(`https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestFireStation.name + ' fire station Western Australia')}`, '_blank')
+                                window.open(
+                                  `https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestFireStation.name + ' fire station Western Australia')}`,
+                                  '_blank'
+                                );
                               }
                             }}
                             className="w-full bg-orange-700 hover:bg-orange-600 text-sm py-1"
@@ -2009,33 +2317,43 @@ function DriveContent() {
                       <div className="bg-blue-900/30 rounded-lg p-3 border border-blue-600">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-blue-400">🚔</span>
-                          <span className="text-blue-400 font-semibold">Nearest Police Station</span>
+                          <span className="text-blue-400 font-semibold">
+                            Nearest Police Station
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Name:</span>
-                          <span className="text-white font-semibold">{emergencyData.nearestPoliceStation.name}</span>
+                          <span className="text-white font-semibold">
+                            {emergencyData.nearestPoliceStation.name}
+                          </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Distance:</span>
                           <span className="text-white">
                             {(() => {
-                              const d = emergencyData.nearestPoliceStation.distanceM
+                              const d = emergencyData.nearestPoliceStation.distanceM;
                               if (d >= 1000) {
-                                return `${(d / 1000).toFixed(1)} km`
+                                return `${(d / 1000).toFixed(1)} km`;
                               }
-                              return `${Math.round(d / 100) * 100} m`
+                              return `${Math.round(d / 100) * 100} m`;
                             })()}
                           </span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Address:</span>
-                          <span className="text-white text-sm">{emergencyData.nearestPoliceStation.address}, {emergencyData.nearestPoliceStation.suburb}</span>
+                          <span className="text-white text-sm">
+                            {emergencyData.nearestPoliceStation.address},{' '}
+                            {emergencyData.nearestPoliceStation.suburb}
+                          </span>
                         </div>
                         <div className="mt-2">
                           <Button
                             onClick={() => {
                               if (emergencyData.nearestPoliceStation) {
-                                window.open(`https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestPoliceStation.name + ' police station ' + emergencyData.nearestPoliceStation.suburb + ' Western Australia')}`, '_blank')
+                                window.open(
+                                  `https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestPoliceStation.name + ' police station ' + emergencyData.nearestPoliceStation.suburb + ' Western Australia')}`,
+                                  '_blank'
+                                );
                               }
                             }}
                             className="w-full bg-blue-700 hover:bg-blue-600 text-sm py-1"
@@ -2051,16 +2369,21 @@ function DriveContent() {
                   <div className="flex gap-2">
                     <Button
                       onClick={() => {
-                        const text = `Emergency on ${emergencyData.roadName}${emergencyData.crossRoad ? `, approximately ${formatEmergencyDistance(emergencyData.crossRoad.distance)} ${emergencyData.crossRoad.direction} of ${emergencyData.crossRoad.name}` : ''}${emergencyData.nearestTown ? `, about ${formatEmergencyDistance(emergencyData.nearestTown.distance)} ${emergencyData.nearestTown.direction} of ${emergencyData.nearestTown.name}` : ''}. GPS coordinates: ${emergencyData.lat.toFixed(6)}, ${emergencyData.lon.toFixed(6)}. [${APP_VERSION} | crossRoad: ${emergencyData.crossRoad ? `${emergencyData.crossRoad.name}(${Math.round(emergencyData.crossRoad.distanceM || 0)}m)` : 'none'} | src: Layer6 | limit: 200]`
-                        navigator.clipboard.writeText(text)
-                        alert('Location copied to clipboard!')
+                        const text = `Emergency on ${emergencyData.roadName}${emergencyData.crossRoad ? `, approximately ${formatEmergencyDistance(emergencyData.crossRoad.distance)} ${emergencyData.crossRoad.direction} of ${emergencyData.crossRoad.name}` : ''}${emergencyData.nearestTown ? `, about ${formatEmergencyDistance(emergencyData.nearestTown.distance)} ${emergencyData.nearestTown.direction} of ${emergencyData.nearestTown.name}` : ''}. GPS coordinates: ${emergencyData.lat.toFixed(6)}, ${emergencyData.lon.toFixed(6)}. [${APP_VERSION} | crossRoad: ${emergencyData.crossRoad ? `${emergencyData.crossRoad.name}(${Math.round(emergencyData.crossRoad.distanceM || 0)}m)` : 'none'} | src: Layer6 | limit: 200]`;
+                        navigator.clipboard.writeText(text);
+                        alert('Location copied to clipboard!');
                       }}
                       className="flex-1 bg-blue-600 hover:bg-blue-500"
                     >
                       📋 Copy Text
                     </Button>
                     <Button
-                      onClick={() => window.open(`https://www.google.com/maps?q=${emergencyData.lat},${emergencyData.lon}`, '_blank')}
+                      onClick={() =>
+                        window.open(
+                          `https://www.google.com/maps?q=${emergencyData.lat},${emergencyData.lon}`,
+                          '_blank'
+                        )
+                      }
                       className="flex-1 bg-green-600 hover:bg-green-500"
                     >
                       📍 Open Maps
@@ -2076,8 +2399,8 @@ function DriveContent() {
             <div className="p-4 border-t border-gray-700">
               <Button
                 onClick={() => {
-                  setShowEmergencyModal(false)
-                  setEmergencyData(null)
+                  setShowEmergencyModal(false);
+                  setEmergencyData(null);
                 }}
                 className="w-full bg-gray-600 hover:bg-gray-500 text-white font-semibold"
               >
