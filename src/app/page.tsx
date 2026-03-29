@@ -238,6 +238,16 @@ interface Place {
   address?: string;
   googleMapsUrl: string;
   isEmergency?: boolean;
+  // Hospital-specific (from WA Health SLIP)
+  hospitalType?: string; // 'Public' | 'Private' | 'Nursing Post'
+  hospitalCategory?: string; // e.g. 'Acute Hospital', 'Nursing Post'
+  beds?: number;
+  suburb?: string;
+  // Fuel station-specific (from FuelWatch WA)
+  fuelBrand?: string;
+  fuelPrice?: number; // cents per litre (e.g. 231.3 = $2.313/L)
+  fuelDate?: string; // date of price
+  siteFeatures?: string[]; // e.g. ['Open 24 hours', 'Toilets', 'ATM']
 }
 
 interface PlacesData {
@@ -249,6 +259,9 @@ interface PlacesData {
   cachedLocation?: { lat: number; lon: number };
   source?: string;
   dataUnavailable?: boolean; // True when offline mode but no cached data available
+  // Enhanced source tracking
+  hospitalSource?: string; // e.g. 'WA Health SLIP' | 'Overpass API'
+  fuelSource?: string; // e.g. 'FuelWatch WA' | 'Overpass API'
 }
 
 interface CrossRoad {
@@ -1340,11 +1353,20 @@ export default function Home() {
         lines.push('Hospital:');
         lines.push(`  Name:           ${places.hospital.name}`);
         lines.push(`  Distance:       ${places.hospital.distance} km`);
+        if (places.hospital.hospitalType) {
+          lines.push(`  Type:           ${places.hospital.hospitalType}`);
+        }
+        if (places.hospital.isEmergency) {
+          lines.push(`  Emergency Dept: Yes`);
+        }
+        if (places.hospital.address) {
+          lines.push(`  Address:        ${places.hospital.address}`);
+        }
         if (places.hospital.phone) {
           lines.push(`  Phone:          ${places.hospital.phone}`);
         }
-        if (places.hospital.isEmergency) {
-          lines.push(`  Emergency:      Yes`);
+        if (places.hospital.beds) {
+          lines.push(`  Beds:           ${places.hospital.beds}`);
         }
       }
       if (places.fuelStation) {
@@ -1352,6 +1374,23 @@ export default function Home() {
         lines.push('Fuel Station:');
         lines.push(`  Name:           ${places.fuelStation.name}`);
         lines.push(`  Distance:       ${places.fuelStation.distance} km`);
+        if (places.fuelStation.fuelPrice) {
+          lines.push(
+            `  U91 Price:      ${places.fuelStation.fuelPrice.toFixed(1)} c/L ($${(places.fuelStation.fuelPrice / 100).toFixed(2)})`
+          );
+        }
+        if (places.fuelStation.fuelDate) {
+          lines.push(`  Price Date:     ${places.fuelStation.fuelDate}`);
+        }
+        if (places.fuelStation.address) {
+          lines.push(`  Address:        ${places.fuelStation.address}`);
+        }
+        if (places.fuelStation.phone) {
+          lines.push(`  Phone:          ${places.fuelStation.phone}`);
+        }
+        if (places.fuelStation.siteFeatures && places.fuelStation.siteFeatures.length > 0) {
+          lines.push(`  Features:       ${places.fuelStation.siteFeatures.join(', ')}`);
+        }
       }
       if (places.toilet) {
         lines.push('');
@@ -1943,7 +1982,9 @@ export default function Home() {
         <div class="stat-label">🏥 Hospital</div>
         <div style="font-weight: 600;">${places.hospital.name}</div>
         <p style="font-size: 10px; color: #6b7280;">${places.hospital.distance} km away</p>
-        ${places.hospital.isEmergency ? '<span class="badge badge-warning">Emergency</span>' : ''}
+        ${places.hospital.hospitalType ? `<span class="badge ${places.hospital.hospitalType === 'Public' ? 'badge-info' : places.hospital.hospitalType === 'Nursing Post' ? 'badge-warning' : 'badge-secondary'}">${places.hospital.hospitalType}</span>` : ''}
+        ${places.hospital.isEmergency ? '<span class="badge badge-warning">ED</span>' : ''}
+        ${places.hospital.beds ? `<p style="font-size: 10px; color: #6b7280; margin-top: 4px;">${places.hospital.beds} beds</p>` : ''}
         ${places.hospital.phone ? `<p style="font-size: 10px; margin-top: 4px;">📞 ${places.hospital.phone}</p>` : ''}
       </div>
       `
@@ -1957,6 +1998,9 @@ export default function Home() {
         <div class="stat-label">⛽ Fuel Station</div>
         <div style="font-weight: 600;">${places.fuelStation.name}</div>
         <p style="font-size: 10px; color: #6b7280;">${places.fuelStation.distance} km away</p>
+        ${places.fuelStation.fuelPrice ? `<span class="badge badge-success">$${places.fuelStation.fuelPrice.toFixed(1)}/L U91</span>` : ''}
+        ${places.fuelStation.phone ? `<p style="font-size: 10px; margin-top: 4px;">📞 ${places.fuelStation.phone}</p>` : ''}
+        ${places.fuelStation.siteFeatures && places.fuelStation.siteFeatures.length > 0 ? `<p style="font-size: 10px; color: #6b7280; margin-top: 4px;">${places.fuelStation.siteFeatures.join(' · ')}</p>` : ''}
       </div>
       `
           : '<div class="stat"><p style="color: #9ca3af;">No fuel station found</p></div>'
@@ -2860,31 +2904,22 @@ export default function Home() {
   };
 
   const fetchPlaces = async (lat: number, lon: number) => {
-    // Check amenities offline toggle - ON = offline mode (use cached data only)
-    if (offlineToggles.amenities) {
-      // OFFLINE MODE: Use IndexedDB data only
+    // Helper: return cached data from localStorage or IndexedDB
+    const getCachedPlaces = async (): Promise<PlacesData | null> => {
       const indexedDBPlaces = await getPlacesFromIndexedDB(lat, lon);
-      if (indexedDBPlaces) {
-        setPlaces({
-          ...indexedDBPlaces,
-          source: 'Offline: IndexedDB cached data',
-        });
-        return;
-      }
-
-      // Fallback to localStorage cache
+      if (indexedDBPlaces) return indexedDBPlaces;
       const cached = localStorage.getItem('cachedPlaces');
       if (cached) {
-        const cachedData = JSON.parse(cached);
-        setPlaces({
-          ...cachedData,
-          fromCache: true,
-          source: 'Offline: localStorage cached data',
-        });
-        return;
+        try {
+          return JSON.parse(cached);
+        } catch {
+          return null;
+        }
       }
+      return null;
+    };
 
-      // No cached data available - show clear indicator
+    const setOfflineUnavailable = () => {
       setPlaces({
         hospital: null,
         toilet: null,
@@ -2893,74 +2928,118 @@ export default function Home() {
         dataUnavailable: true,
         source: 'Offline: No cached amenities data - download required',
       });
-      return;
-    }
+    };
 
-    // ONLINE MODE: Fetch from API, fall back to cache
-    // Also check navigator.onLine as a safety net
-    if (!navigator.onLine) {
-      const indexedDBPlaces = await getPlacesFromIndexedDB(lat, lon);
-      if (indexedDBPlaces) {
-        setPlaces({
-          ...indexedDBPlaces,
-          source: 'Offline: IndexedDB cached data (browser offline)',
-        });
-        return;
-      }
-
-      const cached = localStorage.getItem('cachedPlaces');
+    // OFFLINE MODE: Use cached data only
+    if (offlineToggles.amenities || !navigator.onLine) {
+      const cached = await getCachedPlaces();
       if (cached) {
-        const cachedData = JSON.parse(cached);
         setPlaces({
-          ...cachedData,
+          ...cached,
           fromCache: true,
-          source: 'Offline: localStorage cached data (browser offline)',
-        });
-        return;
-      }
-
-      setPlaces({
-        hospital: null,
-        toilet: null,
-        fuelStation: null,
-        fromCache: true,
-        dataUnavailable: true,
-        source: 'Offline: Browser offline, no cached data',
-      });
-      return;
-    }
-
-    // Online: fetch from API
-    try {
-      const response = await fetch(`/api/places?lat=${lat}&lon=${lon}`);
-      const data = await response.json();
-      if (response.ok) {
-        // Cache places data
-        data.cachedAt = Date.now();
-        data.cachedLocation = { lat, lon };
-        localStorage.setItem('cachedPlaces', JSON.stringify(data));
-        setPlaces({
-          ...data,
-          source: 'Online: OpenStreetMap via Overpass API',
+          source: offlineToggles.amenities
+            ? 'Offline: Cached data'
+            : 'Offline: Cached data (browser offline)',
         });
       } else {
-        // Try IndexedDB first on API failure, then localStorage
-        const indexedDBPlaces = await getPlacesFromIndexedDB(lat, lon);
-        if (indexedDBPlaces) {
-          setPlaces({
-            ...indexedDBPlaces,
-            source: 'Cached (API unavailable)',
-          });
-          return;
+        setOfflineUnavailable();
+      }
+      return;
+    }
+
+    // ONLINE MODE: Fetch from three sources in parallel
+    let hospital: Place | null = null;
+    let hospitalSource = '';
+    let fuelStation: Place | null = null;
+    let fuelSource = '';
+    let toilet: Place | null = null;
+    let toiletSource = '';
+
+    try {
+      // 1. Hospital from WA Health SLIP Services
+      try {
+        const hospRes = await fetch(`/api/nearest-hospital?lat=${lat}&lon=${lon}&radius=100`);
+        if (hospRes.ok) {
+          const hospData = await hospRes.json();
+          const h = hospData.nearestHospital;
+          if (h) {
+            hospital = {
+              name: h.name,
+              distance: (h.distanceM / 1000).toFixed(1),
+              lat: h.lat,
+              lon: h.lon,
+              phone: h.phone || undefined,
+              address: h.address ? `${h.address}${h.suburb ? `, ${h.suburb}` : ''}` : undefined,
+              googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${h.lat},${h.lon}`,
+              isEmergency: h.hasED,
+              hospitalType: h.type === 'Nursing Post' ? 'Nursing Post' : h.type,
+              hospitalCategory: h.category || undefined,
+              beds: h.beds || undefined,
+              suburb: h.suburb || undefined,
+            };
+            hospitalSource = 'WA Health SLIP';
+          }
         }
-        const cached = localStorage.getItem('cachedPlaces');
+      } catch (e) {
+        console.log('WA Health SLIP hospital query failed, will try Overpass fallback:', e);
+      }
+
+      // 2. Fuel station from FuelWatch WA
+      try {
+        const fuelRes = await fetch(`/api/fuel-stations?lat=${lat}&lon=${lon}&radius=100`);
+        if (fuelRes.ok) {
+          const fuelData = await fuelRes.json();
+          const f = fuelData.nearest;
+          if (f) {
+            fuelStation = {
+              name: f.name,
+              distance: String(f.distanceKm),
+              lat: f.lat,
+              lon: f.lon,
+              phone: f.phone || undefined,
+              address: f.address ? `${f.address}, ${f.location}` : undefined,
+              googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${f.lat},${f.lon}`,
+              fuelBrand: f.brand || undefined,
+              fuelPrice: f.price || undefined,
+              fuelDate: f.date || undefined,
+              siteFeatures: f.siteFeatures || [],
+            };
+            fuelSource = 'FuelWatch WA';
+          }
+        }
+      } catch (e) {
+        console.log('FuelWatch fuel station query failed, will try Overpass fallback:', e);
+      }
+
+      // 3. Toilets from Overpass API (no better source available)
+      try {
+        const placesRes = await fetch(`/api/places?lat=${lat}&lon=${lon}`);
+        if (placesRes.ok) {
+          const placesData = await placesRes.json();
+          if (placesData.toilet) {
+            toilet = placesData.toilet;
+            toiletSource = 'OpenStreetMap';
+          }
+          // Use Overpass as fallback for hospital if SLIP failed
+          if (!hospital && placesData.hospital) {
+            hospital = placesData.hospital;
+            hospitalSource = 'OpenStreetMap';
+          }
+          // Use Overpass as fallback for fuel if FuelWatch failed
+          if (!fuelStation && placesData.fuelStation) {
+            fuelStation = placesData.fuelStation;
+            fuelSource = 'OpenStreetMap';
+          }
+        }
+      } catch (e) {
+        console.log('Overpass toilet query failed:', e);
+      }
+
+      // If all three sources failed, try cache
+      if (!hospital && !fuelStation && !toilet) {
+        const cached = await getCachedPlaces();
         if (cached) {
-          const cachedData = JSON.parse(cached);
-          setPlaces({
-            ...cachedData,
-            fromCache: true,
-            source: 'Cached (API unavailable)',
-          });
+          setPlaces({ ...cached, source: 'Cached (all APIs unavailable)' });
           return;
         }
         setPlaces({
@@ -2968,36 +3047,45 @@ export default function Home() {
           toilet: null,
           fuelStation: null,
           dataUnavailable: true,
-          source: 'Error: API unavailable, no cached data',
+          source: 'Error: All data sources unavailable, no cached data',
         });
+        return;
       }
+
+      // Build source string
+      const sources = [];
+      if (hospitalSource) sources.push(`Hospital: ${hospitalSource}`);
+      if (fuelSource) sources.push(`Fuel: ${fuelSource}`);
+      if (toiletSource) sources.push(`Toilet: ${toiletSource}`);
+
+      const result: PlacesData = {
+        hospital,
+        fuelStation,
+        toilet,
+        hospitalSource,
+        fuelSource,
+        cachedAt: Date.now(),
+        cachedLocation: { lat, lon },
+        source: sources.length > 0 ? `Online: ${sources.join(' | ')}` : 'Online',
+      };
+
+      // Cache the result
+      localStorage.setItem('cachedPlaces', JSON.stringify(result));
+      setPlaces(result);
     } catch (err) {
-      // Try IndexedDB first on network error, then localStorage
-      const indexedDBPlaces = await getPlacesFromIndexedDB(lat, lon);
-      if (indexedDBPlaces) {
-        setPlaces({
-          ...indexedDBPlaces,
-          source: 'Cached (network error)',
-        });
-        return;
-      }
-      const cached = localStorage.getItem('cachedPlaces');
+      // Last resort: cache
+      const cached = await getCachedPlaces();
       if (cached) {
-        const cachedData = JSON.parse(cached);
+        setPlaces({ ...cached, source: 'Cached (error)' });
+      } else {
         setPlaces({
-          ...cachedData,
-          fromCache: true,
-          source: 'Cached (network error)',
+          hospital: null,
+          toilet: null,
+          fuelStation: null,
+          dataUnavailable: true,
+          source: 'Error: Network error, no cached data',
         });
-        return;
       }
-      setPlaces({
-        hospital: null,
-        toilet: null,
-        fuelStation: null,
-        dataUnavailable: true,
-        source: 'Error: Network error, no cached data',
-      });
     }
   };
 
@@ -5721,7 +5809,22 @@ export default function Home() {
                             </span>
                             {places.hospital.isEmergency && (
                               <span className="text-xs bg-red-600 text-white px-1.5 py-0.5 rounded ml-1">
-                                Emergency
+                                ED
+                              </span>
+                            )}
+                            {places.hospital.hospitalType === 'Public' && (
+                              <span className="text-xs bg-blue-700 text-white px-1.5 py-0.5 rounded ml-1">
+                                Public
+                              </span>
+                            )}
+                            {places.hospital.hospitalType === 'Private' && (
+                              <span className="text-xs bg-gray-600 text-white px-1.5 py-0.5 rounded ml-1">
+                                Private
+                              </span>
+                            )}
+                            {places.hospital.hospitalType === 'Nursing Post' && (
+                              <span className="text-xs bg-amber-700 text-white px-1.5 py-0.5 rounded ml-1">
+                                Nursing Post
                               </span>
                             )}
                           </p>
@@ -5744,9 +5847,17 @@ export default function Home() {
                             </Button>
                           </div>
                         </div>
-                        {places.hospital.phone && (
-                          <p className="text-sm text-gray-400">📞 {places.hospital.phone}</p>
-                        )}
+                        <div className="mt-1 space-y-0.5">
+                          {places.hospital.address && (
+                            <p className="text-xs text-gray-400">📍 {places.hospital.address}</p>
+                          )}
+                          {places.hospital.phone && (
+                            <p className="text-xs text-gray-400">📞 {places.hospital.phone}</p>
+                          )}
+                          {places.hospital.beds && places.hospital.beds > 0 && (
+                            <p className="text-xs text-gray-500">🛏️ {places.hospital.beds} beds</p>
+                          )}
+                        </div>
                       </div>
                     ) : (
                       <p className="text-gray-500 text-sm mb-4">No hospital found nearby</p>
@@ -5761,6 +5872,11 @@ export default function Home() {
                             <span className="text-gray-500 text-sm ml-2">
                               ({places.fuelStation.distance} km)
                             </span>
+                            {places.fuelStation.fuelPrice && (
+                              <span className="text-xs bg-green-700 text-white px-1.5 py-0.5 rounded ml-1">
+                                ${places.fuelStation.fuelPrice.toFixed(1)}/L
+                              </span>
+                            )}
                           </p>
                           <div className="flex gap-1">
                             <Button
@@ -5782,6 +5898,20 @@ export default function Home() {
                               🏠
                             </Button>
                           </div>
+                        </div>
+                        <div className="mt-1 space-y-0.5">
+                          {places.fuelStation.address && (
+                            <p className="text-xs text-gray-400">📍 {places.fuelStation.address}</p>
+                          )}
+                          {places.fuelStation.phone && (
+                            <p className="text-xs text-gray-400">📞 {places.fuelStation.phone}</p>
+                          )}
+                          {places.fuelStation.siteFeatures &&
+                            places.fuelStation.siteFeatures.length > 0 && (
+                              <p className="text-xs text-gray-500">
+                                🏷️ {places.fuelStation.siteFeatures.join(' · ')}
+                              </p>
+                            )}
                         </div>
                       </div>
                     ) : (
