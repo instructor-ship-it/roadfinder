@@ -1200,8 +1200,8 @@ function DriveContent() {
                     {/* Pace Rate */}
                     {showSpeedDisplay && currentSpeed >= 60 && speedLimit > 0 && (
                       <div className={`mt-4 pt-3 border-t border-gray-700 ${getPaceColor()}`}>
-                        <p className="text-[10px] font-medium opacity-70 mb-1">PACE RATE</p>
-                        <div className="flex justify-between font-mono text-xs">
+                        <p className="text-xs font-medium opacity-70 mb-1">PACE RATE</p>
+                        <div className="flex justify-between font-mono text-sm">
                           <span className="opacity-60">1km</span>
                           <span>{getPaceDelta(currentSpeed, speedLimit, 1)}</span>
                           <span className="opacity-60">10km</span>
@@ -1625,8 +1625,8 @@ function DriveContent() {
           {/* Pace Rate */}
           {showSpeedDisplay && currentSpeed >= 60 && speedLimit > 0 && (
             <div className={`mt-4 pt-3 border-t border-gray-700 ${getPaceColor()}`}>
-              <p className="text-[10px] font-medium opacity-70 mb-1">PACE RATE</p>
-              <div className="flex justify-between font-mono text-xs">
+              <p className="text-xs font-medium opacity-70 mb-1">PACE RATE</p>
+              <div className="flex justify-between font-mono text-sm">
                 <span className="opacity-60">1km</span>
                 <span>{getPaceDelta(currentSpeed, speedLimit, 1)}</span>
                 <span className="opacity-60">10km</span>
