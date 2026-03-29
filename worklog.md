@@ -1,7 +1,52 @@
 # TC Work Zone Locator - Work Log
 
-> **Last Updated:** 2026-03-28
+> **Last Updated:** 2026-03-29
 > **Current Version:** RC 1.9.6
+
+---
+
+## Task ID: 2026-03-29-001
+
+**Agent:** Main Agent
+**Task:** Maximum Hold Time - Fix Missing Display on Work Zone Info Page
+
+### Work Log:
+
+- **Issue Reported**: Maximum Hold Time card not showing on Work Zone Info page
+- **Root Cause Analysis**:
+  - The `TrafficSection` component (`src/components/home/TrafficSection.tsx`) already contained the Maximum Hold Time card with full implementation
+  - However, it was **imported but never rendered** in `page.tsx` (the Work Zone Info page)
+  - The page had its own inline traffic section that duplicated the TrafficSection functionality but lacked the Maximum Hold Time card
+  - The `/api/traffic` route already returns weekday-specific fields (`aadt_weekday`, `peak_hour_volume_weekday`, `heavy_vehicle_weekday_pct`) from both online (ArcGIS) and offline sources
+  - The `max-hold-time.ts` library with `calculateMaxHoldTime()` function and 10 passing tests already existed
+
+- **Fix Implemented**:
+  - Added `calculateMaxHoldTime`, `PREPARE_TO_STOP_DISTANCE_M`, `ADV_QUEUE_WARNING_DISTANCE_M` imports from `@/lib/max-hold-time` to `page.tsx`
+  - Updated `TrafficData` interface to include weekday fields: `aadt_weekday`, `peak_hour_volume_weekday`, `heavy_vehicle_weekday_pct`
+  - Updated `WorkZoneResult.tc_positions` interface to include `tc_length_m` field
+  - Added Maximum Hold Time card to the inline traffic section in `page.tsx`, using weekday data preferentially with fallback to overall data
+  - Card displays: Max Hold (min), Recommended Stop (min), Queue Growth (m/min), Queue at recommended stop (m)
+  - Includes TC zone length and clearance time when available
+  - Shows warning when queue at recommended stop exceeds Prepare to Stop distance (100m)
+
+### Files Changed:
+
+- `src/app/page.tsx` (imports, interfaces, Maximum Hold Time card in traffic section)
+
+### Key Learnings:
+
+- **Imported != Used**: A component can be imported but never rendered - always verify it's actually used in the JSX
+- **Duplicate inline sections**: When refactoring components, ensure the original inline code is fully replaced or the component is actually used
+- **API data already available**: The traffic API already returned all needed fields; only the UI was missing
+
+### Stage Summary:
+
+- Maximum Hold Time now displays on Work Zone Info page traffic section
+- Uses weekday peak VPH and heavy vehicle percentage when available
+- Shows TC zone length and clearance time from work zone geometry
+- All 10 max-hold-time tests pass
+- TypeScript check clean, ESLint clean
+- Version: RC 1.9.6 (no version bump - feature was designed in previous session)
 
 ---
 

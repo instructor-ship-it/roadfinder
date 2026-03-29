@@ -29,6 +29,11 @@ import { TrafficSection } from '@/components/home/TrafficSection';
 import { AmenitiesSection } from '@/components/home/AmenitiesSection';
 import { WorkZoneSummary } from '@/components/home/WorkZoneSummary';
 import {
+  calculateMaxHoldTime,
+  PREPARE_TO_STOP_DISTANCE_M,
+  ADV_QUEUE_WARNING_DISTANCE_M,
+} from '@/lib/max-hold-time';
+import {
   initDB,
   isOfflineDataAvailable,
   getOfflineMetadata,
@@ -111,6 +116,7 @@ interface WorkZoneResult {
     end_slk: number;
     start: Position | null;
     end: Position | null;
+    tc_length_m?: number;
   };
   approach_signs: {
     start_slk: number;
@@ -204,6 +210,9 @@ interface TrafficData {
   aadt_year: string;
   heavy_vehicle_percent: number;
   peak_hour_volume: number;
+  aadt_weekday?: number;
+  peak_hour_volume_weekday?: number;
+  heavy_vehicle_weekday_pct?: number;
   source: string;
   distance_to_site?: number;
   nearest_sites?: Array<{
@@ -4777,6 +4786,88 @@ export default function Home() {
                             </details>
                           </div>
                         )}
+
+                        {/* Maximum Hold Time */}
+                        {(() => {
+                          const peakVphWeekday =
+                            traffic.peak_hour_volume_weekday || traffic.peak_hour_volume || 0;
+                          const heavyPctWeekday =
+                            traffic.heavy_vehicle_weekday_pct || traffic.heavy_vehicle_percent || 0;
+                          const vphOneDirWeekday = peakVphWeekday
+                            ? Math.round(peakVphWeekday / 2)
+                            : vphOneDir;
+                          const maxHold = calculateMaxHoldTime(vphOneDirWeekday, heavyPctWeekday);
+                          const tcLengthM = result?.tc_positions?.tc_length_m;
+
+                          if (!maxHold) return null;
+
+                          return (
+                            <div className="mt-3 pt-3 border-t border-gray-700">
+                              <div className="bg-orange-900/20 border border-orange-700/50 rounded p-3">
+                                <h4 className="text-sm font-medium text-orange-400 mb-2">
+                                  ⏱️ Maximum Hold Time
+                                </h4>
+                                <div className="grid grid-cols-2 gap-3 text-sm mb-2">
+                                  <div>
+                                    <p className="text-gray-400 text-xs">Max Hold</p>
+                                    <p className="text-xl font-bold text-orange-300">
+                                      {maxHold.maxHoldTimeMinutes} min
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-400 text-xs">Recommended Stop</p>
+                                    <p className="text-xl font-bold text-white">
+                                      {maxHold.recommendedStopMinutes} min
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-400 text-xs">Queue Growth</p>
+                                    <p className="font-medium text-gray-200">
+                                      {maxHold.queueGrowthRate} m/min
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-400 text-xs">
+                                      Queue @ {maxHold.recommendedStopMinutes}min
+                                    </p>
+                                    <p className="font-medium text-gray-200">
+                                      {maxHold.queueAtRecommendedStop}m
+                                    </p>
+                                  </div>
+                                </div>
+                                {tcLengthM && tcLengthM > 0 && (
+                                  <div className="bg-gray-900/50 rounded p-2 mb-2">
+                                    <p className="text-xs text-gray-400">
+                                      📏 TC zone length:{' '}
+                                      <span className="text-white font-semibold">{tcLengthM}m</span>
+                                    </p>
+                                    <p className="text-xs text-gray-400">
+                                      Clearance time:{' '}
+                                      <span className="text-white font-semibold">
+                                        ~{Math.round((tcLengthM / 40) * 60)}s
+                                      </span>
+                                    </p>
+                                  </div>
+                                )}
+                                {maxHold.queueAtRecommendedStop > PREPARE_TO_STOP_DISTANCE_M && (
+                                  <div className="bg-red-900/30 border border-red-700 rounded p-2 mb-2">
+                                    <p className="text-xs text-red-400">
+                                      ⚠️ Queue at {maxHold.recommendedStopMinutes}min stop (
+                                      {maxHold.queueAtRecommendedStop}m) exceeds Prepare to Stop
+                                      distance ({PREPARE_TO_STOP_DISTANCE_M}m)
+                                    </p>
+                                  </div>
+                                )}
+                                <p className="text-xs text-gray-500">
+                                  Based on weekday peak {vphOneDirWeekday} VPH/direction,{' '}
+                                  {heavyPctWeekday}% heavy. Sign distances: Prepare to Stop{' '}
+                                  {PREPARE_TO_STOP_DISTANCE_M}m, Adv Queue Warning{' '}
+                                  {ADV_QUEUE_WARNING_DISTANCE_M}m.
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })()}
 
                         {traffic.distance_to_site !== undefined && (
                           <p className="text-xs text-cyan-400 mt-2">
