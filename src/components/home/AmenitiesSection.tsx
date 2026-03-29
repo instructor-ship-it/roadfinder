@@ -159,7 +159,7 @@ export function AmenitiesSection({
                   </span>
                   {places.fuelStation.fuelPrice && (
                     <span className="text-xs bg-green-700 text-white px-1.5 py-0.5 rounded ml-1">
-                      ${places.fuelStation.fuelPrice.toFixed(1)}/L
+                      $${(places.fuelStation.fuelPrice / 100).toFixed(2)}/L
                     </span>
                   )}
                   {!places.fuelStation.fuelPrice && (

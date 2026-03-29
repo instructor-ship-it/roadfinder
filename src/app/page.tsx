@@ -2000,7 +2000,7 @@ export default function Home() {
         <div class="stat-label">⛽ Fuel Station</div>
         <div style="font-weight: 600;">${places.fuelStation.name}</div>
         <p style="font-size: 10px; color: #6b7280;">${places.fuelStation.distance} km away</p>
-        ${places.fuelStation.fuelPrice ? `<span class="badge badge-success">$${places.fuelStation.fuelPrice.toFixed(1)}/L Diesel</span>` : ''}
+        ${places.fuelStation.fuelPrice ? `<span class="badge badge-success">$${(places.fuelStation.fuelPrice / 100).toFixed(2)}/L Diesel</span>` : ''}
         ${places.fuelStation.phone ? `<p style="font-size: 10px; margin-top: 4px;">📞 ${places.fuelStation.phone}</p>` : ''}
         ${places.fuelStation.siteFeatures && places.fuelStation.siteFeatures.length > 0 ? `<p style="font-size: 10px; color: #6b7280; margin-top: 4px;">${places.fuelStation.siteFeatures.join(' · ')}</p>` : ''}
       </div>
@@ -5871,7 +5871,7 @@ export default function Home() {
                             </span>
                             {places.fuelStation.fuelPrice && (
                               <span className="text-xs bg-green-700 text-white px-1.5 py-0.5 rounded ml-1">
-                                ${places.fuelStation.fuelPrice.toFixed(1)}/L Diesel
+                                $${(places.fuelStation.fuelPrice / 100).toFixed(2)}/L Diesel
                               </span>
                             )}
                             {!places.fuelStation.fuelPrice && (

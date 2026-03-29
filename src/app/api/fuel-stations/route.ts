@@ -2,7 +2,9 @@
  * API Route: /api/fuel-stations
  *
  * Find nearest fuel stations by merging two data sources:
- * 1. FuelWatch WA RSS feed (daily diesel prices, site features, all WA stations)
+ * 1. FuelWatch WA JSON API (daily diesel prices, site features, all WA stations)
+ *    Uses the new /api/sites endpoint which properly supports diesel (DSL).
+ *    The old RSS feed silently ignored diesel product codes and returned ULP.
  * 2. OpenStreetMap Overpass API (complete station coverage, no prices)
  *
  * Stations within 200m of each other are deduplicated, keeping FuelWatch data
@@ -66,6 +68,25 @@ const fuelCache: Record<string, FuelCache> = {};
 const CACHE_DURATION_MS = 30 * 60 * 1000; // 30 minutes
 const DEDUP_DISTANCE_M = 200; // stations within 200m treated as the same
 
+/**
+ * Map our app fuel type codes to FuelWatch JSON API fuel type codes.
+ * The JSON API uses DSL for diesel, BDL for brand diesel.
+ * Our app historically used DL (from the old RSS feed which didn't work anyway).
+ */
+function toFuelWatchApiCode(fuelType: string): string {
+  const map: Record<string, string> = {
+    DL: 'DSL', // Diesel
+    DSL: 'DSL', // Diesel (already correct)
+    BDL: 'BDL', // Brand Diesel
+    ULP: 'ULP', // Unleaded Petrol
+    PULP: 'PUP', // Premium Unleaded
+    '98R': '98R', // 98 RON
+    LPG: 'LPG', // LPG
+    E85: 'E85', // E85
+  };
+  return map[fuelType] || 'DSL'; // default to diesel
+}
+
 function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -98,9 +119,37 @@ function parseSiteFeatures(description: string, siteFeatures: string): string[] 
   return features;
 }
 
-// ─── FuelWatch WA RSS Feed ─────────────────────────────────────────────
+// ─── FuelWatch WA JSON API ──────────────────────────────────────────────
 
-async function fetchFuelWatchRSS(fuelType: string = 'DL'): Promise<ParsedStation[]> {
+interface FuelWatchSite {
+  id: number;
+  siteName: string;
+  address: {
+    id: number;
+    line1: string;
+    location: string;
+    postCode: number;
+    state: string;
+    latitude: number;
+    longitude: number;
+  };
+  product: {
+    shortName: string;
+    isTruckStop: boolean;
+    priceToday: number | null;
+  };
+  productFuelType: string;
+  brandName: string;
+  isClosedNow: boolean;
+  isClosedAllDayTomorrow: boolean;
+  drivewayService: string;
+  manned: boolean;
+  operates247: boolean;
+  membershipRequired: boolean;
+  currentPricingOrder: number;
+}
+
+async function fetchFuelWatchJSON(fuelType: string = 'DL'): Promise<ParsedStation[]> {
   if (
     fuelCache[fuelType] &&
     fuelCache[fuelType].stations.length > 0 &&
@@ -108,80 +157,98 @@ async function fetchFuelWatchRSS(fuelType: string = 'DL'): Promise<ParsedStation
     Date.now() - fuelCache[fuelType].loadedAt < CACHE_DURATION_MS
   ) {
     console.log(
-      `Using cached FuelWatch data for ${fuelType} (age: ${Math.round((Date.now() - fuelCache[fuelType].loadedAt!) / 1000)}s, ${fuelCache[fuelType].stations.length} stations)`
+      `Using cached FuelWatch JSON data for ${fuelType} (age: ${Math.round((Date.now() - fuelCache[fuelType].loadedAt!) / 1000)}s, ${fuelCache[fuelType].stations.length} stations)`
     );
     return fuelCache[fuelType].stations;
   }
 
   try {
-    const url = `https://www.fuelwatch.wa.gov.au/fuelwatch/fuelWatchRSS?fuelType=${fuelType}`;
+    const apiFuelType = toFuelWatchApiCode(fuelType);
+    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
+    const url = `https://www.fuelwatch.wa.gov.au/api/sites?fuelType=${apiFuelType}&effectiveAt=${today}`;
+    console.log(`Fetching FuelWatch JSON API: ${url}`);
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
 
     const response = await fetch(url, {
       signal: controller.signal,
       headers: {
-        Accept: 'application/rss+xml, application/xml, text/xml, */*',
+        Accept: 'application/json',
       },
     });
 
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      console.error(`FuelWatch RSS returned ${response.status}`);
+      console.error(`FuelWatch JSON API returned ${response.status}`);
       return fuelCache[fuelType]?.stations || [];
     }
 
-    const xml = await response.text();
-    const stations = parseFuelWatchXML(xml);
+    const sites: FuelWatchSite[] = await response.json();
+
+    // Map JSON response to our ParsedStation format
+    const stations: ParsedStation[] = sites
+      .filter((site) => {
+        // Must have valid coordinates and a price
+        if (!site.address?.latitude || !site.address?.longitude) return false;
+        if (site.address.latitude === 0 && site.address.longitude === 0) return false;
+        if (!site.product?.priceToday || site.product.priceToday <= 0) return false;
+        return true;
+      })
+      .map((site) => {
+        // priceToday is in cents per litre (e.g., 299.2 = $2.992/L for diesel)
+        // Same format as the old RSS <price> field
+        const priceCentsPerLitre = site.product?.priceToday ?? 0;
+
+        const fullAddress = [
+          site.address.line1,
+          site.address.location,
+          site.address.state,
+          site.address.postCode,
+        ]
+          .filter(Boolean)
+          .join(', ');
+
+        // Build features from site properties
+        const features: string[] = [];
+        if (site.operates247) features.push('Open 24 hours');
+        if (site.drivewayService && site.drivewayService !== 'None')
+          features.push(site.drivewayService);
+        if (site.manned) features.push('Manned');
+        if (site.membershipRequired) features.push('Membership Required');
+        if (site.product.isTruckStop) features.push('Truck Stop');
+
+        return {
+          brand: site.brandName || '',
+          tradingName: site.siteName || site.brandName || 'Service Station',
+          location: site.address.location || '',
+          address: fullAddress,
+          phone: '', // JSON API list endpoint doesn't include phone
+          price: Math.round(priceCentsPerLitre * 10) / 10, // cents per litre, 1 decimal
+          date: today,
+          lat: site.address.latitude,
+          lon: site.address.longitude,
+          description: site.operates247 ? 'Open 24 hours' : '',
+          siteFeatures: features.join(', '),
+        };
+      });
 
     if (stations.length > 0) {
       fuelCache[fuelType] = { stations, loadedAt: Date.now(), fuelType };
-      console.log(`Cached ${stations.length} FuelWatch stations for ${fuelType}`);
+      console.log(
+        `Cached ${stations.length} FuelWatch JSON stations for ${fuelType} (${apiFuelType})`
+      );
+    } else {
+      console.warn(`FuelWatch JSON API returned 0 stations for ${fuelType} (${apiFuelType})`);
     }
 
     return stations;
   } catch (error) {
-    console.error('FuelWatch fetch error:', error);
+    console.error('FuelWatch JSON fetch error:', error);
     return fuelCache[fuelType]?.stations || [];
   }
-}
-
-function parseFuelWatchXML(xml: string): ParsedStation[] {
-  const stations: ParsedStation[] = [];
-  const itemRegex = /<item>([\s\S]*?)<\/item>/gi;
-  let match;
-
-  while ((match = itemRegex.exec(xml)) !== null) {
-    const itemXml = match[1];
-
-    const getTag = (tag: string): string => {
-      const tagMatch = itemXml.match(new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`, 'i'));
-      return tagMatch ? tagMatch[1].trim() : '';
-    };
-
-    const lat = parseFloat(getTag('latitude'));
-    const lon = parseFloat(getTag('longitude'));
-    const price = parseFloat(getTag('price'));
-
-    if (!isNaN(lat) && !isNaN(lon) && lat !== 0 && lon !== 0) {
-      stations.push({
-        brand: getTag('brand'),
-        tradingName: getTag('trading-name'),
-        location: getTag('location'),
-        address: getTag('address'),
-        phone: getTag('phone'),
-        price: isNaN(price) ? 0 : price,
-        date: getTag('date'),
-        lat,
-        lon,
-        description: getTag('description'),
-        siteFeatures: getTag('site-features'),
-      });
-    }
-  }
-
-  return stations;
 }
 
 // ─── Overpass API (for complete fuel station coverage) ─────────────────
@@ -359,7 +426,7 @@ export async function GET(request: Request) {
   try {
     // Fetch both data sources in parallel
     const [fuelWatchStations, overpassStations] = await Promise.all([
-      fetchFuelWatchRSS(fuelType).then((stations) =>
+      fetchFuelWatchJSON(fuelType).then((stations) =>
         stations
           .map((s) => ({
             station: s,
@@ -397,7 +464,7 @@ export async function GET(request: Request) {
       nearest,
       cheapest: cheapest && cheapest !== nearest ? cheapest : null, // only if different from nearest
       stations: allStations.slice(0, 20),
-      source: `FuelWatch (${fuelWatchStations.length}) + OpenStreetMap (${overpassStations.length})`,
+      source: `FuelWatch JSON API (${fuelWatchStations.length}) + OpenStreetMap (${overpassStations.length})`,
       cachedAt: fuelCache[fuelType]?.loadedAt,
     });
   } catch (error) {
