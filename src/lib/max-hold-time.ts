@@ -20,6 +20,7 @@ export interface MaxHoldTimeResult {
   heavyPercent: number;
   lightVehicleLengthM: number;
   heavyVehicleLengthM: number;
+  belowMinimum: boolean; // true when max hold < minimum 2-min bracket
 }
 
 export function calculateMaxHoldTime(
@@ -38,9 +39,14 @@ export function calculateMaxHoldTime(
   const maxHoldTimeMinutes = PREPARE_TO_STOP_DISTANCE_M / queueGrowthRate;
 
   // Recommended stop: round down to nearest standard bracket
+  // Minimum practical stop is 2 minutes (MRWA guideline)
   let recommendedStopMinutes: number;
+  let belowMinimum = false;
   if (maxHoldTimeMinutes <= 2) {
+    // Max hold doesn't even reach minimum 2-min bracket
+    // Still show 2 min as the minimum bracket, but flag as below minimum
     recommendedStopMinutes = 2;
+    belowMinimum = true;
   } else if (maxHoldTimeMinutes <= 5) {
     recommendedStopMinutes = 2; // If can't safely do 5, use 2
   } else if (maxHoldTimeMinutes <= 10) {
@@ -60,5 +66,6 @@ export function calculateMaxHoldTime(
     heavyPercent,
     lightVehicleLengthM: LIGHT_VEHICLE_LENGTH_M,
     heavyVehicleLengthM: HEAVY_VEHICLE_LENGTH_M,
+    belowMinimum,
   };
 }

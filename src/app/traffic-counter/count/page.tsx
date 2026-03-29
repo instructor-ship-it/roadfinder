@@ -415,8 +415,11 @@ function CompletionOverlay({
                 ⏱️ Max Hold:{' '}
                 <span className="text-white font-bold">{maxHoldOverlay.maxHoldTimeMinutes}min</span>{' '}
                 | Recommended:{' '}
-                <span className="text-white font-bold">
+                <span
+                  className={`font-bold ${maxHoldOverlay.belowMinimum ? 'text-red-400' : 'text-white'}`}
+                >
                   {maxHoldOverlay.recommendedStopMinutes}min
+                  {maxHoldOverlay.belowMinimum && ' ⚠️'}
                 </span>
               </p>
               <p className="text-xs text-gray-500">

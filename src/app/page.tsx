@@ -1318,7 +1318,7 @@ export default function Home() {
     lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     if (traffic) {
       lines.push(`AADT:             ${traffic.aadt?.toLocaleString() || 'N/A'} vehicles/day`);
-      lines.push(`Peak Hour:        ${traffic.peak_hour_volume || 'N/A'} vehicles/hour`);
+      lines.push(`Peak Hour:        ${traffic.peak_hour_volume || 'N/A'} vehicles/hour (both dir)`);
       lines.push(`Heavy Vehicles:   ${traffic.heavy_vehicle_percent}%`);
       lines.push(`Data Year:        ${traffic.aadt_year}`);
       if (traffic.distance_to_site !== undefined) {
@@ -1915,7 +1915,7 @@ export default function Home() {
       <div class="stat">
         <div class="stat-label">Peak Hour</div>
         <div class="stat-value">${traffic.peak_hour_volume || 'N/A'}</div>
-        <p style="font-size: 10px; color: #6b7280;">vehicles/hour</p>
+        <p style="font-size: 10px; color: #6b7280;">vehicles/hour (both dir)</p>
       </div>
       <div class="stat">
         <div class="stat-label">Heavy Vehicles</div>
@@ -4621,9 +4621,13 @@ export default function Home() {
                                 {/* Traffic stats from user count */}
                                 <div className="grid grid-cols-2 gap-3 text-sm">
                                   <div>
-                                    <p className="text-gray-400">VPH (one dir)</p>
-                                    <p className="font-medium text-lg">{vphOneDir}</p>
-                                    <p className="text-xs text-gray-500">vehicles/hour</p>
+                                    <p className="text-gray-400">Combined VPH</p>
+                                    <p className="font-medium text-lg">{vphBothDir}</p>
+                                    <p className="text-xs text-gray-500">
+                                      {primaryCount.direction_mode === 'both-ways'
+                                        ? 'both directions'
+                                        : 'one direction'}
+                                    </p>
                                   </div>
                                   <div>
                                     <p className="text-gray-400">Heavy Vehicles</p>
@@ -4633,22 +4637,39 @@ export default function Home() {
                                       counted
                                     </p>
                                   </div>
+                                  {primaryCount.direction_mode === 'both-ways' && (
+                                    <>
+                                      <div>
+                                        <p className="text-gray-400">True Left</p>
+                                        <p className="font-medium text-lg">
+                                          {primaryCount.vph_true_left} VPH
+                                        </p>
+                                        <p className="text-xs text-gray-500">
+                                          {primaryCount.true_left_light +
+                                            primaryCount.true_left_heavy}{' '}
+                                          vehicles
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p className="text-gray-400">True Right</p>
+                                        <p className="font-medium text-lg">
+                                          {primaryCount.vph_true_right} VPH
+                                        </p>
+                                        <p className="text-xs text-gray-500">
+                                          {primaryCount.true_right_light +
+                                            primaryCount.true_right_heavy}{' '}
+                                          vehicles
+                                        </p>
+                                      </div>
+                                    </>
+                                  )}
                                   <div>
-                                    <p className="text-gray-400">Direction</p>
-                                    <p className="font-medium text-lg">
-                                      {primaryCount.direction_mode === 'both-ways'
-                                        ? 'Both'
-                                        : 'One-way'}
-                                    </p>
+                                    <p className="text-gray-400">Worst Dir VPH</p>
+                                    <p className="font-medium text-lg">{vphOneDir}</p>
                                     <p className="text-xs text-gray-500">
                                       {primaryCount.total_vehicles} vehicles in{' '}
                                       {primaryCount.duration_minutes}min
                                     </p>
-                                  </div>
-                                  <div>
-                                    <p className="text-gray-400">Est. VPH (both dir)</p>
-                                    <p className="font-medium text-lg">{vphBothDir}</p>
-                                    <p className="text-xs text-gray-500">estimated total</p>
                                   </div>
                                 </div>
 
@@ -4905,8 +4926,15 @@ export default function Home() {
                                                 <p className="text-gray-400 text-xs">
                                                   Recommended Stop
                                                 </p>
-                                                <p className="text-xl font-bold text-white">
+                                                <p
+                                                  className={`text-xl font-bold ${maxHold.belowMinimum ? 'text-red-400' : 'text-white'}`}
+                                                >
                                                   {maxHold.recommendedStopMinutes} min
+                                                  {maxHold.belowMinimum && (
+                                                    <span className="text-xs font-normal ml-1">
+                                                      ⚠️ exceeds max
+                                                    </span>
+                                                  )}
                                                 </p>
                                               </div>
                                               <div>
@@ -5018,7 +5046,7 @@ export default function Home() {
                                 <p className="font-medium text-lg">
                                   {traffic.peak_hour_volume || 'N/A'}
                                 </p>
-                                <p className="text-xs text-gray-500">vehicles/hour (one dir)</p>
+                                <p className="text-xs text-gray-500">vehicles/hour (both dir)</p>
                               </div>
                               <div>
                                 <p className="text-gray-400">Heavy Vehicles</p>
@@ -5034,8 +5062,9 @@ export default function Home() {
 
                             {/* Calculated Values */}
                             {(() => {
-                              const peakHourOneDir = traffic.peak_hour_volume || 0;
-                              const peakHourBothDir = peakHourOneDir * 2;
+                              // peak_hour_volume from API is BOTH directions (estimated at 10% of AADT)
+                              const peakHourBothDir = traffic.peak_hour_volume || 0;
+                              const peakHourOneDir = Math.round(peakHourBothDir / 2);
                               const estimatedPeakFromAadt = traffic.aadt
                                 ? Math.round(traffic.aadt * 0.1)
                                 : 0;
@@ -5307,8 +5336,15 @@ export default function Home() {
                                               <p className="text-gray-400 text-xs">
                                                 Recommended Stop
                                               </p>
-                                              <p className="text-xl font-bold text-white">
+                                              <p
+                                                className={`text-xl font-bold ${maxHold.belowMinimum ? 'text-red-400' : 'text-white'}`}
+                                              >
                                                 {maxHold.recommendedStopMinutes} min
+                                                {maxHold.belowMinimum && (
+                                                  <span className="text-xs font-normal ml-1">
+                                                    ⚠️ exceeds max
+                                                  </span>
+                                                )}
                                               </p>
                                             </div>
                                             <div>

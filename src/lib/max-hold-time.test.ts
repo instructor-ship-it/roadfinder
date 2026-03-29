@@ -62,6 +62,24 @@ describe('calculateMaxHoldTime', () => {
     expect(result!.recommendedStopMinutes).toBe(2);
   });
 
+  it('should flag belowMinimum when max hold < 2 minutes', () => {
+    // Very high volume: 500 VPH/direction, 100% heavy
+    // Queue growth = (500/60) * 20.0 = 166.67 m/min
+    // Max hold = 100 / 166.67 ≈ 0.6 min → below minimum
+    const result = calculateMaxHoldTime(500, 100);
+    expect(result).not.toBeNull();
+    expect(result!.maxHoldTimeMinutes).toBeLessThan(2);
+    expect(result!.belowMinimum).toBe(true);
+    expect(result!.recommendedStopMinutes).toBe(2); // still shows minimum bracket
+  });
+
+  it('should not flag belowMinimum when max hold >= 2 minutes', () => {
+    const result = calculateMaxHoldTime(100, 28.8);
+    expect(result).not.toBeNull();
+    expect(result!.maxHoldTimeMinutes).toBeGreaterThanOrEqual(5.5);
+    expect(result!.belowMinimum).toBe(false);
+  });
+
   it('should select correct recommended stop bracket for high volume', () => {
     // Low volume: 30 VPH/direction, 10% heavy
     // Queue growth = (30/60) * ((90/100 * 6.0) + (10/100 * 20.0))
