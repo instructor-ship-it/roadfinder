@@ -2,7 +2,7 @@
 
 ## Program Logic Documentation
 
-**Version RC 1.9.7**
+**Version RC 1.9.8**
 
 **Western Australia Traffic Controllers**
 
@@ -269,12 +269,13 @@ The application implements several API routes using Next.js App Router conventio
 
 ### 5.2 Emergency Routes
 
-| Route                   | Method | Purpose                          |
-| ----------------------- | ------ | -------------------------------- |
-| /api/emergency-stations | GET    | All emergency facility locations |
-| /api/hospitals          | GET    | Hospital locations from OSM      |
-| /api/nearest-hospital   | GET    | Find nearest hospital            |
-| /api/police-stations    | GET    | Police station locations         |
+| Route                   | Method | Purpose                                                        |
+| ----------------------- | ------ | -------------------------------------------------------------- |
+| /api/emergency-stations | GET    | All emergency facility locations                               |
+| /api/hospitals          | GET    | Hospital locations from WA Health SLIP Services (Layers 6 & 7) |
+| /api/nearest-hospital   | GET    | Nearest hospital from WA Health SLIP Services                  |
+| /api/fuel-stations      | GET    | Diesel fuel stations from FuelWatch WA + Overpass merge        |
+| /api/police-stations    | GET    | Police station locations                                       |
 
 ### 5.3 Speed Zone Routes
 
@@ -302,7 +303,55 @@ The application implements several API routes using Next.js App Router conventio
 | /api/qa       | GET      | QA test data and validation |
 | /api/qa-saved | GET/POST | Saved QA test results       |
 
-### 5.6 Incidents Route
+### 5.6 Fuel Stations Route
+
+**Endpoint:** `GET /api/fuel-stations`
+
+Provides diesel fuel station data by merging FuelWatch WA (daily prices) with OpenStreetMap Overpass API (coverage gaps).
+
+**Query Parameters:**
+
+| Parameter | Type   | Default | Description                  |
+| --------- | ------ | ------- | ---------------------------- |
+| lat       | number | —       | Latitude (required)          |
+| lon       | number | —       | Longitude (required)         |
+| radius    | number | 100     | Search radius in km          |
+| fuelType  | string | DL      | Fuel type code (DL = diesel) |
+
+**Response Structure:**
+
+```typescript
+{
+  nearest: FuelStation | null;    // Closest station
+  cheapest: FuelStation | null;    // Cheapest (if different from nearest)
+  stations: FuelStation[];        // Top 20 by distance
+}
+```
+
+**Merge/Dedup Logic:**
+
+1. Fetch all diesel stations from FuelWatch WA RSS feed (~700 stations)
+2. Fetch all fuel stations from Overpass API within radius
+3. Deduplicate stations within 200m proximity — FuelWatch data takes priority (has pricing)
+4. Sort by distance, return top 20
+5. Server-side cache: 30 minutes
+
+**FuelStation Object:**
+
+```typescript
+{
+  name: string; // Display name
+  brand: string; // Brand name
+  price: number | null; // Diesel price (cents/L) — null if from Overpass
+  lat: number; // Latitude
+  lon: number; // Longitude
+  distanceKm: number; // Distance from search center
+  source: 'FuelWatch' | 'OpenStreetMap'; // Data source
+  // ... additional fields (address, phone, siteFeatures, etc.)
+}
+```
+
+### 5.7 Incidents Route
 
 | Route          | Method | Purpose             |
 | -------------- | ------ | ------------------- |
@@ -726,6 +775,51 @@ React best practices are followed to prevent unnecessary re-renders:
 - Collapsible sections use local state for expand/collapse
 - Suspense boundaries handle async parameter parsing
 
+### 13.4 fetchPlaces() 3-Source Parallel Architecture
+
+The home page (`src/app/page.tsx`) implements a sophisticated parallel data fetching strategy for amenity data through the `fetchPlaces()` function. This architecture ensures the best available data is displayed while maintaining resilience through smart fallback chains.
+
+**Architecture Overview:**
+
+The function launches three independent fetch calls in parallel using `Promise.allSettled()`:
+
+1. **Hospitals**: `GET /api/nearest-hospital` (WA Health SLIP primary) → `GET /api/places?type=hospital` (Overpass fallback)
+2. **Fuel Stations**: `GET /api/fuel-stations` (FuelWatch WA + Overpass merge) → `GET /api/places?type=fuel` (Overpass fallback)
+3. **Toilets**: `GET /api/places?type=toilet` (Overpass API only — no better alternative exists)
+
+**Smart Fallback Chain:**
+
+Each source has its own try/catch block. If the primary source fails (timeout, network error, parsing error), the home page automatically falls back to the Overpass-based `/api/places` endpoint for that amenity type. This ensures data is always displayed even if a government data source is unavailable.
+
+**Source Tracking:**
+
+The `PlacesData` interface includes source tracking fields:
+
+```typescript
+interface PlacesData {
+  hospitalSource?: 'WA Health SLIP' | 'OpenStreetMap';
+  fuelSource?: 'FuelWatch WA' | 'OpenStreetMap';
+  // ... other fields
+}
+```
+
+This enables the UI to show users which data source was used, adding transparency.
+
+**Offline Mode:**
+
+When offline, the system follows this chain:
+
+1. **IndexedDB** — Check for cached amenity data in IndexedDB `amenities` store
+2. **localStorage** — Fall back to localStorage cached PlacesData with timestamp
+3. **"Data Unavailable"** — Display indicator that amenity data requires internet connection
+
+**Cache Strategy:**
+
+- localStorage cache with timestamp (30-minute expiry)
+- Each amenity type cached independently
+- Stale cache served when offline (better than no data)
+- Cache invalidated on successful fresh fetch
+
 ---
 
 ## 14. Technical Debt and Future Improvements
@@ -746,8 +840,6 @@ The current implementation has several areas identified for future improvement:
 
 7. **Live Traffic Integration**: Could integrate real-time traffic incident data from MRWA WebEOC.
 
-8. **BOM Warnings Integration**: Could integrate live BOM weather warnings into the drive page.
-
 ---
 
-_This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.7._
+_This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.8._

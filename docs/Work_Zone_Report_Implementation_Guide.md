@@ -4,7 +4,7 @@
 
 This document explains how the Work Zone Report Generator feature was implemented in the TC Work Zone Locator app. The feature allows users to generate a comprehensive text report of all work zone information with a visual ASCII graphic for road width breakdown.
 
-**Version: RC 1.9.7**
+**Version: RC 1.9.8**
 
 ---
 
@@ -295,13 +295,24 @@ if (places) {
     lines.push('Hospital:');
     lines.push(`  Name:           ${places.hospital.name}`);
     lines.push(`  Distance:       ${places.hospital.distance} km`);
+    if (places.hospital.type) lines.push(`  Type:           ${places.hospital.type}`);
+    if (places.hospital.hasEmergency) lines.push(`  ED:             Yes`);
+    if (places.hospital.beds) lines.push(`  Beds:           ${places.hospital.beds}`);
+    if (places.hospital.address) lines.push(`  Address:        ${places.hospital.address}`);
     if (places.hospital.phone) lines.push(`  Phone:           ${places.hospital.phone}`);
-    if (places.hospital.isEmergency) lines.push(`  Emergency:      Yes`);
   }
   if (places.fuelStation) {
     lines.push('Fuel Station:');
     lines.push(`  Name:           ${places.fuelStation.name}`);
     lines.push(`  Distance:       ${places.fuelStation.distance} km`);
+    if (places.fuelStation.dieselPrice)
+      lines.push(
+        `  Diesel Price:   ${places.fuelStation.dieselPrice} c/L ($${(places.fuelStation.dieselPrice / 100).toFixed(2)})`
+      );
+    if (places.fuelStation.brand) lines.push(`  Brand:          ${places.fuelStation.brand}`);
+    if (places.fuelStation.features) lines.push(`  Features:       ${places.fuelStation.features}`);
+    if (places.fuelStation.address) lines.push(`  Address:        ${places.fuelStation.address}`);
+    if (places.fuelStation.phone) lines.push(`  Phone:           ${places.fuelStation.phone}`);
   }
   if (places.toilet) {
     lines.push('Public Toilet:');
@@ -433,24 +444,25 @@ const downloadReport = () => {
 
 The report uses data from these state variables:
 
-| Variable             | Source         | Content                                             |
-| -------------------- | -------------- | --------------------------------------------------- |
-| `result`             | `/api/roads`   | Work zone info, pavement, TC positions, speed zones |
-| `weather`            | `/api/weather` | Temperature, conditions, UV, wind, warnings         |
-| `traffic`            | `/api/traffic` | AADT, peak hour, heavy vehicles                     |
-| `places`             | `/api/places`  | Nearby hospital, fuel, toilet                       |
-| `signage`            | IndexedDB      | Speed signs, warning signs, rail crossings          |
-| `intersecting_roads` | Overpass API   | Cross roads in work zone                            |
+| Variable             | Source                                                                        | Content                                             |
+| -------------------- | ----------------------------------------------------------------------------- | --------------------------------------------------- |
+| `result`             | `/api/roads`                                                                  | Work zone info, pavement, TC positions, speed zones |
+| `weather`            | `/api/weather`                                                                | Temperature, conditions, UV, wind, warnings         |
+| `traffic`            | `/api/traffic`                                                                | AADT, peak hour, heavy vehicles                     |
+| `places`             | `/api/nearest-hospital` + `/api/fuel-stations` + `/api/places` (toilets only) | Nearby hospital, fuel, toilet                       |
+| `signage`            | IndexedDB                                                                     | Speed signs, warning signs, rail crossings          |
+| `intersecting_roads` | Overpass API                                                                  | Cross roads in work zone                            |
 
 ---
 
 ## Version History
 
-| Version   | Date       | Changes                                                     |
-| --------- | ---------- | ----------------------------------------------------------- |
-| RC 1.9.7  | 2025-06    | Updated for new features, added warning banners             |
-| RC 1.5.3  | 2026-03-09 | Added work zone report generator with visual road width bar |
-| Build Fix | 2026-03-09 | Fixed `emergency` → `isEmergency` property name             |
+| Version   | Date       | Changes                                                          |
+| --------- | ---------- | ---------------------------------------------------------------- |
+| RC 1.9.8  | 2025-06    | Enhanced amenity details (hospital types, fuel prices, features) |
+| RC 1.9.7  | 2025-06    | Updated for new features, added warning banners                  |
+| RC 1.5.3  | 2026-03-09 | Added work zone report generator with visual road width bar      |
+| Build Fix | 2026-03-09 | Fixed `emergency` → `isEmergency` property name                  |
 
 ---
 

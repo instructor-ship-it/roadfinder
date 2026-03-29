@@ -2,7 +2,7 @@
 
 **Data Dictionary**
 
-Version RC 1.9.7
+Version RC 1.9.8
 
 Comprehensive Data Structure Reference
 
@@ -556,17 +556,25 @@ Cached weather data for offline access:
 
 Individual amenity location:
 
-| **Field**     | **Type** | **Description**                 |
-| ------------- | -------- | ------------------------------- |
-| name          | string   | Place name                      |
-| type          | enum     | "hospital", "fuel", or "toilet" |
-| lat           | number   | Latitude                        |
-| lon           | number   | Longitude                       |
-| distance      | number?  | Distance from current location  |
-| address       | string?  | Street address                  |
-| phone         | string?  | Phone number                    |
-| opening_hours | string?  | Opening hours                   |
-| emergency     | boolean? | Is emergency facility           |
+| **Field**        | **Type**  | **Description**                                                    |
+| ---------------- | --------- | ------------------------------------------------------------------ |
+| name             | string    | Place name                                                         |
+| type             | enum      | "hospital", "fuel", or "toilet"                                    |
+| lat              | number    | Latitude                                                           |
+| lon              | number    | Longitude                                                          |
+| distance         | number?   | Distance from current location                                     |
+| address          | string?   | Street address                                                     |
+| phone            | string?   | Phone number                                                       |
+| opening_hours    | string?   | Opening hours                                                      |
+| emergency        | boolean?  | Is emergency facility                                              |
+| hospitalType     | string?   | Hospital type: 'Public', 'Private', 'Nursing Post'                 |
+| hospitalCategory | string?   | Hospital category (e.g., 'Acute Hospital')                         |
+| beds             | number?   | Number of hospital beds                                            |
+| suburb           | string?   | Suburb/town name                                                   |
+| fuelBrand        | string?   | Fuel station brand name                                            |
+| fuelPrice        | number?   | Diesel price in cents/L (e.g., 231.3 = $2.313/L)                   |
+| fuelDate         | string?   | Date of fuel price (YYYY-MM-DD)                                    |
+| siteFeatures     | string[]? | Station features array (e.g., ['Open 24 hours', 'Toilets', 'ATM']) |
 
 ### 10.2 AmenitiesCache
 
@@ -582,17 +590,84 @@ Cached amenities by region:
 
 ### 10.3 Place (Legacy)
 
-| **Field**     | **Type** | **Description**         |
-| ------------- | -------- | ----------------------- |
-| name          | string   | Place name              |
-| type          | string   | hospital, fuel, toilet  |
-| distance      | string   | Distance from work zone |
-| lat           | number   | Latitude                |
-| lon           | number   | Longitude               |
-| phone         | string?  | Phone number            |
-| address       | string?  | Street address          |
-| googleMapsUrl | string   | Google Maps link        |
-| isEmergency   | boolean? | Emergency facility?     |
+| **Field**        | **Type**  | **Description**                                                    |
+| ---------------- | --------- | ------------------------------------------------------------------ |
+| name             | string    | Place name                                                         |
+| type             | string    | hospital, fuel, toilet                                             |
+| distance         | string    | Distance from work zone                                            |
+| lat              | number    | Latitude                                                           |
+| lon              | number    | Longitude                                                          |
+| phone            | string?   | Phone number                                                       |
+| address          | string?   | Street address                                                     |
+| googleMapsUrl    | string    | Google Maps link                                                   |
+| isEmergency      | boolean?  | Emergency facility?                                                |
+| hospitalType     | string?   | Hospital type: 'Public', 'Private', 'Nursing Post'                 |
+| hospitalCategory | string?   | Hospital category (e.g., 'Acute Hospital')                         |
+| beds             | number?   | Number of hospital beds                                            |
+| suburb           | string?   | Suburb/town name                                                   |
+| fuelBrand        | string?   | Fuel station brand name                                            |
+| fuelPrice        | number?   | Diesel price in cents/L (e.g., 231.3 = $2.313/L)                   |
+| fuelDate         | string?   | Date of fuel price (YYYY-MM-DD)                                    |
+| siteFeatures     | string[]? | Station features array (e.g., ['Open 24 hours', 'Toilets', 'ATM']) |
+
+---
+
+## 10.4 PlacesData
+
+Container for all amenity data returned by `fetchPlaces()` on the home page, with source tracking:
+
+| **Field**      | **Type**       | **Description**                                                |
+| -------------- | -------------- | -------------------------------------------------------------- |
+| hospitals      | Hospital[]     | Hospital results                                               |
+| fuelStations   | FuelStation[]  | Fuel station results                                           |
+| toilets        | AmenityPlace[] | Public toilet results                                          |
+| hospitalSource | string?        | Data source for hospitals: 'WA Health SLIP' \| 'OpenStreetMap' |
+| fuelSource     | string?        | Data source for fuel: 'FuelWatch WA' \| 'OpenStreetMap'        |
+
+---
+
+## 10.5 FuelStation (API Response)
+
+Fuel station data from `/api/fuel-stations`, merging FuelWatch WA and Overpass data:
+
+| **Field**     | **Type**                       | **Description**                                              |
+| ------------- | ------------------------------ | ------------------------------------------------------------ |
+| name          | string                         | Display name                                                 |
+| brand         | string                         | Brand name (e.g., 'BP', 'Caltex')                            |
+| tradingName   | string                         | Full trading name                                            |
+| location      | string                         | Town/suburb                                                  |
+| address       | string                         | Street address                                               |
+| phone         | string \| null                 | Phone number                                                 |
+| price         | number \| null                 | Diesel price in cents per litre (null if from Overpass)      |
+| fuelType      | string                         | Fuel type code (e.g., 'DL')                                  |
+| date          | string                         | Price date (YYYY-MM-DD)                                      |
+| lat           | number                         | Latitude                                                     |
+| lon           | number                         | Longitude                                                    |
+| distanceKm    | number                         | Distance from search center in km                            |
+| googleMapsUrl | string                         | Google Maps navigation URL                                   |
+| siteFeatures  | string[]                       | Station features (e.g., ['Open 24 hours', 'Toilets', 'ATM']) |
+| source        | 'FuelWatch' \| 'OpenStreetMap' | Data source                                                  |
+
+---
+
+## 10.6 Hospital (API Response)
+
+Hospital data from `/api/nearest-hospital` via WA Health SLIP Services:
+
+| **Field**     | **Type**                           | **Description**                             |
+| ------------- | ---------------------------------- | ------------------------------------------- |
+| name          | string                             | Establishment name                          |
+| address       | string                             | Street address                              |
+| suburb        | string                             | Suburb                                      |
+| phone         | string \| null                     | Phone number                                |
+| category      | string                             | Hospital category (e.g., 'Acute Hospital')  |
+| type          | 'Public' \| 'Private' \| 'Unknown' | Establishment type                          |
+| hasED         | boolean                            | Has Emergency Department (ed_reporti = 'Y') |
+| beds          | number \| null                     | Number of beds                              |
+| lat           | number                             | Latitude                                    |
+| lon           | number                             | Longitude                                   |
+| distanceM     | number                             | Distance from search center in metres       |
+| googleMapsUrl | string                             | Google Maps URL                             |
 
 ---
 

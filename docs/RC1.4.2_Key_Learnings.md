@@ -1,6 +1,6 @@
-# RC 1.9.7 Key Learnings & Concepts
+# RC 1.9.8 Key Learnings & Concepts
 
-> **Version:** RC 1.9.7
+> **Version:** RC 1.9.8
 > **Date:** June 2025
 > **Author:** Development Session Notes
 
@@ -943,7 +943,7 @@ const getWAFine = (kmOver: number): { fine: number; points: number } => {
   if (kmOver <= 9) return { fine: 100, points: 0 };
   if (kmOver <= 19) return { fine: 200, points: 2 };
   if (kmOver <= 29) return { fine: 400, points: 3 };
-  if (kmOver <= 40) return { fine: 800, points: 4 };
+  if (kmOver <= 40) return { fine: 800, points: 6 };
   return { fine: 1500, points: 6 }; // 40+ km/h over
 };
 ```
@@ -1197,7 +1197,7 @@ const documentCategories = [
 | 1-9 km/h        | $100    | 0              |
 | 10-19 km/h      | $200    | 2              |
 | 20-29 km/h      | $400    | 3              |
-| 30-40 km/h      | $800    | 4              |
+| 30-40 km/h      | $800    | 6              |
 | 40+ km/h        | $1,200+ | 6-7            |
 
 ### Slow Driving Fines

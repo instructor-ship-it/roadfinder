@@ -2,7 +2,7 @@
 
 ## File Structure Documentation
 
-**Version RC 1.9.7**
+**Version RC 1.9.8**
 
 ---
 
@@ -57,34 +57,35 @@ The TC Work Zone Locator is a Next.js 15 application built with the App Router a
 
 ### 3.2 API Routes (src/app/api/)
 
-| Route                            | Purpose                       |
-| -------------------------------- | ----------------------------- |
-| `roads/route.ts`                 | Road data, SLK coordinates    |
-| `gps/route.ts`                   | GPS to SLK conversion         |
-| `weather/route.ts`               | Weather data (Open-Meteo)     |
-| `warnings/route.ts`              | BOM weather warnings RSS      |
-| `weather/warnings/route.ts`      | Weather warnings sub-endpoint |
-| `traffic/route.ts`               | Traffic volume data           |
-| `places/route.ts`                | Nearby amenities              |
-| `intersections/route.ts`         | Cross road detection          |
-| `nearest-intersections/route.ts` | Find nearest intersections    |
-| `admin-sync/route.ts`            | MRWA direct sync              |
-| `overrides/route.ts`             | Override storage pass-through |
-| `speed-compare/route.ts`         | MRWA vs OSM comparison        |
-| `osm-speed/route.ts`             | OSM speed limit data          |
-| `speed-verify/route.ts`          | Speed verification            |
-| `speedlimit/route.ts`            | Speed limit lookup            |
-| `download-signs/route.ts`        | Sign data download            |
-| `export-pdf/route.ts`            | Work zone report export       |
-| `sync-data/route.ts`             | Offline data sync             |
-| `route/route.ts`                 | Route API                     |
-| `emergency-stations/route.ts`    | Emergency facility locations  |
-| `hospitals/route.ts`             | Hospital locations            |
-| `nearest-hospital/route.ts`      | Find nearest hospital         |
-| `police-stations/route.ts`       | Police station locations      |
-| `incidents/route.ts`             | Live road incidents           |
-| `qa/route.ts`                    | QA test data                  |
-| `qa-saved/route.ts`              | Saved QA results              |
+| Route                            | Purpose                                                                                |
+| -------------------------------- | -------------------------------------------------------------------------------------- |
+| `roads/route.ts`                 | Road data, SLK coordinates                                                             |
+| `gps/route.ts`                   | GPS to SLK conversion                                                                  |
+| `weather/route.ts`               | Weather data (Open-Meteo)                                                              |
+| `warnings/route.ts`              | BOM weather warnings RSS                                                               |
+| `weather/warnings/route.ts`      | Weather warnings sub-endpoint                                                          |
+| `traffic/route.ts`               | Traffic volume data                                                                    |
+| `places/route.ts`                | Nearby amenities                                                                       |
+| `intersections/route.ts`         | Cross road detection                                                                   |
+| `nearest-intersections/route.ts` | Find nearest intersections                                                             |
+| `admin-sync/route.ts`            | MRWA direct sync                                                                       |
+| `overrides/route.ts`             | Override storage pass-through                                                          |
+| `speed-compare/route.ts`         | MRWA vs OSM comparison                                                                 |
+| `osm-speed/route.ts`             | OSM speed limit data                                                                   |
+| `speed-verify/route.ts`          | Speed verification                                                                     |
+| `speedlimit/route.ts`            | Speed limit lookup                                                                     |
+| `download-signs/route.ts`        | Sign data download                                                                     |
+| `export-pdf/route.ts`            | Work zone report export                                                                |
+| `sync-data/route.ts`             | Offline data sync                                                                      |
+| `route/route.ts`                 | Route API                                                                              |
+| `emergency-stations/route.ts`    | Emergency facility locations                                                           |
+| `hospitals/route.ts`             | Hospital locations from WA Health SLIP Services (Layers 6 & 7)                         |
+| `nearest-hospital/route.ts`      | Nearest hospital from WA Health SLIP Services, includes nursing posts for remote areas |
+| `police-stations/route.ts`       | Police station locations                                                               |
+| `incidents/route.ts`             | Live road incidents                                                                    |
+| `fuel-stations/route.ts`         | FuelWatch WA + Overpass merged fuel station search                                     |
+| `qa/route.ts`                    | QA test data                                                                           |
+| `qa-saved/route.ts`              | Saved QA results                                                                       |
 
 ### 3.3 Library Modules (src/lib/)
 
@@ -319,21 +320,22 @@ Route optimization for multi-stop signage retrieval:
 
 ## 9. Version History
 
-| Version   | Date       | Key Changes                                                               |
-| --------- | ---------- | ------------------------------------------------------------------------- |
-| RC 1.9.7  | March 2026 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements |
-| RC 1.9.1  | March 2026 | Speeding alerts with WA fine info, minutes per km, 10km time              |
-| RC 1.9.0  | March 2026 | Traffic Counter feature, Documents Library                                |
-| RC 1.8.0  | March 2026 | QA page, Settings Drawer consolidation                                    |
-| RC 1.7.18 | March 2026 | Signage Corridor intersection fix (Layer 6)                               |
-| RC 1.7.17 | March 2026 | Emergency cross road detection, shared module                             |
-| RC 1.7.14 | March 2026 | Emergency location enhancement                                            |
-| RC 1.6.0  | March 2026 | AfterCare Map View, Leaflet integration                                   |
-| RC 1.5.0  | March 2026 | Nearby Signs page, filtered view                                          |
-| RC 1.4.0  | March 2026 | AfterCare signage tracking system                                         |
-| RC 1.2.1  | March 2026 | Override zone visual indicator                                            |
-| RC 1.2.0  | March 2026 | Speed sign override system                                                |
-| RC 1.0    | March 2026 | Official release candidate                                                |
+| Version   | Date       | Key Changes                                                                         |
+| --------- | ---------- | ----------------------------------------------------------------------------------- |
+| RC 1.9.8  | June 2026  | Fuel stations (FuelWatch WA + Overpass), hospital type badges, amenity data sources |
+| RC 1.9.7  | March 2026 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements           |
+| RC 1.9.1  | March 2026 | Speeding alerts with WA fine info, minutes per km, 10km time                        |
+| RC 1.9.0  | March 2026 | Traffic Counter feature, Documents Library                                          |
+| RC 1.8.0  | March 2026 | QA page, Settings Drawer consolidation                                              |
+| RC 1.7.18 | March 2026 | Signage Corridor intersection fix (Layer 6)                                         |
+| RC 1.7.17 | March 2026 | Emergency cross road detection, shared module                                       |
+| RC 1.7.14 | March 2026 | Emergency location enhancement                                                      |
+| RC 1.6.0  | March 2026 | AfterCare Map View, Leaflet integration                                             |
+| RC 1.5.0  | March 2026 | Nearby Signs page, filtered view                                                    |
+| RC 1.4.0  | March 2026 | AfterCare signage tracking system                                                   |
+| RC 1.2.1  | March 2026 | Override zone visual indicator                                                      |
+| RC 1.2.0  | March 2026 | Speed sign override system                                                          |
+| RC 1.0    | March 2026 | Official release candidate                                                          |
 
 ---
 

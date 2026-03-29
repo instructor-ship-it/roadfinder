@@ -1,12 +1,12 @@
 # TC Work Zone Locator
 
-## Release Candidate 1.9.7
+## Release Candidate 1.9.8
 
 **Complete Layout & Functionality Documentation**
 
 | Field          | Value                                            |
 | -------------- | ------------------------------------------------ |
-| **Version**    | RC 1.9.7                                         |
+| **Version**    | RC 1.9.8                                         |
 | **Date**       | June 2025                                        |
 | **Repository** | https://github.com/instructor-ship-it/roadfinder |
 
@@ -60,6 +60,9 @@ TC Work Zone Locator is a mobile-first Progressive Web Application (PWA) designe
 - **Settings Drawer** with organized configuration options
 - **Weather Warning Banner** for BOM alerts
 - **Incident Warning Banner** for road incidents
+- **Fuel price display** with daily updated diesel pricing from FuelWatch WA
+- **Hospital type badges** (ED, Public, Private, Nursing Post)
+- **Multi-source amenity data** (WA Health SLIP + FuelWatch WA + Overpass)
 
 ### 1.2 Technology Stack
 
@@ -139,7 +142,7 @@ The application has twelve main pages:
 ### 4.1 Header Section
 
 - Application title: "TC Work Zone Locator"
-- Version display: "vRC 1.9.7"
+- Version display: "vRC 1.9.8"
 - Offline status indicator (green when data downloaded)
 - Hamburger menu (☰) - Opens Settings drawer
 
@@ -233,7 +236,7 @@ When exceeding the speed limit, a warning banner displays:
 ### 6.1 Header
 
 - Title: "AfterCare Signs"
-- Version display: "vRC 1.9.7"
+- Version display: "vRC 1.9.8"
 - Back to Work Zone Locator link
 
 ### 6.2 Job List
@@ -325,7 +328,7 @@ Fixed at bottom-left of map:
 
 ### 8.1 Header
 
-- Version: "vRC 1.9.7"
+- Version: "vRC 1.9.8"
 - Storage mode: "Local Storage"
 - Back to Work Zone Locator button
 
@@ -589,32 +592,43 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 
 ## 16. API Endpoints
 
-| Endpoint              | Method   | Description                |
-| --------------------- | -------- | -------------------------- |
-| `/api/roads`          | GET/POST | Road data, SLK coordinates |
-| `/api/gps`            | GET      | GPS to SLK conversion      |
-| `/api/weather`        | GET      | Weather data (Open-Meteo)  |
-| `/api/warnings`       | GET      | BOM weather warnings       |
-| `/api/traffic`        | GET      | Traffic volume data        |
-| `/api/places`         | GET      | Nearby amenities           |
-| `/api/intersections`  | GET      | Cross road detection       |
-| `/api/admin-sync`     | GET/POST | MRWA direct sync           |
-| `/api/overrides`      | GET/POST | Override storage           |
-| `/api/speed-compare`  | GET      | MRWA vs OSM comparison     |
-| `/api/osm-speed`      | GET      | OSM speed limits           |
-| `/api/speed-verify`   | GET      | Speed verification         |
-| `/api/speedlimit`     | GET      | Speed limit lookup         |
-| `/api/download-signs` | GET      | Sign data download         |
-| `/api/export-pdf`     | POST     | Report export              |
-| `/api/sync-data`      | POST     | Offline data sync          |
-| `/api/qa`             | POST     | Q&A AI assistant           |
-| `/api/library`        | GET      | Library documents          |
+| Endpoint              | Method   | Description                                                        |
+| --------------------- | -------- | ------------------------------------------------------------------ |
+| `/api/roads`          | GET/POST | Road data, SLK coordinates                                         |
+| `/api/gps`            | GET      | GPS to SLK conversion                                              |
+| `/api/weather`        | GET      | Weather data (Open-Meteo)                                          |
+| `/api/warnings`       | GET      | BOM weather warnings                                               |
+| `/api/traffic`        | GET      | Traffic volume data                                                |
+| `/api/places`         | GET      | Nearby amenities                                                   |
+| `/api/intersections`  | GET      | Cross road detection                                               |
+| `/api/admin-sync`     | GET/POST | MRWA direct sync                                                   |
+| `/api/overrides`      | GET/POST | Override storage                                                   |
+| `/api/speed-compare`  | GET      | MRWA vs OSM comparison                                             |
+| `/api/osm-speed`      | GET      | OSM speed limits                                                   |
+| `/api/speed-verify`   | GET      | Speed verification                                                 |
+| `/api/speedlimit`     | GET      | Speed limit lookup                                                 |
+| `/api/download-signs` | GET      | Sign data download                                                 |
+| `/api/export-pdf`     | POST     | Report export                                                      |
+| `/api/sync-data`      | POST     | Offline data sync                                                  |
+| `/api/qa`             | POST     | Q&A AI assistant                                                   |
+| `/api/library`        | GET      | Library documents                                                  |
+| `/api/fuel-stations`  | GET      | Diesel fuel stations (FuelWatch WA + Overpass merge, 30-min cache) |
 
 ---
 
 ## 17. Version History
 
-### RC 1.9.7 (Current) - Maximum Hold Time, Shuttle Flow Corrections, UI Improvements
+### RC 1.9.8 (Current) - Fuel Stations, Hospital Badges, Multi-Source Amenities
+
+- **Fuel station search** now merges FuelWatch WA and Overpass data for comprehensive coverage
+- **Hospital type badges** show ED, Public, Private, or Nursing Post status
+- **Hospital details** include bed count, address, and phone from WA Health SLIP
+- **Fuel price display** with daily updated diesel pricing from FuelWatch WA
+- **Site features** for fuel stations (e.g., Fuel Cards, ATM, Toilets, EFTPOS)
+- **Multi-source amenity data** from WA Health SLIP + FuelWatch WA + Overpass
+- **Report fuel station output** includes diesel price, brand, features, address, phone
+
+### RC 1.9.7 - Maximum Hold Time, Shuttle Flow Corrections, UI Improvements
 
 - **Maximum Hold Time Calculator** added to Work Zone Info page
 - **Shuttle Flow Risk Assessment** fixed to match AGTTM Part 2 Table 3.5 and MRWA COP Table 15

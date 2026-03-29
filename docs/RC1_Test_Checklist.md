@@ -1,4 +1,4 @@
-# TC Work Zone Locator - RC 1.9.7 Test Checklist
+# TC Work Zone Locator - RC 1.9.8 Test Checklist
 
 ## Pre-Test Setup
 
@@ -145,7 +145,15 @@
 - [ ] Fuel Station shown with:
   - [ ] Yellow gas icon
   - [ ] Distance
+  - [ ] Diesel price badge when price available (from FuelWatch)
+  - [ ] "No price today" badge when price is null (from Overpass)
+  - [ ] Site features (e.g., "Open 24 hours · Toilets · ATM")
   - [ ] Two small icon buttons
+- [ ] Hospital shows ED badge when hasEmergency is true
+- [ ] Hospital shows Public/Private/Nursing Post type badge
+- [ ] Hospital shows bed count when available
+- [ ] Hospital shows address and phone when available
+- [ ] Amenities source tracking displayed correctly
 - [ ] Public Toilet shown with:
   - [ ] Blue toilet icon
   - [ ] Distance
@@ -175,7 +183,7 @@
 
 ### Page Load
 
-- [ ] Version shows "RC 1.9.7"
+- [ ] Version shows "RC 1.9.8"
 - [ ] "EKF Filtering Active" shows in purple
 - [ ] "Offline Ready" shows in green if data downloaded
 
@@ -337,7 +345,7 @@
 
 ### Page Load
 
-- [ ] Version shows "RC 1.9.7"
+- [ ] Version shows "RC 1.9.8"
 - [ ] Job list shows grouped by status (Due, TBA, Active, Archived)
 
 ### Add Job
@@ -638,7 +646,7 @@
 
 ## Final Checks
 
-- [ ] Version displays "RC 1.9.7" on all pages
+- [ ] Version displays "RC 1.9.8" on all pages
 - [ ] No console errors in browser dev tools
 - [ ] No TypeScript build errors
 - [ ] All features documented in Word docs

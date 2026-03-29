@@ -2,7 +2,7 @@
 
 **User Manual**
 
-Version RC 1.9.7
+Version RC 1.9.8
 
 June 2025
 
@@ -308,9 +308,35 @@ Visual bar showing road width components from left to right:
 
 **Amenities (requires internet):**
 
-- Nearest hospital
-- Nearest fuel station
-- Nearest public toilet
+- Nearest hospital (from WA Health SLIP Services — official government data)
+- Nearest fuel station (from FuelWatch WA daily prices + OpenStreetMap)
+- Nearest public toilet (from OpenStreetMap)
+
+**Hospital details now show:**
+
+- Hospital name with distance badge
+- ED badge (red) — if the hospital has an Emergency Department
+- Public/Private/Nursing Post badge (color-coded)
+- Address line
+- Phone number
+- Bed count (if available)
+
+**Fuel station details now show:**
+
+- Station name with distance badge
+- Diesel price badge (green): "$X.X/L Diesel" — from FuelWatch WA (updated daily)
+- "No price today" badge (gray) — for stations that haven't submitted prices to FuelWatch
+- Address line
+- Phone number
+- Site features: "Open 24 hours · Toilets · ATM · EFTPOS" etc.
+
+**Amenity Data Sources:**
+
+| **Amenity**   | **Primary Source**                             | **Fallback**  |
+| ------------- | ---------------------------------------------- | ------------- |
+| Hospitals     | WA Health SLIP Services (official government)  | OpenStreetMap |
+| Fuel Stations | FuelWatch WA (daily diesel prices) + OSM merge | OpenStreetMap |
+| Toilets       | OpenStreetMap                                  | —             |
 
 ### 4.6 TC Tools Section
 

@@ -4,7 +4,7 @@
 
 ### Complete Reference for All Data APIs and Sources
 
-**Version: RC 1.9.7**
+**Version: RC 1.9.8**
 
 **Date: March 28, 2026**
 
@@ -16,11 +16,12 @@ TC Work Zone Locator integrates data from multiple sources to provide comprehens
 
 ### 1.1 Data Source Categories
 
-The application uses three main categories of data sources:
+The application uses four main categories of data sources:
 
 - **MRWA ArcGIS Services** - Official road network, speed zones, rail crossings, and signage data from Main Roads Western Australia
 - **External Weather APIs** - Open-Meteo for weather forecasts and BOM for weather warnings
 - **OpenStreetMap Services** - Overpass API for amenities and Nominatim for geocoding
+- **WA Government Data Services** - WA Health SLIP Services for hospital data, FuelWatch WA for fuel prices
 
 ---
 
@@ -281,12 +282,13 @@ The application provides internal API routes that aggregate data from multiple s
 
 ### 5.2 Emergency Routes
 
-| Route                   | Method | Purpose                              |
-| ----------------------- | ------ | ------------------------------------ |
-| /api/emergency-stations | GET    | All emergency facility locations     |
-| /api/hospitals          | GET    | Hospital locations from OSM          |
-| /api/nearest-hospital   | GET    | Find nearest hospital to coordinates |
-| /api/police-stations    | GET    | Police station locations             |
+| Route                   | Method | Purpose                                                 |
+| ----------------------- | ------ | ------------------------------------------------------- |
+| /api/emergency-stations | GET    | All emergency facility locations                        |
+| /api/hospitals          | GET    | Hospital locations from WA Health SLIP Services         |
+| /api/nearest-hospital   | GET    | Nearest hospital from WA Health SLIP Services           |
+| /api/fuel-stations      | GET    | Diesel fuel stations from FuelWatch WA + Overpass merge |
+| /api/police-stations    | GET    | Police station locations                                |
 
 ### 5.3 Speed Zone Routes
 
@@ -315,7 +317,36 @@ The application provides internal API routes that aggregate data from multiple s
 | /api/qa       | GET      | QA test data and validation |
 | /api/qa-saved | GET/POST | Saved QA test results       |
 
-### 5.6 Incidents Route
+### 5.6 Fuel Stations Route
+
+| Route              | Method | Purpose                                                 |
+| ------------------ | ------ | ------------------------------------------------------- |
+| /api/fuel-stations | GET    | Diesel fuel stations from FuelWatch WA + Overpass merge |
+
+**Query Parameters:**
+
+| Parameter | Type   | Default | Description                  |
+| --------- | ------ | ------- | ---------------------------- |
+| lat       | number | —       | Latitude (required)          |
+| lon       | number | —       | Longitude (required)         |
+| radius    | number | 100     | Search radius in km          |
+| fuelType  | string | DL      | Fuel type code (DL = diesel) |
+
+**Response Structure:**
+
+- `nearest`: Closest station to search center
+- `cheapest`: Station with lowest price (if different from nearest)
+- `stations`: Top 20 stations sorted by distance
+
+**Merge/Dedup Logic:**
+
+- FuelWatch WA provides price data for ~700 stations (updated daily)
+- Overpass API fills coverage gaps for stations not in FuelWatch
+- Deduplication: stations within 200m proximity are merged (FuelWatch data takes priority)
+- Source tracking: each station includes `source` field ('FuelWatch' or 'OpenStreetMap')
+- Server-side cache: 30 minutes
+
+### 5.7 Incidents Route
 
 | Route          | Method | Purpose                                  |
 | -------------- | ------ | ---------------------------------------- |
@@ -365,39 +396,110 @@ For offline capability, MRWA data is stored in IndexedDB on the client device. T
 
 ## 7. Code References
 
-| File                                       | Purpose                            |
-| ------------------------------------------ | ---------------------------------- |
-| src/lib/mrwa_api.ts                        | MRWA ArcGIS queries and transforms |
-| src/app/api/weather/route.ts               | Open-Meteo weather integration     |
-| src/app/api/warnings/route.ts              | BOM RSS warning parser             |
-| src/app/api/weather/warnings/route.ts      | Combined weather endpoint          |
-| src/app/api/places/route.ts                | Overpass API amenity search        |
-| src/app/api/traffic/route.ts               | MRWA traffic count queries         |
-| src/app/api/admin-sync/route.ts            | MRWA bulk data sync                |
-| src/app/api/emergency-stations/route.ts    | Emergency facility queries         |
-| src/app/api/hospitals/route.ts             | Hospital location queries          |
-| src/app/api/nearest-hospital/route.ts      | Nearest hospital finder            |
-| src/app/api/police-stations/route.ts       | Police station queries             |
-| src/app/api/incidents/route.ts             | Road incidents (future)            |
-| src/app/api/nearest-intersections/route.ts | Intersection finder                |
-| src/app/api/qa/route.ts                    | QA test endpoints                  |
-| src/app/api/qa-saved/route.ts              | QA results storage                 |
-| src/lib/offline-db.ts                      | IndexedDB operations               |
-| src/lib/offline-storage.ts                 | Offline data management            |
-| src/lib/aftercare.ts                       | AfterCare storage operations       |
-| src/lib/traffic-counter-storage.ts         | Traffic count storage              |
+| File                                       | Purpose                                            |
+| ------------------------------------------ | -------------------------------------------------- |
+| src/lib/mrwa_api.ts                        | MRWA ArcGIS queries and transforms                 |
+| src/app/api/weather/route.ts               | Open-Meteo weather integration                     |
+| src/app/api/warnings/route.ts              | BOM RSS warning parser                             |
+| src/app/api/weather/warnings/route.ts      | Combined weather endpoint                          |
+| src/app/api/places/route.ts                | Overpass API amenity search                        |
+| src/app/api/traffic/route.ts               | MRWA traffic count queries                         |
+| src/app/api/admin-sync/route.ts            | MRWA bulk data sync                                |
+| src/app/api/emergency-stations/route.ts    | Emergency facility queries                         |
+| src/app/api/hospitals/route.ts             | Hospital location queries (WA Health SLIP)         |
+| src/app/api/nearest-hospital/route.ts      | Nearest hospital finder (WA Health SLIP)           |
+| src/app/api/fuel-stations/route.ts         | FuelWatch WA + Overpass merged fuel station search |
+| src/app/api/police-stations/route.ts       | Police station queries                             |
+| src/app/api/incidents/route.ts             | Road incidents (future)                            |
+| src/app/api/nearest-intersections/route.ts | Intersection finder                                |
+| src/app/api/qa/route.ts                    | QA test endpoints                                  |
+| src/app/api/qa-saved/route.ts              | QA results storage                                 |
+| src/lib/offline-db.ts                      | IndexedDB operations                               |
+| src/lib/offline-storage.ts                 | Offline data management                            |
+| src/lib/aftercare.ts                       | AfterCare storage operations                       |
+| src/lib/traffic-counter-storage.ts         | Traffic count storage                              |
+
+---
+
+## 7.1 WA Government Data Services
+
+### 7.1.1 FuelWatch WA
+
+FuelWatch WA is a service provided by the WA Government (Department of Local Government, Industry Regulation and Safety) that publishes daily updated fuel prices for all service stations in Western Australia.
+
+**RSS Feed Endpoint:**
+
+```
+https://www.fuelwatch.wa.gov.au/fuelwatch/fuelWatchRSS?fuelType=DL
+```
+
+| Property         | Value                                                                   |
+| ---------------- | ----------------------------------------------------------------------- |
+| Provider         | WA Government, Dept of Local Government, Industry Regulation and Safety |
+| Data Type        | RSS/XML feed                                                            |
+| Fuel Type        | DL (Diesel)                                                             |
+| Authentication   | None required (free)                                                    |
+| Update Frequency | Daily                                                                   |
+| Coverage         | 700+ service stations statewide                                         |
+| Cache Duration   | 30 minutes (server-side)                                                |
+
+**RSS Feed Data Fields:**
+
+- `name` — Station name
+- `brand` — Brand name (e.g., BP, Caltex, Shell)
+- `trading-name` — Full trading name
+- `location` — Town/suburb
+- `address` — Street address
+- `phone` — Phone number
+- `price` — Price in cents per litre
+- `fuel-type` — Fuel type code
+- `date` — Price date
+- `latitude` — Latitude coordinate
+- `longitude` — Longitude coordinate
+- `site-features` — Station features (pipe-delimited)
+
+### 7.1.2 WA Health SLIP Services
+
+The WA Health SLIP (Shared Location Information Platform) provides hospital facility data for Western Australia.
+
+| Property       | Value                                  |
+| -------------- | -------------------------------------- |
+| Provider       | WA Health (Government)                 |
+| Layers Used    | Layer 6 & Layer 7                      |
+| Authentication | SLIP API key (server-side)             |
+| Coverage       | All WA hospitals and health facilities |
+
+Used by `/api/hospitals` and `/api/nearest-hospital` for authoritative hospital data including ED status, bed counts, and hospital type classification.
+
+---
+
+## 7.2 Amenity Architecture Note
+
+The home page (`fetchPlaces()` in `src/app/page.tsx`) uses a **3-source parallel architecture** for fetching amenity data:
+
+1. **Hospitals**: WA Health SLIP Services (primary, via `/api/nearest-hospital`) → Overpass API (fallback via `/api/places`)
+2. **Fuel Stations**: FuelWatch WA + Overpass merge (via `/api/fuel-stations`) → Overpass API (fallback via `/api/places`)
+3. **Toilets**: Overpass API only (via `/api/places`) — no better alternative exists
+
+**Fallback Chain:** Each source has its own try/catch. If the primary source fails (timeout, error), the home page automatically falls back to the Overpass-based `/api/places` endpoint.
+
+**Source Tracking:** The `PlacesData` interface includes `hospitalSource` and `fuelSource` fields to track which data source was used, enabling transparency in the UI.
+
+**Note:** `/api/places` still exists as a general-purpose Overpass endpoint but the home page only uses it for toilet data (and hospital/fuel fallback).
 
 ---
 
 ## 8. Rate Limits and Caching
 
-| API         | Rate Limit           | Caching Strategy                  |
-| ----------- | -------------------- | --------------------------------- |
-| MRWA ArcGIS | 2000 records/request | Client-side IndexedDB             |
-| Open-Meteo  | None (free)          | Per-request, 30-min offline cache |
-| BOM RSS     | Reasonable use       | 5-minute server cache             |
-| Overpass    | Varies by server     | No caching, fallback servers      |
-| Nominatim   | 1 req/sec            | No caching, used once per lookup  |
+| API            | Rate Limit           | Caching Strategy                  |
+| -------------- | -------------------- | --------------------------------- |
+| MRWA ArcGIS    | 2000 records/request | Client-side IndexedDB             |
+| Open-Meteo     | None (free)          | Per-request, 30-min offline cache |
+| BOM RSS        | Reasonable use       | 5-minute server cache             |
+| FuelWatch WA   | None (free RSS)      | 30-min server cache               |
+| WA Health SLIP | Per API terms        | Per-request, no client cache      |
+| Overpass       | Varies by server     | No caching, fallback servers      |
+| Nominatim      | 1 req/sec            | No caching, used once per lookup  |
 
 ---
 
@@ -413,4 +515,4 @@ For offline capability, MRWA data is stored in IndexedDB on the client device. T
 
 ---
 
-_This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.7._
+_This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.8._
