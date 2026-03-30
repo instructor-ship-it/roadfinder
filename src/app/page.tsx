@@ -68,7 +68,12 @@ import {
   type ParsedSpeedZone,
 } from '@/lib/offline-db';
 import { loadStaticData, checkStaticData } from '@/lib/download-roads';
-import { getRecordsForRoadNearSlk, type TrafficCountRecord } from '@/lib/traffic-counter-storage';
+import {
+  getRecordsForRoadNearSlk,
+  generateShareText,
+  formatAusDate,
+  type TrafficCountRecord,
+} from '@/lib/traffic-counter-storage';
 
 // Helper function to format distance for emergency messages
 // Rounds to nearest 100m when under 1km for easier communication
@@ -296,6 +301,7 @@ export default function Home() {
   const [warnings, setWarnings] = useState<WarningData | null>(null);
   const [traffic, setTraffic] = useState<TrafficData | null>(null);
   const [userTrafficCounts, setUserTrafficCounts] = useState<TrafficCountRecord[]>([]);
+  const [selectedCountDetail, setSelectedCountDetail] = useState<TrafficCountRecord | null>(null);
   const [places, setPlaces] = useState<PlacesData | null>(null);
   const [crossRoads, setCrossRoads] = useState<CrossRoad[]>([]);
   const [corridorIntersections, setCorridorIntersections] = useState<CrossRoad[]>([]); // For signage corridor (±700m)
@@ -360,15 +366,18 @@ export default function Home() {
     if (loc.region && loc.region !== selectedRegion) {
       setSelectedRegion(loc.region);
       // The roads will be loaded by the useEffect that watches selectedRegion
-      // We need to wait a bit for the roads to load
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      // We need to wait for the roads to load
+      await new Promise((resolve) => setTimeout(resolve, 500));
     }
 
-    // Set the road and SLK values
-    setSelectedRoad(loc.road_id);
-    setStartSlk(loc.start_slk.toString());
-    setEndSlk(loc.end_slk ? loc.end_slk.toString() : '');
-    setIsSinglePoint(!loc.end_slk);
+    // Directly call getWorkZoneInfo — fills the form AND loads the work zone
+    await getWorkZoneInfo(
+      loc.region || selectedRegion,
+      loc.road_id,
+      loc.start_slk.toString(),
+      loc.end_slk ? loc.end_slk.toString() : '',
+      true
+    );
   };
 
   // GPS location state
@@ -4764,13 +4773,16 @@ export default function Home() {
                                   <span className="bg-green-600 text-white text-xs px-2 py-0.5 rounded-full">
                                     User Counted
                                   </span>
-                                  <span className="text-xs text-gray-400">
+                                  <button
+                                    className="text-xs text-gray-400 hover:text-white transition-colors"
+                                    onClick={() => setSelectedCountDetail(primaryCount)}
+                                  >
                                     {new Date(primaryCount.date).toLocaleDateString('en-AU')} •{' '}
                                     {primaryCount.duration_minutes}min
                                     {primaryCount.slk && startSlk
                                       ? ` • SLK ${primaryCount.slk.toFixed(2)}`
                                       : ''}
-                                  </span>
+                                  </button>
                                   <Link href={countTrafficUrl} className="ml-auto">
                                     <Button className="text-xs h-6 px-2 bg-blue-600/30 hover:bg-blue-600/50 text-blue-300">
                                       📊 New Count
@@ -5164,7 +5176,8 @@ export default function Home() {
                                       {userTrafficCounts.slice(1, 4).map((record) => (
                                         <div
                                           key={record.id}
-                                          className="flex justify-between text-gray-300"
+                                          className="flex justify-between text-gray-300 cursor-pointer hover:bg-gray-700/50 rounded px-2 py-1 -mx-2 transition-colors"
+                                          onClick={() => setSelectedCountDetail(record)}
                                         >
                                           <span>
                                             {record.vph_one_direction} VPH •{' '}
@@ -5606,7 +5619,8 @@ export default function Home() {
                                   {userTrafficCounts.slice(0, 3).map((record) => (
                                     <div
                                       key={record.id}
-                                      className="bg-gray-900/50 rounded p-2 mb-2 text-xs"
+                                      className="bg-gray-900/50 rounded p-2 mb-2 text-xs cursor-pointer hover:bg-gray-800/70 transition-colors"
+                                      onClick={() => setSelectedCountDetail(record)}
                                     >
                                       <div className="flex justify-between items-center mb-1">
                                         <span className="text-white font-medium">
@@ -5634,7 +5648,10 @@ export default function Home() {
                                         {record.direction_mode === 'both-ways'
                                           ? 'Both directions'
                                           : 'One direction'}{' '}
-                                        •{record.total_vehicles} vehicles
+                                        • {record.total_vehicles} vehicles
+                                        <span className="text-blue-400 ml-1">
+                                          tap for details →
+                                        </span>
                                       </div>
                                     </div>
                                   ))}
@@ -6656,6 +6673,182 @@ export default function Home() {
                   className="h-10 text-sm bg-red-600 hover:bg-red-700"
                 >
                   🗑️ Reset
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Traffic Count Detail Modal */}
+      {selectedCountDetail && (
+        <div className="fixed inset-0 bg-black/85 z-50 flex items-end sm:items-center justify-center">
+          <div className="bg-gray-800 rounded-t-2xl sm:rounded-2xl w-full max-w-md max-h-[85vh] overflow-y-auto border border-gray-700">
+            {/* Header */}
+            <div className="sticky top-0 bg-gray-800 border-b border-gray-700 px-4 py-3 flex items-center justify-between rounded-t-2xl">
+              <h3 className="text-base font-bold text-green-400">📊 Traffic Count Details</h3>
+              <button
+                onClick={() => setSelectedCountDetail(null)}
+                className="text-gray-400 hover:text-white text-xl leading-none p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-4 space-y-3">
+              {/* Location */}
+              <div className="bg-gray-900 rounded-lg p-3">
+                <p className="font-bold text-white text-sm">{selectedCountDetail.road_id}</p>
+                <p className="text-gray-400 text-xs">{selectedCountDetail.road_name}</p>
+                {selectedCountDetail.slk && (
+                  <p className="text-gray-500 text-xs mt-1">
+                    SLK {selectedCountDetail.slk.toFixed(2)}
+                  </p>
+                )}
+              </div>
+
+              {/* Date & Time */}
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <div className="bg-gray-900 rounded-lg p-2">
+                  <p className="text-white font-semibold text-sm">
+                    {formatAusDate(selectedCountDetail.date)}
+                  </p>
+                  <p className="text-xs text-gray-500">Date</p>
+                </div>
+                <div className="bg-gray-900 rounded-lg p-2">
+                  <p className="text-white font-semibold text-sm">
+                    {selectedCountDetail.start_time}
+                  </p>
+                  <p className="text-xs text-gray-500">Start</p>
+                </div>
+                <div className="bg-gray-900 rounded-lg p-2">
+                  <p className="text-white font-semibold text-sm">{selectedCountDetail.end_time}</p>
+                  <p className="text-xs text-gray-500">End</p>
+                </div>
+              </div>
+
+              {/* Duration & Direction */}
+              <div className="grid grid-cols-2 gap-2 text-center">
+                <div className="bg-gray-900 rounded-lg p-2">
+                  <p className="text-white font-semibold text-sm">
+                    {selectedCountDetail.duration_minutes} min
+                  </p>
+                  <p className="text-xs text-gray-500">Duration</p>
+                </div>
+                <div className="bg-gray-900 rounded-lg p-2">
+                  <p className="text-white font-semibold text-sm">
+                    {selectedCountDetail.direction_mode === 'both-ways' ? 'Both Ways' : 'One Way'}
+                  </p>
+                  <p className="text-xs text-gray-500">Direction</p>
+                </div>
+              </div>
+
+              {/* Per-direction breakdown */}
+              {selectedCountDetail.direction_mode === 'both-ways' && (
+                <div className="bg-gray-900 rounded-lg p-3">
+                  <h4 className="text-xs font-medium text-gray-400 mb-2">Counts by Direction</h4>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <p className="text-green-400 text-xs font-semibold mb-1">← True Left</p>
+                      <div className="text-xs space-y-0.5">
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Light:</span>
+                          <span className="text-white">{selectedCountDetail.true_left_light}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Heavy:</span>
+                          <span className="text-amber-400">
+                            {selectedCountDetail.true_left_heavy}
+                          </span>
+                        </div>
+                        <div className="flex justify-between border-t border-gray-700 pt-0.5 mt-0.5">
+                          <span className="text-gray-400">VPH:</span>
+                          <span className="text-blue-400 font-semibold">
+                            {selectedCountDetail.vph_true_left}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-cyan-400 text-xs font-semibold mb-1">True Right →</p>
+                      <div className="text-xs space-y-0.5">
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Light:</span>
+                          <span className="text-white">{selectedCountDetail.true_right_light}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400">Heavy:</span>
+                          <span className="text-amber-400">
+                            {selectedCountDetail.true_right_heavy}
+                          </span>
+                        </div>
+                        <div className="flex justify-between border-t border-gray-700 pt-0.5 mt-0.5">
+                          <span className="text-gray-400">VPH:</span>
+                          <span className="text-blue-400 font-semibold">
+                            {selectedCountDetail.vph_true_right}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Summary stats */}
+              <div className="grid grid-cols-4 gap-2 text-center">
+                <div className="bg-gray-900 rounded-lg p-2">
+                  <p className="text-lg font-bold text-white">
+                    {selectedCountDetail.total_vehicles}
+                  </p>
+                  <p className="text-xs text-gray-500">Total</p>
+                </div>
+                <div className="bg-gray-900 rounded-lg p-2">
+                  <p className="text-lg font-bold text-amber-400">
+                    {selectedCountDetail.heavy_percentage}%
+                  </p>
+                  <p className="text-xs text-gray-500">Heavy</p>
+                </div>
+                <div className="bg-gray-900 rounded-lg p-2">
+                  <p className="text-lg font-bold text-blue-400">
+                    {selectedCountDetail.vph_combined}
+                  </p>
+                  <p className="text-xs text-gray-500">VPH</p>
+                </div>
+                <div className="bg-gray-900 rounded-lg p-2">
+                  <p className="text-lg font-bold text-purple-400">
+                    {selectedCountDetail.queue_length || '-'}
+                  </p>
+                  <p className="text-xs text-gray-500">Queue</p>
+                </div>
+              </div>
+
+              {/* Notes */}
+              {selectedCountDetail.notes && (
+                <div className="bg-gray-900 rounded-lg p-3">
+                  <p className="text-xs text-gray-400 mb-1">📝 Notes</p>
+                  <p className="text-sm text-gray-300 italic">{selectedCountDetail.notes}</p>
+                </div>
+              )}
+
+              {/* Actions */}
+              <div className="flex gap-2 pt-1">
+                <Button
+                  onClick={() => {
+                    const text = generateShareText(selectedCountDetail);
+                    navigator.clipboard.writeText(text);
+                    if (navigator.vibrate) navigator.vibrate(50);
+                    alert('Count details copied to clipboard!');
+                  }}
+                  variant="outline"
+                  className="flex-1 bg-gray-700 border-gray-600 h-10 text-sm"
+                >
+                  📋 Copy Report
+                </Button>
+                <Button
+                  onClick={() => setSelectedCountDetail(null)}
+                  className="flex-1 bg-gray-600 hover:bg-gray-500 h-10 text-sm"
+                >
+                  ✕ Close
                 </Button>
               </div>
             </div>
