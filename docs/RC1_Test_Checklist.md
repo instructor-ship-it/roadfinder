@@ -1,4 +1,4 @@
-# TC Work Zone Locator - RC 1.9.8 Test Checklist
+# TC Work Zone Locator - RC 1.9.9 Test Checklist
 
 ## Pre-Test Setup
 
@@ -183,7 +183,7 @@
 
 ### Page Load
 
-- [ ] Version shows "RC 1.9.8"
+- [ ] Version shows "RC 1.9.9"
 - [ ] "EKF Filtering Active" shows in purple
 - [ ] "Offline Ready" shows in green if data downloaded
 
@@ -345,7 +345,7 @@
 
 ### Page Load
 
-- [ ] Version shows "RC 1.9.8"
+- [ ] Version shows "RC 1.9.9"
 - [ ] Job list shows grouped by status (Due, TBA, Active, Archived)
 
 ### Add Job
@@ -646,7 +646,7 @@
 
 ## Final Checks
 
-- [ ] Version displays "RC 1.9.8" on all pages
+- [ ] Version displays "RC 1.9.9" on all pages
 - [ ] No console errors in browser dev tools
 - [ ] No TypeScript build errors
 - [ ] All features documented in Word docs

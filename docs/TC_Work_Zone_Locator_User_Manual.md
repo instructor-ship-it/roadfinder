@@ -2,7 +2,7 @@
 
 **User Manual**
 
-Version RC 1.9.8
+Version RC 1.9.9
 
 June 2025
 

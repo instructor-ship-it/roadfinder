@@ -64,6 +64,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **User Traffic Count Override** on Work Zone Info page
+  - Blue "Using live count data" banner with revert button when override is active
+  - Swaps live count VPH and heavy% into all downstream calculations (shuttle flow, lane capacity, max hold time, queue growth, sign distances)
+  - MRWA data remains visible as reference below the override banner
+  - Override clears on page reset or new work zone search
+- **Traffic Count Detail Modal**
+  - Tappable user traffic count rows in work zone info page open a detail modal
+  - Full breakdown: date, time, duration, direction mode, per-direction counts, queue length, notes
+  - "📊 Use This Count" button to transfer live count data into work zone calculations
+  - Modal accessible from three locations: STATE 2 primary count, STATE 2 other counts, STATE 1 supplementary counts
+- **Saved Locations Auto-Load**
+  - Recalling a saved location now auto-triggers `getWorkZoneInfo()` search
+  - Eliminates extra step of manually clicking "Get Work Zone Info" after recall
+- **Speed Zone Layout Graphic in HTML Report**
+  - Colored CSS bar matching SpeedZoneLayout component color scheme
+  - Sign position marker dots (TC=orange, PTS=red, RWA=yellow, SR=white/red)
+  - Intersection vertical lines with distinct colors per road
+  - SLK scale labels and work zone boundary indicators
+  - TC Signage Position table (TC, PTS, Box PTS, SR/RNST, RWA) with zone-speed-aware RWA formatting
+  - Zone segment detail table with speed color swatches, source tags, and work zone highlighting
+  - Conditional Box PTS row only shown for high-speed roads (≥80 km/h approach and exit)
+  - Warning for inferred/gap zones when speed zone data is missing
+- **Live Count Data Section in Reports**
+  - Text report: Date, time, duration, direction, vehicle counts, heavy%, per-direction breakdown
+  - HTML report: Same data with visual formatting (blue info box)
+- **Traffic Calculations Section in Reports**
+  - Effective VPH (both/one dir), heavy vehicle %, reduction factor
+  - Shuttle flow max length with risk assessment warning
+  - Lane capacity recommendation
+  - Maximum hold time, recommended stop, queue growth rate
+  - Queue at recommended stop with prepare-to-stop distance comparison
 - **National Public Toilet Map Integration** via ArcGIS Feature Service (replacing Overpass-only toilet search)
   - Australian Government toilet data from NSW Government open data portal
   - 2,714+ public toilets across Western Australia (vs 0–5 from Overpass in rural areas)
@@ -77,10 +108,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Toilet search** now uses ArcGIS Feature Service as primary source, Overpass API retained as fallback only
 - **Amenity architecture** updated from 3-source to 3-source with improved toilet coverage
 - **v1.9.8 changelog** toilet entry updated: "Overpass API (no better alternative)" → ArcGIS primary
+- **Report modal Close button** changed from outline variant (white bg, invisible text) to dark bg (gray-800) with white text
+- **HTML report footer** version now correctly resolves from `APP_VERSION` constant
+- **Text report footer** version now uses template literal for proper interpolation
+
+### Fixed
+
+- **Site Distance (TC to TC) input overwriting to 50** — `onChange` was clamping to min 50 on every keystroke. `Number("")` returned 0 → clamped to 50. Fixed by deferring clamp to `onBlur`, with safety clamp in `startCounting()`.
+- **Recommended Stop colour too light in reports** — changed from `#e5e7eb` (light grey, invisible on print) to `#111827` (dark)
+- **Report footer showing literal `v{APP_VERSION}`** — HTML report was using escaped template literal. Fixed with proper variable reference.
+- **Report modal Close button invisible** — outline variant used `bg-background` (white) with default text color. Changed to explicit dark styling.
 
 ### Removed
 
 - Overpass API as primary toilet data source (retained as fallback only)
+- Speed zone layout ASCII art from text report (user requested removal; remains in HTML report only)
 
 ---
 
@@ -372,26 +414,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History Summary
 
-| Version | Date       | Key Changes                                                               |
-| ------- | ---------- | ------------------------------------------------------------------------- |
-| 1.9.9   | 2026-03-30 | National Public Toilet Map ArcGIS integration (2,714+ WA toilets)         |
-| 1.9.8   | 2026-03-29 | FuelWatch WA + WA Health SLIP amenities, fuel prices, hospital ED/badges  |
-| 1.9.7   | 2026-03-29 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements |
-| 1.9.6   | 2026-03-28 | Traffic Counter: Auto-GPS, custom duration UI, duration fixes, lint fixes |
-| 1.9.5   | 2026-03-28 | Testing, CI/CD, Best Practice 100                                         |
-| 1.9.4   | 2026-03-28 | Component extraction (Weather, Traffic, Amenities, WorkZone)              |
-| 1.9.3   | 2026-03-28 | Prettier, CONTRIBUTING, SavedLocations component                          |
-| 1.9.2   | 2026-03-28 | MIT License, .env.example                                                 |
-| 1.9.1   | 2026-03-28 | Version synchronization note                                              |
-| 1.9.0   | 2026-03    | AI Q&A Assistant                                                          |
-| 1.8.0   | 2026-03    | Library offline indicators                                                |
-| 1.7.x   | 2026-03    | Wake lock, saved locations, amenities                                     |
-| 1.6.0   | 2026-03    | AfterCare map view                                                        |
-| 1.5.0   | 2026-03    | PWA, nearby signs                                                         |
-| 1.4.0   | 2026-03    | AfterCare module                                                          |
-| 1.3.0   | 2026-03    | Set distance, lane names                                                  |
-| 1.2.0   | 2026-03    | LocalStorage overrides                                                    |
-| 1.0.0   | 2026-03    | Initial release                                                           |
+| Version | Date       | Key Changes                                                                                 |
+| ------- | ---------- | ------------------------------------------------------------------------------------------- |
+| 1.9.9   | 2026-03-30 | Traffic override, count detail modal, speed zone layout in report, toilet map, report fixes |
+| 1.9.8   | 2026-03-29 | FuelWatch WA + WA Health SLIP amenities, fuel prices, hospital ED/badges                    |
+| 1.9.7   | 2026-03-29 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements                   |
+| 1.9.6   | 2026-03-28 | Traffic Counter: Auto-GPS, custom duration UI, duration fixes, lint fixes                   |
+| 1.9.5   | 2026-03-28 | Testing, CI/CD, Best Practice 100                                                           |
+| 1.9.4   | 2026-03-28 | Component extraction (Weather, Traffic, Amenities, WorkZone)                                |
+| 1.9.3   | 2026-03-28 | Prettier, CONTRIBUTING, SavedLocations component                                            |
+| 1.9.2   | 2026-03-28 | MIT License, .env.example                                                                   |
+| 1.9.1   | 2026-03-28 | Version synchronization note                                                                |
+| 1.9.0   | 2026-03    | AI Q&A Assistant                                                                            |
+| 1.8.0   | 2026-03    | Library offline indicators                                                                  |
+| 1.7.x   | 2026-03    | Wake lock, saved locations, amenities                                                       |
+| 1.6.0   | 2026-03    | AfterCare map view                                                                          |
+| 1.5.0   | 2026-03    | PWA, nearby signs                                                                           |
+| 1.4.0   | 2026-03    | AfterCare module                                                                            |
+| 1.3.0   | 2026-03    | Set distance, lane names                                                                    |
+| 1.2.0   | 2026-03    | LocalStorage overrides                                                                      |
+| 1.0.0   | 2026-03    | Initial release                                                                             |
 
 ---
 

@@ -89,7 +89,7 @@ async function fetchGpsFromSlk(
 }
 
 // App version
-const APP_VERSION = 'RC 1.9.8';
+const APP_VERSION = 'RC 1.9.9';
 
 // ============================================
 // MAIN COMPONENT

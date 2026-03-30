@@ -973,7 +973,7 @@ This data should be verified against MRWA records before making database updates
           </Link>
           <h1 className="text-xl font-bold">Speed Sign Overrides</h1>
         </div>
-        <div className="text-xs text-gray-500">vRC 1.9.8 | Local Storage</div>
+        <div className="text-xs text-gray-500">vRC 1.9.9 | Local Storage</div>
       </div>
 
       {/* Storage Info */}

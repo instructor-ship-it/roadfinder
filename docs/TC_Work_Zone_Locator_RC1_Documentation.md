@@ -1,12 +1,12 @@
 # TC Work Zone Locator
 
-## Release Candidate 1.9.8
+## Release Candidate 1.9.9
 
 **Complete Layout & Functionality Documentation**
 
 | Field          | Value                                            |
 | -------------- | ------------------------------------------------ |
-| **Version**    | RC 1.9.8                                         |
+| **Version**    | RC 1.9.9                                         |
 | **Date**       | March 2026                                       |
 | **Repository** | https://github.com/instructor-ship-it/roadfinder |
 
@@ -142,7 +142,7 @@ The application has twelve main pages:
 ### 4.1 Header Section
 
 - Application title: "TC Work Zone Locator"
-- Version display: "vRC 1.9.8"
+- Version display: "vRC 1.9.9"
 - Offline status indicator (green when data downloaded)
 - Hamburger menu (☰) - Opens Settings drawer
 
@@ -235,7 +235,7 @@ When exceeding the speed limit, a warning banner displays:
 ### 6.1 Header
 
 - Title: "AfterCare Signs"
-- Version display: "vRC 1.9.8"
+- Version display: "vRC 1.9.9"
 - Back to Work Zone Locator link
 
 ### 6.2 Job List
@@ -327,7 +327,7 @@ Fixed at bottom-left of map:
 
 ### 8.1 Header
 
-- Version: "vRC 1.9.8"
+- Version: "vRC 1.9.9"
 - Storage mode: "Local Storage"
 - Back to Work Zone Locator button
 
@@ -617,7 +617,7 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 
 ## 17. Version History
 
-### RC 1.9.8 (Current) - Fuel Stations, Hospital Badges, Multi-Source Amenities
+### RC 1.9.9 (Current) - Fuel Stations, Hospital Badges, Multi-Source Amenities
 
 - **Fuel station search** now merges FuelWatch WA and Overpass data for comprehensive coverage
 - **Hospital type badges** show ED, Public, Private, or Nursing Post status

@@ -1,6 +1,6 @@
-# RC 1.9.8 Key Learnings & Concepts
+# RC 1.9.9 Key Learnings & Concepts
 
-> **Version:** RC 1.9.8
+> **Version:** RC 1.9.9
 > **Date:** June 2025
 > **Author:** Development Session Notes
 

@@ -4,7 +4,7 @@
 
 This document explains how the Work Zone Report Generator feature was implemented in the TC Work Zone Locator app. The feature allows users to generate a comprehensive text report of all work zone information with a visual ASCII graphic for road width breakdown.
 
-**Version: RC 1.9.8**
+**Version: RC 1.9.9**
 
 ---
 
@@ -459,7 +459,7 @@ The report uses data from these state variables:
 
 | Version   | Date       | Changes                                                          |
 | --------- | ---------- | ---------------------------------------------------------------- |
-| RC 1.9.8  | 2025-06    | Enhanced amenity details (hospital types, fuel prices, features) |
+| RC 1.9.9  | 2025-06    | Enhanced amenity details (hospital types, fuel prices, features) |
 | RC 1.9.7  | 2025-06    | Updated for new features, added warning banners                  |
 | RC 1.5.3  | 2026-03-09 | Added work zone report generator with visual road width bar      |
 | Build Fix | 2026-03-09 | Fixed `emergency` → `isEmergency` property name                  |

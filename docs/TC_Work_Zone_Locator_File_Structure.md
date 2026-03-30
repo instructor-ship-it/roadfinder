@@ -2,7 +2,7 @@
 
 ## File Structure Documentation
 
-**Version RC 1.9.8**
+**Version RC 1.9.9**
 
 ---
 
@@ -322,7 +322,7 @@ Route optimization for multi-stop signage retrieval:
 
 | Version   | Date       | Key Changes                                                                         |
 | --------- | ---------- | ----------------------------------------------------------------------------------- |
-| RC 1.9.8  | June 2026  | Fuel stations (FuelWatch WA + Overpass), hospital type badges, amenity data sources |
+| RC 1.9.9  | June 2026  | Fuel stations (FuelWatch WA + Overpass), hospital type badges, amenity data sources |
 | RC 1.9.7  | March 2026 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements           |
 | RC 1.9.1  | March 2026 | Speeding alerts with WA fine info, minutes per km, 10km time                        |
 | RC 1.9.0  | March 2026 | Traffic Counter feature, Documents Library                                          |

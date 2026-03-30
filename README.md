@@ -1,7 +1,7 @@
 # TC Work Zone Locator
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-RC%201.9.8-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
+[![Version](https://img.shields.io/badge/version-RC%201.9.9-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
@@ -241,7 +241,18 @@ src/
 
 ## Version History
 
-### RC 1.9.8 (Current) - FuelWatch Diesel Fix, Pace Rate Indicator, Amenities Upgrades
+### RC 1.9.9 (Current) - Work Zone Report Overhaul, Traffic Override, Speed Zone Layout
+
+- **User Traffic Count Override** — swap live count VPH/heavy% into all work zone calculations
+- **Traffic Count Detail Modal** — tappable count rows with full breakdown and "Use This Count" button
+- **Saved Locations Auto-Load** — recalling a location now auto-triggers work zone search
+- **Speed Zone Layout Graphic** in HTML report (colored bar, sign positions, zone segments table)
+- **Report Enhancements** — live count data section, full traffic calculations section
+- **Site Distance Input Fix** — defer clamping to onBlur instead of onChange
+- **Report Formatting** — dark Recommended Stop colour, fixed footer version, Close button visibility
+- **National Public Toilet Map** via ArcGIS (2,714+ WA toilets replacing Overpass-only)
+
+### RC 1.9.8 - FuelWatch Diesel Fix, Pace Rate Indicator, Amenities Upgrades
 
 - **FuelWatch WA JSON API** replacing broken RSS feed for accurate diesel prices
 - **Pace Rate Indicator** showing time delta vs posted speed (1km/10km/100km)

@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
-> **Last Updated:** 2026-03-26
-> **Current Version:** RC 1.9.8
+> **Last Updated:** 2026-03-30
+> **Current Version:** RC 1.9.9
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -256,14 +256,15 @@ src/
 
 ### External APIs
 
-| Data             | Source                  | Notes                                          |
-| ---------------- | ----------------------- | ---------------------------------------------- |
-| Weather          | Open-Meteo              | Free, no API key                               |
-| Weather Warnings | BOM RSS (IDZ00067)      | WA land warnings, 5-min cache                  |
-| Fuel Prices      | FuelWatch WA JSON API   | `/api/sites?fuelType=DSL`, daily diesel prices |
-| Hospital Data    | WA Health SLIP Services | SLIP API key (server-side), Layers 6 & 7       |
-| Places/Amenities | Overpass API            | OpenStreetMap (fallback for hospitals/fuel)    |
-| Traffic Volume   | Static MRWA data        | Pre-downloaded                                 |
+| Data             | Source                     | Notes                                              |
+| ---------------- | -------------------------- | -------------------------------------------------- |
+| Weather          | Open-Meteo                 | Free, no API key                                   |
+| Weather Warnings | BOM RSS (IDZ00067)         | WA land warnings, 5-min cache                      |
+| Fuel Prices      | FuelWatch WA JSON API      | `/api/sites?fuelType=DSL`, daily diesel prices     |
+| Hospital Data    | WA Health SLIP Services    | SLIP API key (server-side), Layers 6 & 7           |
+| Toilet Data      | National Public Toilet Map | ArcGIS Feature Service, 2,714+ WA toilets          |
+| Places/Amenities | Overpass API               | OpenStreetMap (fallback for hospitals/fuel/toilet) |
+| Traffic Volume   | Static MRWA data           | Pre-downloaded                                     |
 
 ---
 
@@ -424,7 +425,33 @@ See `scripts/README.md` for full documentation of available scripts.
 
 ## Recent Changes (v5.x)
 
-### RC 1.9.8 (Current) - Amenities Data Source Upgrades, Pace Rate Indicator
+### RC 1.9.9 (Current) - Work Zone Report Overhaul, Traffic Override, Speed Zone Layout
+
+- **User Traffic Count Override** on Work Zone Info page
+  - Blue "Using live count data" banner with revert button
+  - Swaps live count VPH/heavy% into all calculations (shuttle flow, lane capacity, max hold time, queue growth, sign distances)
+  - MRWA data remains visible as reference; override clears on reset/new search
+- **Traffic Count Detail Modal**
+  - Tappable user traffic count rows open detail modal with full breakdown
+  - "📊 Use This Count" button to transfer data into work zone calculations
+- **Saved Locations Auto-Load** — recalling a location auto-triggers work zone search
+- **Speed Zone Layout Graphic in HTML Report**
+  - Colored CSS bar, sign position markers, intersection lines, SLK scale
+  - TC Signage Position table (TC, PTS, Box PTS, SR/RNST, RWA)
+  - Zone segment detail table with speed colors and source tags
+- **Report Enhancements**
+  - Live count data section (both text and HTML reports)
+  - Traffic calculations section (effective VPH, heavy reduction, shuttle flow, lane capacity, max hold time, queue growth, sign distances)
+- **Site Distance Input Fix** — defer clamping to onBlur instead of onChange
+- **Report Formatting Fixes** — dark Recommended Stop colour, footer version, Close button visibility
+- **National Public Toilet Map** via ArcGIS (2,714+ WA toilets)
+- **Files Changed**
+  - `src/app/page.tsx` (override, modal, reports, speed zone layout, site distance fix)
+  - `src/app/traffic-counter/page.tsx` (site distance fix)
+  - `src/lib/toilet-map.ts` (NEW - ArcGIS toilet data)
+  - `src/app/api/fuel-stations/route.ts` (toilet source integration)
+
+### RC 1.9.8 - Amenities Data Source Upgrades, Pace Rate Indicator
 
 - **FuelWatch WA JSON API** (replacing broken RSS feed)
   - Diesel prices from `/api/sites?fuelType=DSL` endpoint
@@ -437,7 +464,7 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Three-Source Amenity Architecture** with smart fallback chain
   - Hospital: WA Health SLIP → Overpass fallback
   - Fuel: FuelWatch WA JSON API + Overpass merge (200m dedup)
-  - Toilet: Overpass API only
+  - Toilet: National Public Toilet Map ArcGIS → Overpass fallback
 - **Pace Rate Indicator** on drive page
   - Time delta vs posted speed for 1km, 10km, 100km
   - Colour coded: grey (under posted), green (at posted ±2 km/h), red (over posted)
