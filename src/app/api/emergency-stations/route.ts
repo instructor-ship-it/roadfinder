@@ -33,7 +33,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const stations = await findFireStationsNear(lat, lon, radiusKm, 20);
+    const stations = await findFireStationsNear(lat, lon, radiusKm, 50);
 
     // Categorize nearest stations
     const nearestAny = stations[0] || null;

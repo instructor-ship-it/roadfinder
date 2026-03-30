@@ -314,7 +314,7 @@ export async function findFireStationsNear(
     });
   }
 
-  // Sort: professional stations first, then by distance
+  // Sort: professional stations first, then by distance within each group
   stations.sort((a, b) => {
     const aProf = PROFESSIONAL_TYPES.has(a.type) ? 0 : 1;
     const bProf = PROFESSIONAL_TYPES.has(b.type) ? 0 : 1;
@@ -324,7 +324,7 @@ export async function findFireStationsNear(
 
   const enriched = stations.filter((s) => s.address);
   console.log(
-    `[FireStations] Found ${stations.length} fire stations (${enriched.length} with GNAF addresses). Nearest: ${stations[0]?.name || 'none'} (${stations[0]?.distanceKm}km, ${stations[0]?.type})`
+    `[FireStations] Found ${stations.length} fire stations (${enriched.length} with GNAF addresses). Nearest professional: ${stations.find((s) => PROFESSIONAL_TYPES.has(s.type))?.name || 'none'}, nearest volunteer: ${stations.find((s) => !PROFESSIONAL_TYPES.has(s.type))?.name || 'none'}`
   );
 
   return stations.slice(0, limit);

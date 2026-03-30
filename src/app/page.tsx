@@ -673,6 +673,22 @@ export default function Home() {
       buildingName?: string;
       isProfessional?: boolean;
     } | null;
+    nearestVolunteerFireStation: {
+      name: string;
+      type: string;
+      typeDescription: string;
+      distanceM: number;
+      lat: number;
+      lon: number;
+      googleMapsUrl: string;
+      address?: string;
+      suburb?: string;
+      postcode?: string;
+      state?: string;
+      operationalStatus?: string;
+      buildingName?: string;
+      isProfessional?: boolean;
+    } | null;
     nearestPoliceStation: {
       name: string;
       address: string;
@@ -3291,19 +3307,14 @@ export default function Home() {
 
           if (gpsData.road_id) {
             // Use shared functions for all emergency data lookups (runs in parallel for speed)
-            const [
-              crossRoad,
-              nearestTown,
-              nearestHospital,
-              nearestFireStation,
-              nearestPoliceStation,
-            ] = await Promise.all([
-              findCrossRoad(lat, lon, gpsData.road_name || gpsData.road_id),
-              findNearestTown(lat, lon, gpsData.locality || gpsData.region),
-              findNearestHospital(lat, lon),
-              findNearestFireStation(lat, lon),
-              findNearestPoliceStation(lat, lon),
-            ]);
+            const [crossRoad, nearestTown, nearestHospital, fireStations, nearestPoliceStation] =
+              await Promise.all([
+                findCrossRoad(lat, lon, gpsData.road_name || gpsData.road_id),
+                findNearestTown(lat, lon, gpsData.locality || gpsData.region),
+                findNearestHospital(lat, lon),
+                findNearestFireStation(lat, lon),
+                findNearestPoliceStation(lat, lon),
+              ]);
 
             setEmergencyData({
               roadName: gpsData.road_name || gpsData.road_id,
@@ -3316,13 +3327,14 @@ export default function Home() {
               nearestTown,
               nearbyRoads: gpsData.nearby_roads || [],
               nearestHospital,
-              nearestFireStation,
+              nearestFireStation: fireStations.professional,
+              nearestVolunteerFireStation: fireStations.volunteer,
               nearestPoliceStation,
             });
           } else {
             // No road found, use GPS coordinates only
             // Still try to get emergency services
-            const [nearestHospital, nearestFireStation, nearestPoliceStation] = await Promise.all([
+            const [nearestHospital, fireStations, nearestPoliceStation] = await Promise.all([
               findNearestHospital(lat, lon),
               findNearestFireStation(lat, lon),
               findNearestPoliceStation(lat, lon),
@@ -3339,7 +3351,8 @@ export default function Home() {
               nearestTown: null,
               nearbyRoads: [],
               nearestHospital,
-              nearestFireStation,
+              nearestFireStation: fireStations.professional,
+              nearestVolunteerFireStation: fireStations.volunteer,
               nearestPoliceStation,
             });
           }
@@ -3358,6 +3371,7 @@ export default function Home() {
             nearbyRoads: [],
             nearestHospital: null,
             nearestFireStation: null,
+            nearestVolunteerFireStation: null,
             nearestPoliceStation: null,
           });
         }
@@ -6283,86 +6297,150 @@ export default function Home() {
                         </div>
                       </div>
                     )}
-
-                    {/* Nearest Fire/Emergency Station */}
-                    {emergencyData.nearestFireStation && (
+                    {/* Nearest Fire/Emergency Stations */}
+                    {(emergencyData.nearestFireStation ||
+                      emergencyData.nearestVolunteerFireStation) && (
                       <div className="bg-orange-900/30 rounded-lg p-3 border border-orange-600">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-orange-400">🚒</span>
                           <span className="text-orange-400 font-semibold">
-                            Nearest Fire/Emergency Station
-                          </span>
-                          {emergencyData.nearestFireStation.isProfessional && (
-                            <span className="text-xs bg-green-700 text-white px-1.5 py-0.5 rounded ml-1">
-                              24/7 Staffed
-                            </span>
-                          )}
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-400">Name:</span>
-                          <span className="text-white font-semibold">
-                            {emergencyData.nearestFireStation.buildingName ||
-                              emergencyData.nearestFireStation.name}
+                            Fire & Emergency Stations
                           </span>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-400">Distance:</span>
-                          <span className="text-white">
-                            {(() => {
-                              const d = emergencyData.nearestFireStation.distanceM;
-                              if (d >= 1000) {
-                                return `${(d / 1000).toFixed(1)} km`;
-                              }
-                              return `${Math.round(d / 100) * 100} m`;
-                            })()}
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-gray-400">Type:</span>
-                          <span className="text-white">
-                            {emergencyData.nearestFireStation.typeDescription}{' '}
-                            <span className="text-orange-400">
-                              ({emergencyData.nearestFireStation.type})
-                            </span>
-                          </span>
-                        </div>
-                        {emergencyData.nearestFireStation.address && (
-                          <div className="flex justify-between">
-                            <span className="text-gray-400">Address:</span>
-                            <span className="text-white text-sm">
-                              {emergencyData.nearestFireStation.address}
-                              {emergencyData.nearestFireStation.suburb &&
-                                `, ${emergencyData.nearestFireStation.suburb}`}
-                              {emergencyData.nearestFireStation.postcode &&
-                                ` ${emergencyData.nearestFireStation.postcode}`}
-                            </span>
-                          </div>
-                        )}
-                        {emergencyData.nearestFireStation.operationalStatus && (
-                          <div className="flex justify-between">
-                            <span className="text-gray-400">Status:</span>
-                            <span
-                              className={`${emergencyData.nearestFireStation.operationalStatus === 'OPERATIONAL' ? 'text-green-400' : 'text-yellow-400'}`}
+
+                        {/* Professional (CFRS/PFRS) - 24/7 staffed */}
+                        {emergencyData.nearestFireStation && (
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center">
+                              <span className="text-white font-semibold text-sm">
+                                {emergencyData.nearestFireStation.buildingName ||
+                                  emergencyData.nearestFireStation.name}
+                              </span>
+                              <div className="flex items-center gap-1">
+                                <span className="text-xs bg-green-700 text-white px-1.5 py-0.5 rounded">
+                                  24/7 Staffed
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex justify-between text-xs">
+                              <span className="text-gray-400">Type:</span>
+                              <span className="text-gray-300">
+                                {emergencyData.nearestFireStation.typeDescription} (
+                                {emergencyData.nearestFireStation.type})
+                              </span>
+                            </div>
+                            <div className="flex justify-between text-xs">
+                              <span className="text-gray-400">Distance:</span>
+                              <span className="text-gray-300">
+                                {(() => {
+                                  const d = emergencyData.nearestFireStation!.distanceM;
+                                  return d >= 1000
+                                    ? `${(d / 1000).toFixed(1)} km`
+                                    : `${Math.round(d / 100) * 100} m`;
+                                })()}
+                              </span>
+                            </div>
+                            {emergencyData.nearestFireStation.address && (
+                              <div className="text-xs">
+                                <span className="text-gray-500">
+                                  📍 {emergencyData.nearestFireStation.address}
+                                </span>
+                                {emergencyData.nearestFireStation.suburb && (
+                                  <span className="text-gray-500">
+                                    , {emergencyData.nearestFireStation.suburb}
+                                  </span>
+                                )}
+                                {emergencyData.nearestFireStation.postcode && (
+                                  <span className="text-gray-500">
+                                    {' '}
+                                    {emergencyData.nearestFireStation.postcode}
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                            <Button
+                              onClick={() => {
+                                const fs = emergencyData.nearestFireStation!;
+                                window.open(
+                                  fs.googleMapsUrl ||
+                                    `https://www.google.com/maps/dir/?api=1&destination=${fs.lat},${fs.lon}`,
+                                  '_blank'
+                                );
+                              }}
+                              className="w-full bg-orange-700 hover:bg-orange-600 text-xs py-0.5 mt-1"
                             >
-                              {emergencyData.nearestFireStation.operationalStatus}
-                            </span>
+                              📍 Directions to {emergencyData.nearestFireStation.typeDescription}
+                            </Button>
                           </div>
                         )}
-                        <div className="mt-2">
-                          <Button
-                            onClick={() => {
-                              if (emergencyData.nearestFireStation) {
-                                const url =
-                                  emergencyData.nearestFireStation.googleMapsUrl ||
-                                  `https://www.google.com/maps/dir/?api=1&destination=${emergencyData.nearestFireStation.lat},${emergencyData.nearestFireStation.lon}`;
-                                window.open(url, '_blank');
-                              }
-                            }}
-                            className="w-full bg-orange-700 hover:bg-orange-600 text-sm py-1"
-                          >
-                            📍 Directions to Station
-                          </Button>
-                        </div>
+
+                        {/* Volunteer (VFRS/VFESU/BFB) - only show if different from professional */}
+                        {emergencyData.nearestVolunteerFireStation &&
+                          (!emergencyData.nearestFireStation ||
+                            emergencyData.nearestVolunteerFireStation.name !==
+                              emergencyData.nearestFireStation.name) && (
+                            <div className="border-t border-orange-600/50 mt-2 pt-2 space-y-1">
+                              <div className="flex justify-between items-center">
+                                <span className="text-white font-semibold text-sm">
+                                  {emergencyData.nearestVolunteerFireStation.buildingName ||
+                                    emergencyData.nearestVolunteerFireStation.name}
+                                </span>
+                                <span className="text-xs bg-yellow-700 text-white px-1.5 py-0.5 rounded">
+                                  Volunteer
+                                </span>
+                              </div>
+                              <div className="flex justify-between text-xs">
+                                <span className="text-gray-400">Type:</span>
+                                <span className="text-gray-300">
+                                  {emergencyData.nearestVolunteerFireStation.typeDescription} (
+                                  {emergencyData.nearestVolunteerFireStation.type})
+                                </span>
+                              </div>
+                              <div className="flex justify-between text-xs">
+                                <span className="text-gray-400">Distance:</span>
+                                <span className="text-gray-300">
+                                  {(() => {
+                                    const d = emergencyData.nearestVolunteerFireStation!.distanceM;
+                                    return d >= 1000
+                                      ? `${(d / 1000).toFixed(1)} km`
+                                      : `${Math.round(d / 100) * 100} m`;
+                                  })()}
+                                </span>
+                              </div>
+                              {emergencyData.nearestVolunteerFireStation.address && (
+                                <div className="text-xs">
+                                  <span className="text-gray-500">
+                                    📍 {emergencyData.nearestVolunteerFireStation.address}
+                                  </span>
+                                  {emergencyData.nearestVolunteerFireStation.suburb && (
+                                    <span className="text-gray-500">
+                                      , {emergencyData.nearestVolunteerFireStation.suburb}
+                                    </span>
+                                  )}
+                                  {emergencyData.nearestVolunteerFireStation.postcode && (
+                                    <span className="text-gray-500">
+                                      {' '}
+                                      {emergencyData.nearestVolunteerFireStation.postcode}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                              <Button
+                                onClick={() => {
+                                  const fs = emergencyData.nearestVolunteerFireStation!;
+                                  window.open(
+                                    fs.googleMapsUrl ||
+                                      `https://www.google.com/maps/dir/?api=1&destination=${fs.lat},${fs.lon}`,
+                                    '_blank'
+                                  );
+                                }}
+                                className="w-full bg-orange-700 hover:bg-orange-600 text-xs py-0.5 mt-1"
+                              >
+                                📍 Directions to{' '}
+                                {emergencyData.nearestVolunteerFireStation.typeDescription}
+                              </Button>
+                            </div>
+                          )}
                       </div>
                     )}
 

@@ -67,7 +67,8 @@ export interface EmergencyData {
   lat: number;
   lon: number;
   nearestHospital?: NearestHospital;
-  nearestFireStation?: NearestFireStation;
+  nearestFireStation?: NearestFireStation; // Nearest CFRS/PFRS (24/7 staffed)
+  nearestVolunteerFireStation?: NearestFireStation; // Nearest VFRS/VFESU/BFB (volunteer)
   nearestPoliceStation?: NearestPoliceStation;
 }
 
@@ -371,42 +372,43 @@ export async function findNearestHospital(
 }
 
 /**
- * Find nearest fire/emergency station from DFES data
+ * Find nearest fire/emergency stations from DFES data
  * with GNAF address enrichment from Geoscience Australia.
+ * Returns both the nearest professional (CFRS/PFRS) and volunteer (VFRS/VFESU/BFB) stations.
  */
 export async function findNearestFireStation(
   lat: number,
   lon: number
-): Promise<NearestFireStation | null> {
+): Promise<{ professional: NearestFireStation | null; volunteer: NearestFireStation | null }> {
   try {
     const response = await fetch(`/api/emergency-stations?lat=${lat}&lon=${lon}&radius=100`);
     const data = await response.json();
 
-    // Prefer professional (24/7 staffed) stations, then volunteer, then any
-    const s = data.nearest?.professional || data.nearest?.volunteer || data.nearest?.any;
+    const mapStation = (s: Record<string, unknown>): NearestFireStation => ({
+      name: s.name as string,
+      distanceM: s.distanceM as number,
+      type: s.type as string,
+      typeDescription: s.typeDescription as string,
+      lat: s.lat as number,
+      lon: s.lon as number,
+      googleMapsUrl: s.googleMapsUrl as string,
+      address: s.address as string | undefined,
+      suburb: s.suburb as string | undefined,
+      postcode: s.postcode as string | undefined,
+      state: s.state as string | undefined,
+      operationalStatus: s.operationalStatus as string | undefined,
+      buildingName: s.buildingName as string | undefined,
+      isProfessional: s.isProfessional as boolean,
+    });
 
-    if (s) {
-      return {
-        name: s.name,
-        distanceM: s.distanceM,
-        type: s.type,
-        typeDescription: s.typeDescription,
-        lat: s.lat,
-        lon: s.lon,
-        googleMapsUrl: s.googleMapsUrl,
-        address: s.address,
-        suburb: s.suburb,
-        postcode: s.postcode,
-        state: s.state,
-        operationalStatus: s.operationalStatus,
-        buildingName: s.buildingName,
-        isProfessional: s.isProfessional,
-      };
-    }
+    return {
+      professional: data.nearest?.professional ? mapStation(data.nearest.professional) : null,
+      volunteer: data.nearest?.volunteer ? mapStation(data.nearest.volunteer) : null,
+    };
   } catch (e) {
     console.error('Failed to find nearest fire station:', e);
   }
-  return null;
+  return { professional: null, volunteer: null };
 }
 
 /**

@@ -332,6 +332,12 @@ function DriveContent() {
       type: string;
       typeDescription: string;
     };
+    nearestVolunteerFireStation?: {
+      name: string;
+      distanceM: number;
+      type: string;
+      typeDescription: string;
+    };
     nearestPoliceStation?: {
       name: string;
       distanceM: number;
@@ -666,7 +672,7 @@ function DriveContent() {
       const gpsData = await gpsResponse.json();
 
       // Use shared functions for all emergency data lookups (runs in parallel for speed)
-      const [crossRoad, nearestTown, nearestHospital, nearestFireStation, nearestPoliceStation] =
+      const [crossRoad, nearestTown, nearestHospital, fireStations, nearestPoliceStation] =
         await Promise.all([
           findCrossRoad(lat, lon, gpsData.road_name || gpsData.road_id),
           findNearestTown(lat, lon, gpsData.locality || gpsData.region),
@@ -692,12 +698,20 @@ function DriveContent() {
               suburb: nearestHospital.suburb,
             }
           : undefined,
-        nearestFireStation: nearestFireStation
+        nearestFireStation: fireStations.professional
           ? {
-              name: nearestFireStation.name,
-              distanceM: nearestFireStation.distanceM,
-              type: nearestFireStation.type,
-              typeDescription: nearestFireStation.typeDescription,
+              name: fireStations.professional.name,
+              distanceM: fireStations.professional.distanceM,
+              type: fireStations.professional.type,
+              typeDescription: fireStations.professional.typeDescription,
+            }
+          : undefined,
+        nearestVolunteerFireStation: fireStations.volunteer
+          ? {
+              name: fireStations.volunteer.name,
+              distanceM: fireStations.volunteer.distanceM,
+              type: fireStations.volunteer.type,
+              typeDescription: fireStations.volunteer.typeDescription,
             }
           : undefined,
         nearestPoliceStation: nearestPoliceStation
