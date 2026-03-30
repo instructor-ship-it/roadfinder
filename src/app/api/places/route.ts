@@ -32,7 +32,7 @@ interface AmenitiesCache {
 
 const amenitiesCache: AmenitiesCache = {
   data: null,
-  loadedAt: null
+  loadedAt: null,
 };
 
 // Cache duration in milliseconds (default: 5 minutes)
@@ -42,46 +42,53 @@ function isCacheValid(): boolean {
   if (!amenitiesCache.data || !amenitiesCache.loadedAt) {
     return false;
   }
-  return (Date.now() - amenitiesCache.loadedAt) < CACHE_DURATION_MS;
+  return Date.now() - amenitiesCache.loadedAt < CACHE_DURATION_MS;
 }
 
 function loadOfflineAmenitiesData(forceRefresh: boolean = false) {
   // Return cached data if valid and not forcing refresh
   if (!forceRefresh && isCacheValid() && amenitiesCache.data) {
-    console.log(`Using cached amenities data (age: ${Math.round((Date.now() - (amenitiesCache.loadedAt || 0)) / 1000)}s)`);
+    console.log(
+      `Using cached amenities data (age: ${Math.round((Date.now() - (amenitiesCache.loadedAt || 0)) / 1000)}s)`
+    );
     return amenitiesCache.data;
   }
-  
+
   try {
     const filePath = path.join(process.cwd(), 'public', 'data', 'amenities.json');
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf-8');
       const data = JSON.parse(content);
-      
+
       amenitiesCache.data = {
         hospitals: data.hospitals || [],
         fuelStations: data.fuelStations || [],
-        toilets: data.toilets || []
+        toilets: data.toilets || [],
       };
       amenitiesCache.loadedAt = Date.now();
-      
-      console.log(`Refreshed amenities cache: ${amenitiesCache.data.hospitals.length} hospitals, ${amenitiesCache.data.fuelStations.length} fuel stations, ${amenitiesCache.data.toilets.length} toilets`);
+
+      console.log(
+        `Refreshed amenities cache: ${amenitiesCache.data.hospitals.length} hospitals, ${amenitiesCache.data.fuelStations.length} fuel stations, ${amenitiesCache.data.toilets.length} toilets`
+      );
     }
   } catch (e) {
     console.error('Error loading offline amenities data:', e);
   }
-  
+
   return amenitiesCache.data || { hospitals: [], fuelStations: [], toilets: [] };
 }
 
 // Calculate distance between two coordinates
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371; // Earth's radius in km
-  const dLat = (lat2 - lat1) * Math.PI / 180;
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
@@ -95,70 +102,88 @@ async function searchOverpass(lat: number, lon: number, query: string): Promise<
     );
     out center;
   `;
-  
+
   // Try multiple Overpass servers
   const servers = [
     'https://overpass-api.de/api/interpreter',
     'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
     'https://overpass.kumi.systems/api/interpreter',
   ];
-  
+
   for (const server of servers) {
     try {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-      
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+
       const response = await fetch(server, {
         method: 'POST',
         body: `data=${encodeURIComponent(overpassQuery)}`,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        signal: controller.signal
+        signal: controller.signal,
       });
-      
+
       clearTimeout(timeoutId);
-      
+
       if (!response.ok) continue;
-      
+
       const data = await response.json();
       return data.elements || [];
     } catch (error) {
       continue;
     }
   }
-  
+
   return [];
 }
 
 // Check if facility is a real hospital (not dental, fertility, etc.)
 function isRealHospital(tags: Record<string, string>): boolean {
   const name = (tags.name || '').toLowerCase();
-  
+
   // Exclude non-hospital medical facilities
-  const excludeTerms = ['dental', 'dentist', 'orthodontic', 'fertility', 'ivf', 
-                        'day surgery', 'cosmetic', 'psychology', 'counselling',
-                        'private clinic', 'eye hospital'];
-  
-  if (excludeTerms.some(term => name.includes(term))) {
+  const excludeTerms = [
+    'dental',
+    'dentist',
+    'orthodontic',
+    'fertility',
+    'ivf',
+    'day surgery',
+    'cosmetic',
+    'psychology',
+    'counselling',
+    'private clinic',
+    'eye hospital',
+  ];
+
+  if (excludeTerms.some((term) => name.includes(term))) {
     return false;
   }
-  
+
   return true;
 }
 
 // Check if fuel station is legitimate
 function isValidFuelStation(tags: Record<string, string>): boolean {
   const name = (tags.name || '').toLowerCase();
-  
+
   // Exclude obviously non-Australian stations
-  const excludeTerms = ['e. leclerc', 'leclerc', 'carrefour', 'total', 'esso', 
-                        'shell france', 'bp france', 'intermarché'];
-  
-  if (excludeTerms.some(term => name.includes(term))) {
+  const excludeTerms = [
+    'e. leclerc',
+    'leclerc',
+    'carrefour',
+    'total',
+    'esso',
+    'shell france',
+    'bp france',
+    'intermarché',
+  ];
+
+  if (excludeTerms.some((term) => name.includes(term))) {
     return false;
   }
-  
+
   return true;
 }
 
@@ -168,17 +193,22 @@ function getCoordinates(el: any): { lat: number; lon: number } | null {
   if (el.lat && el.lon) {
     return { lat: el.lat, lon: el.lon };
   }
-  
+
   // Way has center property (from 'out center' query)
   if (el.center && el.center.lat && el.center.lon) {
     return { lat: el.center.lat, lon: el.center.lon };
   }
-  
+
   return null;
 }
 
 // Process and sort places by distance, prioritizing emergency facilities
-function processPlaces(elements: any[], targetLat: number, targetLon: number, filterType: 'hospital' | 'fuel' | 'other' = 'other'): Place[] {
+function processPlaces(
+  elements: any[],
+  targetLat: number,
+  targetLon: number,
+  filterType: 'hospital' | 'fuel' | 'other' = 'other'
+): Place[] {
   let places: Place[] = elements
     .filter((el: any) => getCoordinates(el))
     .filter((el: any) => {
@@ -195,17 +225,24 @@ function processPlaces(elements: any[], targetLat: number, targetLon: number, fi
       const tags = el.tags || {};
       const coords = getCoordinates(el)!;
       const distance = calculateDistance(targetLat, targetLon, coords.lat, coords.lon);
-      
+
       // Get best available name
       let name = tags.name || tags.operator || tags.official_name || '';
       if (!name) {
-        name = tags.amenity === 'hospital' ? 'Hospital' : 
-               tags.amenity === 'fuel' ? 'Service Station' :
-               tags.amenity === 'toilets' ? 'Public Toilets' : 'Unknown';
+        name =
+          tags.amenity === 'hospital'
+            ? 'Hospital'
+            : tags.amenity === 'fuel'
+              ? 'Service Station'
+              : tags.amenity === 'toilets'
+                ? 'Public Toilets'
+                : tags.toilets === 'yes'
+                  ? 'Public Toilets'
+                  : 'Unknown';
       }
-      
+
       const phone = tags.phone || tags['contact:phone'] || tags['phone:mobile'] || undefined;
-      
+
       // Build address from available tags
       let address: string | undefined = '';
       if (tags['addr:housenumber']) address += tags['addr:housenumber'] + ' ';
@@ -214,9 +251,9 @@ function processPlaces(elements: any[], targetLat: number, targetLon: number, fi
       if (tags['addr:city']) address += ', ' + tags['addr:city'];
       if (tags['addr:postcode']) address += ' ' + tags['addr:postcode'];
       address = address.trim() || undefined;
-      
+
       const isEmergency = tags.emergency === 'yes';
-      
+
       return {
         name,
         distance: distance.toFixed(1),
@@ -241,21 +278,17 @@ function processPlaces(elements: any[], targetLat: number, targetLon: number, fi
   } else {
     places.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
   }
-  
+
   return places;
 }
 
 // Process offline amenities data
-function processOfflineAmenities(
-  amenities: any[], 
-  targetLat: number, 
-  targetLon: number
-): Place[] {
+function processOfflineAmenities(amenities: any[], targetLat: number, targetLon: number): Place[] {
   return amenities
     .filter((a: any) => a.lat && a.lon)
     .map((a: any) => {
       const distance = calculateDistance(targetLat, targetLon, a.lat, a.lon);
-      
+
       return {
         name: a.name || 'Unknown',
         distance: distance.toFixed(1),
@@ -271,18 +304,22 @@ function processOfflineAmenities(
 }
 
 // Get offline places fallback
-function getOfflinePlaces(targetLat: number, targetLon: number, forceRefresh: boolean = false): PlacesResult {
+function getOfflinePlaces(
+  targetLat: number,
+  targetLon: number,
+  forceRefresh: boolean = false
+): PlacesResult {
   const offlineData = loadOfflineAmenitiesData(forceRefresh);
-  
+
   const hospitals = processOfflineAmenities(offlineData.hospitals, targetLat, targetLon);
   const fuelStations = processOfflineAmenities(offlineData.fuelStations, targetLat, targetLon);
   const toilets = processOfflineAmenities(offlineData.toilets, targetLat, targetLon);
-  
+
   return {
     hospital: hospitals[0] || null,
     toilet: toilets[0] || null,
     fuelStation: fuelStations[0] || null,
-    source: 'Offline: OpenStreetMap cached data'
+    source: 'Offline: OpenStreetMap cached data',
   };
 }
 
@@ -293,47 +330,53 @@ export async function GET(request: Request) {
 
   // Handle cache status request
   if (action === 'status') {
-    const cacheAge = amenitiesCache.loadedAt 
-      ? Math.round((Date.now() - amenitiesCache.loadedAt) / 1000) 
+    const cacheAge = amenitiesCache.loadedAt
+      ? Math.round((Date.now() - amenitiesCache.loadedAt) / 1000)
       : null;
     const cacheValid = isCacheValid();
-    
+
     return NextResponse.json({
       cacheStatus: {
         loaded: !!amenitiesCache.data,
         valid: cacheValid,
         loadedAt: amenitiesCache.loadedAt ? new Date(amenitiesCache.loadedAt).toISOString() : null,
         ageSeconds: cacheAge,
-        expiresInSeconds: cacheValid ? Math.round((CACHE_DURATION_MS - (Date.now() - (amenitiesCache.loadedAt || 0))) / 1000) : 0,
+        expiresInSeconds: cacheValid
+          ? Math.round((CACHE_DURATION_MS - (Date.now() - (amenitiesCache.loadedAt || 0))) / 1000)
+          : 0,
         cacheDurationMs: CACHE_DURATION_MS,
-        counts: amenitiesCache.data ? {
-          hospitals: amenitiesCache.data.hospitals.length,
-          fuelStations: amenitiesCache.data.fuelStations.length,
-          toilets: amenitiesCache.data.toilets.length
-        } : null
-      }
+        counts: amenitiesCache.data
+          ? {
+              hospitals: amenitiesCache.data.hospitals.length,
+              fuelStations: amenitiesCache.data.fuelStations.length,
+              toilets: amenitiesCache.data.toilets.length,
+            }
+          : null,
+      },
     });
   }
 
   // Handle cache refresh request
   if (action === 'refresh') {
     loadOfflineAmenitiesData(true); // Force refresh
-    const cacheAge = amenitiesCache.loadedAt 
-      ? Math.round((Date.now() - amenitiesCache.loadedAt) / 1000) 
+    const cacheAge = amenitiesCache.loadedAt
+      ? Math.round((Date.now() - amenitiesCache.loadedAt) / 1000)
       : null;
-    
+
     return NextResponse.json({
       message: 'Cache refreshed',
       cacheStatus: {
         loaded: !!amenitiesCache.data,
         loadedAt: amenitiesCache.loadedAt ? new Date(amenitiesCache.loadedAt).toISOString() : null,
         ageSeconds: cacheAge,
-        counts: amenitiesCache.data ? {
-          hospitals: amenitiesCache.data.hospitals.length,
-          fuelStations: amenitiesCache.data.fuelStations.length,
-          toilets: amenitiesCache.data.toilets.length
-        } : null
-      }
+        counts: amenitiesCache.data
+          ? {
+              hospitals: amenitiesCache.data.hospitals.length,
+              fuelStations: amenitiesCache.data.fuelStations.length,
+              toilets: amenitiesCache.data.toilets.length,
+            }
+          : null,
+      },
     });
   }
 
@@ -350,12 +393,12 @@ export async function GET(request: Request) {
 
   // Check if offline mode
   const isOffline = process.env.OFFLINE_MODE === 'true';
-  
+
   // Force refresh cache if requested
   if (refresh) {
     loadOfflineAmenitiesData(true);
   }
-  
+
   if (!isOffline) {
     try {
       // Search for hospitals/medical centres with emergency services
@@ -365,13 +408,18 @@ export async function GET(request: Request) {
         node["healthcare"="hospital"](around:${radius},${targetLat},${targetLon});
         way["healthcare"="hospital"](around:${radius},${targetLat},${targetLon});
       `;
-      
-      // Search for toilets
+
+      // Search for toilets (both amenity=toilets and toilets=yes tags)
+      // toilets=yes catches toilets at fuel stations, restaurants, parks etc.
+      // that are not tagged with amenity=toilets
       const toiletQuery = `
         node["amenity"="toilets"](around:${radius},${targetLat},${targetLon});
         way["amenity"="toilets"](around:${radius},${targetLat},${targetLon});
+        node["toilets"="yes"](around:${radius},${targetLat},${targetLon});
+        way["toilets"="yes"](around:${radius},${targetLat},${targetLon});
+        node["building"="toilets"](around:${radius},${targetLat},${targetLon});
       `;
-      
+
       // Search for fuel/service stations
       const fuelQuery = `
         node["amenity"="fuel"](around:${radius},${targetLat},${targetLon});
@@ -386,7 +434,11 @@ export async function GET(request: Request) {
       ]);
 
       // If all searches returned empty, fall back to offline
-      if (hospitalElements.length === 0 && toiletElements.length === 0 && fuelElements.length === 0) {
+      if (
+        hospitalElements.length === 0 &&
+        toiletElements.length === 0 &&
+        fuelElements.length === 0
+      ) {
         return NextResponse.json(getOfflinePlaces(targetLat, targetLon, refresh));
       }
 
@@ -398,7 +450,7 @@ export async function GET(request: Request) {
         hospital: hospitals[0] || null,
         toilet: toilets[0] || null,
         fuelStation: fuelStations[0] || null,
-        source: 'Online: OpenStreetMap via Overpass API'
+        source: 'Online: OpenStreetMap via Overpass API',
       };
 
       return NextResponse.json(result);
@@ -407,7 +459,7 @@ export async function GET(request: Request) {
       return NextResponse.json(getOfflinePlaces(targetLat, targetLon, refresh));
     }
   }
-  
+
   // Offline mode - use cached data
   return NextResponse.json(getOfflinePlaces(targetLat, targetLon, refresh));
 }
