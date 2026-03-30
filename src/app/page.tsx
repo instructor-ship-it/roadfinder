@@ -248,6 +248,13 @@ interface Place {
   fuelPrice?: number; // cents per litre (e.g. 231.3 = $2.313/L)
   fuelDate?: string; // date of price
   siteFeatures?: string[]; // e.g. ['Open 24 hours', 'Toilets', 'ATM']
+  // Toilet-specific (from National Public Toilet Map)
+  toiletType?: string; // e.g. 'Park or reserve', 'Service station', 'Community building'
+  openingHours?: string;
+  wheelchair?: boolean;
+  toiletNote?: string;
+  toiletUrl?: string;
+  toiletSource?: string; // 'NationalToiletMap' | 'OpenStreetMap'
 }
 
 interface PlacesData {
@@ -1399,6 +1406,12 @@ export default function Home() {
         lines.push('Public Toilet:');
         lines.push(`  Name:           ${places.toilet.name}`);
         lines.push(`  Distance:       ${places.toilet.distance} km`);
+        if (places.toilet.address) {
+          lines.push(`  Address:        ${places.toilet.address}`);
+        }
+        if (places.toilet.siteFeatures && places.toilet.siteFeatures.length > 0) {
+          lines.push(`  Features:       ${places.toilet.siteFeatures.join(' · ')}`);
+        }
       }
       if (!places.hospital && !places.fuelStation && !places.toilet) {
         lines.push('No amenities found nearby');
@@ -2015,6 +2028,8 @@ export default function Home() {
         <div class="stat-label">🚻 Public Toilet</div>
         <div style="font-weight: 600;">${places.toilet.name}</div>
         <p style="font-size: 10px; color: #6b7280;">${places.toilet.distance} km away</p>
+        ${places.toilet.address ? `<p style="font-size: 10px; color: #6b7280;">${places.toilet.address}</p>` : ''}
+        ${places.toilet.siteFeatures && places.toilet.siteFeatures.length > 0 ? `<p style="font-size: 10px; color: #6b7280;">${places.toilet.siteFeatures.join(' · ')}</p>` : ''}
       </div>
       `
           : '<div class="stat"><p style="color: #9ca3af;">No toilet found</p></div>'
@@ -3013,23 +3028,51 @@ export default function Home() {
         console.log('Fuel station query failed:', e);
       }
 
-      // 3. Toilets from Overpass API (no better source available)
+      // 3. Toilets from National Public Toilet Map (Australian Government data)
+      // Falls back to Overpass API if the map service is unavailable
       try {
-        const placesRes = await fetch(`/api/places?lat=${lat}&lon=${lon}`);
-        if (placesRes.ok) {
-          const placesData = await placesRes.json();
-          if (placesData.toilet) {
-            toilet = placesData.toilet;
-            toiletSource = 'OpenStreetMap';
-          }
-          // Use Overpass as fallback for hospital if SLIP failed
-          if (!hospital && placesData.hospital) {
-            hospital = placesData.hospital;
-            hospitalSource = 'OpenStreetMap';
+        const toiletRes = await fetch(`/api/toilets?lat=${lat}&lon=${lon}`);
+        if (toiletRes.ok) {
+          const toiletData = await toiletRes.json();
+          if (toiletData.nearest) {
+            const t = toiletData.nearest;
+            toilet = {
+              name: t.name,
+              distance: String(t.distanceKm),
+              lat: t.lat,
+              lon: t.lon,
+              googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${t.lat},${t.lon}`,
+              toiletType: t.facilityType,
+              openingHours: t.openingHours || undefined,
+              wheelchair: t.accessible || t.wheelchair || false,
+              toiletNote: t.toiletNote || undefined,
+              toiletUrl: t.url || undefined,
+              toiletSource: t.source || 'NationalToiletMap',
+            };
+            toiletSource =
+              t.source === 'NationalToiletMap' ? 'National Toilet Map' : 'OpenStreetMap';
           }
         }
       } catch (e) {
-        console.log('Overpass toilet query failed:', e);
+        console.log('Toilet map query failed:', e);
+        // Fallback to Overpass via /api/places
+        try {
+          const placesRes = await fetch(`/api/places?lat=${lat}&lon=${lon}`);
+          if (placesRes.ok) {
+            const placesData = await placesRes.json();
+            if (!toilet && placesData.toilet) {
+              toilet = placesData.toilet;
+              toiletSource = 'OpenStreetMap (fallback)';
+            }
+            // Use Overpass as fallback for hospital if SLIP failed
+            if (!hospital && placesData.hospital) {
+              hospital = placesData.hospital;
+              hospitalSource = 'OpenStreetMap';
+            }
+          }
+        } catch (e2) {
+          console.log('Overpass toilet fallback failed:', e2);
+        }
       }
 
       // If all three sources failed, try cache

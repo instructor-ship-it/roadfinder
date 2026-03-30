@@ -11,6 +11,7 @@ interface Place {
   address?: string;
   googleMapsUrl: string;
   isEmergency?: boolean;
+  siteFeatures?: string[];
 }
 
 interface PlacesResult {
@@ -136,6 +137,138 @@ async function searchOverpass(lat: number, lon: number, query: string): Promise<
   }
 
   return [];
+}
+
+// ─── National Public Toilet Map API ────────────────────────────────────
+// Australian Government toilet database with 25,000+ facilities.
+// Uses undocumented internal JSON APIs from toiletmap.gov.au.
+
+interface ToiletMapFacility {
+  ID: number;
+  T: string; // Title/Name
+  F: string; // Facility Type (e.g., "Park or reserve", "Service station")
+  A1: string; // Address Line 1
+  FM: number; // Feature bitmask
+  LA: number; // Latitude
+  LO: number; // Longitude
+  S: number; // Score (sorting)
+  O: string; // Opening Hours
+  L: string; // Locality/Town
+  ST: string; // State
+  AID: string | null;
+}
+
+async function fetchToiletMapNearest(lat: number, lon: number): Promise<Place | null> {
+  try {
+    const now = new Date().toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM
+    const url = `https://toiletmap.gov.au/api/AppAPI/GetNearestFacilities?xIdiom=Desktop&lat=${lat}&lon=${lon}&clat=${lat}&clon=${lon}&mask=0&cDate=${encodeURIComponent(now)}&openNow=false&inCar=false&appType=Mobile`;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    const response = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'TCWorkZoneLocator/1.9.8 (WA Traffic Control Application)',
+      },
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    const facilities: ToiletMapFacility[] = data.Facilitys || [];
+
+    if (facilities.length === 0) return null;
+
+    const f = facilities[0];
+
+    // Decode feature bitmask for site features
+    const fm = f.FM || 0;
+    const features: string[] = [];
+    if (f.O && f.O.includes('24 hours')) features.push('Open 24 hours');
+    if (fm & 16) features.push('Wheelchair Accessible');
+    if (fm & 256) features.push('Parking');
+    if (fm & 1024) features.push('Baby Change');
+    if (fm & 4096) features.push('Showers');
+    if (fm & 16384) features.push('Drinking Water');
+
+    const distance = calculateDistance(lat, lon, f.LA, f.LO);
+    const address = [f.A1, f.L, f.ST].filter(Boolean).join(', ');
+
+    console.log(`Toilet Map API: ${f.T} (${distance.toFixed(1)}km) - ${f.O}`);
+
+    return {
+      name: f.T,
+      distance: distance.toFixed(1),
+      lat: f.LA,
+      lon: f.LO,
+      googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${f.LA},${f.LO}`,
+      address,
+      siteFeatures: features,
+    };
+  } catch (error) {
+    console.error('National Toilet Map API error:', error);
+    return null;
+  }
+}
+
+async function fetchToiletMapBoundingBox(lat: number, lon: number): Promise<Place[]> {
+  try {
+    const now = new Date().toISOString().slice(0, 16);
+    // ~22km bounding box (0.2 degrees)
+    const url = `https://toiletmap.gov.au/api/AppAPI/GetFacilitysInBoundingBox?xIdiom=Desktop&lat=${lat}&lon=${lon}&latDegrees=0.2&lonDegrees=0.2&clat=${lat}&clon=${lon}&cDate=${encodeURIComponent(now)}&openNow=false&mask=0&enforcePrefs=false&appType=Mobile`;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    const response = await fetch(url, {
+      signal: controller.signal,
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'TCWorkZoneLocator/1.9.8 (WA Traffic Control Application)',
+      },
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) return [];
+
+    const data = await response.json();
+    const facilities: ToiletMapFacility[] = data.Facilitys || [];
+
+    return facilities
+      .filter((f) => f.LA && f.LO)
+      .map((f) => {
+        const fm = f.FM || 0;
+        const features: string[] = [];
+        if (f.O && f.O.includes('24 hours')) features.push('Open 24 hours');
+        if (fm & 16) features.push('Wheelchair Accessible');
+        if (fm & 256) features.push('Parking');
+        if (fm & 1024) features.push('Baby Change');
+        if (fm & 4096) features.push('Showers');
+        if (fm & 16384) features.push('Drinking Water');
+
+        const distance = calculateDistance(lat, lon, f.LA, f.LO);
+        const address = [f.A1, f.L, f.ST].filter(Boolean).join(', ');
+
+        return {
+          name: f.T,
+          distance: distance.toFixed(1),
+          lat: f.LA,
+          lon: f.LO,
+          googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${f.LA},${f.LO}`,
+          address,
+          siteFeatures: features,
+        };
+      })
+      .sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+  } catch (error) {
+    console.error('National Toilet Map BoundingBox API error:', error);
+    return [];
+  }
 }
 
 // Check if facility is a real hospital (not dental, fertility, etc.)
@@ -401,7 +534,17 @@ export async function GET(request: Request) {
 
   if (!isOffline) {
     try {
-      // Search for hospitals/medical centres with emergency services
+      // ─── Toilets: National Public Toilet Map API (primary) ─────────
+      // 25,000+ Australian Government toilet facilities with rich metadata
+      // Falls back to Overpass API if Toilet Map is unavailable
+      let toiletMapToilet: Place | null = null;
+      try {
+        toiletMapToilet = await fetchToiletMapNearest(targetLat, targetLon);
+      } catch (e) {
+        console.log('National Toilet Map API failed, using Overpass fallback for toilets');
+      }
+
+      // ─── Overpass: hospitals and fuel (primary source for these) ─────
       const hospitalQuery = `
         node["amenity"="hospital"](around:${radius},${targetLat},${targetLon});
         way["amenity"="hospital"](around:${radius},${targetLat},${targetLon});
@@ -409,9 +552,13 @@ export async function GET(request: Request) {
         way["healthcare"="hospital"](around:${radius},${targetLat},${targetLon});
       `;
 
-      // Search for toilets (both amenity=toilets and toilets=yes tags)
-      // toilets=yes catches toilets at fuel stations, restaurants, parks etc.
-      // that are not tagged with amenity=toilets
+      const fuelQuery = `
+        node["amenity"="fuel"](around:${radius},${targetLat},${targetLon});
+        way["amenity"="fuel"](around:${radius},${targetLat},${targetLon});
+      `;
+
+      // ─── Overpass: toilets fallback (only if Toilet Map failed) ──────
+      // Uses expanded search: amenity=toilets, toilets=yes, building=toilets
       const toiletQuery = `
         node["amenity"="toilets"](around:${radius},${targetLat},${targetLon});
         way["amenity"="toilets"](around:${radius},${targetLat},${targetLon});
@@ -420,37 +567,37 @@ export async function GET(request: Request) {
         node["building"="toilets"](around:${radius},${targetLat},${targetLon});
       `;
 
-      // Search for fuel/service stations
-      const fuelQuery = `
-        node["amenity"="fuel"](around:${radius},${targetLat},${targetLon});
-        way["amenity"="fuel"](around:${radius},${targetLat},${targetLon});
-      `;
-
-      // Run searches in parallel
-      const [hospitalElements, toiletElements, fuelElements] = await Promise.all([
+      // Run Overpass searches in parallel (hospital + fuel + toilet fallback)
+      const [hospitalElements, fuelElements, toiletElements] = await Promise.all([
         searchOverpass(targetLat, targetLon, hospitalQuery),
-        searchOverpass(targetLat, targetLon, toiletQuery),
         searchOverpass(targetLat, targetLon, fuelQuery),
+        toiletMapToilet ? Promise.resolve([]) : searchOverpass(targetLat, targetLon, toiletQuery),
       ]);
 
       // If all searches returned empty, fall back to offline
       if (
         hospitalElements.length === 0 &&
         toiletElements.length === 0 &&
-        fuelElements.length === 0
+        fuelElements.length === 0 &&
+        !toiletMapToilet
       ) {
         return NextResponse.json(getOfflinePlaces(targetLat, targetLon, refresh));
       }
 
       const hospitals = processPlaces(hospitalElements, targetLat, targetLon, 'hospital');
-      const toilets = processPlaces(toiletElements, targetLat, targetLon, 'other');
       const fuelStations = processPlaces(fuelElements, targetLat, targetLon, 'fuel');
+      const overpassToilets = processPlaces(toiletElements, targetLat, targetLon, 'other');
+
+      // Use Toilet Map result if available, otherwise Overpass result
+      const toilet = toiletMapToilet || overpassToilets[0] || null;
 
       const result: PlacesResult = {
         hospital: hospitals[0] || null,
-        toilet: toilets[0] || null,
+        toilet: toilet || null,
         fuelStation: fuelStations[0] || null,
-        source: 'Online: OpenStreetMap via Overpass API',
+        source: toiletMapToilet
+          ? 'Online: National Public Toilet Map (Australian Government)'
+          : 'Online: OpenStreetMap via Overpass API',
       };
 
       return NextResponse.json(result);
