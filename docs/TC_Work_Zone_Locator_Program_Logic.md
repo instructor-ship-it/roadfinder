@@ -353,7 +353,27 @@ Provides diesel fuel station data by merging FuelWatch WA (daily prices) with Op
 }
 ```
 
-### 5.7 Incidents Route
+### 5.7 Toilet Map Utility
+
+The shared utility `src/lib/toilet-map.ts` provides toilet search using the Australian Government National Public Toilet Map via ArcGIS Feature Service.
+
+| Property    | Value                                                                                                                  |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Service URL | `https://portal.data.nsw.gov.au/arcgis/rest/services/Hosted/National_Public_Toilet_Map/FeatureServer/0/query`          |
+| Coverage    | 2,714+ public toilets in Western Australia                                                                             |
+| Cache       | 6-hour in-memory cache (all WA toilets fetched on first call)                                                          |
+| Fallback    | Overpass API via `/api/places?type=toilet`                                                                             |
+| Metadata    | Opening hours, wheelchair access, baby change, showers, parking, drinking water, facility type, toiletmap.gov.au links |
+
+**Key Function:**
+
+```typescript
+findNearestToilets(lat: number, lon: number, radiusKm: number): Promise<Place[]>
+```
+
+Fetches all WA toilets (cached for 6 hours), filters by radius, and returns results in the standard `Place` interface format.
+
+### 5.8 Incidents Route
 
 | Route          | Method | Purpose             |
 | -------------- | ------ | ------------------- |
@@ -783,11 +803,11 @@ The home page (`src/app/page.tsx`) implements a sophisticated parallel data fetc
 
 **Architecture Overview:**
 
-The function launches three independent fetch calls in parallel using `Promise.allSettled()`:
+The function launches three independent fetch calls in parallel using `Promise.allSettled()`. For toilets, the shared utility `src/lib/toilet-map.ts` fetches ALL Western Australian toilets (2,714+) from the National Public Toilet Map ArcGIS Feature Service (hosted on the NSW Government open data portal) and caches them in memory for 6 hours, then performs client-side distance filtering to find the nearest.
 
 1. **Hospitals**: `GET /api/nearest-hospital` (WA Health SLIP primary) → `GET /api/places?type=hospital` (Overpass fallback)
 2. **Fuel Stations**: `GET /api/fuel-stations` (FuelWatch WA + Overpass merge) → `GET /api/places?type=fuel` (Overpass fallback)
-3. **Toilets**: `GET /api/places?type=toilet` (Overpass API only — no better alternative exists)
+3. **Toilets**: `findNearestToilets()` from `src/lib/toilet-map.ts` (National Public Toilet Map ArcGIS, 2,714+ WA toilets) → `GET /api/places?type=toilet` (Overpass fallback)
 
 **Smart Fallback Chain:**
 
@@ -801,6 +821,7 @@ The `PlacesData` interface includes source tracking fields:
 interface PlacesData {
   hospitalSource?: 'WA Health SLIP' | 'OpenStreetMap';
   fuelSource?: 'FuelWatch WA' | 'OpenStreetMap';
+  toiletSource?: 'National Toilet Map' | 'OpenStreetMap';
   // ... other fields
 }
 ```

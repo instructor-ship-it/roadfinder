@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Three-Source Amenity Architecture** with smart fallback chain
   - Hospital: WA Health SLIP → Overpass fallback
   - Fuel: FuelWatch WA + Overpass merge (deduplication within 200m)
-  - Toilet: Overpass API (no better alternative)
+  - Toilet: Overpass API (no better alternative; replaced by ArcGIS in v1.9.9)
   - Source tracking per amenity type displayed in UI
 - **Hospital Display Enhancements**
   - ED badge (red), Public badge (blue), Private badge (gray), Nursing Post badge (amber)
@@ -57,6 +57,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **TypeScript inference error**: `const sources = []` inferred as `never[]`, causing Vercel build failure. Fixed with explicit `string[]` type annotation.
 - **FuelWatch RSS diesel bug**: RSS feed silently ignored diesel product code and returned ULP prices. Switched to FuelWatch JSON API which properly supports diesel.
 - **Fuel price display bug**: 3 UI locations showed raw cents as dollars (e.g., $299.2/L instead of $2.99/L). Fixed price formatting in page.tsx (email HTML + UI badge) and AmenitiesSection.tsx.
+
+---
+
+## [1.9.9] - 2026-03-30
+
+### Added
+
+- **National Public Toilet Map Integration** via ArcGIS Feature Service (replacing Overpass-only toilet search)
+  - Australian Government toilet data from NSW Government open data portal
+  - 2,714+ public toilets across Western Australia (vs 0–5 from Overpass in rural areas)
+  - Shared utility `src/lib/toilet-map.ts` fetches all WA toilets with 6-hour in-memory cache
+  - Rich metadata: opening hours, wheelchair access, baby change, showers, parking, drinking water, facility type
+  - Direct toiletmap.gov.au links for each facility
+- **Toilet source tracking** in `PlacesData` interface (`toiletSource` field)
+
+### Changed
+
+- **Toilet search** now uses ArcGIS Feature Service as primary source, Overpass API retained as fallback only
+- **Amenity architecture** updated from 3-source to 3-source with improved toilet coverage
+- **v1.9.8 changelog** toilet entry updated: "Overpass API (no better alternative)" → ArcGIS primary
+
+### Removed
+
+- Overpass API as primary toilet data source (retained as fallback only)
 
 ---
 
@@ -350,6 +374,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Key Changes                                                               |
 | ------- | ---------- | ------------------------------------------------------------------------- |
+| 1.9.9   | 2026-03-30 | National Public Toilet Map ArcGIS integration (2,714+ WA toilets)         |
 | 1.9.8   | 2026-03-29 | FuelWatch WA + WA Health SLIP amenities, fuel prices, hospital ED/badges  |
 | 1.9.7   | 2026-03-29 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements |
 | 1.9.6   | 2026-03-28 | Traffic Counter: Auto-GPS, custom duration UI, duration fixes, lint fixes |

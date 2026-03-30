@@ -22,6 +22,7 @@ The application uses four main categories of data sources:
 - **External Weather APIs** - Open-Meteo for weather forecasts and BOM for weather warnings
 - **OpenStreetMap Services** - Overpass API for amenities and Nominatim for geocoding
 - **WA Government Data Services** - WA Health SLIP Services for hospital data, FuelWatch WA for fuel prices
+- **Australian Government Data Services** - National Public Toilet Map via ArcGIS Feature Service (NSW Government open data portal)
 
 ---
 
@@ -247,7 +248,8 @@ The application searches within 100km radius for rural WA coverage:
 ```
 Hospital: node["amenity"="hospital"](around:100000,{lat},{lon});
 Fuel: node["amenity"="fuel"](around:100000,{lat},{lon});
-Toilets: node["amenity"="toilets"](around:100000,{lat},{lon});
+Toilets: National Public Toilet Map ArcGIS Feature Service (primary, 2,714+ WA toilets)
+  → Overpass API (fallback only): node["amenity"="toilets"](around:100000,{lat},{lon});
 ```
 
 **Hospital Filtering:**
@@ -414,6 +416,7 @@ For offline capability, MRWA data is stored in IndexedDB on the client device. T
 | src/app/api/nearest-intersections/route.ts | Intersection finder                                |
 | src/app/api/qa/route.ts                    | QA test endpoints                                  |
 | src/app/api/qa-saved/route.ts              | QA results storage                                 |
+| src/lib/toilet-map.ts                      | National Public Toilet Map ArcGIS queries & cache  |
 | src/lib/offline-db.ts                      | IndexedDB operations                               |
 | src/lib/offline-storage.ts                 | Offline data management                            |
 | src/lib/aftercare.ts                       | AfterCare storage operations                       |
@@ -498,6 +501,63 @@ The WA Health SLIP (Shared Location Information Platform) provides hospital faci
 
 Used by `/api/hospitals` and `/api/nearest-hospital` for authoritative hospital data including ED status, bed counts, and hospital type classification.
 
+### 7.1.3 National Public Toilet Map (ArcGIS Feature Service)
+
+The Australian Government National Public Toilet Map data is accessed via an ArcGIS Feature Service hosted on the NSW Government open data portal. This replaced the previous Overpass-only toilet search, which returned 0–5 results in rural WA. The ArcGIS service returns 2,714+ toilets across Western Australia.
+
+| Property       | Value                                                                                        |
+| -------------- | -------------------------------------------------------------------------------------------- |
+| Provider       | Australian Government (Department of Health and Aged Care), hosted via NSW Government portal |
+| Data Type      | ArcGIS REST Feature Service                                                                  |
+| Authentication | None required (free, no API key)                                                             |
+| Coverage       | 2,714+ public toilets in Western Australia                                                   |
+| Cache Duration | 6 hours (in-memory, shared utility `src/lib/toilet-map.ts`)                                  |
+| CORS           | Server-side only (no browser-side access)                                                    |
+| Fallback       | Overpass API (via `/api/places`)                                                             |
+
+**ArcGIS Feature Service URL:**
+
+```
+https://portal.data.nsw.gov.au/arcgis/rest/services/Hosted/National_Public_Toilet_Map/FeatureServer/0/query
+```
+
+**Query Parameters:**
+
+| Parameter      | Value          | Description                           |
+| -------------- | -------------- | ------------------------------------- |
+| where          | STATE='WA'     | Filter to Western Australia           |
+| outFields      | \*             | All fields (rich metadata)            |
+| returnGeometry | true           | Include lat/lon coordinates           |
+| f              | json           | JSON response format                  |
+| resultOffset   | 0 (pagination) | Paginated fetch for large result sets |
+
+**Rich Metadata Available:**
+
+- Opening hours (24/7, restricted, seasonal)
+- Wheelchair accessibility (yes/no)
+- Baby change facility (yes/no)
+- Showers (yes/no)
+- Parking (yes/no)
+- Drinking water (yes/no)
+- Facility type (park, mall, transport, library, etc.)
+- Direct link to toiletmap.gov.au facility page
+
+**Why ArcGIS over toiletmap.gov.au Internal API:**
+
+During research, the toiletmap.gov.au website was found to have undocumented internal APIs:
+
+- `GetNearestFacilities`: Returns ~5 nearest facilities (insufficient for rural WA)
+- `GetFacilitysInBoundingBox`: Returns all facilities in area (better but unstable)
+
+The ArcGIS Feature Service approach was chosen because it is a proper, stable data service (vs. internal website APIs that may change without notice).
+
+**Shared Utility (`src/lib/toilet-map.ts`):**
+
+- Fetches ALL WA toilets in a single query (paginated if needed)
+- Caches results in memory for 6 hours
+- Provides `findNearestToilets(lat, lon, radiusKm)` function
+- Returns data in standard `Place` interface format for consistency
+
 ---
 
 ## 7.2 Amenity Architecture Note
@@ -506,27 +566,28 @@ The home page (`fetchPlaces()` in `src/app/page.tsx`) uses a **3-source parallel
 
 1. **Hospitals**: WA Health SLIP Services (primary, via `/api/nearest-hospital`) → Overpass API (fallback via `/api/places`)
 2. **Fuel Stations**: FuelWatch WA + Overpass merge (via `/api/fuel-stations`) → Overpass API (fallback via `/api/places`)
-3. **Toilets**: Overpass API only (via `/api/places`) — no better alternative exists
+3. **Toilets**: National Public Toilet Map ArcGIS Feature Service (primary, via `src/lib/toilet-map.ts`) → Overpass API (fallback via `/api/places`)
 
 **Fallback Chain:** Each source has its own try/catch. If the primary source fails (timeout, error), the home page automatically falls back to the Overpass-based `/api/places` endpoint.
 
 **Source Tracking:** The `PlacesData` interface includes `hospitalSource` and `fuelSource` fields to track which data source was used, enabling transparency in the UI.
 
-**Note:** `/api/places` still exists as a general-purpose Overpass endpoint but the home page only uses it for toilet data (and hospital/fuel fallback).
+**Note:** `/api/places` still exists as a general-purpose Overpass endpoint but the home page now only uses it as a fallback for toilet data (and hospital/fuel fallback).
 
 ---
 
 ## 8. Rate Limits and Caching
 
-| API            | Rate Limit           | Caching Strategy                  |
-| -------------- | -------------------- | --------------------------------- |
-| MRWA ArcGIS    | 2000 records/request | Client-side IndexedDB             |
-| Open-Meteo     | None (free)          | Per-request, 30-min offline cache |
-| BOM RSS        | Reasonable use       | 5-minute server cache             |
-| FuelWatch WA   | None (free JSON API) | 30-min server cache, 60s CDN      |
-| WA Health SLIP | Per API terms        | Per-request, no client cache      |
-| Overpass       | Varies by server     | No caching, fallback servers      |
-| Nominatim      | 1 req/sec            | No caching, used once per lookup  |
+| API               | Rate Limit           | Caching Strategy                        |
+| ----------------- | -------------------- | --------------------------------------- |
+| MRWA ArcGIS       | 2000 records/request | Client-side IndexedDB                   |
+| Open-Meteo        | None (free)          | Per-request, 30-min offline cache       |
+| BOM RSS           | Reasonable use       | 5-minute server cache                   |
+| FuelWatch WA      | None (free JSON API) | 30-min server cache, 60s CDN            |
+| WA Health SLIP    | Per API terms        | Per-request, no client cache            |
+| Overpass          | Varies by server     | No caching, fallback servers            |
+| Toilet Map ArcGIS | None (free, public)  | 6-hour in-memory cache (all WA toilets) |
+| Nominatim         | 1 req/sec            | No caching, used once per lookup        |
 
 ---
 
