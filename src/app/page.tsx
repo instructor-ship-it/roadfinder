@@ -1372,17 +1372,152 @@ export default function Home() {
     lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     lines.push('🚗 TRAFFIC VOLUME');
     lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    if (traffic) {
-      lines.push(`AADT:             ${traffic.aadt?.toLocaleString() || 'N/A'} vehicles/day`);
-      lines.push(`Peak Hour:        ${traffic.peak_hour_volume || 'N/A'} vehicles/hour (both dir)`);
-      lines.push(`Heavy Vehicles:   ${traffic.heavy_vehicle_percent}%`);
-      lines.push(`Data Year:        ${traffic.aadt_year}`);
-      if (traffic.distance_to_site !== undefined) {
-        lines.push(`Count Site:       ${traffic.distance_to_site} km from work zone`);
+
+    // Determine effective values (MRWA or user override)
+    const effectiveVphBothDir = (() => {
+      if (userTrafficOverride) {
+        const ovOneDir = userTrafficOverride.vph_one_direction || 0;
+        return userTrafficOverride.direction_mode === 'both-ways'
+          ? userTrafficOverride.vph_combined || ovOneDir * 2
+          : ovOneDir * 2;
       }
-      lines.push(`Source:           ${traffic.source}`);
+      return traffic?.peak_hour_volume || (traffic?.aadt ? Math.round(traffic.aadt * 0.1) : 0);
+    })();
+    const effectiveVphOneDir = (() => {
+      if (userTrafficOverride) return userTrafficOverride.vph_one_direction || 0;
+      return Math.round(effectiveVphBothDir / 2);
+    })();
+    const effectiveHeavyPct = (() => {
+      if (userTrafficOverride) return userTrafficOverride.heavy_percentage || 0;
+      return traffic?.heavy_vehicle_percent || 0;
+    })();
+
+    if (traffic) {
+      lines.push('Historical Data (MRWA):');
+      lines.push(`  AADT:           ${traffic.aadt?.toLocaleString() || 'N/A'} vehicles/day`);
+      lines.push(`  Peak Hour:      ${traffic.peak_hour_volume || 'N/A'} vehicles/hour (both dir)`);
+      lines.push(`  Heavy Vehicles: ${traffic.heavy_vehicle_percent}%`);
+      lines.push(`  Data Year:      ${traffic.aadt_year}`);
+      if (traffic.distance_to_site !== undefined) {
+        lines.push(`  Count Site:     ${traffic.distance_to_site} km from work zone`);
+      }
+      lines.push(`  Source:         ${traffic.source}`);
     } else {
-      lines.push('No traffic data available');
+      lines.push('No historical traffic data available');
+    }
+
+    // User traffic count override
+    if (userTrafficOverride) {
+      const ov = userTrafficOverride;
+      lines.push('');
+      lines.push('Live Count Data (user counted — used for calculations):');
+      lines.push(`  Date:           ${formatAusDate(ov.date)}`);
+      lines.push(`  Time:           ${ov.start_time} - ${ov.end_time}`);
+      lines.push(`  Duration:       ${ov.duration_minutes} min`);
+      lines.push(
+        `  Direction:      ${ov.direction_mode === 'both-ways' ? 'Both directions' : 'One direction'}`
+      );
+      lines.push(`  Total Vehicles: ${ov.total_vehicles}`);
+      lines.push(`  Heavy Vehicles: ${ov.heavy_percentage}%`);
+      lines.push(`  Combined VPH:   ${effectiveVphBothDir}`);
+      lines.push(`  VPH/Direction:  ${effectiveVphOneDir}`);
+      if (ov.direction_mode === 'both-ways') {
+        lines.push('');
+        lines.push('  Per Direction:');
+        lines.push(
+          `    True Left:    ${ov.true_left_light} light, ${ov.true_left_heavy} heavy (${ov.vph_true_left} VPH)`
+        );
+        lines.push(
+          `    True Right:   ${ov.true_right_light} light, ${ov.true_right_heavy} heavy (${ov.vph_true_right} VPH)`
+        );
+      }
+      if (ov.queue_length) {
+        lines.push(`  Queue Length:   ${ov.queue_length}m`);
+      }
+      if (ov.notes) {
+        lines.push(`  Notes:          ${ov.notes}`);
+      }
+    }
+    lines.push('');
+
+    // === TRAFFIC CALCULATIONS ===
+    lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    lines.push('📊 TRAFFIC CALCULATIONS');
+    lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+    if (effectiveVphBothDir > 0) {
+      const reductionFactor = effectiveHeavyPct > 10 ? 0.8 : 1;
+      const reducedVph = Math.round(effectiveVphBothDir * reductionFactor);
+
+      lines.push(`Effective VPH (both dir):  ${effectiveVphBothDir}`);
+      lines.push(`Effective VPH (one dir):   ${effectiveVphOneDir}`);
+      lines.push(`Heavy Vehicle %:           ${effectiveHeavyPct}%`);
+      if (effectiveHeavyPct > 10) {
+        lines.push(`Heavy Reduction Factor:   ×${reductionFactor} (>10% heavy vehicles)`);
+        lines.push(`Reduced VPH (both dir):   ${reducedVph}`);
+      }
+      lines.push('');
+
+      // Shuttle flow
+      const getShuttleLength = (v: number) => {
+        if (v >= 701) return '70m';
+        if (v >= 601) return '100m';
+        if (v >= 501) return '150m';
+        if (v >= 401) return '250m';
+        if (v >= 351) return '400m';
+        if (v >= 301) return '600m';
+        if (v >= 251) return '800m';
+        if (v >= 201) return '1200m';
+        if (v >= 151) return '1600m';
+        return '2200m';
+      };
+      const shuttleLen = getShuttleLength(reducedVph);
+      const shuttleRisk = reducedVph < 301;
+      lines.push(
+        `Shuttle Flow Max Length:   ${shuttleLen}${shuttleRisk ? ' (exceeds AGTTM — risk assessment required)' : ''}`
+      );
+      lines.push('');
+
+      // Lane capacity
+      const getLaneCap = (v: number) => {
+        if (v <= 1000) return '1 lane';
+        if (v <= 2000) return '2 lanes';
+        if (v <= 3000) return '3 lanes';
+        return '4+ lanes';
+      };
+      const reducedOneDir = Math.round(effectiveVphOneDir * reductionFactor);
+      lines.push(`Lane Capacity (one dir):  ${getLaneCap(reducedOneDir)} (${reducedOneDir} VPH)`);
+      lines.push('');
+
+      // Max hold time
+      const maxHold = calculateMaxHoldTime(effectiveVphOneDir, effectiveHeavyPct);
+      if (maxHold) {
+        lines.push(`Maximum Hold Time:        ${maxHold.maxHoldTimeMinutes} min`);
+        lines.push(
+          `Recommended Stop:        ${maxHold.recommendedStopMinutes} min${maxHold.belowMinimum ? ' (exceeds max!)' : ''}`
+        );
+        lines.push(`Queue Growth Rate:       ${maxHold.queueGrowthRate} m/min`);
+        lines.push(
+          `Queue @ ${maxHold.recommendedStopMinutes}min stop:     ${maxHold.queueAtRecommendedStop}m`
+        );
+        lines.push(`Prepare to Stop Distance: ${PREPARE_TO_STOP_DISTANCE_M}m`);
+        lines.push(`Adv Queue Warning Dist:   ${ADV_QUEUE_WARNING_DISTANCE_M}m`);
+        if (maxHold.queueAtRecommendedStop > PREPARE_TO_STOP_DISTANCE_M) {
+          lines.push(`⚠️ Queue at recommended stop exceeds Prepare to Stop distance`);
+        }
+      }
+
+      if (userTrafficOverride) {
+        lines.push('');
+        lines.push(
+          `* Calculations based on live user count of ${userTrafficOverride.duration_minutes}min on ${formatAusDate(userTrafficOverride.date)}`
+        );
+      } else {
+        lines.push('');
+        lines.push('* Calculations based on MRWA historical data');
+      }
+    } else {
+      lines.push('No traffic data available for calculations');
     }
     lines.push('');
 
@@ -2004,6 +2139,7 @@ export default function Home() {
     ${
       traffic
         ? `
+    <h3 style="font-size: 11px; color: #9ca3af; margin: 0 0 4px 0; text-transform: uppercase;">Historical Data (MRWA)</h3>
     <div class="grid">
       <div class="stat">
         <div class="stat-label">AADT</div>
@@ -2025,8 +2161,136 @@ export default function Home() {
       </div>
     </div>
     <p style="color: #6b7280; margin-top: 8px; font-size: 10px;">Source: ${traffic.source}</p>
+    ${
+      userTrafficOverride
+        ? `
+    <h3 style="font-size: 11px; color: #60a5fa; margin: 16px 0 4px 0; text-transform: uppercase;">Live Count Data (user counted — used for calculations)</h3>
+    <div class="grid">
+      <div class="stat">
+        <div class="stat-label">Combined VPH</div>
+        <div class="stat-value" style="color: #60a5fa;">${effectiveVphBothDir}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">VPH/Direction</div>
+        <div class="stat-value" style="color: #60a5fa;">${effectiveVphOneDir}</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Heavy Vehicles</div>
+        <div class="stat-value" style="color: #fbbf24;">${effectiveHeavyPct}%</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total Counted</div>
+        <div class="stat-value">${userTrafficOverride.total_vehicles}</div>
+      </div>
+    </div>
+    <p style="color: #9ca3af; margin-top: 8px; font-size: 10px;">${formatAusDate(userTrafficOverride.date)} ${userTrafficOverride.start_time}–${userTrafficOverride.end_time} · ${userTrafficOverride.duration_minutes}min · ${userTrafficOverride.direction_mode === 'both-ways' ? 'Both directions' : 'One direction'}${userTrafficOverride.notes ? ' · ' + userTrafficOverride.notes : ''}</p>
+    ${
+      userTrafficOverride.direction_mode === 'both-ways'
+        ? `
+    <table style="width:100%; font-size: 10px; margin-top: 8px; border-collapse: collapse;">
+      <tr style="color: #9ca3af; border-bottom: 1px solid #374151;">
+        <td style="padding: 2px 4px;">Direction</td><td>Light</td><td>Heavy</td><td>VPH</td>
+      </tr>
+      <tr>
+        <td style="padding: 2px 4px;">True Left</td><td>${userTrafficOverride.true_left_light}</td><td>${userTrafficOverride.true_left_heavy}</td><td>${userTrafficOverride.vph_true_left}</td>
+      </tr>
+      <tr>
+        <td style="padding: 2px 4px;">True Right</td><td>${userTrafficOverride.true_right_light}</td><td>${userTrafficOverride.true_right_heavy}</td><td>${userTrafficOverride.vph_true_right}</td>
+      </tr>
+    </table>`
+        : ''
+    }
+    `
+        : ''
+    }
     `
         : '<p style="color: #9ca3af;">No traffic data available</p>'
+    }
+  </div>
+
+  <!-- Traffic Calculations -->
+  <h2>📊 Traffic Calculations</h2>
+  <div class="section">
+    ${
+      effectiveVphBothDir > 0
+        ? (() => {
+            const rf = effectiveHeavyPct > 10 ? 0.8 : 1;
+            const rv = Math.round(effectiveVphBothDir * rf);
+            const rod = Math.round(effectiveVphOneDir * rf);
+            const sl = (() => {
+              if (rv >= 701) return '70m';
+              if (rv >= 601) return '100m';
+              if (rv >= 501) return '150m';
+              if (rv >= 401) return '250m';
+              if (rv >= 351) return '400m';
+              if (rv >= 301) return '600m';
+              if (rv >= 251) return '800m';
+              if (rv >= 201) return '1200m';
+              if (rv >= 151) return '1600m';
+              return '2200m';
+            })();
+            const sr = rv < 301;
+            const lc = (() => {
+              if (rod <= 1000) return '1 lane';
+              if (rod <= 2000) return '2 lanes';
+              if (rod <= 3000) return '3 lanes';
+              return '4+ lanes';
+            })();
+            const mh = calculateMaxHoldTime(effectiveVphOneDir, effectiveHeavyPct);
+            return `
+    <div class="grid">
+      <div class="stat">
+        <div class="stat-label">Effective VPH (both)</div>
+        <div class="stat-value">${effectiveVphBothDir}${effectiveHeavyPct > 10 ? `<span style="font-size:10px;color:#fbbf24;"> → ${rv}</span>` : ''}</div>
+        <p style="font-size: 10px; color: #6b7280;">${effectiveHeavyPct > 10 ? `×${rf} heavy reduction` : 'no reduction'}</p>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Effective VPH (one)</div>
+        <div class="stat-value">${effectiveVphOneDir}${effectiveHeavyPct > 10 ? `<span style="font-size:10px;color:#fbbf24;"> → ${rod}</span>` : ''}</div>
+        <p style="font-size: 10px; color: #6b7280;">per direction</p>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Heavy Vehicle %</div>
+        <div class="stat-value">${effectiveHeavyPct}%</div>
+        ${effectiveHeavyPct > 10 ? '<p style="font-size: 10px; color: #fbbf24;">⚠️ >10% — 20% reduction applied</p>' : ''}
+      </div>
+      <div class="stat">
+        <div class="stat-label">Lane Capacity</div>
+        <div class="stat-value">${lc}</div>
+        <p style="font-size: 10px; color: #6b7280;">one direction</p>
+      </div>
+    </div>
+    <div class="grid" style="margin-top: 8px;">
+      <div class="stat">
+        <div class="stat-label">Shuttle Flow Max</div>
+        <div class="stat-value" style="color: ${sr ? '#fbbf24' : '#4ade80'};">${sl}</div>
+        ${sr ? '<p style="font-size: 10px; color: #fbbf24;">⚠️ Exceeds AGTTM limits</p>' : ''}
+      </div>
+      ${
+        mh
+          ? `
+      <div class="stat">
+        <div class="stat-label">Max Hold Time</div>
+        <div class="stat-value">${mh.maxHoldTimeMinutes} min</div>
+        <p style="font-size: 10px; color: #6b7280;">queue ${mh.queueGrowthRate}m/min</p>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Recommended Stop</div>
+        <div class="stat-value" style="color: ${mh.belowMinimum ? '#f87171' : '#e5e7eb'};">${mh.recommendedStopMinutes} min${mh.belowMinimum ? ' ⚠️' : ''}</div>
+        <p style="font-size: 10px; color: #6b7280;">queue ${mh.queueAtRecommendedStop}m</p>
+      </div>
+      `
+          : ''
+      }
+    </div>
+    <p style="color: #6b7280; margin-top: 8px; font-size: 10px;">
+      Prepare to Stop: ${PREPARE_TO_STOP_DISTANCE_M}m · Adv Queue Warning: ${ADV_QUEUE_WARNING_DISTANCE_M}m
+      ${mh && mh.queueAtRecommendedStop > PREPARE_TO_STOP_DISTANCE_M ? '<br><span style="color: #f87171;">⚠️ Queue at recommended stop exceeds Prepare to Stop distance</span>' : ''}
+    </p>
+    <p style="color: #6b7280; margin-top: 4px; font-size: 10px;">* ${userTrafficOverride ? `Based on live user count (${userTrafficOverride.duration_minutes}min, ${formatAusDate(userTrafficOverride.date)})` : 'Based on MRWA historical data'}</p>
+    `;
+          })()
+        : '<p style="color: #9ca3af;">No traffic data available for calculations</p>'
     }
   </div>
 
