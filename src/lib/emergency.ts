@@ -1,9 +1,9 @@
 /**
  * Emergency Location Module
- * 
+ *
  * Shared functionality for emergency location detection.
  * Used by both the main page and SLK tracking page.
- * 
+ *
  * Cross road detection uses MRWA Layer 6 (Intersections) for accurate names.
  */
 
@@ -41,6 +41,16 @@ export interface NearestFireStation {
   distanceM: number;
   type: string;
   typeDescription: string;
+  lat: number;
+  lon: number;
+  googleMapsUrl: string;
+  address?: string;
+  suburb?: string;
+  postcode?: string;
+  state?: string;
+  operationalStatus?: string;
+  buildingName?: string;
+  isProfessional?: boolean;
 }
 
 export interface NearestPoliceStation {
@@ -84,7 +94,11 @@ interface IntersectionAPI {
  * 4. Sort by distance and return the nearest match
  * 5. Fallback: If no intersection contains our road, find nearest valid intersection
  */
-export async function findCrossRoad(lat: number, lon: number, currentRoadName: string): Promise<CrossRoad | null> {
+export async function findCrossRoad(
+  lat: number,
+  lon: number,
+  currentRoadName: string
+): Promise<CrossRoad | null> {
   try {
     // Query Layer 6 for nearby intersections
     const response = await fetch(`/api/nearest-intersections?lat=${lat}&lon=${lon}&radius=2`);
@@ -98,22 +112,29 @@ export async function findCrossRoad(lat: number, lon: number, currentRoadName: s
     const roadNameVariations = getRoadNameVariations(currentRoadName);
 
     // Debug: log road name variations
-    console.log(`[RC 1.7.28] Cross road search for "${currentRoadName}" - variations:`, roadNameVariations);
+    console.log(
+      `[RC 1.7.28] Cross road search for "${currentRoadName}" - variations:`,
+      roadNameVariations
+    );
 
     // Filter out invalid intersections (end/start roads)
-    const validIntersections: IntersectionAPI[] = data.intersections.filter((int: IntersectionAPI) => {
-      const nodeName = int.nodeName.toLowerCase();
-      return !nodeName.includes('end road') && !nodeName.includes('start road');
-    });
+    const validIntersections: IntersectionAPI[] = data.intersections.filter(
+      (int: IntersectionAPI) => {
+        const nodeName = int.nodeName.toLowerCase();
+        return !nodeName.includes('end road') && !nodeName.includes('start road');
+      }
+    );
 
     // Step 1: Find intersections that CONTAIN our current road (using any variation)
     const matchingIntersections = validIntersections.filter((int: IntersectionAPI) => {
       const nodeName = int.nodeName.toLowerCase();
-      return roadNameVariations.some(variation => nodeName.includes(variation));
+      return roadNameVariations.some((variation) => nodeName.includes(variation));
     });
 
     // Debug: log matching intersections
-    console.log(`[RC 1.7.28] Found ${matchingIntersections.length} matching intersections for "${currentRoadName}":`);
+    console.log(
+      `[RC 1.7.28] Found ${matchingIntersections.length} matching intersections for "${currentRoadName}":`
+    );
     matchingIntersections.slice(0, 5).forEach((int, i) => {
       console.log(`  ${i + 1}. ${int.nodeName} (${int.distanceM}m)`);
     });
@@ -126,7 +147,7 @@ export async function findCrossRoad(lat: number, lon: number, currentRoadName: s
       // Find parts that are NOT our current road
       const crossParts = parts.filter((p: string) => {
         const partLower = p.toLowerCase();
-        return !roadNameVariations.some(variation => partLower.includes(variation));
+        return !roadNameVariations.some((variation) => partLower.includes(variation));
       });
 
       if (crossParts.length > 0) {
@@ -139,7 +160,7 @@ export async function findCrossRoad(lat: number, lon: number, currentRoadName: s
           name: crossParts[0].trim(),
           distance: formatDistance(distanceM),
           direction,
-          distanceM
+          distanceM,
         };
       }
     }
@@ -152,7 +173,7 @@ export async function findCrossRoad(lat: number, lon: number, currentRoadName: s
       // Find parts that are NOT our current road
       const crossParts = parts.filter((p: string) => {
         const partLower = p.toLowerCase();
-        return !roadNameVariations.some(variation => partLower.includes(variation));
+        return !roadNameVariations.some((variation) => partLower.includes(variation));
       });
 
       if (crossParts.length > 0) {
@@ -164,7 +185,7 @@ export async function findCrossRoad(lat: number, lon: number, currentRoadName: s
           name: crossParts[0].trim(),
           distance: formatDistance(distanceM),
           direction,
-          distanceM
+          distanceM,
         };
       }
     }
@@ -184,7 +205,7 @@ export async function findCrossRoad(lat: number, lon: number, currentRoadName: s
 function getRoadNameVariations(roadName: string): string[] {
   const variations: string[] = [];
   const lower = roadName.toLowerCase();
-  const words = lower.split(' ').filter(w => w.length > 0);
+  const words = lower.split(' ').filter((w) => w.length > 0);
 
   // Add full name (most specific)
   variations.push(lower);
@@ -251,9 +272,13 @@ function getRoadNameVariations(roadName: string): string[] {
 /**
  * Find nearest town using OSM Nominatim
  */
-export async function findNearestTown(lat: number, lon: number, locality: string | null): Promise<NearestTown | null> {
+export async function findNearestTown(
+  lat: number,
+  lon: number,
+  locality: string | null
+): Promise<NearestTown | null> {
   if (!locality) return null;
-  
+
   try {
     const osmResponse = await fetch(
       `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locality + ', Western Australia, Australia')}&format=json&limit=5&addressdetails=1`
@@ -262,7 +287,8 @@ export async function findNearestTown(lat: number, lon: number, locality: string
 
     if (osmData && osmData.length > 0) {
       // Find the actual town (has address.town), not the shire boundary
-      const townPlace = osmData.find((p: { address?: { town?: string } }) => p.address?.town) || osmData[0];
+      const townPlace =
+        osmData.find((p: { address?: { town?: string } }) => p.address?.town) || osmData[0];
 
       const townLat = parseFloat(townPlace.lat);
       const townLon = parseFloat(townPlace.lon);
@@ -270,7 +296,8 @@ export async function findNearestTown(lat: number, lon: number, locality: string
       // Distance in meters
       const distM = haversineDistance(lat, lon, townLat, townLon);
 
-      if (distM < 100000) { // Within 100km
+      if (distM < 100000) {
+        // Within 100km
         // Calculate bearing FROM town TO emergency (where emergency is FROM town)
         // NOT FROM emergency TO town (which was the bug)
         const bearing = getBearing(townLat, townLon, lat, lon);
@@ -282,7 +309,7 @@ export async function findNearestTown(lat: number, lon: number, locality: string
         return {
           name: townName,
           distance: formatDistance(distM),
-          direction
+          direction,
         };
       }
     }
@@ -295,7 +322,10 @@ export async function findNearestTown(lat: number, lon: number, locality: string
 /**
  * Find nearest hospital with Emergency Department
  */
-export async function findNearestHospital(lat: number, lon: number): Promise<NearestHospital | null> {
+export async function findNearestHospital(
+  lat: number,
+  lon: number
+): Promise<NearestHospital | null> {
   try {
     const response = await fetch(`/api/hospitals?lat=${lat}&lon=${lon}&radius=150&edOnly=true`);
     const data = await response.json();
@@ -309,7 +339,7 @@ export async function findNearestHospital(lat: number, lon: number): Promise<Nea
         hasED: h.hasEmergency,
         phone: h.telephone || null,
         address: h.address,
-        suburb: h.suburb
+        suburb: h.suburb,
       };
     } else if (data.nearest?.hospital) {
       const h = data.nearest.hospital;
@@ -320,7 +350,7 @@ export async function findNearestHospital(lat: number, lon: number): Promise<Nea
         hasED: h.hasEmergency,
         phone: h.telephone || null,
         address: h.address,
-        suburb: h.suburb
+        suburb: h.suburb,
       };
     } else if (data.nearest?.nursingPost) {
       const n = data.nearest.nursingPost;
@@ -331,7 +361,7 @@ export async function findNearestHospital(lat: number, lon: number): Promise<Nea
         hasED: false,
         phone: n.telephone || null,
         address: n.address,
-        suburb: n.suburb
+        suburb: n.suburb,
       };
     }
   } catch (e) {
@@ -342,38 +372,35 @@ export async function findNearestHospital(lat: number, lon: number): Promise<Nea
 
 /**
  * Find nearest fire/emergency station from DFES data
+ * with GNAF address enrichment from Geoscience Australia.
  */
-export async function findNearestFireStation(lat: number, lon: number): Promise<NearestFireStation | null> {
+export async function findNearestFireStation(
+  lat: number,
+  lon: number
+): Promise<NearestFireStation | null> {
   try {
     const response = await fetch(`/api/emergency-stations?lat=${lat}&lon=${lon}&radius=100`);
     const data = await response.json();
 
-    if (data.nearest?.professional) {
-      // Prefer professional (24/7 staffed) stations
-      const s = data.nearest.professional;
+    // Prefer professional (24/7 staffed) stations, then volunteer, then any
+    const s = data.nearest?.professional || data.nearest?.volunteer || data.nearest?.any;
+
+    if (s) {
       return {
         name: s.name,
         distanceM: s.distanceM,
         type: s.type,
-        typeDescription: s.typeDescription
-      };
-    } else if (data.nearest?.volunteer) {
-      // Fallback to volunteer fire rescue
-      const s = data.nearest.volunteer;
-      return {
-        name: s.name,
-        distanceM: s.distanceM,
-        type: s.type,
-        typeDescription: s.typeDescription
-      };
-    } else if (data.nearest?.any) {
-      // Any available station
-      const s = data.nearest.any;
-      return {
-        name: s.name,
-        distanceM: s.distanceM,
-        type: s.type,
-        typeDescription: s.typeDescription
+        typeDescription: s.typeDescription,
+        lat: s.lat,
+        lon: s.lon,
+        googleMapsUrl: s.googleMapsUrl,
+        address: s.address,
+        suburb: s.suburb,
+        postcode: s.postcode,
+        state: s.state,
+        operationalStatus: s.operationalStatus,
+        buildingName: s.buildingName,
+        isProfessional: s.isProfessional,
       };
     }
   } catch (e) {
@@ -385,7 +412,10 @@ export async function findNearestFireStation(lat: number, lon: number): Promise<
 /**
  * Find nearest WA Police station
  */
-export async function findNearestPoliceStation(lat: number, lon: number): Promise<NearestPoliceStation | null> {
+export async function findNearestPoliceStation(
+  lat: number,
+  lon: number
+): Promise<NearestPoliceStation | null> {
   try {
     const response = await fetch(`/api/police-stations?lat=${lat}&lon=${lon}&radius=150`);
     const data = await response.json();
@@ -396,7 +426,7 @@ export async function findNearestPoliceStation(lat: number, lon: number): Promis
         name: p.name,
         distanceM: p.distanceM,
         address: p.address,
-        suburb: p.suburb
+        suburb: p.suburb,
       };
     }
   } catch (e) {

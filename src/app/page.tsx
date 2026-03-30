@@ -662,6 +662,16 @@ export default function Home() {
       type: string;
       typeDescription: string;
       distanceM: number;
+      lat: number;
+      lon: number;
+      googleMapsUrl: string;
+      address?: string;
+      suburb?: string;
+      postcode?: string;
+      state?: string;
+      operationalStatus?: string;
+      buildingName?: string;
+      isProfessional?: boolean;
     } | null;
     nearestPoliceStation: {
       name: string;
@@ -1407,10 +1417,18 @@ export default function Home() {
         lines.push(`  Name:           ${places.toilet.name}`);
         lines.push(`  Distance:       ${places.toilet.distance} km`);
         if (places.toilet.address) {
-          lines.push(`  Address:        ${places.toilet.address}`);
+          lines.push(
+            `  Address:        ${places.toilet.address}${places.toilet.suburb ? `, ${places.toilet.suburb}` : ''}`
+          );
         }
-        if (places.toilet.siteFeatures && places.toilet.siteFeatures.length > 0) {
-          lines.push(`  Features:       ${places.toilet.siteFeatures.join(' · ')}`);
+        if (places.toilet.openingHours) {
+          lines.push(`  Hours:          ${places.toilet.openingHours}`);
+        }
+        const toiletFeatures: string[] = [];
+        if (places.toilet.wheelchair) toiletFeatures.push('♿ Wheelchair accessible');
+        if (places.toilet.toiletType) toiletFeatures.push(places.toilet.toiletType);
+        if (toiletFeatures.length > 0) {
+          lines.push(`  Features:       ${toiletFeatures.join(' · ')}`);
         }
       }
       if (!places.hospital && !places.fuelStation && !places.toilet) {
@@ -2026,10 +2044,10 @@ export default function Home() {
           ? `
       <div class="stat">
         <div class="stat-label">🚻 Public Toilet</div>
-        <div style="font-weight: 600;">${places.toilet.name}</div>
+        <div style="font-weight: 600;">${places.toilet.name}${places.toilet.wheelchair ? ' ♿' : ''}</div>
         <p style="font-size: 10px; color: #6b7280;">${places.toilet.distance} km away</p>
-        ${places.toilet.address ? `<p style="font-size: 10px; color: #6b7280;">${places.toilet.address}</p>` : ''}
-        ${places.toilet.siteFeatures && places.toilet.siteFeatures.length > 0 ? `<p style="font-size: 10px; color: #6b7280;">${places.toilet.siteFeatures.join(' · ')}</p>` : ''}
+        ${places.toilet.address ? `<p style="font-size: 10px; color: #6b7280;">${places.toilet.address}${places.toilet.suburb ? `, ${places.toilet.suburb}` : ''}</p>` : ''}
+        ${places.toilet.openingHours ? `<p style="font-size: 10px; color: #6b7280;">${places.toilet.openingHours}</p>` : ''}
       </div>
       `
           : '<div class="stat"><p style="color: #9ca3af;">No toilet found</p></div>'
@@ -6274,11 +6292,17 @@ export default function Home() {
                           <span className="text-orange-400 font-semibold">
                             Nearest Fire/Emergency Station
                           </span>
+                          {emergencyData.nearestFireStation.isProfessional && (
+                            <span className="text-xs bg-green-700 text-white px-1.5 py-0.5 rounded ml-1">
+                              24/7 Staffed
+                            </span>
+                          )}
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-400">Name:</span>
                           <span className="text-white font-semibold">
-                            {emergencyData.nearestFireStation.name}
+                            {emergencyData.nearestFireStation.buildingName ||
+                              emergencyData.nearestFireStation.name}
                           </span>
                         </div>
                         <div className="flex justify-between">
@@ -6302,14 +6326,36 @@ export default function Home() {
                             </span>
                           </span>
                         </div>
+                        {emergencyData.nearestFireStation.address && (
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Address:</span>
+                            <span className="text-white text-sm">
+                              {emergencyData.nearestFireStation.address}
+                              {emergencyData.nearestFireStation.suburb &&
+                                `, ${emergencyData.nearestFireStation.suburb}`}
+                              {emergencyData.nearestFireStation.postcode &&
+                                ` ${emergencyData.nearestFireStation.postcode}`}
+                            </span>
+                          </div>
+                        )}
+                        {emergencyData.nearestFireStation.operationalStatus && (
+                          <div className="flex justify-between">
+                            <span className="text-gray-400">Status:</span>
+                            <span
+                              className={`${emergencyData.nearestFireStation.operationalStatus === 'OPERATIONAL' ? 'text-green-400' : 'text-yellow-400'}`}
+                            >
+                              {emergencyData.nearestFireStation.operationalStatus}
+                            </span>
+                          </div>
+                        )}
                         <div className="mt-2">
                           <Button
                             onClick={() => {
                               if (emergencyData.nearestFireStation) {
-                                window.open(
-                                  `https://www.google.com/maps?q=${encodeURIComponent(emergencyData.nearestFireStation.name + ' fire station Western Australia')}`,
-                                  '_blank'
-                                );
+                                const url =
+                                  emergencyData.nearestFireStation.googleMapsUrl ||
+                                  `https://www.google.com/maps/dir/?api=1&destination=${emergencyData.nearestFireStation.lat},${emergencyData.nearestFireStation.lon}`;
+                                window.open(url, '_blank');
                               }
                             }}
                             className="w-full bg-orange-700 hover:bg-orange-600 text-sm py-1"
