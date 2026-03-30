@@ -1221,6 +1221,188 @@ export default function Home() {
     }
     lines.push('');
 
+    // === SPEED ZONE LAYOUT ===
+    if (result && corridorSpeedZones.length > 0) {
+      const wzStart = result.work_zone.start_slk;
+      const wzEnd = result.work_zone.end_slk || wzStart;
+      const margin = 0.85;
+      const corStart = wzStart - margin;
+      const corEnd = wzEnd + margin;
+      const totalRange = corEnd - corStart;
+
+      // Filter zones that overlap with corridor
+      const relZones = corridorSpeedZones
+        .filter((z) => z.end_slk > corStart && z.start_slk < corEnd)
+        .sort((a, b) => a.start_slk - b.start_slk);
+
+      // Build segments
+      const segments: { start: number; end: number; speed: number; source: string }[] = [];
+      let lastEnd = corStart;
+      for (const zone of relZones) {
+        const zs = Math.max(zone.start_slk, corStart);
+        const ze = Math.min(zone.end_slk, corEnd);
+        if (zs > lastEnd + 0.01) {
+          const prevZone = relZones.find((z) => z.end_slk <= zs);
+          segments.push({
+            start: lastEnd,
+            end: zs,
+            speed: prevZone?.speed_limit || zone.speed_limit,
+            source: 'inferred',
+          });
+        }
+        segments.push({
+          start: zs,
+          end: ze,
+          speed: zone.speed_limit,
+          source: zone.is_override ? 'community' : 'mrwa',
+        });
+        lastEnd = ze;
+      }
+      if (lastEnd < corEnd - 0.01) {
+        const lastZone = relZones[relZones.length - 1];
+        segments.push({
+          start: lastEnd,
+          end: corEnd,
+          speed: lastZone?.speed_limit || 110,
+          source: 'inferred',
+        });
+      }
+
+      // ASCII art speed bar (60 chars wide)
+      const barWidth = 60;
+      lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      lines.push('📊 SPEED ZONE LAYOUT (±850m corridor)');
+      lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      lines.push('');
+
+      // Speed zone bar
+      let speedBar = '  ';
+      for (const seg of segments) {
+        const charCount = Math.max(1, Math.round(((seg.end - seg.start) / totalRange) * barWidth));
+        if (seg.source === 'inferred') {
+          speedBar += '?'.repeat(charCount);
+        } else {
+          const chars: Record<number, string> = {
+            40: '░',
+            50: '▒',
+            60: '▓',
+            70: '█',
+            80: '■',
+            90: '◆',
+            100: '●',
+            110: '▲',
+            130: '★',
+          };
+          speedBar += (chars[seg.speed] || '█').repeat(charCount);
+        }
+      }
+      lines.push(speedBar);
+      lines.push('  ' + '─'.repeat(barWidth));
+      lines.push('');
+
+      // Speed legend
+      lines.push('  Legend:');
+      const seenSpeeds = [
+        ...new Set(segments.filter((s) => s.source !== 'inferred').map((s) => s.speed)),
+      ].sort((a, b) => a - b);
+      const chars: Record<number, string> = {
+        40: '░',
+        50: '▒',
+        60: '▓',
+        70: '█',
+        80: '■',
+        90: '◆',
+        100: '●',
+        110: '▲',
+        130: '★',
+      };
+      for (const speed of seenSpeeds) {
+        const segLen = segments
+          .filter((s) => s.speed === speed && s.source !== 'inferred')
+          .reduce((acc, s) => acc + (s.end - s.start), 0);
+        lines.push(`    ${chars[speed] || '█'} = ${speed} km/h (${(segLen * 1000).toFixed(0)}m)`);
+      }
+      lines.push('    ? = Inferred (no zone data)');
+      lines.push('');
+
+      // Work zone boundaries on the bar
+      const wzStartPos = Math.round(((wzStart - corStart) / totalRange) * barWidth);
+      const wzEndPos = Math.round(((wzEnd - corStart) / totalRange) * barWidth);
+      let boundaryBar = '  ';
+      for (let i = 0; i < barWidth; i++) {
+        if (i === wzStartPos || i === wzEndPos) {
+          boundaryBar += '▼';
+        } else if (i > wzStartPos && i < wzEndPos) {
+          boundaryBar += '═';
+        } else {
+          boundaryBar += '─';
+        }
+      }
+      lines.push(boundaryBar);
+      lines.push('     Work Zone');
+      lines.push('');
+
+      // Speed zone detail table
+      lines.push('  Zone Segments:');
+      for (const seg of segments) {
+        const sourceTag =
+          seg.source === 'community'
+            ? ' [Community]'
+            : seg.source === 'mrwa'
+              ? ' [MRWA]'
+              : ' [Inferred]';
+        const marker = seg.start <= wzStart && seg.end >= wzEnd ? ' ◄ WORK ZONE' : '';
+        lines.push(
+          `    ${seg.speed} km/h  SLK ${seg.start.toFixed(2)} → ${seg.end.toFixed(2)}  (${((seg.end - seg.start) * 1000).toFixed(0)}m)${sourceTag}${marker}`
+        );
+      }
+      lines.push('');
+
+      // TC Signage positions
+      const approachSpeed = segments.length > 0 ? segments[0].speed : 110;
+      const exitSpeed = segments.length > 0 ? segments[segments.length - 1].speed : 110;
+      const isHighSpeed = approachSpeed >= 80;
+      const isExitHighSpeed = exitSpeed >= 80;
+
+      const tc1Slk = wzStart - 0.1;
+      const tc2Slk = wzEnd + 0.1;
+      const pts1Slk = wzStart - 0.2;
+      const pts2Slk = wzEnd + 0.2;
+      const boxPts1Slk = wzStart - 0.4;
+      const boxPts2Slk = wzEnd + 0.4;
+      const sr1Slk = wzStart - 0.5;
+      const rnst2Slk = wzEnd + 0.5;
+      const rwa1Slk = wzStart - 0.8;
+      const rwa2Slk = wzEnd + 0.8;
+
+      const getSpeedAtSlk = (slk: number): number => {
+        const seg = segments.find((s) => slk >= s.start && slk < s.end);
+        return seg?.speed || approachSpeed;
+      };
+
+      const formatRwa = (speed: number): string => (speed >= 80 ? '(80)' : '(RWA)');
+
+      lines.push('  TC Signage Positions:');
+      lines.push('  ─────────────────────────────────────────────');
+      lines.push('  Sign Type        TC1            TC2');
+      lines.push('  ─────────────────────────────────────────────');
+      lines.push(`  ● TC             ${tc1Slk.toFixed(2)}        ${tc2Slk.toFixed(2)}`);
+      lines.push(`  ● PTS            ${pts1Slk.toFixed(2)}        ${pts2Slk.toFixed(2)}`);
+      if (isHighSpeed && isExitHighSpeed) {
+        lines.push(`  ● Box PTS        ${boxPts1Slk.toFixed(2)}        ${boxPts2Slk.toFixed(2)}`);
+      }
+      lines.push(`  ● SR/RNST        ${sr1Slk.toFixed(2)}        ${rnst2Slk.toFixed(2)}`);
+      lines.push(
+        `                     (60/${getSpeedAtSlk(sr1Slk)})         (60/${getSpeedAtSlk(rnst2Slk)})`
+      );
+      lines.push(`  ● RWA            ${rwa1Slk.toFixed(2)}        ${rwa2Slk.toFixed(2)}`);
+      lines.push(
+        `                     ${formatRwa(getSpeedAtSlk(rwa1Slk))}              ${formatRwa(getSpeedAtSlk(rwa2Slk))}`
+      );
+      lines.push('');
+    }
+    lines.push('');
+
     // === TC POSITIONS ===
     lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     lines.push('👷 TC POSITIONS (±100m from work zone)');
@@ -1908,6 +2090,319 @@ export default function Home() {
         : '<p style="color: #9ca3af;">No speed zone data available</p>'
     }
   </div>
+
+  <!-- Speed Zone Layout Graphic -->
+  ${
+    result && corridorSpeedZones.length > 0
+      ? (() => {
+          const wzStart = result.work_zone.start_slk;
+          const wzEnd = result.work_zone.end_slk || wzStart;
+          const margin = 0.85;
+          const corStart = wzStart - margin;
+          const corEnd = wzEnd + margin;
+          const totalRange = corEnd - corStart;
+
+          const relZones = corridorSpeedZones
+            .filter((z) => z.end_slk > corStart && z.start_slk < corEnd)
+            .sort((a, b) => a.start_slk - b.start_slk);
+
+          const segments: { start: number; end: number; speed: number; source: string }[] = [];
+          let lastEnd = corStart;
+          for (const zone of relZones) {
+            const zs = Math.max(zone.start_slk, corStart);
+            const ze = Math.min(zone.end_slk, corEnd);
+            if (zs > lastEnd + 0.01) {
+              const prevZone = relZones.find((z) => z.end_slk <= zs);
+              segments.push({
+                start: lastEnd,
+                end: zs,
+                speed: prevZone?.speed_limit || zone.speed_limit,
+                source: 'inferred',
+              });
+            }
+            segments.push({
+              start: zs,
+              end: ze,
+              speed: zone.speed_limit,
+              source: zone.is_override ? 'community' : 'mrwa',
+            });
+            lastEnd = ze;
+          }
+          if (lastEnd < corEnd - 0.01) {
+            const lastZone = relZones[relZones.length - 1];
+            segments.push({
+              start: lastEnd,
+              end: corEnd,
+              speed: lastZone?.speed_limit || 110,
+              source: 'inferred',
+            });
+          }
+
+          const speedColors: Record<number, string> = {
+            40: '#ef4444',
+            50: '#f97316',
+            60: '#eab308',
+            70: '#84cc16',
+            80: '#22c55e',
+            90: '#14b8a6',
+            100: '#0ea5e9',
+            110: '#3b82f6',
+            130: '#8b5cf6',
+          };
+          const getColor = (s: number) => speedColors[s] || '#6b7280';
+          const pct = (slk: number) => (((slk - corStart) / totalRange) * 100).toFixed(2);
+
+          const approachSpeed = segments.length > 0 ? segments[0].speed : 110;
+          const exitSpeed = segments.length > 0 ? segments[segments.length - 1].speed : 110;
+          const isHighSpeed = approachSpeed >= 80;
+          const isExitHighSpeed = exitSpeed >= 80;
+
+          const tc1Slk = wzStart - 0.1;
+          const tc2Slk = wzEnd + 0.1;
+          const pts1Slk = wzStart - 0.2;
+          const pts2Slk = wzEnd + 0.2;
+          const boxPts1Slk = wzStart - 0.4;
+          const boxPts2Slk = wzEnd + 0.4;
+          const sr1Slk = wzStart - 0.5;
+          const rnst2Slk = wzEnd + 0.5;
+          const rwa1Slk = wzStart - 0.8;
+          const rwa2Slk = wzEnd + 0.8;
+
+          const getSpeedAtSlk = (slk: number): number => {
+            const seg = segments.find((s) => slk >= s.start && slk < s.end);
+            return seg?.speed || approachSpeed;
+          };
+          const formatRwa = (speed: number): string => (speed >= 80 ? '(80)' : '(RWA)');
+
+          // Intersection markers
+          const intMarkers = crossRoads
+            .filter((r) => r.name.toLowerCase() !== result.road_name.toLowerCase())
+            .map((r) => ({
+              name: r.name,
+              slk: r.intersectionSlk ?? parseFloat(r.distance) + wzStart,
+            }))
+            .filter((r) => r.slk >= corStart && r.slk <= corEnd);
+
+          return `
+  <h2>📊 Speed Zone Layout (±850m)</h2>
+  <div class="section" style="padding: 16px;">
+    <!-- Speed zone bar -->
+    <div style="position: relative; height: 48px; background: #374151; border-radius: 8px; overflow: hidden; margin-bottom: 4px;">
+      ${segments
+        .map((seg) => {
+          const left = pct(seg.start);
+          const right = pct(seg.end);
+          const width = (parseFloat(right) - parseFloat(left)).toFixed(2);
+          const isInf = seg.source === 'inferred';
+          const bg = isInf
+            ? 'border: 2px dashed #6b7280; background: transparent;'
+            : 'background: ' + getColor(seg.speed) + ';';
+          return (
+            '<div style="position: absolute; top: 0; height: 100%; left: ' +
+            left +
+            '%; width: ' +
+            width +
+            '%; ' +
+            bg +
+            ' display: flex; align-items: center; justify-content: center;"><span style="font-weight: bold; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); font-size: 14px;">' +
+            seg.speed +
+            '</span></div>'
+          );
+        })
+        .join('')}
+
+      <!-- Work zone indicator -->
+      <div style="position: absolute; top: 0; height: 100%; border-left: 3px solid #3b82f6; border-right: 3px solid #3b82f6;
+        background: rgba(59,130,246,0.15); left: ${pct(wzStart)}%; width: ${(parseFloat(pct(wzEnd)) - parseFloat(pct(wzStart))).toFixed(2)}%;">
+      </div>
+
+      <!-- Intersection markers -->
+      ${intMarkers
+        .map((int, i) => {
+          const colors = [
+            '#a855f7',
+            '#ec4899',
+            '#14b8a6',
+            '#f97316',
+            '#06b6d4',
+            '#84cc16',
+            '#ef4444',
+            '#8b5cf6',
+          ];
+          const color = colors[i % colors.length];
+          return (
+            '<div style="position: absolute; top: 0; height: 100%; border-left: 2px solid ' +
+            color +
+            '; left: ' +
+            pct(int.slk) +
+            '%;" title="' +
+            int.name +
+            '"></div>'
+          );
+        })
+        .join('')}
+    </div>
+
+    <!-- SLK scale labels -->
+    <div style="position: relative; height: 20px; font-size: 11px; color: #9ca3af; margin-bottom: 8px;">
+      <span style="position: absolute; left: 0;">${corStart.toFixed(2)}</span>
+      <span style="position: absolute; left: ${pct(wzStart)}%; transform: translateX(-50%); color: #60a5fa;">${wzStart.toFixed(2)}</span>
+      <span style="position: absolute; left: ${pct(wzEnd)}%; transform: translateX(-50%); color: #60a5fa;">${wzEnd.toFixed(2)}</span>
+      <span style="position: absolute; right: 0;">${corEnd.toFixed(2)}</span>
+    </div>
+
+    <!-- Sign position markers -->
+    <div style="position: relative; height: 8px; background: #1f2937; border-radius: 4px; margin-bottom: 16px;">
+      <div style="position: absolute; top: 0; height: 100%; background: rgba(59,130,246,0.2);
+        left: ${pct(wzStart)}%; width: ${(parseFloat(pct(wzEnd)) - parseFloat(pct(wzStart))).toFixed(2)}%;"></div>
+      <div style="position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; background: #f97316; left: ${pct(tc1Slk)}%;"></div>
+      <div style="position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; background: #f97316; left: ${pct(tc2Slk)}%;"></div>
+      <div style="position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; background: #ef4444; left: ${pct(pts1Slk)}%;"></div>
+      <div style="position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; background: #ef4444; left: ${pct(pts2Slk)}%;"></div>
+      ${
+        isHighSpeed
+          ? `<div style="position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; background: #f87171; left: ${pct(boxPts1Slk)}%;"></div>
+      <div style="position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; background: #f87171; left: ${pct(boxPts2Slk)}%;"></div>`
+          : ''
+      }
+      <div style="position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; background: white; border: 2px solid #ef4444; left: ${pct(sr1Slk)}%;"></div>
+      <div style="position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; background: white; border: 2px solid #ef4444; left: ${pct(rnst2Slk)}%;"></div>
+      <div style="position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; background: #eab308; left: ${pct(rwa1Slk)}%;"></div>
+      <div style="position: absolute; top: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; border-radius: 50%; background: #eab308; left: ${pct(rwa2Slk)}%;"></div>
+    </div>
+
+    <!-- TC Signage Position Table -->
+    <table style="width: 100%; max-width: 400px; margin: 0 auto 16px auto;">
+      <thead>
+        <tr style="border-bottom: 2px solid #374151;">
+          <th style="text-align: left; padding: 6px 12px; color: #9ca3af; font-size: 12px;">Sign Type</th>
+          <th style="text-align: center; padding: 6px 12px; color: #f97316; font-size: 12px;">TC1</th>
+          <th style="text-align: center; padding: 6px 12px; color: #f97316; font-size: 12px;">TC2</th>
+        </tr>
+      </thead>
+      <tbody style="font-family: monospace; font-size: 13px;">
+        <tr style="border-bottom: 1px solid #1f2937;">
+          <td style="padding: 6px 12px; color: #d1d5db;">
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #f97316; margin-right: 8px;"></span>TC Position
+          </td>
+          <td style="text-align: center; padding: 6px 12px; color: white;">${tc1Slk.toFixed(2)}</td>
+          <td style="text-align: center; padding: 6px 12px; color: white;">${tc2Slk.toFixed(2)}</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #1f2937;">
+          <td style="padding: 6px 12px; color: #d1d5db;">
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; margin-right: 8px;"></span>PTS
+          </td>
+          <td style="text-align: center; padding: 6px 12px; color: white;">${pts1Slk.toFixed(2)}</td>
+          <td style="text-align: center; padding: 6px 12px; color: white;">${pts2Slk.toFixed(2)}</td>
+        </tr>
+        ${
+          isHighSpeed && isExitHighSpeed
+            ? `
+        <tr style="border-bottom: 1px solid #1f2937;">
+          <td style="padding: 6px 12px; color: #d1d5db;">
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #f87171; margin-right: 8px;"></span>Box PTS
+          </td>
+          <td style="text-align: center; padding: 6px 12px; color: white;">${boxPts1Slk.toFixed(2)}</td>
+          <td style="text-align: center; padding: 6px 12px; color: white;">${boxPts2Slk.toFixed(2)}</td>
+        </tr>`
+            : ''
+        }
+        <tr style="border-bottom: 1px solid #1f2937;">
+          <td style="padding: 6px 12px; color: #d1d5db;">
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: white; border: 2px solid #ef4444; margin-right: 8px;"></span>SR/RNST
+          </td>
+          <td style="text-align: center; padding: 6px 12px; color: white;">
+            ${sr1Slk.toFixed(2)}<br>
+            <span style="color: #6b7280; font-size: 11px;">(60/${getSpeedAtSlk(sr1Slk)})</span>
+          </td>
+          <td style="text-align: center; padding: 6px 12px; color: white;">
+            ${rnst2Slk.toFixed(2)}<br>
+            <span style="color: #6b7280; font-size: 11px;">(60/${getSpeedAtSlk(rnst2Slk)})</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 6px 12px; color: #d1d5db;">
+            <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #eab308; margin-right: 8px;"></span>RWA
+          </td>
+          <td style="text-align: center; padding: 6px 12px; color: white;">
+            ${rwa1Slk.toFixed(2)}<br>
+            <span style="color: #6b7280; font-size: 11px;">${formatRwa(getSpeedAtSlk(rwa1Slk))}</span>
+          </td>
+          <td style="text-align: center; padding: 6px 12px; color: white;">
+            ${rwa2Slk.toFixed(2)}<br>
+            <span style="color: #6b7280; font-size: 11px;">${formatRwa(getSpeedAtSlk(rwa2Slk))}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Zone segment details -->
+    <table style="width: 100%; font-size: 12px;">
+      <thead>
+        <tr style="border-bottom: 2px solid #374151;">
+          <th style="text-align: left; padding: 4px 8px; color: #9ca3af;">Speed</th>
+          <th style="text-align: left; padding: 4px 8px; color: #9ca3af;">Start SLK</th>
+          <th style="text-align: left; padding: 4px 8px; color: #9ca3af;">End SLK</th>
+          <th style="text-align: left; padding: 4px 8px; color: #9ca3af;">Length</th>
+          <th style="text-align: left; padding: 4px 8px; color: #9ca3af;">Source</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${segments
+          .map((seg) => {
+            const len = ((seg.end - seg.start) * 1000).toFixed(0);
+            const srcColor =
+              seg.source === 'community'
+                ? '#22c55e'
+                : seg.source === 'mrwa'
+                  ? '#60a5fa'
+                  : '#f97316';
+            const srcLabel =
+              seg.source === 'community'
+                ? 'Community'
+                : seg.source === 'mrwa'
+                  ? 'MRWA'
+                  : 'Inferred';
+            const isWZ = seg.start <= wzStart && seg.end >= wzEnd;
+            const wzBg = isWZ ? 'background: rgba(59,130,246,0.1);' : '';
+            const wzTag = isWZ ? ' ◄ Work Zone' : '';
+            return (
+              '<tr style="border-bottom: 1px solid #1f2937; ' +
+              wzBg +
+              '"><td style="padding: 4px 8px; color: white;"><span style="display: inline-block; width: 12px; height: 12px; border-radius: 2px; background: ' +
+              getColor(seg.speed) +
+              '; margin-right: 6px; vertical-align: middle;"></span>' +
+              seg.speed +
+              ' km/h</td><td style="padding: 4px 8px; color: #d1d5db; font-family: monospace;">' +
+              seg.start.toFixed(2) +
+              '</td><td style="padding: 4px 8px; color: #d1d5db; font-family: monospace;">' +
+              seg.end.toFixed(2) +
+              '</td><td style="padding: 4px 8px; color: #d1d5db;">' +
+              len +
+              'm</td><td style="padding: 4px 8px; color: ' +
+              srcColor +
+              ';">' +
+              srcLabel +
+              wzTag +
+              '</td></tr>'
+            );
+          })
+          .join('')}
+      </tbody>
+    </table>
+
+    ${
+      segments.some((s) => s.source === 'inferred')
+        ? `
+    <div class="alert alert-warning" style="margin-top: 10px; font-size: 11px;">
+      ⚠ Some speed zone data is missing in this corridor. Gaps are shown with dashed borders. Please verify with site inspection or MRWA records.
+    </div>`
+        : ''
+    }
+  </div>`;
+        })()
+      : ''
+  }
 
   <!-- TC Positions -->
   <h2>👷 TC Positions (±100m from work zone)</h2>
