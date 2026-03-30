@@ -1102,7 +1102,7 @@ export default function Home() {
     lines.push('╚════════════════════════════════════════════════════════════════╝');
     lines.push('');
     lines.push(`Generated: ${timestamp}`);
-    lines.push(`Report Version: 1.0`);
+    lines.push(`App Version:      ${APP_VERSION}`);
     lines.push('');
 
     // === WORK ZONE SUMMARY ===
@@ -2276,7 +2276,7 @@ export default function Home() {
       </div>
       <div class="stat">
         <div class="stat-label">Recommended Stop</div>
-        <div class="stat-value" style="color: ${mh.belowMinimum ? '#f87171' : '#e5e7eb'};">${mh.recommendedStopMinutes} min${mh.belowMinimum ? ' ⚠️' : ''}</div>
+        <div class="stat-value" style="color: ${mh.belowMinimum ? '#f87171' : '#ffffff'};">${mh.recommendedStopMinutes} min${mh.belowMinimum ? ' ⚠️' : ''}</div>
         <p style="font-size: 10px; color: #6b7280;">queue ${mh.queueAtRecommendedStop}m</p>
       </div>
       `
