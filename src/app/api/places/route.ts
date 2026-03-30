@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import {
+  findNearestToilet,
+  findToiletsNear,
+  getToiletCacheStatus,
+  refreshToiletCache,
+} from '@/lib/toilet-map';
 
 interface Place {
   name: string;
@@ -9,9 +15,25 @@ interface Place {
   lon: number;
   phone?: string;
   address?: string;
+  suburb?: string;
   googleMapsUrl: string;
   isEmergency?: boolean;
   siteFeatures?: string[];
+  // Hospital-specific
+  hospitalType?: string;
+  hospitalCategory?: string;
+  beds?: number;
+  // Fuel station-specific
+  fuelBrand?: string;
+  fuelPrice?: number;
+  fuelDate?: string;
+  // Toilet-specific (from National Public Toilet Map)
+  toiletType?: string;
+  openingHours?: string;
+  wheelchair?: boolean;
+  toiletNote?: string;
+  toiletUrl?: string;
+  toiletSource?: string;
 }
 
 interface PlacesResult {
@@ -19,6 +41,10 @@ interface PlacesResult {
   toilet: Place | null;
   fuelStation: Place | null;
   source?: string;
+  // Enhanced source tracking
+  hospitalSource?: string;
+  fuelSource?: string;
+  toiletSource?: string;
 }
 
 // Cache for offline amenities data with expiration
@@ -139,136 +165,48 @@ async function searchOverpass(lat: number, lon: number, query: string): Promise<
   return [];
 }
 
-// ─── National Public Toilet Map API ────────────────────────────────────
-// Australian Government toilet database with 25,000+ facilities.
-// Uses undocumented internal JSON APIs from toiletmap.gov.au.
+// ─── Toilet Map → Place converter ─────────────────────────────────────────
 
-interface ToiletMapFacility {
-  ID: number;
-  T: string; // Title/Name
-  F: string; // Facility Type (e.g., "Park or reserve", "Service station")
-  A1: string; // Address Line 1
-  FM: number; // Feature bitmask
-  LA: number; // Latitude
-  LO: number; // Longitude
-  S: number; // Score (sorting)
-  O: string; // Opening Hours
-  L: string; // Locality/Town
-  ST: string; // State
-  AID: string | null;
-}
-
-async function fetchToiletMapNearest(lat: number, lon: number): Promise<Place | null> {
-  try {
-    const now = new Date().toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM
-    const url = `https://toiletmap.gov.au/api/AppAPI/GetNearestFacilities?xIdiom=Desktop&lat=${lat}&lon=${lon}&clat=${lat}&clon=${lon}&mask=0&cDate=${encodeURIComponent(now)}&openNow=false&inCar=false&appType=Mobile`;
-
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-    const response = await fetch(url, {
-      signal: controller.signal,
-      headers: {
-        Accept: 'application/json',
-        'User-Agent': 'TCWorkZoneLocator/1.9.8 (WA Traffic Control Application)',
-      },
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) return null;
-
-    const data = await response.json();
-    const facilities: ToiletMapFacility[] = data.Facilitys || [];
-
-    if (facilities.length === 0) return null;
-
-    const f = facilities[0];
-
-    // Decode feature bitmask for site features
-    const fm = f.FM || 0;
-    const features: string[] = [];
-    if (f.O && f.O.includes('24 hours')) features.push('Open 24 hours');
-    if (fm & 16) features.push('Wheelchair Accessible');
-    if (fm & 256) features.push('Parking');
-    if (fm & 1024) features.push('Baby Change');
-    if (fm & 4096) features.push('Showers');
-    if (fm & 16384) features.push('Drinking Water');
-
-    const distance = calculateDistance(lat, lon, f.LA, f.LO);
-    const address = [f.A1, f.L, f.ST].filter(Boolean).join(', ');
-
-    console.log(`Toilet Map API: ${f.T} (${distance.toFixed(1)}km) - ${f.O}`);
-
-    return {
-      name: f.T,
-      distance: distance.toFixed(1),
-      lat: f.LA,
-      lon: f.LO,
-      googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${f.LA},${f.LO}`,
-      address,
-      siteFeatures: features,
-    };
-  } catch (error) {
-    console.error('National Toilet Map API error:', error);
-    return null;
+function toiletMapToPlace(
+  toilet: NonNullable<Awaited<ReturnType<typeof findNearestToilet>>>
+): Place {
+  // Build site features from the rich metadata
+  const features: string[] = [];
+  if (toilet.openingHours && toilet.openingHours.toLowerCase().includes('24 hour')) {
+    features.push('Open 24 hours');
   }
-}
+  if (toilet.accessible) features.push('♿ Wheelchair accessible');
+  if (toilet.ambulant) features.push('Ambulant accessible');
+  if (toilet.parking) features.push('Parking');
+  if (toilet.parkingAccessible) features.push('Accessible parking');
+  if (toilet.babyChange) features.push('Baby change');
+  if (toilet.shower) features.push('Showers');
+  if (toilet.drinkingWater) features.push('Drinking water');
+  if (toilet.male) features.push('Male');
+  if (toilet.female) features.push('Female');
+  if (toilet.unisex) features.push('Unisex');
+  if (toilet.allGender) features.push('All gender');
 
-async function fetchToiletMapBoundingBox(lat: number, lon: number): Promise<Place[]> {
-  try {
-    const now = new Date().toISOString().slice(0, 16);
-    // ~22km bounding box (0.2 degrees)
-    const url = `https://toiletmap.gov.au/api/AppAPI/GetFacilitysInBoundingBox?xIdiom=Desktop&lat=${lat}&lon=${lon}&latDegrees=0.2&lonDegrees=0.2&clat=${lat}&clon=${lon}&cDate=${encodeURIComponent(now)}&openNow=false&mask=0&enforcePrefs=false&appType=Mobile`;
+  // Build address with suburb
+  const addressParts = [toilet.address, toilet.town, toilet.state].filter(Boolean);
+  const fullAddress = addressParts.join(', ') || undefined;
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-    const response = await fetch(url, {
-      signal: controller.signal,
-      headers: {
-        Accept: 'application/json',
-        'User-Agent': 'TCWorkZoneLocator/1.9.8 (WA Traffic Control Application)',
-      },
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) return [];
-
-    const data = await response.json();
-    const facilities: ToiletMapFacility[] = data.Facilitys || [];
-
-    return facilities
-      .filter((f) => f.LA && f.LO)
-      .map((f) => {
-        const fm = f.FM || 0;
-        const features: string[] = [];
-        if (f.O && f.O.includes('24 hours')) features.push('Open 24 hours');
-        if (fm & 16) features.push('Wheelchair Accessible');
-        if (fm & 256) features.push('Parking');
-        if (fm & 1024) features.push('Baby Change');
-        if (fm & 4096) features.push('Showers');
-        if (fm & 16384) features.push('Drinking Water');
-
-        const distance = calculateDistance(lat, lon, f.LA, f.LO);
-        const address = [f.A1, f.L, f.ST].filter(Boolean).join(', ');
-
-        return {
-          name: f.T,
-          distance: distance.toFixed(1),
-          lat: f.LA,
-          lon: f.LO,
-          googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${f.LA},${f.LO}`,
-          address,
-          siteFeatures: features,
-        };
-      })
-      .sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
-  } catch (error) {
-    console.error('National Toilet Map BoundingBox API error:', error);
-    return [];
-  }
+  return {
+    name: toilet.name,
+    distance: toilet.distanceKm.toFixed(1),
+    lat: toilet.lat,
+    lon: toilet.lon,
+    googleMapsUrl: `https://www.google.com/maps/dir/?api=1&destination=${toilet.lat},${toilet.lon}`,
+    address: fullAddress,
+    suburb: toilet.town || undefined,
+    siteFeatures: features,
+    toiletType: toilet.facilityType || undefined,
+    openingHours: toilet.openingHours || undefined,
+    wheelchair: toilet.accessible,
+    toiletNote: toilet.toiletNote || undefined,
+    toiletUrl: toilet.url || undefined,
+    toiletSource: 'NationalToiletMap',
+  };
 }
 
 // Check if facility is a real hospital (not dental, fertility, etc.)
@@ -467,6 +405,7 @@ export async function GET(request: Request) {
       ? Math.round((Date.now() - amenitiesCache.loadedAt) / 1000)
       : null;
     const cacheValid = isCacheValid();
+    const toiletCacheStatus = getToiletCacheStatus();
 
     return NextResponse.json({
       cacheStatus: {
@@ -486,18 +425,22 @@ export async function GET(request: Request) {
             }
           : null,
       },
+      toiletCache: toiletCacheStatus,
     });
   }
 
   // Handle cache refresh request
   if (action === 'refresh') {
     loadOfflineAmenitiesData(true); // Force refresh
+    const toiletCount = await refreshToiletCache();
     const cacheAge = amenitiesCache.loadedAt
       ? Math.round((Date.now() - amenitiesCache.loadedAt) / 1000)
       : null;
 
     return NextResponse.json({
       message: 'Cache refreshed',
+      toiletCacheRefreshed: true,
+      toiletCount,
       cacheStatus: {
         loaded: !!amenitiesCache.data,
         loadedAt: amenitiesCache.loadedAt ? new Date(amenitiesCache.loadedAt).toISOString() : null,
@@ -534,14 +477,24 @@ export async function GET(request: Request) {
 
   if (!isOffline) {
     try {
-      // ─── Toilets: National Public Toilet Map API (primary) ─────────
-      // 25,000+ Australian Government toilet facilities with rich metadata
-      // Falls back to Overpass API if Toilet Map is unavailable
-      let toiletMapToilet: Place | null = null;
+      // ─── Toilets: National Public Toilet Map via ArcGIS (primary) ─────
+      // Australian Government database with 2,714+ WA toilets.
+      // Uses shared utility that fetches all WA toilets and caches in memory.
+      // Falls back to Overpass API if unavailable.
+      let toiletPlace: Place | null = null;
+      let toiletSrc = 'Overpass API';
+
       try {
-        toiletMapToilet = await fetchToiletMapNearest(targetLat, targetLon);
+        const nearestToilet = await findNearestToilet(targetLat, targetLon, 100);
+        if (nearestToilet) {
+          toiletPlace = toiletMapToPlace(nearestToilet);
+          toiletSrc = 'National Public Toilet Map (Australian Government)';
+        }
       } catch (e) {
-        console.log('National Toilet Map API failed, using Overpass fallback for toilets');
+        console.log(
+          '[Places] National Toilet Map (ArcGIS) failed, using Overpass fallback for toilets:',
+          e
+        );
       }
 
       // ─── Overpass: hospitals and fuel (primary source for these) ─────
@@ -571,7 +524,7 @@ export async function GET(request: Request) {
       const [hospitalElements, fuelElements, toiletElements] = await Promise.all([
         searchOverpass(targetLat, targetLon, hospitalQuery),
         searchOverpass(targetLat, targetLon, fuelQuery),
-        toiletMapToilet ? Promise.resolve([]) : searchOverpass(targetLat, targetLon, toiletQuery),
+        toiletPlace ? Promise.resolve([]) : searchOverpass(targetLat, targetLon, toiletQuery),
       ]);
 
       // If all searches returned empty, fall back to offline
@@ -579,7 +532,7 @@ export async function GET(request: Request) {
         hospitalElements.length === 0 &&
         toiletElements.length === 0 &&
         fuelElements.length === 0 &&
-        !toiletMapToilet
+        !toiletPlace
       ) {
         return NextResponse.json(getOfflinePlaces(targetLat, targetLon, refresh));
       }
@@ -589,15 +542,19 @@ export async function GET(request: Request) {
       const overpassToilets = processPlaces(toiletElements, targetLat, targetLon, 'other');
 
       // Use Toilet Map result if available, otherwise Overpass result
-      const toilet = toiletMapToilet || overpassToilets[0] || null;
+      const toilet = toiletPlace || overpassToilets[0] || null;
+      if (!toiletPlace && overpassToilets[0]) {
+        toiletSrc = 'OpenStreetMap (Overpass API)';
+      }
 
       const result: PlacesResult = {
         hospital: hospitals[0] || null,
         toilet: toilet || null,
         fuelStation: fuelStations[0] || null,
-        source: toiletMapToilet
-          ? 'Online: National Public Toilet Map (Australian Government)'
-          : 'Online: OpenStreetMap via Overpass API',
+        source: 'Online',
+        hospitalSource: hospitals.length > 0 ? 'OpenStreetMap (Overpass API)' : 'Not found',
+        fuelSource: fuelStations.length > 0 ? 'OpenStreetMap (Overpass API)' : 'Not found',
+        toiletSource: toilet ? toiletSrc : 'Not found',
       };
 
       return NextResponse.json(result);

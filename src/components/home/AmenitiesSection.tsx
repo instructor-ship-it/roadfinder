@@ -11,6 +11,7 @@ interface Place {
   isEmergency?: boolean;
   googleMapsUrl?: string;
   address?: string;
+  suburb?: string;
   // Hospital-specific (from WA Health SLIP)
   hospitalType?: string;
   hospitalCategory?: string;
@@ -18,7 +19,15 @@ interface Place {
   // Fuel station-specific (from FuelWatch WA)
   fuelBrand?: string;
   fuelPrice?: number;
+  fuelDate?: string;
   siteFeatures?: string[];
+  // Toilet-specific (from National Public Toilet Map)
+  toiletType?: string;
+  openingHours?: string;
+  wheelchair?: boolean;
+  toiletNote?: string;
+  toiletUrl?: string;
+  toiletSource?: string;
 }
 
 interface PlacesData {
@@ -212,6 +221,14 @@ export function AmenitiesSection({
                 <p className="font-medium text-blue-400">
                   🚻 {places.toilet.name}
                   <span className="text-gray-500 text-sm ml-2">({places.toilet.distance} km)</span>
+                  {places.toilet.wheelchair && (
+                    <span
+                      className="text-xs bg-blue-800 text-blue-200 px-1.5 py-0.5 rounded ml-1"
+                      title="Wheelchair accessible"
+                    >
+                      ♿
+                    </span>
+                  )}
                 </p>
                 <div className="flex gap-1">
                   <Button
@@ -228,7 +245,29 @@ export function AmenitiesSection({
                   >
                     🏠
                   </Button>
+                  {places.toilet.toiletUrl && (
+                    <a
+                      href={places.toilet.toiletUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="h-7 w-7 p-0 bg-purple-600 hover:bg-purple-700 flex items-center justify-center text-xs"
+                      title="View on National Toilet Map"
+                    >
+                      ℹ
+                    </a>
+                  )}
                 </div>
+              </div>
+              <div className="mt-1 space-y-0.5">
+                {places.toilet.address && (
+                  <p className="text-xs text-gray-400">
+                    📍 {places.toilet.address}
+                    {places.toilet.suburb ? `, ${places.toilet.suburb}` : ''}
+                  </p>
+                )}
+                <p className="text-xs text-gray-500">
+                  🕐 {places.toilet.openingHours || 'Hours not specified'}
+                </p>
               </div>
             </div>
           ) : (
