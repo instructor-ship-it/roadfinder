@@ -302,6 +302,7 @@ export default function Home() {
   const [traffic, setTraffic] = useState<TrafficData | null>(null);
   const [userTrafficCounts, setUserTrafficCounts] = useState<TrafficCountRecord[]>([]);
   const [selectedCountDetail, setSelectedCountDetail] = useState<TrafficCountRecord | null>(null);
+  const [userTrafficOverride, setUserTrafficOverride] = useState<TrafficCountRecord | null>(null);
   const [places, setPlaces] = useState<PlacesData | null>(null);
   const [crossRoads, setCrossRoads] = useState<CrossRoad[]>([]);
   const [corridorIntersections, setCorridorIntersections] = useState<CrossRoad[]>([]); // For signage corridor (±700m)
@@ -2475,6 +2476,7 @@ export default function Home() {
     setWarnings(null);
     setTraffic(null);
     setUserTrafficCounts([]);
+    setUserTrafficOverride(null);
     setPlaces(null);
     setCrossRoads([]);
 
@@ -2601,6 +2603,7 @@ export default function Home() {
     setWarnings(null);
     setTraffic(null);
     setUserTrafficCounts([]);
+    setUserTrafficOverride(null);
     setPlaces(null);
     setCrossRoads([]);
     setError('');
@@ -5235,14 +5238,30 @@ export default function Home() {
 
                             {/* Calculated Values */}
                             {(() => {
-                              // peak_hour_volume from API is BOTH directions (estimated at 10% of AADT)
-                              const peakHourBothDir = traffic.peak_hour_volume || 0;
-                              const peakHourOneDir = Math.round(peakHourBothDir / 2);
+                              // Base values from MRWA data
+                              let peakHourBothDir = traffic.peak_hour_volume || 0;
+                              let peakHourOneDir = Math.round(peakHourBothDir / 2);
                               const estimatedPeakFromAadt = traffic.aadt
                                 ? Math.round(traffic.aadt * 0.1)
                                 : 0;
-                              const vphBothDir = peakHourBothDir || estimatedPeakFromAadt;
-                              const vphOneDir = peakHourOneDir || Math.round(vphBothDir / 2);
+                              let vphBothDir = peakHourBothDir || estimatedPeakFromAadt;
+                              let vphOneDir = peakHourOneDir || Math.round(vphBothDir / 2);
+                              let heavyPct = traffic.heavy_vehicle_percent || 0;
+                              let overrideActive = false;
+
+                              // Apply user traffic override if active
+                              if (userTrafficOverride) {
+                                const ov = userTrafficOverride;
+                                const ovOneDir = ov.vph_one_direction || 0;
+                                const ovBothDir =
+                                  ov.direction_mode === 'both-ways'
+                                    ? ov.vph_combined || ovOneDir * 2
+                                    : ovOneDir * 2;
+                                vphBothDir = ovBothDir;
+                                vphOneDir = ovOneDir;
+                                heavyPct = ov.heavy_percentage || 0;
+                                overrideActive = true;
+                              }
 
                               const getShuttleFlowLength = (
                                 vph: number
@@ -5266,7 +5285,6 @@ export default function Home() {
                                 return '4+ lanes';
                               };
 
-                              const heavyPct = traffic.heavy_vehicle_percent || 0;
                               const reductionFactor = heavyPct > 10 ? 0.8 : 1;
                               const reducedVph = Math.round(vphBothDir * reductionFactor);
                               const shuttleFlow = getShuttleFlowLength(reducedVph);
@@ -5276,6 +5294,26 @@ export default function Home() {
 
                               return (
                                 <>
+                                  {/* Override banner */}
+                                  {overrideActive && (
+                                    <div className="bg-blue-900/30 border border-blue-600 rounded-lg p-2 mb-3 flex items-center justify-between">
+                                      <div>
+                                        <p className="text-xs text-blue-400 font-semibold">
+                                          📊 Using live count data
+                                        </p>
+                                        <p className="text-xs text-gray-400">
+                                          {vphBothDir} VPH • {heavyPct}% heavy •{' '}
+                                          {userTrafficOverride?.duration_minutes}min count
+                                        </p>
+                                      </div>
+                                      <button
+                                        onClick={() => setUserTrafficOverride(null)}
+                                        className="text-xs text-gray-400 hover:text-white bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded transition-colors"
+                                      >
+                                        Revert
+                                      </button>
+                                    </div>
+                                  )}
                                   {vphBothDir > 0 && (
                                     <div className="mt-4 pt-3 border-t border-gray-700">
                                       <h4 className="text-xs font-semibold text-green-400 mb-2">
@@ -5473,17 +5511,24 @@ export default function Home() {
 
                                   {/* Maximum Hold Time */}
                                   {(() => {
-                                    const peakVphWeekday =
+                                    let peakVphWeekday =
                                       traffic.peak_hour_volume_weekday ||
                                       traffic.peak_hour_volume ||
                                       0;
-                                    const heavyPctWeekday =
+                                    let heavyPctWeekday =
                                       traffic.heavy_vehicle_weekday_pct ||
                                       traffic.heavy_vehicle_percent ||
                                       0;
-                                    const vphOneDirWeekday = peakVphWeekday
+                                    let vphOneDirWeekday = peakVphWeekday
                                       ? Math.round(peakVphWeekday / 2)
                                       : vphOneDir;
+
+                                    // Override with user count values if active
+                                    if (userTrafficOverride) {
+                                      vphOneDirWeekday = userTrafficOverride.vph_one_direction || 0;
+                                      heavyPctWeekday = userTrafficOverride.heavy_percentage || 0;
+                                    }
+
                                     const maxHold = calculateMaxHoldTime(
                                       vphOneDirWeekday,
                                       heavyPctWeekday
@@ -6834,6 +6879,15 @@ export default function Home() {
               <div className="flex gap-2 pt-1">
                 <Button
                   onClick={() => {
+                    setUserTrafficOverride(selectedCountDetail);
+                    setSelectedCountDetail(null);
+                  }}
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 h-10 text-sm font-semibold"
+                >
+                  📊 Use This Count
+                </Button>
+                <Button
+                  onClick={() => {
                     const text = generateShareText(selectedCountDetail);
                     navigator.clipboard.writeText(text);
                     if (navigator.vibrate) navigator.vibrate(50);
@@ -6842,7 +6896,7 @@ export default function Home() {
                   variant="outline"
                   className="flex-1 bg-gray-700 border-gray-600 h-10 text-sm"
                 >
-                  📋 Copy Report
+                  📋 Copy
                 </Button>
                 <Button
                   onClick={() => setSelectedCountDetail(null)}
