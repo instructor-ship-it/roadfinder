@@ -216,12 +216,13 @@ function TrafficCounterSetupPage() {
           }
 
           // Save state with auto-fetched location and navigate
+          const finalSiteDistance = Math.max(50, Math.min(5000, siteDistance));
           const setupState: SetupState = {
             duration,
             directionMode,
             location: finalLocation,
             notes,
-            siteDistance,
+            siteDistance: finalSiteDistance,
           };
           sessionStorage.setItem('trafficCounterSetup', JSON.stringify(setupState));
           router.push('/traffic-counter/count');
@@ -237,12 +238,13 @@ function TrafficCounterSetupPage() {
     }
 
     // Location already set or GPS failed - proceed with current state
+    const finalSiteDistance = Math.max(50, Math.min(5000, siteDistance));
     const setupState: SetupState = {
       duration,
       directionMode,
       location,
       notes,
-      siteDistance,
+      siteDistance: finalSiteDistance,
     };
     sessionStorage.setItem('trafficCounterSetup', JSON.stringify(setupState));
     router.push('/traffic-counter/count');
@@ -411,9 +413,28 @@ function TrafficCounterSetupPage() {
               max={5000}
               step={10}
               value={siteDistance}
-              onChange={(e) =>
-                setSiteDistance(Math.max(50, Math.min(5000, Number(e.target.value))))
-              }
+              onChange={(e) => {
+                const raw = e.target.value;
+                if (raw === '') {
+                  // Allow empty field while typing a new value
+                  setSiteDistance(0);
+                } else {
+                  const num = Number(raw);
+                  if (!isNaN(num) && num >= 0) {
+                    // Allow typing without clamping mid-input
+                    setSiteDistance(num);
+                  }
+                }
+              }}
+              onBlur={(e) => {
+                // Clamp to valid range when user leaves the field
+                const num = Number(e.target.value);
+                if (isNaN(num) || num < 50) {
+                  setSiteDistance(50);
+                } else if (num > 5000) {
+                  setSiteDistance(5000);
+                }
+              }}
               className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-sm h-9 text-white"
             />
             <p className="text-xs text-gray-500 mt-1.5">
