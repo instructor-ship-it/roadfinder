@@ -1,33 +1,35 @@
-'use client'
+'use client';
 
-import { useState, useMemo, useRef } from 'react'
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { useState, useMemo, useRef } from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 export default function UserManualPage() {
-  const [expandedSection, setExpandedSection] = useState<string | null>('intro')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [viewMode, setViewMode] = useState<'accordion' | 'full'>('accordion')
-  const sectionRefs = useRef<Record<string, HTMLElement | null>>({})
+  const [expandedSection, setExpandedSection] = useState<string | null>('intro');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<'accordion' | 'full'>('accordion');
+  const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
   const toggleSection = (section: string) => {
-    setExpandedSection(expandedSection === section ? null : section)
-  }
+    setExpandedSection(expandedSection === section ? null : section);
+  };
 
   const scrollToSection = (sectionId: string) => {
-    setExpandedSection(sectionId)
+    setExpandedSection(sectionId);
     setTimeout(() => {
-      sectionRefs.current[sectionId]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 100)
-  }
+      sectionRefs.current[sectionId]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
 
-  const sections = [
-    {
-      id: 'intro',
-      title: '1. Introduction',
-      keywords: ['what is', 'features', 'navigation', 'icons', 'manual', 'settings'],
-      content: `
+  // Static content — wrapped in useMemo for stable reference identity
+  const sections = useMemo(
+    () => [
+      {
+        id: 'intro',
+        title: '1. Introduction',
+        keywords: ['what is', 'features', 'navigation', 'icons', 'manual', 'settings'],
+        content: `
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">What is TC Work Zone Locator?</h3>
         <p class="mb-3">TC Work Zone Locator is a mobile-first web application designed specifically for Traffic Controllers working on Western Australian roads. It helps you locate work zones, track your position in real-time, and know the speed limits for any location - even in remote areas without internet access.</p>
         
@@ -49,13 +51,21 @@ export default function UserManualPage() {
           <li><strong>☰ Hamburger menu</strong> - Opens Settings (bottom sheet drawer)</li>
         </ul>
         <p class="mb-3 text-sm text-gray-400">The drive page (SLK Tracking) has no menu - use "← Back to Work Zone Locator" to return. The User Manual is accessible from Settings → About section.</p>
-      `
-    },
-    {
-      id: 'getting-started',
-      title: '2. Getting Started',
-      keywords: ['setup', 'download', 'offline', 'region', 'location', 'permission', 'first time'],
-      content: `
+      `,
+      },
+      {
+        id: 'getting-started',
+        title: '2. Getting Started',
+        keywords: [
+          'setup',
+          'download',
+          'offline',
+          'region',
+          'location',
+          'permission',
+          'first time',
+        ],
+        content: `
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">First-Time Setup</h3>
         
         <p class="mb-2"><strong>Step 1: Download Offline Data</strong></p>
@@ -66,13 +76,13 @@ export default function UserManualPage() {
         
         <p class="mb-2"><strong>Step 3: Enable Location Access</strong></p>
         <p class="mb-3">When prompted, allow location access. This is required for GPS-based road detection, SLK tracking, and speed limit display.</p>
-      `
-    },
-    {
-      id: 'offline',
-      title: '3. Offline Capability',
-      keywords: ['offline', 'remote', 'internet', 'coverage', 'works offline', 'indexeddb'],
-      content: `
+      `,
+      },
+      {
+        id: 'offline',
+        title: '3. Offline Capability',
+        keywords: ['offline', 'remote', 'internet', 'coverage', 'works offline', 'indexeddb'],
+        content: `
         <h3 class="text-lg font-semibold text-green-400 mt-4 mb-2">✓ Works Offline</h3>
         <p class="mb-3"><strong>YES! Core features work 100% offline after downloading data.</strong> This is essential for Traffic Controllers working in remote areas of Western Australia where cell coverage is unreliable.</p>
         
@@ -105,13 +115,13 @@ export default function UserManualPage() {
           <li>Test the app in coverage area first</li>
           <li>All core TC functions work without internet</li>
         </ul>
-      `
-    },
-    {
-      id: 'home',
-      title: '4. Home Page - Work Zone Lookup',
-      keywords: ['road', 'slk', 'region', 'lookup', 'search', 'select', 'local roads'],
-      content: `
+      `,
+      },
+      {
+        id: 'home',
+        title: '4. Home Page - Work Zone Lookup',
+        keywords: ['road', 'slk', 'region', 'lookup', 'search', 'select', 'local roads'],
+        content: `
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">Selecting a Road</h3>
         
         <p class="mb-2"><strong>Option 1: Browse by Region</strong></p>
@@ -158,13 +168,22 @@ export default function UserManualPage() {
           <li><span class="text-blue-400">Blue</span> = Trafficable lanes</li>
         </ul>
         <p class="text-sm text-gray-400">Widths are from MRWA Layer 12 (Pavement and Surfacing State).</p>
-      `
-    },
-    {
-      id: 'drive',
-      title: '5. Drive Page - GPS Tracking',
-      keywords: ['gps', 'tracking', 'slk', 'speed', 'ekf', 'confidence', 'lookahead', 'direction'],
-      content: `
+      `,
+      },
+      {
+        id: 'drive',
+        title: '5. Drive Page - GPS Tracking',
+        keywords: [
+          'gps',
+          'tracking',
+          'slk',
+          'speed',
+          'ekf',
+          'confidence',
+          'lookahead',
+          'direction',
+        ],
+        content: `
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">Starting GPS Tracking</h3>
         <p class="mb-3">From home page, tap the tracking icon (📍) next to your work zone, or tap "Start SLK Tracking". Grant location permission if prompted.</p>
 
@@ -204,13 +223,22 @@ export default function UserManualPage() {
 
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">Speed Display Toggle</h3>
         <p class="mb-3">In Settings, you can toggle "Show Speed During Tracking" to display or hide the current speed and posted speed limit during SLK tracking. Defaults to OFF.</p>
-      `
-    },
-    {
-      id: 'aftercare',
-      title: '6. AfterCare - Signage Tracking',
-      keywords: ['aftercare', 'signage', 'tracking', 'retrieval', 'signs', 'job', 'placed', 'collect'],
-      content: `
+      `,
+      },
+      {
+        id: 'aftercare',
+        title: '6. AfterCare - Signage Tracking',
+        keywords: [
+          'aftercare',
+          'signage',
+          'tracking',
+          'retrieval',
+          'signs',
+          'job',
+          'placed',
+          'collect',
+        ],
+        content: `
         <h3 class="text-lg font-semibold text-cyan-400 mt-4 mb-2">What is AfterCare?</h3>
         <p class="mb-3">AfterCare is a signage tracking system that helps Traffic Controllers manage signs placed on roads awaiting retrieval. It tracks what signs were placed, where, and when they need to be collected.</p>
         
@@ -254,13 +282,22 @@ export default function UserManualPage() {
         
         <h3 class="text-lg font-semibold text-cyan-400 mt-4 mb-2">Drive Page Integration</h3>
         <p class="text-sm text-gray-400">When driving, a cyan banner appears if there are AfterCare signs on the current road. Shows next upcoming sign with distance.</p>
-      `
-    },
-    {
-      id: 'overrides',
-      title: '7. Speed Sign Overrides',
-      keywords: ['override', 'speed', 'sign', 'correction', 'direction', 'true left', 'true right', 'mrwa'],
-      content: `
+      `,
+      },
+      {
+        id: 'overrides',
+        title: '7. Speed Sign Overrides',
+        keywords: [
+          'override',
+          'speed',
+          'sign',
+          'correction',
+          'direction',
+          'true left',
+          'true right',
+          'mrwa',
+        ],
+        content: `
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">Why Override Speed Zones?</h3>
         <p class="mb-3">Sometimes MRWA database doesn't match physical signs due to road works, sign relocations, or data entry errors. The override system lets you record correct speed limits based on field observation.</p>
         
@@ -284,13 +321,13 @@ export default function UserManualPage() {
         </table>
         
         <p class="text-sm text-gray-400">Access via Settings → Speed Zone Overrides section, or go to /overrides</p>
-      `
-    },
-    {
-      id: 'calibrate',
-      title: '8. GPS Calibration',
-      keywords: ['calibrate', 'lag', 'compensation', 'gps', 'delay', 'warning', 'timing'],
-      content: `
+      `,
+      },
+      {
+        id: 'calibrate',
+        title: '8. GPS Calibration',
+        keywords: ['calibrate', 'lag', 'compensation', 'gps', 'delay', 'warning', 'timing'],
+        content: `
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">What is GPS Lag?</h3>
         <p class="mb-3">GPS reports your position with a slight delay (typically 1-3 seconds). This affects the accuracy of speed zone lookahead warnings. The calibration tool measures this delay so the app can compensate.</p>
         
@@ -306,13 +343,22 @@ export default function UserManualPage() {
         <p class="mb-3">The app calculates lag based on SLK difference. Tap "APPLY" to save to GPS settings.</p>
         
         <p class="text-sm text-gray-400">Recalibrate when speed warnings seem early/late, or after changing phones.</p>
-      `
-    },
-    {
-      id: 'settings',
-      title: '9. Settings',
-      keywords: ['settings', 'ekf', 'filtering', 'prediction', 'wind', 'gust', 'download', 'offline'],
-      content: `
+      `,
+      },
+      {
+        id: 'settings',
+        title: '9. Settings',
+        keywords: [
+          'settings',
+          'ekf',
+          'filtering',
+          'prediction',
+          'wind',
+          'gust',
+          'download',
+          'offline',
+        ],
+        content: `
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">Accessing Settings</h3>
         <p class="mb-3">Tap the hamburger menu (☰) in the top-right corner of the home page. Settings opens as a <strong>bottom sheet drawer</strong> that slides up from the bottom. Swipe down or tap outside the drawer to close it.</p>
         
@@ -343,13 +389,22 @@ export default function UserManualPage() {
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">Offline Data</h3>
         <p class="mb-2"><strong>Download Data:</strong> Downloads all road data. Required before offline use.</p>
         <p><strong>Clear Data:</strong> Removes all offline data for fresh re-download.</p>
-      `
-    },
-    {
-      id: 'troubleshooting',
-      title: '10. Troubleshooting',
-      keywords: ['wrong road', 'incorrect', 'gps not working', 'speed limit', 'warning', 'problem', 'error', 'fix'],
-      content: `
+      `,
+      },
+      {
+        id: 'troubleshooting',
+        title: '10. Troubleshooting',
+        keywords: [
+          'wrong road',
+          'incorrect',
+          'gps not working',
+          'speed limit',
+          'warning',
+          'problem',
+          'error',
+          'fix',
+        ],
+        content: `
         <h3 class="text-lg font-semibold text-yellow-400 mt-4 mb-2">App Shows Wrong Road</h3>
         <ul class="list-disc list-inside space-y-1 mb-3">
           <li>Make sure offline data is downloaded (green menu button)</li>
@@ -379,13 +434,13 @@ export default function UserManualPage() {
           <li>Apply the measured lag compensation</li>
           <li>Recalibrate if you change devices</li>
         </ul>
-      `
-    },
-    {
-      id: 'reference',
-      title: '11. Quick Reference',
-      keywords: ['reference', 'direction', 'terminology', 'colors', 'distances', 'quick'],
-      content: `
+      `,
+      },
+      {
+        id: 'reference',
+        title: '11. Quick Reference',
+        keywords: ['reference', 'direction', 'terminology', 'colors', 'distances', 'quick'],
+        content: `
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">Direction Terminology</h3>
         <table class="w-full text-sm mb-3 border border-gray-600">
           <tr class="bg-gray-700">
@@ -417,22 +472,24 @@ export default function UserManualPage() {
           <li>Signage Corridor: ±700m from work zone</li>
           <li>Intersections: ±100m from work zone</li>
         </ul>
-      `
-    }
-  ]
+      `,
+      },
+    ],
+    []
+  );
 
   // Filter sections based on search query
   const filteredSections = useMemo(() => {
-    if (!searchQuery.trim()) return sections
-    
-    const query = searchQuery.toLowerCase()
-    return sections.filter(section => {
-      const titleMatch = section.title.toLowerCase().includes(query)
-      const contentMatch = section.content.toLowerCase().includes(query)
-      const keywordMatch = section.keywords.some(kw => kw.includes(query))
-      return titleMatch || contentMatch || keywordMatch
-    })
-  }, [searchQuery])
+    if (!searchQuery.trim()) return sections;
+
+    const query = searchQuery.toLowerCase();
+    return sections.filter((section) => {
+      const titleMatch = section.title.toLowerCase().includes(query);
+      const contentMatch = section.content.toLowerCase().includes(query);
+      const keywordMatch = section.keywords.some((kw) => kw.includes(query));
+      return titleMatch || contentMatch || keywordMatch;
+    });
+  }, [searchQuery, sections]);
 
   // Quick nav chips for common sections
   const quickNavItems = [
@@ -441,7 +498,7 @@ export default function UserManualPage() {
     { id: 'drive', label: 'GPS', icon: '📍' },
     { id: 'settings', label: 'Settings', icon: '☰' },
     { id: 'troubleshooting', label: 'Fix', icon: '🔧' },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -456,10 +513,8 @@ export default function UserManualPage() {
           <h1 className="text-xl font-bold">User Manual</h1>
           <div className="w-16"></div>
         </div>
-        
-        <p className="text-xs text-gray-400 text-center mb-4">
-          Version RC 1.7.13 • March 2026
-        </p>
+
+        <p className="text-xs text-gray-400 text-center mb-4">Version RC 1.7.13 • March 2026</p>
 
         {/* Search Bar */}
         <div className="mb-4">
@@ -494,7 +549,7 @@ export default function UserManualPage() {
               {item.icon} {item.label}
             </button>
           ))}
-          
+
           {/* View Toggle */}
           <div className="ml-auto flex gap-1">
             <button
@@ -515,10 +570,9 @@ export default function UserManualPage() {
         {/* Search Results Count */}
         {searchQuery && (
           <p className="text-xs text-gray-400 mb-3">
-            {filteredSections.length === 0 
-              ? 'No results found' 
-              : `${filteredSections.length} section${filteredSections.length !== 1 ? 's' : ''} found`
-            }
+            {filteredSections.length === 0
+              ? 'No results found'
+              : `${filteredSections.length} section${filteredSections.length !== 1 ? 's' : ''} found`}
           </p>
         )}
 
@@ -526,9 +580,11 @@ export default function UserManualPage() {
         {viewMode === 'accordion' ? (
           <div className="space-y-2">
             {filteredSections.map((section) => (
-              <div 
-                key={section.id} 
-                ref={(el) => { sectionRefs.current[section.id] = el }}
+              <div
+                key={section.id}
+                ref={(el) => {
+                  sectionRefs.current[section.id] = el;
+                }}
                 className="bg-gray-800 rounded-lg border border-gray-700"
               >
                 <button
@@ -541,7 +597,7 @@ export default function UserManualPage() {
                   </span>
                 </button>
                 {expandedSection === section.id && (
-                  <div 
+                  <div
                     className="px-4 pb-4 text-sm text-gray-300"
                     dangerouslySetInnerHTML={{ __html: section.content }}
                   />
@@ -552,13 +608,15 @@ export default function UserManualPage() {
         ) : (
           <div className="space-y-4">
             {filteredSections.map((section) => (
-              <div 
+              <div
                 key={section.id}
-                ref={(el) => { sectionRefs.current[section.id] = el }}
+                ref={(el) => {
+                  sectionRefs.current[section.id] = el;
+                }}
                 className="bg-gray-800 rounded-lg border border-gray-700 p-4"
               >
                 <h2 className="text-lg font-semibold text-blue-400 mb-3">{section.title}</h2>
-                <div 
+                <div
                   className="text-sm text-gray-300"
                   dangerouslySetInnerHTML={{ __html: section.content }}
                 />
@@ -582,27 +640,41 @@ export default function UserManualPage() {
           <dl className="space-y-2 text-sm">
             <div>
               <dt className="font-semibold text-white">SLK (Straight Line Kilometre)</dt>
-              <dd className="text-gray-400 ml-2">Linear reference system for road locations. Values increase from one end to the other.</dd>
+              <dd className="text-gray-400 ml-2">
+                Linear reference system for road locations. Values increase from one end to the
+                other.
+              </dd>
             </div>
             <div>
               <dt className="font-semibold text-white">True Left / True Right</dt>
-              <dd className="text-gray-400 ml-2">Direction terminology for WA roads. True Left = INCREASING SLK, True Right = DECREASING SLK.</dd>
+              <dd className="text-gray-400 ml-2">
+                Direction terminology for WA roads. True Left = INCREASING SLK, True Right =
+                DECREASING SLK.
+              </dd>
             </div>
             <div>
               <dt className="font-semibold text-white">EKF (Extended Kalman Filter)</dt>
-              <dd className="text-gray-400 ml-2">Algorithm that smooths GPS data for more accurate tracking.</dd>
+              <dd className="text-gray-400 ml-2">
+                Algorithm that smooths GPS data for more accurate tracking.
+              </dd>
             </div>
             <div>
               <dt className="font-semibold text-white">Override</dt>
-              <dd className="text-gray-400 ml-2">User-recorded correction to MRWA speed zone data.</dd>
+              <dd className="text-gray-400 ml-2">
+                User-recorded correction to MRWA speed zone data.
+              </dd>
             </div>
             <div>
               <dt className="font-semibold text-white">IndexedDB</dt>
-              <dd className="text-gray-400 ml-2">Browser database storing road data locally for offline access.</dd>
+              <dd className="text-gray-400 ml-2">
+                Browser database storing road data locally for offline access.
+              </dd>
             </div>
             <div>
               <dt className="font-semibold text-white">MRWA</dt>
-              <dd className="text-gray-400 ml-2">Main Roads Western Australia - manages WA roads and provides data.</dd>
+              <dd className="text-gray-400 ml-2">
+                Main Roads Western Australia - manages WA roads and provides data.
+              </dd>
             </div>
           </dl>
         </div>
@@ -613,5 +685,5 @@ export default function UserManualPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

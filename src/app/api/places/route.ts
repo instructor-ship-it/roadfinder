@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { haversineDistanceKm } from '@/lib/utils';
 import {
   findNearestToilet,
   findToiletsNear,
@@ -105,20 +106,7 @@ function loadOfflineAmenitiesData(forceRefresh: boolean = false) {
   return amenitiesCache.data || { hospitals: [], fuelStations: [], toilets: [] };
 }
 
-// Calculate distance between two coordinates
-function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371; // Earth's radius in km
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
+// haversineDistanceKm imported from @/lib/utils (was previously reimplemented here)
 
 // Search for places using Overpass API with fallback servers
 async function searchOverpass(lat: number, lon: number, query: string): Promise<any[]> {
@@ -295,7 +283,7 @@ function processPlaces(
     .map((el: any) => {
       const tags = el.tags || {};
       const coords = getCoordinates(el)!;
-      const distance = calculateDistance(targetLat, targetLon, coords.lat, coords.lon);
+      const distance = haversineDistanceKm(targetLat, targetLon, coords.lat, coords.lon);
 
       // Get best available name
       let name = tags.name || tags.operator || tags.official_name || '';
@@ -358,7 +346,7 @@ function processOfflineAmenities(amenities: any[], targetLat: number, targetLon:
   return amenities
     .filter((a: any) => a.lat && a.lon)
     .map((a: any) => {
-      const distance = calculateDistance(targetLat, targetLon, a.lat, a.lon);
+      const distance = haversineDistanceKm(targetLat, targetLon, a.lat, a.lon);
 
       return {
         name: a.name || 'Unknown',

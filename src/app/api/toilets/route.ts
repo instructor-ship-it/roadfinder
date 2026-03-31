@@ -9,12 +9,8 @@
  */
 
 import { NextResponse } from 'next/server';
-import {
-  findToiletsNear,
-  getToiletCacheStatus,
-  refreshToiletCache,
-  haversineDistance,
-} from '@/lib/toilet-map';
+import { findToiletsNear, getToiletCacheStatus, refreshToiletCache } from '@/lib/toilet-map';
+import { haversineDistanceKm } from '@/lib/utils';
 
 // ─── Overpass API (fallback) ───────────────────────────────────────────
 
@@ -99,7 +95,7 @@ async function fetchOverpassToilets(
         if (!coords) continue;
 
         const tags = el.tags || {};
-        const dist = haversineDistance(lat, lon, coords.lat, coords.lon);
+        const dist = haversineDistanceKm(lat, lon, coords.lat, coords.lon);
         const name = tags.name || tags.operator || '';
         const accessible = tags.wheelchair === 'yes' || tags.wheelchair === 'designated';
 

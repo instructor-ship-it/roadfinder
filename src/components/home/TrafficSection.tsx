@@ -7,50 +7,14 @@ import {
   ADV_QUEUE_WARNING_DISTANCE_M,
   type MaxHoldTimeResult,
 } from '@/lib/max-hold-time';
-
-interface TrafficData {
-  aadt?: number;
-  aadt_weekday?: number;
-  peak_hour_volume?: number;
-  peak_hour_volume_weekday?: number;
-  heavy_vehicle_percent?: number;
-  heavy_vehicle_weekday_pct?: number;
-  source: string;
-  distance_to_site?: number;
-  nearest_sites?: Array<{
-    location: string;
-    aadt?: number;
-    distance_km: number;
-  }>;
-  note?: string;
-}
+import { getShuttleFlowLength, getLaneCapacity } from '@/lib/traffic-calculations';
+import type { TrafficData } from '@/types/shared';
 
 interface TrafficSectionProps {
   traffic: TrafficData | null;
   showTraffic: boolean;
   onToggle: () => void;
   tcLengthM?: number | null;
-}
-
-// Helper functions for traffic calculations
-function getShuttleFlowLength(vph: number): { length: string; risk: boolean } {
-  if (vph >= 701) return { length: '70m', risk: false };
-  if (vph >= 601) return { length: '100m', risk: false };
-  if (vph >= 501) return { length: '150m', risk: false };
-  if (vph >= 401) return { length: '250m', risk: false };
-  if (vph >= 351) return { length: '400m', risk: false };
-  if (vph >= 301) return { length: '600m', risk: false };
-  if (vph >= 251) return { length: '800m', risk: false }; // AGTTM Table 3.5: ≤300 VPH → 800m
-  if (vph >= 201) return { length: '1200m', risk: true }; // MRWA COP Table 15: exceeds AGTTM
-  if (vph >= 151) return { length: '1600m', risk: true }; // MRWA COP Table 15: exceeds AGTTM
-  return { length: '2200m', risk: true }; // MRWA COP Table 15: exceeds AGTTM
-}
-
-function getLaneCapacity(vph: number): string {
-  if (vph <= 1000) return '1 lane';
-  if (vph <= 2000) return '2 lanes';
-  if (vph <= 3000) return '3 lanes';
-  return '4+ lanes';
 }
 
 export function TrafficSection({ traffic, showTraffic, onToggle, tcLengthM }: TrafficSectionProps) {

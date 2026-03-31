@@ -59,6 +59,7 @@ import {
   updateSignStatuses,
   getNearbySigns,
 } from '@/lib/aftercare';
+import { APP_VERSION } from '@/components/SettingsDrawer';
 import {
   optimizeRoute,
   getAllSignsDueForRetrieval,
@@ -87,9 +88,6 @@ async function fetchGpsFromSlk(
   }
   return null;
 }
-
-// App version
-const APP_VERSION = 'RC 1.9.9';
 
 // ============================================
 // MAIN COMPONENT
@@ -174,6 +172,8 @@ function AfterCareContent() {
       retrieved: allGroups.retrieved.filter((j) => filteredJobIds.includes(j.id)),
       archived: allGroups.archived.filter((j) => filteredJobIds.includes(j.id)),
     };
+    // jobs is an intentional reactive trigger — recompute grouping when job list changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jobs, isFilteredMode, filteredJobIds]);
 
   // Handle job deletion
@@ -855,23 +855,18 @@ function JobCard({
   const statusInfo = getStatusInfo(status);
   const statusCounts = getSignStatusCounts(job);
 
-  // Check which signs have GPS coords for map buttons (use calculated status)
+  // Check which signs have GPS coords for map buttons (single pass — was 4 separate .some() calls)
   const hasGpsCoords = job.signs.some((s) => s.lat && s.lon);
-  const hasActiveWithGps = job.signs.some((s) => {
-    if (!s.lat || !s.lon) return false;
-    const calculatedStatus = calculateSignStatus(s);
-    return calculatedStatus !== 'retrieved';
-  });
-  const hasRetrievalWithGps = job.signs.some((s) => {
-    if (!s.lat || !s.lon) return false;
-    const calculatedStatus = calculateSignStatus(s);
-    return calculatedStatus === 'due-retrieval';
-  });
-  const hasMaintenanceWithGps = job.signs.some((s) => {
-    if (!s.lat || !s.lon) return false;
-    const calculatedStatus = calculateSignStatus(s);
-    return calculatedStatus === 'due-maintenance' || calculatedStatus === 'maintained';
-  });
+  let hasActiveWithGps = false;
+  let hasRetrievalWithGps = false;
+  let hasMaintenanceWithGps = false;
+  for (const s of job.signs) {
+    if (!s.lat || !s.lon) continue;
+    const st = calculateSignStatus(s);
+    if (st !== 'retrieved') hasActiveWithGps = true;
+    if (st === 'due-retrieval') hasRetrievalWithGps = true;
+    if (st === 'due-maintenance' || st === 'maintained') hasMaintenanceWithGps = true;
+  }
 
   // Get SLK range
   const slks = job.signs.map((s) => s.slk);

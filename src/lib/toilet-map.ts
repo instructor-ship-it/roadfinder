@@ -11,6 +11,8 @@
  * This avoids per-query API calls and ensures consistent performance.
  */
 
+import { haversineDistanceKm } from './utils';
+
 // ─── Types ────────────────────────────────────────────────────────────────
 
 export interface ToiletMapEntry {
@@ -59,21 +61,10 @@ const CACHE_DURATION_MS = 6 * 60 * 60 * 1000; // 6 hours — toilet data changes
 const ARCGIS_BASE =
   'https://portal.data.nsw.gov.au/arcgis/rest/services/Hosted/National_Public_Toilet_Map/FeatureServer/0/query';
 
-// ─── Haversine ────────────────────────────────────────────────────────────
+// ─── Haversine (uses shared utils) ──────────────────────────────────────
 
-export function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const R = 6371;
-  const dLat = ((lat2 - lat1) * Math.PI) / 180;
-  const dLon = ((lon2 - lon1) * Math.PI) / 180;
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
+// NOTE: haversineDistance was previously re-exported here but returned km (misleading name).
+// Consumers should import haversineDistanceKm from './utils' directly.
 
 // ─── Fetch all WA toilets from ArcGIS ─────────────────────────────────────
 
@@ -84,13 +75,17 @@ async function fetchAllWAToilets(): Promise<RawToiletRecord[]> {
     Date.now() - toiletCache.loadedAt < CACHE_DURATION_MS &&
     toiletCache.toilets.length > 0
   ) {
-    console.log(
-      `[ToiletMap] Using cached data (${toiletCache.toilets.length} toilets, age: ${Math.round((Date.now() - toiletCache.loadedAt) / 60000)}min)`
-    );
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(
+        `[ToiletMap] Using cached data (${toiletCache.toilets.length} toilets, age: ${Math.round((Date.now() - toiletCache.loadedAt) / 60000)}min)`
+      );
+    }
     return toiletCache.toilets;
   }
 
-  console.log('[ToiletMap] Fetching all WA toilets from ArcGIS Feature Service...');
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('[ToiletMap] Fetching all WA toilets from ArcGIS Feature Service...');
+  }
 
   try {
     const allToilets: RawToiletRecord[] = [];
@@ -147,9 +142,11 @@ async function fetchAllWAToilets(): Promise<RawToiletRecord[]> {
     if (allToilets.length > 0) {
       toiletCache.toilets = allToilets;
       toiletCache.loadedAt = Date.now();
-      console.log(
-        `[ToiletMap] Cached ${allToilets.length} WA toilets from National Public Toilet Map`
-      );
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(
+          `[ToiletMap] Cached ${allToilets.length} WA toilets from National Public Toilet Map`
+        );
+      }
     }
 
     return allToilets;
@@ -211,22 +208,26 @@ export async function findToiletsNear(
     const allToilets = await fetchAllWAToilets();
 
     if (allToilets.length === 0) {
-      console.log('[ToiletMap] No WA toilets available (cache empty, fetch failed)');
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[ToiletMap] No WA toilets available (cache empty, fetch failed)');
+      }
       return [];
     }
 
     const results = allToilets
       .map((t) => {
         const entry = mapRecord(t, lat, lon);
-        const distanceKm = Math.round(haversineDistance(lat, lon, t.lat, t.lon) * 10) / 10;
+        const distanceKm = Math.round(haversineDistanceKm(lat, lon, t.lat, t.lon) * 10) / 10;
         return { ...entry, distanceKm };
       })
       .filter((t) => t.distanceKm <= radiusKm)
       .sort((a, b) => a.distanceKm - b.distanceKm);
 
-    console.log(
-      `[ToiletMap] Found ${results.length} toilets within ${radiusKm}km (nearest: ${results[0]?.name || 'none'} at ${results[0]?.distanceKm || '?'}km)`
-    );
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(
+        `[ToiletMap] Found ${results.length} toilets within ${radiusKm}km (nearest: ${results[0]?.name || 'none'} at ${results[0]?.distanceKm || '?'}km)`
+      );
+    }
 
     return results.slice(0, limit);
   } catch (error) {

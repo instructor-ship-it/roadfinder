@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { APP_VERSION } from '@/components/SettingsDrawer';
 import {
   getQaHistory,
   deleteQaEntry,
@@ -17,8 +18,6 @@ import {
   importQaHistory,
   type QaEntry,
 } from '@/lib/qa-storage';
-
-const APP_VERSION = 'RC 1.9.9';
 
 // Types
 interface SearchableDocument {

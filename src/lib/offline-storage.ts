@@ -5,10 +5,7 @@ const OFFLINE_CACHE_NAME = 'tc-workzone-offline-v1';
 const TRACKING_KEY = 'tc-offline-library';
 const DOWNLOADED_KEY = 'tc-downloaded-library';
 
-// Check if running in browser
-function isBrowser(): boolean {
-  return typeof window !== 'undefined' && typeof caches !== 'undefined';
-}
+import { isBrowser } from './utils';
 
 // Offline library tracking entry
 export interface OfflineDocument {
@@ -44,18 +41,18 @@ export function getOfflineDocuments(): OfflineDocument[] {
 export function isDocumentOffline(documentId: string): boolean {
   if (!isBrowser()) return false;
   const docs = getOfflineDocuments();
-  return docs.some(d => d.id === documentId);
+  return docs.some((d) => d.id === documentId);
 }
 
 // Verify if cached document actually exists in Cache API
 export async function verifyCacheExists(documentId: string): Promise<boolean> {
   if (!isBrowser()) return false;
-  
+
   const docs = getOfflineDocuments();
-  const doc = docs.find(d => d.id === documentId);
-  
+  const doc = docs.find((d) => d.id === documentId);
+
   if (!doc) return false;
-  
+
   try {
     const cache = await caches.open(OFFLINE_CACHE_NAME);
     const cachedResponse = await cache.match(doc.url);
@@ -68,13 +65,13 @@ export async function verifyCacheExists(documentId: string): Promise<boolean> {
 // Check all cached documents and return which ones have been deleted
 export async function getDeletedCacheIds(): Promise<string[]> {
   if (!isBrowser()) return [];
-  
+
   const docs = getOfflineDocuments();
   const deletedIds: string[] = [];
-  
+
   try {
     const cache = await caches.open(OFFLINE_CACHE_NAME);
-    
+
     for (const doc of docs) {
       const cachedResponse = await cache.match(doc.url);
       if (!cachedResponse) {
@@ -83,9 +80,9 @@ export async function getDeletedCacheIds(): Promise<string[]> {
     }
   } catch {
     // If cache access fails, assume all might be deleted
-    return docs.map(d => d.id);
+    return docs.map((d) => d.id);
   }
-  
+
   return deletedIds;
 }
 
@@ -108,7 +105,7 @@ export function getDownloadedDocuments(): DownloadedDocument[] {
 export function isDocumentDownloaded(documentId: string): boolean {
   if (!isBrowser()) return false;
   const docs = getDownloadedDocuments();
-  return docs.some(d => d.id === documentId);
+  return docs.some((d) => d.id === documentId);
 }
 
 // Mark a document as downloaded
@@ -119,33 +116,33 @@ export function markDocumentDownloaded(doc: {
   fileSize?: string;
 }): void {
   if (!isBrowser()) return;
-  
+
   const docs = getDownloadedDocuments();
-  const existingIndex = docs.findIndex(d => d.id === doc.id);
-  
+  const existingIndex = docs.findIndex((d) => d.id === doc.id);
+
   const downloadedDoc: DownloadedDocument = {
     id: doc.id,
     title: doc.title,
     shortTitle: doc.shortTitle,
     downloadedDate: new Date().toISOString(),
-    fileSize: doc.fileSize
+    fileSize: doc.fileSize,
   };
-  
+
   if (existingIndex >= 0) {
     docs[existingIndex] = downloadedDoc;
   } else {
     docs.push(downloadedDoc);
   }
-  
+
   localStorage.setItem(DOWNLOADED_KEY, JSON.stringify(docs));
 }
 
 // Remove download tracking
 export function removeDownloadedTracking(documentId: string): void {
   if (!isBrowser()) return;
-  
+
   const docs = getDownloadedDocuments();
-  const updatedDocs = docs.filter(d => d.id !== documentId);
+  const updatedDocs = docs.filter((d) => d.id !== documentId);
   localStorage.setItem(DOWNLOADED_KEY, JSON.stringify(updatedDocs));
 }
 
@@ -153,7 +150,7 @@ export function removeDownloadedTracking(documentId: string): void {
 export function getOfflineDocumentInfo(documentId: string): OfflineDocument | null {
   if (!isBrowser()) return null;
   const docs = getOfflineDocuments();
-  return docs.find(d => d.id === documentId) || null;
+  return docs.find((d) => d.id === documentId) || null;
 }
 
 // Save a document for offline use
@@ -171,36 +168,36 @@ export async function saveDocumentOffline(doc: {
   try {
     // Open the cache
     const cache = await caches.open(OFFLINE_CACHE_NAME);
-    
+
     // Fetch and cache the document
     const response = await fetch(doc.url);
     if (!response.ok) {
       return { success: false, error: `Failed to fetch: ${response.status}` };
     }
-    
+
     await cache.put(doc.url, response);
-    
+
     // Update tracking in localStorage
     const docs = getOfflineDocuments();
-    const existingIndex = docs.findIndex(d => d.id === doc.id);
-    
+    const existingIndex = docs.findIndex((d) => d.id === doc.id);
+
     const offlineDoc: OfflineDocument = {
       id: doc.id,
       url: doc.url,
       title: doc.title,
       shortTitle: doc.shortTitle,
       savedDate: new Date().toISOString(),
-      fileSize: doc.fileSize
+      fileSize: doc.fileSize,
     };
-    
+
     if (existingIndex >= 0) {
       docs[existingIndex] = offlineDoc;
     } else {
       docs.push(offlineDoc);
     }
-    
+
     localStorage.setItem(TRACKING_KEY, JSON.stringify(docs));
-    
+
     return { success: true };
   } catch (error) {
     console.error('Failed to save document offline:', error);
@@ -209,27 +206,29 @@ export async function saveDocumentOffline(doc: {
 }
 
 // Remove a document from offline storage
-export async function removeDocumentOffline(documentId: string): Promise<{ success: boolean; error?: string }> {
+export async function removeDocumentOffline(
+  documentId: string
+): Promise<{ success: boolean; error?: string }> {
   if (!isBrowser()) {
     return { success: false, error: 'Not in browser environment' };
   }
 
   try {
     const docs = getOfflineDocuments();
-    const doc = docs.find(d => d.id === documentId);
-    
+    const doc = docs.find((d) => d.id === documentId);
+
     if (!doc) {
       return { success: false, error: 'Document not found in offline library' };
     }
-    
+
     // Remove from cache
     const cache = await caches.open(OFFLINE_CACHE_NAME);
     await cache.delete(doc.url);
-    
+
     // Update tracking
-    const updatedDocs = docs.filter(d => d.id !== documentId);
+    const updatedDocs = docs.filter((d) => d.id !== documentId);
     localStorage.setItem(TRACKING_KEY, JSON.stringify(updatedDocs));
-    
+
     return { success: true };
   } catch (error) {
     console.error('Failed to remove document from offline:', error);
@@ -238,18 +237,21 @@ export async function removeDocumentOffline(documentId: string): Promise<{ succe
 }
 
 // Get the URL for a document (offline cache or network)
-export async function getDocumentUrl(
-  doc: { id: string; file?: string; url?: string; path?: string }
-): Promise<string> {
+export async function getDocumentUrl(doc: {
+  id: string;
+  file?: string;
+  url?: string;
+  path?: string;
+}): Promise<string> {
   if (!isBrowser()) {
     // Server-side: just return the URL
     return doc.file || doc.url || doc.path || '#';
   }
-  
+
   // Check if document is cached offline
   const offlineDocs = getOfflineDocuments();
-  const offlineDoc = offlineDocs.find(d => d.id === doc.id);
-  
+  const offlineDoc = offlineDocs.find((d) => d.id === doc.id);
+
   if (offlineDoc) {
     // Verify it's actually in the cache
     try {
@@ -262,27 +264,30 @@ export async function getDocumentUrl(
       // Cache check failed, fall through to network
     }
   }
-  
+
   // Return the appropriate network URL
   return doc.file || doc.url || doc.path || '#';
 }
 
 // Synchronous version for initial render (returns cached URL immediately)
-export function getDocumentUrlSync(
-  doc: { id: string; file?: string; url?: string; path?: string }
-): string {
+export function getDocumentUrlSync(doc: {
+  id: string;
+  file?: string;
+  url?: string;
+  path?: string;
+}): string {
   if (!isBrowser()) {
     return doc.file || doc.url || doc.path || '#';
   }
-  
+
   // Check if document is tracked as offline
   const offlineDocs = getOfflineDocuments();
-  const offlineDoc = offlineDocs.find(d => d.id === doc.id);
-  
+  const offlineDoc = offlineDocs.find((d) => d.id === doc.id);
+
   if (offlineDoc) {
     return offlineDoc.url; // Return the URL that's cached
   }
-  
+
   return doc.file || doc.url || doc.path || '#';
 }
 
@@ -295,15 +300,15 @@ export async function clearAllOfflineDocuments(): Promise<{ success: boolean; co
   try {
     const docs = getOfflineDocuments();
     const cache = await caches.open(OFFLINE_CACHE_NAME);
-    
+
     // Remove all documents from cache
     for (const doc of docs) {
       await cache.delete(doc.url);
     }
-    
+
     // Clear tracking
     localStorage.removeItem(TRACKING_KEY);
-    
+
     return { success: true, count: docs.length };
   } catch (error) {
     console.error('Failed to clear offline documents:', error);
@@ -321,7 +326,7 @@ export async function getStorageEstimate(): Promise<{ used: number; quota: numbe
     const estimate = await navigator.storage.estimate();
     return {
       used: estimate.usage || 0,
-      quota: estimate.quota || 0
+      quota: estimate.quota || 0,
     };
   } catch {
     return null;

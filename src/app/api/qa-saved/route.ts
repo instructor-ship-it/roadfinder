@@ -47,7 +47,7 @@ function saveQAs(entries: QAEntry[]): boolean {
 
 // Generate a unique ID
 function generateId(): string {
-  return `qa-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  return `qa-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 }
 
 // GET - List saved Q&As
@@ -57,7 +57,7 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       entries,
-      total: entries.length
+      total: entries.length,
     });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to load Q&As' }, { status: 500 });
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       documentNames: documentNames || [],
       category,
       createdAt: new Date().toISOString(),
-      isFavorite: false
+      isFavorite: false,
     };
 
     // Add to beginning
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         entry: newEntry,
-        total: trimmed.length
+        total: trimmed.length,
       });
     } else {
       return NextResponse.json({ error: 'Failed to save Q&A' }, { status: 500 });
@@ -118,7 +118,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const entries = loadSavedQAs();
-    const filtered = entries.filter(e => e.id !== id);
+    const filtered = entries.filter((e) => e.id !== id);
 
     if (filtered.length === entries.length) {
       return NextResponse.json({ error: 'Entry not found' }, { status: 404 });
@@ -145,7 +145,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const entries = loadSavedQAs();
-    const index = entries.findIndex(e => e.id === id);
+    const index = entries.findIndex((e) => e.id === id);
 
     if (index === -1) {
       return NextResponse.json({ error: 'Entry not found' }, { status: 404 });

@@ -16,7 +16,7 @@
  * - Provides uncertainty estimates
  */
 
-import { haversineDistance } from './utils';
+import { haversineDistance, getBearing } from './utils';
 
 // ============================================================================
 // Types
@@ -25,10 +25,10 @@ import { haversineDistance } from './utils';
 export interface GpsReading {
   lat: number;
   lon: number;
-  speed?: number;        // m/s from GPS
-  heading?: number;      // degrees from GPS
-  accuracy?: number;     // meters (1 sigma)
-  timestamp: number;     // milliseconds
+  speed?: number; // m/s from GPS
+  heading?: number; // degrees from GPS
+  accuracy?: number; // meters (1 sigma)
+  timestamp: number; // milliseconds
 }
 
 export interface EkfState {
@@ -37,41 +37,41 @@ export interface EkfState {
   lon: number;
 
   // Velocity (m/s, converted to degrees for internal use)
-  vLat: number;          // North-South velocity component
-  vLon: number;          // East-West velocity component
+  vLat: number; // North-South velocity component
+  vLon: number; // East-West velocity component
 
   // Uncertainty (variances)
-  pLat: number;          // Position variance (degrees²)
+  pLat: number; // Position variance (degrees²)
   pLon: number;
-  pVLat: number;         // Velocity variance ((degrees/s)²)
+  pVLat: number; // Velocity variance ((degrees/s)²)
   pVLon: number;
 
   // Metadata
-  lastUpdate: number;    // timestamp of last update
-  isPredicted: boolean;  // true if position is predicted (not measured)
+  lastUpdate: number; // timestamp of last update
+  isPredicted: boolean; // true if position is predicted (not measured)
   outageDuration: number; // milliseconds since last GPS fix
 }
 
 export interface EkfConfig {
   // Process noise - how much we expect the vehicle to move unpredictably
-  processNoisePosition: number;    // Default: 5.0 (meters/second²)
-  processNoiseVelocity: number;    // Default: 1.0 (meters/second³)
+  processNoisePosition: number; // Default: 5.0 (meters/second²)
+  processNoiseVelocity: number; // Default: 1.0 (meters/second³)
 
   // Measurement noise scaling
-  measurementNoiseScale: number;   // Default: 1.0 (use GPS accuracy as-is)
+  measurementNoiseScale: number; // Default: 1.0 (use GPS accuracy as-is)
 
   // Prediction limits
-  maxPredictionTime: number;       // Max time to predict during outage (ms)
-  maxPredictionDistance: number;   // Max distance to predict (meters)
-  maxVelocityAge: number;          // Max age of velocity estimate (ms)
+  maxPredictionTime: number; // Max time to predict during outage (ms)
+  maxPredictionDistance: number; // Max distance to predict (meters)
+  maxVelocityAge: number; // Max age of velocity estimate (ms)
 
   // Initial uncertainty
   initialPositionVariance: number; // meters²
   initialVelocityVariance: number; // (m/s)²
 
   // Road constraint
-  roadConstraintEnabled: boolean;  // Snap predictions to road geometry
-  roadSearchRadius: number;        // meters - max distance to search for road
+  roadConstraintEnabled: boolean; // Snap predictions to road geometry
+  roadSearchRadius: number; // meters - max distance to search for road
 }
 
 export interface EkfOutput {
@@ -84,13 +84,13 @@ export interface EkfOutput {
   heading: number;
 
   // Uncertainty
-  uncertaintyM: number;          // Position uncertainty in meters
+  uncertaintyM: number; // Position uncertainty in meters
   confidence: 'high' | 'medium' | 'low' | 'predicted';
 
   // Status
   isPredicted: boolean;
-  outageDuration: number;        // ms since last GPS fix
-  shouldWarn: boolean;           // True if uncertainty is high
+  outageDuration: number; // ms since last GPS fix
+  shouldWarn: boolean; // True if uncertainty is high
 }
 
 // ============================================================================
@@ -98,14 +98,14 @@ export interface EkfOutput {
 // ============================================================================
 
 // Conversion factors
-const METERS_PER_DEG_LAT = 111000;  // Approximate meters per degree latitude
+const METERS_PER_DEG_LAT = 111000; // Approximate meters per degree latitude
 const DEG_LAT_PER_METER = 1 / METERS_PER_DEG_LAT;
 
 /**
  * Get meters per degree longitude at a given latitude
  */
 function metersPerDegLon(lat: number): number {
-  return METERS_PER_DEG_LAT * Math.cos(lat * Math.PI / 180);
+  return METERS_PER_DEG_LAT * Math.cos((lat * Math.PI) / 180);
 }
 
 function degLonPerMeter(lat: number): number {
@@ -116,14 +116,14 @@ function degLonPerMeter(lat: number): number {
  * Default EKF configuration optimized for road vehicles
  */
 export const DEFAULT_EKF_CONFIG: EkfConfig = {
-  processNoisePosition: 5.0,      // 5 m/s² - reasonable for road vehicles
-  processNoiseVelocity: 1.0,      // 1 m/s³ - smooth acceleration changes
-  measurementNoiseScale: 1.0,     // Use GPS accuracy as-is
-  maxPredictionTime: 30_000,      // 30 seconds max prediction
-  maxPredictionDistance: 500,     // 500 meters max
-  maxVelocityAge: 60_000,         // 1 minute
-  initialPositionVariance: 100,   // 100m² initial uncertainty
-  initialVelocityVariance: 25,    // 25 (m/s)² - about 90 km/h
+  processNoisePosition: 5.0, // 5 m/s² - reasonable for road vehicles
+  processNoiseVelocity: 1.0, // 1 m/s³ - smooth acceleration changes
+  measurementNoiseScale: 1.0, // Use GPS accuracy as-is
+  maxPredictionTime: 30_000, // 30 seconds max prediction
+  maxPredictionDistance: 500, // 500 meters max
+  maxVelocityAge: 60_000, // 1 minute
+  initialPositionVariance: 100, // 100m² initial uncertainty
+  initialVelocityVariance: 25, // 25 (m/s)² - about 90 km/h
   roadConstraintEnabled: true,
   roadSearchRadius: 500,
 };
@@ -170,10 +170,12 @@ export class GpsEkf {
     const vNorthMs = this.state.vLat * METERS_PER_DEG_LAT;
     const vEastMs = this.state.vLon * metersPerDegLon(this.state.lat);
     const speedMs = Math.sqrt(vNorthMs * vNorthMs + vEastMs * vEastMs);
-    
+
     // Handle NaN, Infinity, or unreasonably high speed (>500 km/h is clearly wrong)
     const MAX_REASONABLE_SPEED_MS = 500 / 3.6; // ~139 m/s = 500 km/h
-    const clampedSpeedMs = Number.isFinite(speedMs) ? Math.min(speedMs, MAX_REASONABLE_SPEED_MS) : 0;
+    const clampedSpeedMs = Number.isFinite(speedMs)
+      ? Math.min(speedMs, MAX_REASONABLE_SPEED_MS)
+      : 0;
     const speedKmh = clampedSpeedMs * 3.6;
 
     // Heading: 0 = North, 90 = East, 180 = South, 270 = West
@@ -317,8 +319,8 @@ export class GpsEkf {
     this.state.lon += kLon * yLon;
 
     // Covariance update: P = (I - K) * P
-    this.state.pLat *= (1 - kLat);
-    this.state.pLon *= (1 - kLon);
+    this.state.pLat *= 1 - kLat;
+    this.state.pLon *= 1 - kLon;
 
     // Update velocity if GPS provides speed/heading
     if (reading.speed !== undefined && reading.heading !== undefined) {
@@ -331,15 +333,15 @@ export class GpsEkf {
    */
   private updateVelocity(reading: GpsReading): void {
     if (!this.state) return;
-    
+
     // These should be defined when this method is called
     const speed = reading.speed ?? 0;
     const heading = reading.heading ?? 0;
 
     // Convert speed (m/s) and heading (degrees) to velocity components
-    const headingRad = heading * Math.PI / 180;
+    const headingRad = (heading * Math.PI) / 180;
     const vNorth = speed * Math.cos(headingRad); // m/s
-    const vEast = speed * Math.sin(headingRad);  // m/s
+    const vEast = speed * Math.sin(headingRad); // m/s
 
     // Convert to degrees/second
     const measuredVLat = vNorth * DEG_LAT_PER_METER;
@@ -359,27 +361,27 @@ export class GpsEkf {
     this.state.vLon += kVLon * (measuredVLon - this.state.vLon);
 
     // Update velocity covariance
-    this.state.pVLat *= (1 - kVLat);
-    this.state.pVLon *= (1 - kVLon);
+    this.state.pVLat *= 1 - kVLat;
+    this.state.pVLon *= 1 - kVLon;
   }
 
   /**
    * Store velocity reading for averaging
    */
   private storeVelocityReading(reading: GpsReading): void {
-    const headingRad = reading.heading! * Math.PI / 180;
+    const headingRad = (reading.heading! * Math.PI) / 180;
     const vLat = reading.speed! * Math.cos(headingRad) * DEG_LAT_PER_METER;
     const vLon = reading.speed! * Math.sin(headingRad) * degLonPerMeter(reading.lat);
 
     this.velocityReadings.push({
       vLat,
       vLon,
-      time: reading.timestamp || Date.now()
+      time: reading.timestamp || Date.now(),
     });
 
     // Keep only recent readings (last 30 seconds)
     const cutoff = Date.now() - 30_000;
-    this.velocityReadings = this.velocityReadings.filter(r => r.time > cutoff);
+    this.velocityReadings = this.velocityReadings.filter((r) => r.time > cutoff);
   }
 
   /**
@@ -391,7 +393,7 @@ export class GpsEkf {
     let vLon = 0;
 
     if (reading.speed !== undefined && reading.heading !== undefined) {
-      const headingRad = reading.heading * Math.PI / 180;
+      const headingRad = (reading.heading * Math.PI) / 180;
       vLat = reading.speed * Math.cos(headingRad) * DEG_LAT_PER_METER;
       vLon = reading.speed * Math.sin(headingRad) * degLonPerMeter(reading.lat);
     }
@@ -440,7 +442,9 @@ export class GpsEkf {
     const uncertaintyM = Math.sqrt(this.state.pLat) * METERS_PER_DEG_LAT;
 
     return {
-      canPredict: outageMs < this.config.maxPredictionTime && uncertaintyM < this.config.maxPredictionDistance,
+      canPredict:
+        outageMs < this.config.maxPredictionTime &&
+        uncertaintyM < this.config.maxPredictionDistance,
       remainingTime: Math.round(remainingMs / 1000),
       uncertainty: Math.round(uncertaintyM),
     };
@@ -504,9 +508,12 @@ export function constrainToRoad(
  * Project a point onto a line segment
  */
 function projectPointOnSegment(
-  px: number, py: number,
-  x1: number, y1: number,
-  x2: number, y2: number
+  px: number,
+  py: number,
+  x1: number,
+  y1: number,
+  x2: number,
+  y2: number
 ): { lat: number; lon: number; t: number; distance: number } | null {
   const dx = x2 - x1;
   const dy = y2 - y1;
@@ -536,23 +543,18 @@ function projectPointOnSegment(
  * Calculate bearing between two points
  */
 export function calculateBearing(lat1: number, lon1: number, lat2: number, lon2: number): number {
-  const dLon = (lon2 - lon1) * Math.PI / 180;
-  const lat1Rad = lat1 * Math.PI / 180;
-  const lat2Rad = lat2 * Math.PI / 180;
-
-  const y = Math.sin(dLon) * Math.cos(lat2Rad);
-  const x = Math.cos(lat1Rad) * Math.sin(lat2Rad) -
-            Math.sin(lat1Rad) * Math.cos(lat2Rad) * Math.cos(dLon);
-
-  let bearing = Math.atan2(y, x) * 180 / Math.PI;
-  return (bearing + 360) % 360;
+  return getBearing(lat1, lon1, lat2, lon2);
 }
 
 /**
  * Calculate speed between two points
  */
 export function calculateSpeedMs(
-  lat1: number, lon1: number, lat2: number, lon2: number, dtMs: number
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number,
+  dtMs: number
 ): number {
   if (dtMs === 0) return 0;
   const distanceM = haversineDistance(lat1, lon1, lat2, lon2);

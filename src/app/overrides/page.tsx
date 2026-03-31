@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { getSpeedZones, clearSpeedOverridesCache } from '@/lib/offline-db';
+import { APP_VERSION } from '@/components/SettingsDrawer';
 
 // Storage key for localStorage
 const STORAGE_KEY = 'speed-sign-overrides';
@@ -973,7 +974,7 @@ This data should be verified against MRWA records before making database updates
           </Link>
           <h1 className="text-xl font-bold">Speed Sign Overrides</h1>
         </div>
-        <div className="text-xs text-gray-500">vRC 1.9.9 | Local Storage</div>
+        <div className="text-xs text-gray-500">v{APP_VERSION} | Local Storage</div>
       </div>
 
       {/* Storage Info */}

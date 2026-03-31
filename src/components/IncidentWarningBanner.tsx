@@ -24,13 +24,17 @@ interface IncidentWarningBannerProps {
   enabled?: boolean;
 }
 
-export function IncidentWarningBanner({ roadId, currentSlk, enabled = true }: IncidentWarningBannerProps) {
+export function IncidentWarningBanner({
+  roadId,
+  currentSlk,
+  enabled = true,
+}: IncidentWarningBannerProps) {
   const [incidents, setIncidents] = useState<RoadIncident[]>([]);
   const [loading, setLoading] = useState(false);
   const [dismissed, setDismissed] = useState<Set<number>>(new Set());
   const [lastFetch, setLastFetch] = useState<number>(0);
 
-  // Fetch incidents for current road
+  // Fetch incidents for current road — fetchIncidents unstable, lastFetch excluded for throttling
   useEffect(() => {
     if (!enabled || !roadId) return;
 
@@ -43,6 +47,7 @@ export function IncidentWarningBanner({ roadId, currentSlk, enabled = true }: In
     // Refresh every 2 minutes
     const interval = setInterval(fetchIncidents, 2 * 60 * 1000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roadId, enabled]);
 
   async function fetchIncidents() {
@@ -50,15 +55,16 @@ export function IncidentWarningBanner({ roadId, currentSlk, enabled = true }: In
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/incidents?action=all&road_id=${encodeURIComponent(roadId)}&limit=10`);
+      const response = await fetch(
+        `/api/incidents?action=all&road_id=${encodeURIComponent(roadId)}&limit=10`
+      );
       const data = await response.json();
 
       if (data.success && data.incidents) {
         // Filter to only critical and major incidents, and not dismissed
         const relevantIncidents = data.incidents.filter(
-          (i: RoadIncident) => 
-            (i.severity === 'critical' || i.severity === 'major') && 
-            !dismissed.has(i.fid)
+          (i: RoadIncident) =>
+            (i.severity === 'critical' || i.severity === 'major') && !dismissed.has(i.fid)
         );
         setIncidents(relevantIncidents);
         setLastFetch(Date.now());
@@ -71,8 +77,8 @@ export function IncidentWarningBanner({ roadId, currentSlk, enabled = true }: In
   }
 
   function dismissIncident(fid: number) {
-    setDismissed(prev => new Set([...prev, fid]));
-    setIncidents(prev => prev.filter(i => i.fid !== fid));
+    setDismissed((prev) => new Set([...prev, fid]));
+    setIncidents((prev) => prev.filter((i) => i.fid !== fid));
   }
 
   function getSeverityStyles(severity: string) {
@@ -82,21 +88,21 @@ export function IncidentWarningBanner({ roadId, currentSlk, enabled = true }: In
           bg: 'bg-red-900/60',
           border: 'border-red-500/60',
           text: 'text-red-300',
-          icon: '🔴'
+          icon: '🔴',
         };
       case 'major':
         return {
           bg: 'bg-orange-900/50',
           border: 'border-orange-500/50',
           text: 'text-orange-300',
-          icon: '🟠'
+          icon: '🟠',
         };
       default:
         return {
           bg: 'bg-yellow-900/40',
           border: 'border-yellow-500/40',
           text: 'text-yellow-300',
-          icon: '🟡'
+          icon: '🟡',
         };
     }
   }

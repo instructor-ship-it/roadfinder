@@ -2,7 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronRight, AlertTriangle, Loader2, MapPin, ExternalLink } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronRight,
+  AlertTriangle,
+  Loader2,
+  MapPin,
+  ExternalLink,
+} from 'lucide-react';
 
 interface RoadIncident {
   fid: number;
@@ -44,6 +51,7 @@ export function IncidentsSection({ roadId, roadName, enabled = true }: Incidents
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
+  // Fetch incidents — fetchIncidents is unstable; roadId/enabled are the correct triggers
   useEffect(() => {
     if (!enabled) return;
     fetchIncidents();
@@ -51,13 +59,15 @@ export function IncidentsSection({ roadId, roadName, enabled = true }: Incidents
     // Refresh every 5 minutes
     const interval = setInterval(fetchIncidents, 5 * 60 * 1000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roadId, enabled]);
 
-  // Auto-expand when incidents are loaded
+  // Auto-expand on initial load only — expanded excluded to avoid re-expanding on user collapse
   useEffect(() => {
     if (incidents.length > 0 && !expanded) {
       setExpanded(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [incidents.length]);
 
   async function fetchIncidents() {
@@ -94,28 +104,28 @@ export function IncidentsSection({ roadId, roadName, enabled = true }: Incidents
           bg: 'bg-red-900/40',
           border: 'border-red-500/50',
           text: 'text-red-400',
-          icon: '🔴'
+          icon: '🔴',
         };
       case 'major':
         return {
           bg: 'bg-orange-900/40',
           border: 'border-orange-500/50',
           text: 'text-orange-400',
-          icon: '🟠'
+          icon: '🟠',
         };
       case 'moderate':
         return {
           bg: 'bg-yellow-900/40',
           border: 'border-yellow-500/50',
           text: 'text-yellow-400',
-          icon: '🟡'
+          icon: '🟡',
         };
       default:
         return {
           bg: 'bg-blue-900/40',
           border: 'border-blue-500/50',
           text: 'text-blue-400',
-          icon: '🔵'
+          icon: '🔵',
         };
     }
   }
@@ -133,9 +143,9 @@ export function IncidentsSection({ roadId, roadName, enabled = true }: Incidents
   }
 
   // Count by severity
-  const criticalCount = incidents.filter(i => i.severity === 'critical').length;
-  const majorCount = incidents.filter(i => i.severity === 'major').length;
-  const moderateCount = incidents.filter(i => i.severity === 'moderate').length;
+  const criticalCount = incidents.filter((i) => i.severity === 'critical').length;
+  const majorCount = incidents.filter((i) => i.severity === 'major').length;
+  const moderateCount = incidents.filter((i) => i.severity === 'moderate').length;
 
   if (!enabled) return null;
 
@@ -152,7 +162,9 @@ export function IncidentsSection({ roadId, roadName, enabled = true }: Incidents
           ) : (
             <ChevronRight className="h-4 w-4 text-gray-400" />
           )}
-          <AlertTriangle className={`h-4 w-4 ${incidents.length > 0 ? 'text-red-400' : 'text-gray-400'}`} />
+          <AlertTriangle
+            className={`h-4 w-4 ${incidents.length > 0 ? 'text-red-400' : 'text-gray-400'}`}
+          />
           <span className="font-medium text-sm">
             🚨 Road Incidents
             {incidents.length > 0 && (
@@ -237,16 +249,12 @@ export function IncidentsSection({ roadId, roadName, enabled = true }: Incidents
                       <span className="bg-gray-700 px-2 py-0.5 rounded">
                         {incident.incidentType}
                       </span>
-                      <span className="text-gray-500">
-                        {incident.trafficCondition}
-                      </span>
+                      <span className="text-gray-500">{incident.trafficCondition}</span>
                     </div>
 
                     {/* Traffic Impact */}
                     {incident.trafficImpact && (
-                      <p className="mt-2 text-xs text-amber-400">
-                        ⚠️ {incident.trafficImpact}
-                      </p>
+                      <p className="mt-2 text-xs text-amber-400">⚠️ {incident.trafficImpact}</p>
                     )}
 
                     {/* Navigate button */}

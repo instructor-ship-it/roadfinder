@@ -3,10 +3,7 @@
 
 const QA_STORAGE_KEY = 'tc-library-qa-history';
 
-// Check if running in browser
-function isBrowser(): boolean {
-  return typeof window !== 'undefined';
-}
+import { isBrowser } from './utils';
 
 // Saved Q&A entry
 export interface QaEntry {
@@ -39,7 +36,7 @@ export function saveQaEntry(entry: Omit<QaEntry, 'id' | 'createdAt' | 'isFavorit
 
   const newEntry: QaEntry = {
     ...entry,
-    id: `qa-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    id: `qa-${Date.now()}-${Math.random().toString(36).slice(2, 11)}`,
     createdAt: new Date().toISOString(),
     isFavorite: false,
   };
@@ -59,7 +56,7 @@ export function deleteQaEntry(id: string): boolean {
   if (!isBrowser()) return false;
 
   const history = getQaHistory();
-  const filtered = history.filter(entry => entry.id !== id);
+  const filtered = history.filter((entry) => entry.id !== id);
 
   if (filtered.length < history.length) {
     localStorage.setItem(QA_STORAGE_KEY, JSON.stringify(filtered));
@@ -73,7 +70,7 @@ export function toggleQaFavorite(id: string): boolean {
   if (!isBrowser()) return false;
 
   const history = getQaHistory();
-  const entry = history.find(e => e.id === id);
+  const entry = history.find((e) => e.id === id);
 
   if (entry) {
     entry.isFavorite = !entry.isFavorite;
@@ -88,7 +85,7 @@ export function updateQaCategory(id: string, category: string): boolean {
   if (!isBrowser()) return false;
 
   const history = getQaHistory();
-  const entry = history.find(e => e.id === id);
+  const entry = history.find((e) => e.id === id);
 
   if (entry) {
     entry.category = category;
@@ -103,18 +100,19 @@ export function searchQaHistory(query: string): QaEntry[] {
   const history = getQaHistory();
   const lowerQuery = query.toLowerCase();
 
-  return history.filter(entry =>
-    entry.question.toLowerCase().includes(lowerQuery) ||
-    entry.answer.toLowerCase().includes(lowerQuery) ||
-    entry.documentNames.some(name => name.toLowerCase().includes(lowerQuery)) ||
-    (entry.category && entry.category.toLowerCase().includes(lowerQuery))
+  return history.filter(
+    (entry) =>
+      entry.question.toLowerCase().includes(lowerQuery) ||
+      entry.answer.toLowerCase().includes(lowerQuery) ||
+      entry.documentNames.some((name) => name.toLowerCase().includes(lowerQuery)) ||
+      (entry.category && entry.category.toLowerCase().includes(lowerQuery))
   );
 }
 
 // Get Q&A entries by document
 export function getQaByDocument(documentId: string): QaEntry[] {
   const history = getQaHistory();
-  return history.filter(entry => entry.documents.includes(documentId));
+  return history.filter((entry) => entry.documents.includes(documentId));
 }
 
 // Get all used categories
@@ -122,7 +120,7 @@ export function getQaCategories(): string[] {
   const history = getQaHistory();
   const categories = new Set<string>();
 
-  history.forEach(entry => {
+  history.forEach((entry) => {
     if (entry.category) {
       categories.add(entry.category);
     }
@@ -138,7 +136,11 @@ export function exportQaHistory(): string {
 }
 
 // Import Q&A history from JSON
-export function importQaHistory(jsonData: string): { success: boolean; count: number; error?: string } {
+export function importQaHistory(jsonData: string): {
+  success: boolean;
+  count: number;
+  error?: string;
+} {
   if (!isBrowser()) {
     return { success: false, count: 0, error: 'Not in browser environment' };
   }
@@ -173,8 +175,8 @@ export function importQaHistory(jsonData: string): { success: boolean; count: nu
 
     // Merge with existing history (avoid duplicates by ID)
     const existing = getQaHistory();
-    const existingIds = new Set(existing.map(e => e.id));
-    const newEntries = validEntries.filter(e => !existingIds.has(e.id));
+    const existingIds = new Set(existing.map((e) => e.id));
+    const newEntries = validEntries.filter((e) => !existingIds.has(e.id));
 
     const merged = [...newEntries, ...existing].slice(0, 100);
     localStorage.setItem(QA_STORAGE_KEY, JSON.stringify(merged));
@@ -184,7 +186,7 @@ export function importQaHistory(jsonData: string): { success: boolean; count: nu
     return {
       success: false,
       count: 0,
-      error: error instanceof Error ? error.message : 'Failed to parse JSON'
+      error: error instanceof Error ? error.message : 'Failed to parse JSON',
     };
   }
 }

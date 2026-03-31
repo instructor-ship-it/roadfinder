@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import type { AfterCareSign, AfterCareJob } from '@/lib/aftercare';
+import type { AfterCareSign, AfterCareJob, SignStatus } from '@/lib/aftercare';
 import { calculateSignStatus } from '@/lib/aftercare';
 import 'leaflet/dist/leaflet.css';
 
@@ -10,6 +10,20 @@ interface SignageMapProps {
   jobs: AfterCareJob[];
   height?: string;
 }
+
+// Sign with pre-computed status to avoid redundant calculateSignStatus calls
+interface SignWithStatus extends AfterCareSign {
+  status: SignStatus;
+  jobName: string;
+  roadId: string;
+}
+
+// Color by status
+const getColor = (status: SignStatus) => {
+  if (status === 'due-retrieval') return '#ef4444';
+  if (status === 'due-maintenance' || status === 'maintained') return '#eab308';
+  return '#22c55e';
+};
 
 // Create colored circle marker (client-side only)
 const createIcon = (color: string) => {
@@ -25,12 +39,11 @@ const createIcon = (color: string) => {
   });
 };
 
-// Color by status
-const getColor = (sign: AfterCareSign) => {
-  const s = calculateSignStatus(sign);
-  if (s === 'due-retrieval') return '#ef4444';
-  if (s === 'due-maintenance' || s === 'maintained') return '#eab308';
-  return '#22c55e';
+// Status label for display
+const getStatusLabel = (status: SignStatus) => {
+  if (status === 'due-retrieval') return '🔴 Retrieval';
+  if (status === 'due-maintenance' || status === 'maintained') return '🟡 Maintenance';
+  return '🟢 Active';
 };
 
 export default function SignageMap({ jobs, height = '300px' }: SignageMapProps) {
@@ -41,12 +54,21 @@ export default function SignageMap({ jobs, height = '300px' }: SignageMapProps) 
     setMounted(true);
   }, []);
 
-  // Get all non-retrieved signs with GPS
-  const signs = jobs.flatMap((job) =>
-    job.signs
-      .filter((s) => s.lat && s.lon && calculateSignStatus(s) !== 'retrieved')
-      .map((s) => ({ ...s, jobName: job.job_name, roadId: job.road_id }))
-  );
+  // Compute status once per sign (was 5-6 calls per sign per render)
+  const signs = useMemo(() => {
+    const result: SignWithStatus[] = [];
+    for (const job of jobs) {
+      for (const s of job.signs) {
+        if (s.lat && s.lon) {
+          const status = calculateSignStatus(s);
+          if (status !== 'retrieved') {
+            result.push({ ...s, status, jobName: job.job_name, roadId: job.road_id });
+          }
+        }
+      }
+    }
+    return result;
+  }, [jobs]);
 
   if (!mounted)
     return (
@@ -80,7 +102,11 @@ export default function SignageMap({ jobs, height = '300px' }: SignageMapProps) 
           attribution="© OpenStreetMap"
         />
         {signs.map((sign) => (
-          <Marker key={sign.id} position={[sign.lat!, sign.lon!]} icon={createIcon(getColor(sign))}>
+          <Marker
+            key={sign.id}
+            position={[sign.lat!, sign.lon!]}
+            icon={createIcon(getColor(sign.status))}
+          >
             <Popup>
               <div className="text-sm">
                 <b>
@@ -93,14 +119,7 @@ export default function SignageMap({ jobs, height = '300px' }: SignageMapProps) 
                   {sign.direction === 'True Left' ? '↑ Left' : '↓ Right'}
                 </span>
                 <br />
-                <span style={{ color: getColor(sign) }}>
-                  {calculateSignStatus(sign) === 'due-retrieval'
-                    ? '🔴 Retrieval'
-                    : calculateSignStatus(sign) === 'due-maintenance' ||
-                        calculateSignStatus(sign) === 'maintained'
-                      ? '🟡 Maintenance'
-                      : '🟢 Active'}
-                </span>
+                <span style={{ color: getColor(sign.status) }}>{getStatusLabel(sign.status)}</span>
               </div>
             </Popup>
           </Marker>

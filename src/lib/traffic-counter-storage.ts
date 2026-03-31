@@ -53,23 +53,8 @@ const STORAGE_KEY = 'trafficCounterHistory';
 // HELPER FUNCTIONS
 // ============================================
 
-/**
- * Generate a unique ID
- */
-export function generateId(): string {
-  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-}
-
-/**
- * Format date in Australian format (DD/MM/YYYY)
- */
-export function formatAusDate(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  const day = d.getDate().toString().padStart(2, '0');
-  const month = (d.getMonth() + 1).toString().padStart(2, '0');
-  const year = d.getFullYear();
-  return `${day}/${month}/${year}`;
-}
+import { generateId, formatAusDate, toIsoDate } from './utils';
+export { generateId, formatAusDate, toIsoDate };
 
 /**
  * Format time (HH:MM)
@@ -78,13 +63,6 @@ export function formatTime(date: Date): string {
   const hours = date.getHours().toString().padStart(2, '0');
   const minutes = date.getMinutes().toString().padStart(2, '0');
   return `${hours}:${minutes}`;
-}
-
-/**
- * Format date for ISO storage
- */
-export function toIsoDate(date: Date): string {
-  return date.toISOString().split('T')[0];
 }
 
 // ============================================

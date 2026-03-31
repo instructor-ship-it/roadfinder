@@ -5,13 +5,24 @@
 // TYPES & INTERFACES
 // ============================================
 
-export type RetrievalType = 'standard' | 'scheduled' | 'maintain-daily' | 'maintain-weekly' | 'maintain-monthly' | 'tba';
+export type RetrievalType =
+  | 'standard'
+  | 'scheduled'
+  | 'maintain-daily'
+  | 'maintain-weekly'
+  | 'maintain-monthly'
+  | 'tba';
 
 export type SignCategory = 'surface' | 'speed' | 'hazard';
 
 export type SignDirection = 'True Left' | 'True Right';
 
-export type SignStatus = 'placed' | 'due-retrieval' | 'due-maintenance' | 'maintained' | 'retrieved';
+export type SignStatus =
+  | 'placed'
+  | 'due-retrieval'
+  | 'due-maintenance'
+  | 'maintained'
+  | 'retrieved';
 
 export type JobStatus = 'active' | 'partial' | 'retrieved' | 'archived';
 
@@ -25,14 +36,14 @@ export interface AfterCareSign {
   description: string;
   direction: SignDirection;
   placed_date: string;
-  placed_time?: string;  // HH:MM format (24-hour)
-  retrieval_type: RetrievalType;  // Per-sign retrieval type
-  retrieval_date?: string;        // For scheduled type (per sign)
+  placed_time?: string; // HH:MM format (24-hour)
+  retrieval_type: RetrievalType; // Per-sign retrieval type
+  retrieval_date?: string; // For scheduled type (per sign)
   last_maintained_date?: string;
   retrieved_date?: string;
-  retrieved_time?: string;  // HH:MM format (24-hour)
+  retrieved_time?: string; // HH:MM format (24-hour)
   status: SignStatus;
-  status_manually_set?: boolean;  // True if user manually overrode status
+  status_manually_set?: boolean; // True if user manually overrode status
   notes: string;
 }
 
@@ -44,8 +55,8 @@ export interface AfterCareJob {
   notes: string;
   date_created: string;
   status: JobStatus;
-  work_area_slk_start?: number;  // Optional work area start SLK
-  work_area_slk_end?: number;    // Optional work area end SLK
+  work_area_slk_start?: number; // Optional work area start SLK
+  work_area_slk_end?: number; // Optional work area end SLK
   signs: AfterCareSign[];
 }
 
@@ -62,7 +73,7 @@ export interface AfterCarePresets {
 export const DEFAULT_PRESETS: AfterCarePresets = {
   surface: ['Rough Surface', 'Loose Stones', 'Loose Surface', 'Slippery When Wet', 'Chip Seal'],
   speed: ['Speed Restriction'],
-  hazard: ['Water Over Road', 'Event In Progress', 'Traffic Hazard']
+  hazard: ['Water Over Road', 'Event In Progress', 'Traffic Hazard'],
 };
 
 // ============================================
@@ -79,27 +90,8 @@ const PRESETS_STORAGE_KEY = 'afterCarePresets';
 /**
  * Generate a unique ID
  */
-export function generateId(): string {
-  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-}
-
-/**
- * Format date in Australian format (DD/MM/YYYY)
- */
-export function formatAusDate(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  const day = d.getDate().toString().padStart(2, '0');
-  const month = (d.getMonth() + 1).toString().padStart(2, '0');
-  const year = d.getFullYear();
-  return `${day}/${month}/${year}`;
-}
-
-/**
- * Format date for ISO storage
- */
-export function toIsoDate(date: Date): string {
-  return date.toISOString().split('T')[0];
-}
+import { generateId, formatAusDate, toIsoDate } from './utils';
+export { generateId, formatAusDate, toIsoDate };
 
 /**
  * Parse Australian date string to Date object
@@ -143,9 +135,11 @@ export function addDays(date: Date, days: number): Date {
  * Check if two dates are the same day
  */
 export function isSameDay(date1: Date, date2: Date): boolean {
-  return date1.getFullYear() === date2.getFullYear() &&
-         date1.getMonth() === date2.getMonth() &&
-         date1.getDate() === date2.getDate();
+  return (
+    date1.getFullYear() === date2.getFullYear() &&
+    date1.getMonth() === date2.getMonth() &&
+    date1.getDate() === date2.getDate()
+  );
 }
 
 /**
@@ -182,13 +176,13 @@ export function formatRelativeDays(days: number): string {
 export function calculateSignStatus(sign: AfterCareSign): SignStatus {
   // If retrieved, always retrieved
   if (sign.status === 'retrieved') return 'retrieved';
-  
+
   // If manually set, use stored status
   if (sign.status_manually_set) return sign.status;
-  
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   switch (sign.retrieval_type) {
     case 'standard': {
       const placedDate = new Date(sign.placed_date);
@@ -196,30 +190,30 @@ export function calculateSignStatus(sign: AfterCareSign): SignStatus {
       dueDate.setHours(0, 0, 0, 0);
       return today >= dueDate ? 'due-retrieval' : 'placed';
     }
-    
+
     case 'scheduled': {
       if (!sign.retrieval_date) return 'placed';
       const scheduledDate = new Date(sign.retrieval_date);
       scheduledDate.setHours(0, 0, 0, 0);
       return today >= scheduledDate ? 'due-retrieval' : 'placed';
     }
-    
+
     case 'maintain-daily': {
       return calculateMaintainStatus(sign, 1);
     }
-    
+
     case 'maintain-weekly': {
       return calculateMaintainStatus(sign, 7);
     }
-    
+
     case 'maintain-monthly': {
       return calculateMaintainStatus(sign, 30);
     }
-    
+
     case 'tba': {
       return 'placed';
     }
-    
+
     default:
       return 'placed';
   }
@@ -231,15 +225,15 @@ export function calculateSignStatus(sign: AfterCareSign): SignStatus {
 function calculateMaintainStatus(sign: AfterCareSign, intervalDays: number): SignStatus {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   // Use last maintained date if available, otherwise placed date
-  const lastActivityDate = sign.last_maintained_date 
+  const lastActivityDate = sign.last_maintained_date
     ? new Date(sign.last_maintained_date)
     : new Date(sign.placed_date);
-  
+
   const nextDueDate = addDays(lastActivityDate, intervalDays);
   nextDueDate.setHours(0, 0, 0, 0);
-  
+
   return today >= nextDueDate ? 'due-maintenance' : 'placed';
 }
 
@@ -247,14 +241,14 @@ function calculateMaintainStatus(sign: AfterCareSign, intervalDays: number): Sig
  * Update all sign statuses in a job based on their retrieval_type and time
  */
 export function updateSignStatuses(job: AfterCareJob): AfterCareJob {
-  const updatedSigns = job.signs.map(sign => {
+  const updatedSigns = job.signs.map((sign) => {
     if (sign.status === 'retrieved') return sign; // Don't change retrieved signs
     if (sign.status_manually_set) return sign; // Don't change manually set statuses
-    
+
     const calculatedStatus = calculateSignStatus(sign);
     return { ...sign, status: calculatedStatus };
   });
-  
+
   return { ...job, signs: updatedSigns };
 }
 
@@ -262,32 +256,38 @@ export function updateSignStatuses(job: AfterCareJob): AfterCareJob {
 // JOB STATUS CALCULATIONS
 // ============================================
 
-export type ComputedJobStatus = 'due-retrieval' | 'due-maintenance' | 'tba' | 'active' | 'retrieved' | 'archived';
+export type ComputedJobStatus =
+  | 'due-retrieval'
+  | 'due-maintenance'
+  | 'tba'
+  | 'active'
+  | 'retrieved'
+  | 'archived';
 
 /**
  * Calculate the computed status of a job based on aggregated sign statuses
  */
 export function calculateJobStatus(job: AfterCareJob): ComputedJobStatus {
   if (job.status === 'archived') return 'archived';
-  
+
   // No signs = active
   if (job.signs.length === 0) return 'active';
-  
+
   // Count sign statuses
   let hasDueRetrieval = false;
   let hasDueMaintenance = false;
   let hasTba = false;
   let hasActive = false;
   let allRetrieved = true;
-  
+
   for (const sign of job.signs) {
     const signStatus = calculateSignStatus(sign);
-    
+
     if (signStatus === 'retrieved') {
       // retrieved - don't count as active
     } else {
       allRetrieved = false;
-      
+
       if (signStatus === 'due-retrieval') {
         hasDueRetrieval = true;
       } else if (signStatus === 'due-maintenance' || signStatus === 'maintained') {
@@ -299,22 +299,26 @@ export function calculateJobStatus(job: AfterCareJob): ComputedJobStatus {
       }
     }
   }
-  
+
   // All retrieved
   if (allRetrieved) return 'retrieved';
-  
+
   // Priority: due-retrieval > due-maintenance > tba > active
   if (hasDueRetrieval) return 'due-retrieval';
   if (hasDueMaintenance) return 'due-maintenance';
   if (hasTba && !hasActive) return 'tba';
-  
+
   return 'active';
 }
 
 /**
  * Get status label and color
  */
-export function getStatusInfo(status: ComputedJobStatus): { label: string; color: string; icon: string } {
+export function getStatusInfo(status: ComputedJobStatus): {
+  label: string;
+  color: string;
+  icon: string;
+} {
   switch (status) {
     case 'due-retrieval':
       return { label: 'Due for Retrieval', color: 'text-red-400', icon: '🔴' };
@@ -368,40 +372,45 @@ export function saveAfterCareJobs(jobs: AfterCareJob[]): void {
  */
 export function getAfterCareJob(id: string): AfterCareJob | null {
   const jobs = getAfterCareJobs();
-  return jobs.find(j => j.id === id) || null;
+  return jobs.find((j) => j.id === id) || null;
 }
 
 /**
  * Create a new job
  */
-export function createAfterCareJob(job: Omit<AfterCareJob, 'id' | 'date_created' | 'status' | 'signs'> & { signs?: AfterCareSign[] }): AfterCareJob {
+export function createAfterCareJob(
+  job: Omit<AfterCareJob, 'id' | 'date_created' | 'status' | 'signs'> & { signs?: AfterCareSign[] }
+): AfterCareJob {
   const newJob: AfterCareJob = {
     ...job,
     id: generateId(),
     date_created: toIsoDate(new Date()),
     status: 'active',
-    signs: job.signs || []
+    signs: job.signs || [],
   };
-  
+
   const jobs = getAfterCareJobs();
   jobs.push(newJob);
   saveAfterCareJobs(jobs);
-  
+
   return newJob;
 }
 
 /**
  * Update an existing job
  */
-export function updateAfterCareJob(id: string, updates: Partial<AfterCareJob>): AfterCareJob | null {
+export function updateAfterCareJob(
+  id: string,
+  updates: Partial<AfterCareJob>
+): AfterCareJob | null {
   const jobs = getAfterCareJobs();
-  const index = jobs.findIndex(j => j.id === id);
-  
+  const index = jobs.findIndex((j) => j.id === id);
+
   if (index === -1) return null;
-  
+
   jobs[index] = { ...jobs[index], ...updates };
   saveAfterCareJobs(jobs);
-  
+
   return jobs[index];
 }
 
@@ -410,10 +419,10 @@ export function updateAfterCareJob(id: string, updates: Partial<AfterCareJob>): 
  */
 export function deleteAfterCareJob(id: string): boolean {
   const jobs = getAfterCareJobs();
-  const filtered = jobs.filter(j => j.id !== id);
-  
+  const filtered = jobs.filter((j) => j.id !== id);
+
   if (filtered.length === jobs.length) return false;
-  
+
   saveAfterCareJobs(filtered);
   return true;
 }
@@ -439,36 +448,43 @@ export function unarchiveAfterCareJob(id: string): AfterCareJob | null {
 /**
  * Add a sign to a job
  */
-export function addSignToJob(jobId: string, sign: Omit<AfterCareSign, 'id' | 'placed_date' | 'status'>): AfterCareSign | null {
+export function addSignToJob(
+  jobId: string,
+  sign: Omit<AfterCareSign, 'id' | 'placed_date' | 'status'>
+): AfterCareSign | null {
   const newSign: AfterCareSign = {
     ...sign,
     id: generateId(),
     placed_date: toIsoDate(new Date()),
-    status: 'placed'
+    status: 'placed',
   };
-  
+
   const job = getAfterCareJob(jobId);
   if (!job) return null;
-  
+
   job.signs.push(newSign);
   updateAfterCareJob(jobId, { signs: job.signs });
-  
+
   return newSign;
 }
 
 /**
  * Update a sign in a job
  */
-export function updateSignInJob(jobId: string, signId: string, updates: Partial<AfterCareSign>): boolean {
+export function updateSignInJob(
+  jobId: string,
+  signId: string,
+  updates: Partial<AfterCareSign>
+): boolean {
   const job = getAfterCareJob(jobId);
   if (!job) return false;
-  
-  const index = job.signs.findIndex(s => s.id === signId);
+
+  const index = job.signs.findIndex((s) => s.id === signId);
   if (index === -1) return false;
-  
+
   job.signs[index] = { ...job.signs[index], ...updates };
   updateAfterCareJob(jobId, { signs: job.signs });
-  
+
   return true;
 }
 
@@ -478,10 +494,10 @@ export function updateSignInJob(jobId: string, signId: string, updates: Partial<
 export function removeSignFromJob(jobId: string, signId: string): boolean {
   const job = getAfterCareJob(jobId);
   if (!job) return false;
-  
-  const filtered = job.signs.filter(s => s.id !== signId);
+
+  const filtered = job.signs.filter((s) => s.id !== signId);
   if (filtered.length === job.signs.length) return false;
-  
+
   updateAfterCareJob(jobId, { signs: filtered });
   return true;
 }
@@ -492,7 +508,7 @@ export function removeSignFromJob(jobId: string, signId: string): boolean {
 export function markSignRetrieved(jobId: string, signId: string): boolean {
   return updateSignInJob(jobId, signId, {
     status: 'retrieved',
-    retrieved_date: toIsoDate(new Date())
+    retrieved_date: toIsoDate(new Date()),
   });
 }
 
@@ -502,7 +518,7 @@ export function markSignRetrieved(jobId: string, signId: string): boolean {
 export function markSignMaintained(jobId: string, signId: string): boolean {
   return updateSignInJob(jobId, signId, {
     status: 'maintained',
-    last_maintained_date: toIsoDate(new Date())
+    last_maintained_date: toIsoDate(new Date()),
   });
 }
 
@@ -512,19 +528,19 @@ export function markSignMaintained(jobId: string, signId: string): boolean {
 export function markAllSignsRetrieved(jobId: string): boolean {
   const job = getAfterCareJob(jobId);
   if (!job) return false;
-  
+
   const today = toIsoDate(new Date());
-  const updatedSigns = job.signs.map(s => ({
+  const updatedSigns = job.signs.map((s) => ({
     ...s,
     status: 'retrieved' as SignStatus,
-    retrieved_date: today
+    retrieved_date: today,
   }));
-  
-  updateAfterCareJob(jobId, { 
+
+  updateAfterCareJob(jobId, {
     signs: updatedSigns,
-    status: 'retrieved'
+    status: 'retrieved',
   });
-  
+
   return true;
 }
 
@@ -534,16 +550,16 @@ export function markAllSignsRetrieved(jobId: string): boolean {
 export function markAllSignsMaintained(jobId: string): boolean {
   const job = getAfterCareJob(jobId);
   if (!job) return false;
-  
+
   const today = toIsoDate(new Date());
-  const updatedSigns = job.signs.map(s => ({
+  const updatedSigns = job.signs.map((s) => ({
     ...s,
     status: 'maintained' as SignStatus,
-    last_maintained_date: today
+    last_maintained_date: today,
   }));
-  
+
   updateAfterCareJob(jobId, { signs: updatedSigns });
-  
+
   return true;
 }
 
@@ -559,14 +575,14 @@ export function getAfterCarePresets(): AfterCarePresets {
   try {
     const data = localStorage.getItem(PRESETS_STORAGE_KEY);
     if (!data) return DEFAULT_PRESETS;
-    
+
     const customPresets = JSON.parse(data) as AfterCarePresets;
-    
+
     // Merge with defaults (custom additions preserved)
     return {
       surface: [...new Set([...DEFAULT_PRESETS.surface, ...customPresets.surface])],
       speed: [...new Set([...DEFAULT_PRESETS.speed, ...customPresets.speed])],
-      hazard: [...new Set([...DEFAULT_PRESETS.hazard, ...customPresets.hazard])]
+      hazard: [...new Set([...DEFAULT_PRESETS.hazard, ...customPresets.hazard])],
     };
   } catch {
     return DEFAULT_PRESETS;
@@ -602,9 +618,9 @@ export function addCustomPreset(category: SignCategory, preset: string): void {
 export function removeCustomPreset(category: SignCategory, preset: string): void {
   // Don't allow removing default presets
   if (DEFAULT_PRESETS[category].includes(preset)) return;
-  
+
   const presets = getAfterCarePresets();
-  presets[category] = presets[category].filter(p => p !== preset);
+  presets[category] = presets[category].filter((p) => p !== preset);
   saveAfterCarePresets(presets);
 }
 
@@ -629,7 +645,7 @@ export interface AfterCareStats {
  */
 export function getAfterCareStats(): AfterCareStats {
   const jobs = getAfterCareJobs();
-  
+
   const stats: AfterCareStats = {
     totalJobs: jobs.length,
     activeJobs: 0,
@@ -639,12 +655,12 @@ export function getAfterCareStats(): AfterCareStats {
     tbaJobs: 0,
     totalSigns: 0,
     signsAwaitingRetrieval: 0,
-    signsRetrieved: 0
+    signsRetrieved: 0,
   };
-  
+
   for (const job of jobs) {
     const status = calculateJobStatus(job);
-    
+
     switch (status) {
       case 'archived':
         stats.archivedJobs++;
@@ -669,12 +685,12 @@ export function getAfterCareStats(): AfterCareStats {
         stats.activeJobs++;
         break;
     }
-    
+
     stats.totalSigns += job.signs.length;
-    stats.signsAwaitingRetrieval += job.signs.filter(s => s.status !== 'retrieved').length;
-    stats.signsRetrieved += job.signs.filter(s => s.status === 'retrieved').length;
+    stats.signsAwaitingRetrieval += job.signs.filter((s) => s.status !== 'retrieved').length;
+    stats.signsRetrieved += job.signs.filter((s) => s.status === 'retrieved').length;
   }
-  
+
   return stats;
 }
 
@@ -690,19 +706,19 @@ export function getJobsGroupedByStatus(): {
   archived: AfterCareJob[];
 } {
   const jobs = getAfterCareJobs();
-  
+
   const groups = {
     dueRetrieval: [] as AfterCareJob[],
     dueMaintenance: [] as AfterCareJob[],
     tba: [] as AfterCareJob[],
     active: [] as AfterCareJob[],
     retrieved: [] as AfterCareJob[],
-    archived: [] as AfterCareJob[]
+    archived: [] as AfterCareJob[],
   };
-  
+
   for (const job of jobs) {
     const status = calculateJobStatus(job);
-    
+
     switch (status) {
       case 'due-retrieval':
         groups.dueRetrieval.push(job);
@@ -724,7 +740,7 @@ export function getJobsGroupedByStatus(): {
         break;
     }
   }
-  
+
   return groups;
 }
 
@@ -733,10 +749,11 @@ export function getJobsGroupedByStatus(): {
  */
 export function getJobsForRoad(roadId: string): AfterCareJob[] {
   const jobs = getAfterCareJobs();
-  return jobs.filter(j => 
-    j.road_id.toUpperCase() === roadId.toUpperCase() && 
-    j.status !== 'archived' &&
-    !j.signs.every(s => calculateSignStatus(s) === 'retrieved')
+  return jobs.filter(
+    (j) =>
+      j.road_id.toUpperCase() === roadId.toUpperCase() &&
+      j.status !== 'archived' &&
+      !j.signs.every((s) => calculateSignStatus(s) === 'retrieved')
   );
 }
 
@@ -744,20 +761,25 @@ export function getJobsForRoad(roadId: string): AfterCareJob[] {
  * Get nearby signs for drive page (both ahead and behind, both carriageways)
  * Uses calculated status to include signs due for retrieval or maintenance
  */
-export function getNearbySigns(roadId: string, currentSlk: number, direction: 'increasing' | 'decreasing', maxDistanceKm: number = 5): (AfterCareSign & { job: AfterCareJob; position: 'ahead' | 'behind' })[] {
+export function getNearbySigns(
+  roadId: string,
+  currentSlk: number,
+  direction: 'increasing' | 'decreasing',
+  maxDistanceKm: number = 5
+): (AfterCareSign & { job: AfterCareJob; position: 'ahead' | 'behind' })[] {
   const jobs = getJobsForRoad(roadId);
   const signs: (AfterCareSign & { job: AfterCareJob; position: 'ahead' | 'behind' })[] = [];
-  
+
   for (const job of jobs) {
     for (const sign of job.signs) {
       // Use calculated status - only skip if actually retrieved
       const calculatedStatus = calculateSignStatus(sign);
       if (calculatedStatus === 'retrieved') continue;
-      
+
       // Calculate distance in km
       const distanceKm = Math.abs(sign.slk - currentSlk);
       if (distanceKm > maxDistanceKm) continue;
-      
+
       // Determine if sign is ahead or behind based on travel direction
       let position: 'ahead' | 'behind';
       if (direction === 'increasing') {
@@ -765,18 +787,18 @@ export function getNearbySigns(roadId: string, currentSlk: number, direction: 'i
       } else {
         position = sign.slk <= currentSlk ? 'ahead' : 'behind';
       }
-      
+
       signs.push({ ...sign, job, position });
     }
   }
-  
+
   // Sort by distance (closest first)
   signs.sort((a, b) => {
     const distA = Math.abs(a.slk - currentSlk);
     const distB = Math.abs(b.slk - currentSlk);
     return distA - distB;
   });
-  
+
   return signs;
 }
 
@@ -794,38 +816,34 @@ export type MapFilter = 'all' | 'retrieval' | 'maintenance';
  * Uses double-slash format to start from current location (A, B, C, D waypoints)
  */
 export function generateMapsUrl(job: AfterCareJob, filter: MapFilter = 'all'): string | null {
-  // Filter signs based on calculated status (not stored status)
-  let filteredSigns = job.signs.filter(s => {
-    if (!s.lat || !s.lon) return false;
-    const calculatedStatus = calculateSignStatus(s);
-    return calculatedStatus !== 'retrieved';
-  });
-  
+  // Compute status once per sign, then filter (was 3 separate filter passes calling calculateSignStatus each time)
+  const signsWithStatus = job.signs
+    .filter((s) => s.lat && s.lon)
+    .map((s) => ({ sign: s, status: calculateSignStatus(s) }));
+
+  let filteredSigns = signsWithStatus.filter(({ status }) => status !== 'retrieved');
+
   if (filter === 'retrieval') {
-    filteredSigns = filteredSigns.filter(s => {
-      const calculatedStatus = calculateSignStatus(s);
-      return calculatedStatus === 'due-retrieval';
-    });
+    filteredSigns = signsWithStatus.filter(({ status }) => status === 'due-retrieval');
   } else if (filter === 'maintenance') {
-    filteredSigns = filteredSigns.filter(s => {
-      const calculatedStatus = calculateSignStatus(s);
-      return calculatedStatus === 'due-maintenance' || calculatedStatus === 'maintained';
-    });
+    filteredSigns = signsWithStatus.filter(
+      ({ status }) => status === 'due-maintenance' || status === 'maintained'
+    );
   }
-  
+
   if (filteredSigns.length === 0) return null;
-  
+
   if (filteredSigns.length === 1) {
-    const sign = filteredSigns[0];
+    const { sign } = filteredSigns[0];
     // Single destination - start from current location
     return `https://www.google.com/maps/dir//${sign.lat},${sign.lon}`;
   }
-  
+
   // Multiple pins - use directions format starting from current location
   // Sort by SLK for logical route order
-  const sortedSigns = [...filteredSigns].sort((a, b) => a.slk - b.slk);
-  const coords = sortedSigns.map(s => `${s.lat},${s.lon}`).join('/');
-  
+  const sortedSigns = [...filteredSigns].sort((a, b) => a.sign.slk - b.sign.slk);
+  const coords = sortedSigns.map(({ sign }) => `${sign.lat},${sign.lon}`).join('/');
+
   // Double-slash format: /dir// = start from current location
   // This shows waypoints as A (current), B, C, D etc.
   return `https://www.google.com/maps/dir//${coords}`;
@@ -845,7 +863,7 @@ export function getSignStatusCounts(job: AfterCareJob): {
   let retrieved = 0;
   let dueRetrieval = 0;
   let dueMaintenance = 0;
-  
+
   for (const sign of job.signs) {
     const calculatedStatus = calculateSignStatus(sign);
     if (calculatedStatus === 'retrieved') {
@@ -856,9 +874,9 @@ export function getSignStatusCounts(job: AfterCareJob): {
       dueMaintenance++;
     }
   }
-  
+
   const active = total - retrieved - dueRetrieval - dueMaintenance;
-  
+
   return { total, active, dueRetrieval, dueMaintenance, retrieved };
 }
 
@@ -871,14 +889,14 @@ export function generateShareText(job: AfterCareJob): string {
   lines.push(`Road: ${job.road_id} - ${job.road_name}`);
   lines.push(`Created: ${formatAusDate(job.date_created)}`);
   lines.push(`Status: ${getStatusInfo(calculateJobStatus(job)).label}`);
-  
+
   if (job.notes) {
     lines.push(`Notes: ${job.notes}`);
   }
-  
+
   lines.push('');
   lines.push(`Signs (${job.signs.length}):`);
-  
+
   for (const sign of job.signs) {
     const dirLabel = sign.direction === 'True Left' ? 'TL' : 'TR';
     lines.push(`  SLK ${sign.slk.toFixed(2)}: ${sign.sign_type} (${dirLabel})`);
@@ -886,7 +904,7 @@ export function generateShareText(job: AfterCareJob): string {
       lines.push(`    ${sign.description}`);
     }
   }
-  
+
   return lines.join('\n');
 }
 
@@ -900,21 +918,24 @@ export function exportAllJobs(): string {
 /**
  * Import jobs from JSON string
  */
-export function importJobs(json: string, replace: boolean = false): { success: boolean; count: number; error?: string } {
+export function importJobs(
+  json: string,
+  replace: boolean = false
+): { success: boolean; count: number; error?: string } {
   try {
     const imported = JSON.parse(json) as AfterCareJob[];
-    
+
     if (!Array.isArray(imported)) {
       return { success: false, count: 0, error: 'Invalid format' };
     }
-    
+
     // Validate structure
     for (const job of imported) {
       if (!job.id || !job.road_id || !job.signs) {
         return { success: false, count: 0, error: 'Invalid job structure' };
       }
     }
-    
+
     if (replace) {
       saveAfterCareJobs(imported);
     } else {
@@ -922,13 +943,13 @@ export function importJobs(json: string, replace: boolean = false): { success: b
       // Merge, avoiding duplicates by ID
       const merged = [...existing];
       for (const job of imported) {
-        if (!merged.find(j => j.id === job.id)) {
+        if (!merged.find((j) => j.id === job.id)) {
           merged.push(job);
         }
       }
       saveAfterCareJobs(merged);
     }
-    
+
     return { success: true, count: imported.length };
   } catch (e) {
     return { success: false, count: 0, error: 'Failed to parse JSON' };

@@ -33,6 +33,7 @@ import {
   PREPARE_TO_STOP_DISTANCE_M,
   ADV_QUEUE_WARNING_DISTANCE_M,
 } from '@/lib/max-hold-time';
+import { getShuttleFlowLength, getLaneCapacity } from '@/lib/traffic-calculations';
 import {
   initDB,
   isOfflineDataAvailable,
@@ -74,6 +75,7 @@ import {
   formatAusDate,
   type TrafficCountRecord,
 } from '@/lib/traffic-counter-storage';
+import { WeatherData, WarningItem, WarningData, TrafficData, SavedLocation } from '@/types/shared';
 
 // Helper function to format distance for emergency messages
 // Rounds to nearest 100m when under 1km for easier communication
@@ -161,79 +163,6 @@ interface WorkZoneResult {
   };
 }
 
-interface WeatherData {
-  location: string;
-  current: {
-    temp: number;
-    humidity: number;
-    windSpeed: number;
-    windDir: string;
-    windGust: number;
-    condition: string;
-  };
-  sun: {
-    sunrise: string;
-    sunset: string;
-    daylightHours: string;
-    uvIndex: number;
-    uvLevel: string;
-  };
-  forecast: Array<{
-    time: string;
-    temp: number;
-    windSpeed: number;
-    windDir: string;
-    condition: string;
-  }>;
-  fromCache?: boolean;
-  cachedAt?: number;
-  source?: string;
-  dataUnavailable?: boolean; // True when offline mode but no cached data available
-  cachedLocation?: { lat: number; lon: number };
-}
-
-interface WarningItem {
-  title: string;
-  description: string;
-  link: string;
-  pubDate: string;
-  category: string;
-  urgency: string;
-  severity: string;
-}
-
-interface WarningData {
-  warnings: WarningItem[];
-  count: number;
-  lastUpdated: string;
-  source: string;
-}
-
-interface TrafficData {
-  road_id: string;
-  road_name?: string;
-  aadt: number;
-  aadt_year: string;
-  heavy_vehicle_percent: number;
-  peak_hour_volume: number;
-  aadt_weekday?: number;
-  peak_hour_volume_weekday?: number;
-  heavy_vehicle_weekday_pct?: number;
-  source: string;
-  distance_to_site?: number;
-  nearest_sites?: Array<{
-    site_no: string;
-    location: string;
-    year: string;
-    aadt: number;
-    heavy_percent: number;
-    distance_km: number | null;
-  }>;
-  note?: string;
-  fromCache?: boolean;
-  cachedAt?: number;
-}
-
 interface Place {
   name: string;
   distance: string;
@@ -289,6 +218,12 @@ interface CrossRoad {
 export default function Home() {
   const [regions, setRegions] = useState<string[]>([]);
   const [selectedRegion, setSelectedRegion] = useState<string>('');
+  const selectedRegionRef = useRef<string>('');
+  // Keep ref in sync with state to avoid stale closures in async functions
+  const updateSelectedRegion = useCallback((region: string) => {
+    selectedRegionRef.current = region;
+    setSelectedRegion(region);
+  }, []);
   const [roads, setRoads] = useState<Road[]>([]);
   const [selectedRoad, setSelectedRoad] = useState<string>('');
   const [startSlk, setStartSlk] = useState<string>('');
@@ -310,18 +245,6 @@ export default function Home() {
   const [roadInfo, setRoadInfo] = useState<Road | null>(null);
   const [isSinglePoint, setIsSinglePoint] = useState<boolean>(false);
   const [exporting, setExporting] = useState<boolean>(false);
-
-  // Saved locations for quick recall
-  interface SavedLocation {
-    id: string;
-    name: string;
-    road_id: string;
-    road_name: string;
-    region: string;
-    start_slk: number;
-    end_slk: number | null;
-    created_at: string;
-  }
 
   const [savedLocations, setSavedLocations] = useState<SavedLocation[]>(() => {
     if (typeof window !== 'undefined') {
@@ -363,9 +286,12 @@ export default function Home() {
   };
 
   const recallLocation = async (loc: SavedLocation) => {
+    // Use ref to avoid stale closure — always reads latest region value
+    const currentRegion = selectedRegionRef.current;
+
     // If the region is different, we need to switch regions first
-    if (loc.region && loc.region !== selectedRegion) {
-      setSelectedRegion(loc.region);
+    if (loc.region && loc.region !== currentRegion) {
+      updateSelectedRegion(loc.region);
       // The roads will be loaded by the useEffect that watches selectedRegion
       // We need to wait for the roads to load
       await new Promise((resolve) => setTimeout(resolve, 500));
@@ -373,7 +299,7 @@ export default function Home() {
 
     // Directly call getWorkZoneInfo — fills the form AND loads the work zone
     await getWorkZoneInfo(
-      loc.region || selectedRegion,
+      loc.region || selectedRegionRef.current,
       loc.road_id,
       loc.start_slk.toString(),
       loc.end_slk ? loc.end_slk.toString() : '',
@@ -736,6 +662,7 @@ export default function Home() {
   // Fetch regions on mount
   useEffect(() => {
     fetchRegions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Restore state from sessionStorage when returning from tracking
@@ -752,7 +679,7 @@ export default function Home() {
 
         // Set region to trigger roads fetch
         if (params.region) {
-          setSelectedRegion(params.region);
+          updateSelectedRegion(params.region);
         }
 
         // Don't clear params here - keep them until user clicks Reset
@@ -764,13 +691,14 @@ export default function Home() {
         setIsRestoringUI(false);
       }
     }
-  }, []);
+  }, [updateSelectedRegion]);
 
   // Fetch roads when region changes
   useEffect(() => {
     if (selectedRegion) {
       fetchRoads(selectedRegion);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRegion]);
 
   const checkOfflineStatus = async () => {
@@ -2770,11 +2698,11 @@ export default function Home() {
         // Check for saved default region first
         const savedDefault = localStorage.getItem('defaultRegion');
         if (savedDefault && storedRegions.includes(savedDefault)) {
-          setSelectedRegion(savedDefault);
+          updateSelectedRegion(savedDefault);
         } else if (storedRegions.includes('Wheatbelt')) {
-          setSelectedRegion('Wheatbelt');
+          updateSelectedRegion('Wheatbelt');
         } else {
-          setSelectedRegion(storedRegions[0]);
+          updateSelectedRegion(storedRegions[0]);
         }
         setLoadingRegions(false);
         return; // Exit early, no need to fetch from API
@@ -2791,11 +2719,11 @@ export default function Home() {
             setRegions(metaData.regions);
             const savedDefault = localStorage.getItem('defaultRegion');
             if (savedDefault && metaData.regions.includes(savedDefault)) {
-              setSelectedRegion(savedDefault);
+              updateSelectedRegion(savedDefault);
             } else if (metaData.regions.includes('Wheatbelt')) {
-              setSelectedRegion('Wheatbelt');
+              updateSelectedRegion('Wheatbelt');
             } else {
-              setSelectedRegion(metaData.regions[0]);
+              updateSelectedRegion(metaData.regions[0]);
             }
           }
         }
@@ -2822,9 +2750,9 @@ export default function Home() {
               setRegions(metaData.regions);
               const savedDefault = localStorage.getItem('defaultRegion');
               if (savedDefault && metaData.regions.includes(savedDefault)) {
-                setSelectedRegion(savedDefault);
+                updateSelectedRegion(savedDefault);
               } else {
-                setSelectedRegion(metaData.regions[0]);
+                updateSelectedRegion(metaData.regions[0]);
               }
             }
           }
@@ -2836,11 +2764,11 @@ export default function Home() {
           // Check for saved default region first
           const savedDefault = localStorage.getItem('defaultRegion');
           if (savedDefault && data.regions.includes(savedDefault)) {
-            setSelectedRegion(savedDefault);
+            updateSelectedRegion(savedDefault);
           } else if (data.regions.includes('Wheatbelt')) {
-            setSelectedRegion('Wheatbelt');
+            updateSelectedRegion('Wheatbelt');
           } else {
-            setSelectedRegion(data.regions[0]);
+            updateSelectedRegion(data.regions[0]);
           }
         }
       } catch (fetchErr) {
@@ -2854,11 +2782,11 @@ export default function Home() {
             setRegions(metaData.regions);
             const savedDefault = localStorage.getItem('defaultRegion');
             if (savedDefault && metaData.regions.includes(savedDefault)) {
-              setSelectedRegion(savedDefault);
+              updateSelectedRegion(savedDefault);
             } else if (metaData.regions.includes('Wheatbelt')) {
-              setSelectedRegion('Wheatbelt');
+              updateSelectedRegion('Wheatbelt');
             } else {
-              setSelectedRegion(metaData.regions[0]);
+              updateSelectedRegion(metaData.regions[0]);
             }
           }
         }
@@ -2873,7 +2801,7 @@ export default function Home() {
           const metaData = await metaResponse.json();
           if (metaData.regions && metaData.regions.length > 0) {
             setRegions(metaData.regions);
-            setSelectedRegion(metaData.regions[0]);
+            updateSelectedRegion(metaData.regions[0]);
           }
         }
       } catch {
@@ -3008,6 +2936,7 @@ export default function Home() {
         setIsRestoringUI(false); // Show inputs are hidden by result now
       }, 100);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roads]);
 
   // Main function to get work zone info - can be called with parameters or from UI
@@ -3042,7 +2971,7 @@ export default function Home() {
 
     // Set state variables
     if (region && region !== selectedRegion) {
-      setSelectedRegion(region);
+      updateSelectedRegion(region);
     }
     setSelectedRoad(roadId);
     setStartSlk(startSlkVal);
@@ -3186,7 +3115,7 @@ export default function Home() {
     setPlaces(null);
     setCrossRoads([]);
     setError('');
-    setSelectedRegion('');
+    updateSelectedRegion('');
     setSelectedRoad('');
     setStartSlk('');
     setEndSlk('');
@@ -3856,7 +3785,7 @@ export default function Home() {
 
         // Set region based on road type
         if (data.network_type === 'Local Road') {
-          setSelectedRegion('Local');
+          updateSelectedRegion('Local');
         }
 
         // Clear any previous error
@@ -4064,11 +3993,6 @@ export default function Home() {
 
   // ============ SET DISTANCE FUNCTIONS ============
 
-  // Calculate distance between two GPS points in meters
-  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    return haversineDistance(lat1, lon1, lat2, lon2);
-  };
-
   // Start Set Distance tracking
   const startSetDistance = async () => {
     if (!navigator.geolocation) {
@@ -4146,7 +4070,7 @@ export default function Home() {
 
         // Calculate distance from reference (use ref to avoid stale closure)
         if (setDistanceRefPointRef.current) {
-          const dist = calculateDistance(
+          const dist = haversineDistance(
             setDistanceRefPointRef.current.lat,
             setDistanceRefPointRef.current.lon,
             lat,
@@ -4446,7 +4370,7 @@ export default function Home() {
               <Select
                 value={selectedRegion}
                 onValueChange={(value) => {
-                  setSelectedRegion(value);
+                  updateSelectedRegion(value);
                   // Clear GPS road info if manually changing region
                   if (value !== 'Local' || !gpsRoadInfo) {
                     setGpsRoadInfo(null);
@@ -5429,28 +5353,6 @@ export default function Home() {
 
                                 {/* Calculated Values, Shuttle Flow, Max Hold Time — same as MRWA */}
                                 {(() => {
-                                  const getShuttleFlowLength = (
-                                    vph: number
-                                  ): { length: string; risk: boolean } => {
-                                    if (vph >= 701) return { length: '70m', risk: false };
-                                    if (vph >= 601) return { length: '100m', risk: false };
-                                    if (vph >= 501) return { length: '150m', risk: false };
-                                    if (vph >= 401) return { length: '250m', risk: false };
-                                    if (vph >= 351) return { length: '400m', risk: false };
-                                    if (vph >= 301) return { length: '600m', risk: false };
-                                    if (vph >= 251) return { length: '800m', risk: false };
-                                    if (vph >= 201) return { length: '1200m', risk: true };
-                                    if (vph >= 151) return { length: '1600m', risk: true };
-                                    return { length: '2200m', risk: true };
-                                  };
-
-                                  const getLaneCapacity = (vph: number): string => {
-                                    if (vph <= 1000) return '1 lane';
-                                    if (vph <= 2000) return '2 lanes';
-                                    if (vph <= 3000) return '3 lanes';
-                                    return '4+ lanes';
-                                  };
-
                                   const shuttleFlow = getShuttleFlowLength(reducedVph);
                                   const laneCapacity = getLaneCapacity(
                                     Math.round(vphOneDir * reductionFactor)
@@ -5841,28 +5743,6 @@ export default function Home() {
                                 heavyPct = ov.heavy_percentage || 0;
                                 overrideActive = true;
                               }
-
-                              const getShuttleFlowLength = (
-                                vph: number
-                              ): { length: string; risk: boolean } => {
-                                if (vph >= 701) return { length: '70m', risk: false };
-                                if (vph >= 601) return { length: '100m', risk: false };
-                                if (vph >= 501) return { length: '150m', risk: false };
-                                if (vph >= 401) return { length: '250m', risk: false };
-                                if (vph >= 351) return { length: '400m', risk: false };
-                                if (vph >= 301) return { length: '600m', risk: false };
-                                if (vph >= 251) return { length: '800m', risk: false };
-                                if (vph >= 201) return { length: '1200m', risk: true };
-                                if (vph >= 151) return { length: '1600m', risk: true };
-                                return { length: '2200m', risk: true };
-                              };
-
-                              const getLaneCapacity = (vph: number): string => {
-                                if (vph <= 1000) return '1 lane';
-                                if (vph <= 2000) return '2 lanes';
-                                if (vph <= 3000) return '3 lanes';
-                                return '4+ lanes';
-                              };
 
                               const reductionFactor = heavyPct > 10 ? 0.8 : 1;
                               const reducedVph = Math.round(vphBothDir * reductionFactor);
@@ -6337,33 +6217,6 @@ export default function Home() {
                     )}
                     {/* Weather Warnings - Live from Bureau of Meteorology */}
                     <WarningsSection state="WA" enabled={true} />
-                    {/* Weather Warnings */}
-                    {warnings && warnings.warnings.length > 0 && (
-                      <div className="bg-red-900/30 border border-red-500/50 rounded p-3 mb-4">
-                        <h4 className="text-sm font-semibold text-red-400 mb-2">
-                          ⚠️ Weather Warnings
-                        </h4>
-                        <div className="space-y-2">
-                          {warnings.warnings.map((warning, i) => (
-                            <div key={i} className="text-sm">
-                              <a
-                                href={warning.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-red-300 hover:text-red-200 underline"
-                              >
-                                {warning.title}
-                              </a>
-                              {warning.description && (
-                                <p className="text-xs text-gray-400 mt-0.5 line-clamp-2">
-                                  {warning.description}
-                                </p>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
 
                     {/* Wind Gust Alert */}
                     {weather.current.windGust >= windGustThreshold && (

@@ -1,7 +1,70 @@
 # TC Work Zone Locator - Work Log
 
-> **Last Updated:** 2026-03-29
-> **Current Version:** RC 1.9.7
+> **Last Updated:** 2026-03-31
+> **Current Version:** RC 1.10.0
+
+---
+
+## Task ID: 2026-03-31-001
+
+**Agent:** Main Agent
+**Task:** Phase 4 Optimization — Type Safety & Lint Hygiene (RC 1.10.0)
+
+### Work Log:
+
+- **4a: Enabled `noImplicitAny: true` in tsconfig**
+  - Changed `noImplicitAny: false` → `true`
+  - Fixed 4 implicit any type errors:
+    - `src/app/api/incidents/route.ts:206` — Added `(i: RoadIncident)` type annotation
+    - `src/app/api/speed-compare/route.ts:136` — Added `(s: number)` type annotation
+    - `src/lib/mrwa_api.ts:656` — Added `(r: string)` type annotation
+    - `src/lib/offline-db.ts:1018` — Added `(seg: { start_slk: number; end_slk: number })` type annotation
+
+- **4b: Addressed 18 ESLint exhaustive-deps warnings**
+  - **3 genuine bugs fixed:**
+    - `src/app/manual/page.tsx:435` — Added `sections` to useMemo deps (was stale without it)
+    - `src/app/page.tsx:693` — Added `updateSelectedRegion` to useEffect deps (stable identity from useCallback)
+    - `src/hooks/useGpsTracking.ts:456` — Added `state.roadInfo` to useEffect deps (prevents wrong speed limit when switching roads at same SLK)
+  - **14 intentional omissions documented with eslint-disable comments:**
+    - Mount-only effects (5): `fetchRegions`, `loadData` (×2), `fetchRoads`, `getWorkZoneInfo` — unstable functions that should only run once
+    - Throttled fetch effects (3): `fetchIncidents`, `fetchWarnings` (×2) — unstable functions with intentional exclusion of throttle guards
+    - Auto-expand on initial load (2): `expanded` excluded to avoid re-expanding when user collapses sections
+    - Reactive trigger deps (2): `jobs` in useMemo, `refreshKey` in useMemo — intentional invalidation triggers
+    - Object identity stability (2): `fullConfig` in useCallback deps — wrapped in `useMemo` for stable identity
+  - **Bonus fix:** Wrapped `fullConfig` in `useMemo(() => ({...DEFAULT, ...config}), [config])` in useGpsTracking.ts, eliminating object identity instability at source
+
+- **4c: Build verification**
+  - TypeScript: 0 errors (with noImplicitAny: true)
+  - ESLint: 0 errors, 0 warnings (down from 18)
+  - Tests: 57 passing
+  - Next.js build: successful
+
+### Files Changed:
+
+- `tsconfig.json` (noImplicitAny: true)
+- `src/app/api/incidents/route.ts` (type annotation)
+- `src/app/api/speed-compare/route.ts` (type annotation)
+- `src/lib/mrwa_api.ts` (type annotation)
+- `src/lib/offline-db.ts` (type annotation)
+- `src/app/manual/page.tsx` (sections useMemo deps + wrapped in useMemo for stable identity)
+- `src/app/page.tsx` (updateSelectedRegion dep + 3 eslint-disable comments)
+- `src/hooks/useGpsTracking.ts` (fullConfig useMemo wrapper + state.roadInfo dep + useMemo import)
+- `src/app/aftercare/page.tsx` (eslint-disable comment)
+- `src/app/drive/nearby-signs/page.tsx` (eslint-disable comment)
+- `src/app/overrides/layout/page.tsx` (eslint-disable comment)
+- `src/app/overrides/map/page.tsx` (eslint-disable comment)
+- `src/components/IncidentWarningBanner.tsx` (eslint-disable comment)
+- `src/components/IncidentsSection.tsx` (2 eslint-disable comments)
+- `src/components/WarningsSection.tsx` (2 eslint-disable comments)
+- `src/components/WeatherWarningBanner.tsx` (eslint-disable comment)
+
+### Stage Summary:
+
+- TypeScript strict mode now fully enabled (noImplicitAny: true + strict: true)
+- ESLint zero-warning baseline achieved (18 → 0)
+- 3 genuine React hooks dependency bugs fixed
+- All 14 intentional omissions documented with justified suppression comments
+- Build, typecheck, lint, tests all clean
 
 ---
 
@@ -4802,3 +4865,95 @@ Task: Documentation Audit, Best Practice Improvements, Code Organization
 - 940 lines of component code extracted
 - 577 lines reduced from page.tsx
 - All standard project files in place
+
+---
+
+Task ID: 1
+Agent: Main Agent
+Task: Phase 1 Code Optimization — Quick Wins (RC 1.10.0)
+
+Work Log:
+
+- Verified Prisma query logging already gated (db.ts) — pre-fixed
+- Verified version already bumped to RC 1.10.0 (SettingsDrawer.tsx, package.json) — pre-fixed
+- Verified calibrate page already imports APP_VERSION from SettingsDrawer — pre-fixed
+- DRY haversine: Removed duplicate haversineDistance from mrwa_api.ts (line 966-975), imported from utils instead
+- DRY haversine: Removed duplicate import and misleading re-export in toilet-map.ts; updated api/toilets/route.ts to import haversineDistanceKm from utils directly
+- Fixed stale version references: RC 1.7.28 → descriptive tags in mrwa_api.ts:489 and nearest-intersections/route.ts:105
+- Gated 5 verbose console.log calls in fire-stations.ts behind NODE_ENV !== 'production'
+- Gated 5 verbose console.log calls in toilet-map.ts behind NODE_ENV !== 'production'
+- Fixed deprecated substr() → slice() in qa-storage.ts:39 and api/qa-saved/route.ts:50
+- Identified 13 unused npm packages via thorough import audit; removed with bun remove
+- Deleted 8 orphaned shadcn/ui wrapper files (input-otp, carousel, aspect-ratio, avatar, menubar, navigation-menu, progress, radio-group)
+- Fixed pre-existing bug: ARCGIS_BASE variable name accidentally renamed to ARCGIS_BASE_SUFFIX
+- Fixed pre-existing bug: aftercare.ts and traffic-counter-storage.ts re-export pattern didn't make names available locally (export { x } from vs import + export)
+- Added missing utility functions to utils.ts: isBrowser, generateId, formatAusDate, toIsoDate
+- Fixed pre-existing syntax error in aftercare/page.tsx (misplaced import)
+- TypeScript type check: 0 errors
+- ESLint: 0 warnings
+- Next.js build: successful
+
+Stage Summary:
+
+- Phase 1 optimization complete: all quick wins applied
+- 13 unused packages removed (~5-10MB bundle savings)
+- 1 duplicate haversine function removed
+- 10 production console.logs gated
+- 2 deprecated substr() calls fixed
+- 2 stale version references updated
+- 4 pre-existing bugs fixed (missing utils, import pattern, variable name, syntax)
+- Build verified clean: tsc, eslint, next build all pass
+
+---
+
+Task ID: 2
+Agent: Main Agent
+Task: Phase 2 Code Optimization — Code Quality Fixes (RC 1.10.0)
+
+Work Log:
+
+- Created src/lib/traffic-calculations.ts with shared getShuttleFlowLength, getLaneCapacity, getHeavyVehicleReductionFactor
+- Removed duplicate getShuttleFlowLength from TrafficSection.tsx (now imports from shared module)
+- Removed 2 inline getShuttleFlowLength + getLaneCapacity copies from page.tsx (now imports from shared module)
+- Fixed stale closure bug in recallLocation: added selectedRegionRef + updateSelectedRegion wrapper to keep ref in sync
+- Replaced all 20 setSelectedRegion() calls with updateSelectedRegion() for ref consistency
+- Fixed weather warnings rendered twice: removed inline warnings block (kept WarningsSection component only)
+- Removed trivial calculateDistance wrapper in page.tsx, replaced call with direct haversineDistance
+- Replaced 13-line haversine reimplementation in api/places/route.ts with import from @/lib/utils
+
+Stage Summary:
+
+- page.tsx reduced from 7,492 → 7,426 lines (-66 lines)
+- 3rd haversine duplicate eliminated (api/places/route.ts)
+- Stale closure bug fixed (recallLocation could use wrong region)
+- Weather warnings no longer rendered twice (eliminated duplicate API fetch)
+- TypeScript: 0 errors, ESLint: 0 warnings, Next.js build: successful
+
+---
+
+Task ID: 3
+Agent: Main Agent
+Task: Phase 3 Optimization — Performance & Code Quality (RC 1.10.0)
+
+Work Log:
+
+- Rewrote SignageMap.tsx: computed calculateSignStatus once per sign using useMemo, eliminated 5 redundant calls per sign per render
+- Rewrote aftercare/map/page.tsx: same optimization, also memoized filter and counts from pre-computed statuses
+- Merged 4 separate .some() loops into single-pass in JobCard (aftercare/page.tsx)
+- Optimized generateMapsUrl in aftercare.ts: pre-compute status once per sign, then filter (was 3 redundant filter passes)
+- Created src/types/shared.ts with canonical WeatherData, WarningItem, WarningData, TrafficData, SavedLocation interfaces
+- Removed ~137 lines of duplicate interface definitions from page.tsx (75 lines), WeatherSection.tsx (37), TrafficSection.tsx (16), SavedLocations.tsx (9)
+- Optimized findIntersectionsInCorridor in offline-db.ts: added SLK range pre-filter + road-level bounding box pre-filter to skip non-overlapping roads early (O(R*S*P*M) → O(filtered_R*S*P*M))
+- Changed ESLint react-hooks/exhaustive-deps from 'off' to 'warn' to safely surface issues
+- Verified: 18 legitimate exhaustive-deps warnings now visible (IncidentsSection, WarningsSection, WeatherWarningBanner, useGpsTracking)
+- TypeScript: 0 errors, ESLint: 0 errors, 18 warnings, Next.js build: successful
+
+Stage Summary:
+
+- calculateSignStatus calls reduced from 5-6×/sign to 1×/sign in all render paths
+- JobCard: 4 .some() loops merged into 1 pass
+- generateMapsUrl: 3 filter passes reduced to 1
+- 137 lines of duplicate interfaces eliminated into single canonical source
+- Intersection search significantly faster with pre-filtering
+- page.tsx further reduced in line count (5 interface blocks removed)
+- Build clean, 18 new warnings are informational (not blocking)

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { APP_VERSION } from '@/components/SettingsDrawer';
 import {
   TrafficCountRecord,
   CountDirection,
@@ -19,8 +20,6 @@ import {
   REDUCTION_FACTORS,
   QUEUE_MULTIPLIERS,
 } from '@/lib/traffic-counter-storage';
-
-const APP_VERSION = 'RC 1.9.9';
 
 // ============================================
 // TYPES

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import {
   calculateSignStatus,
   type AfterCareSign,
   type AfterCareJob,
+  type SignStatus,
 } from '@/lib/aftercare';
 import 'leaflet/dist/leaflet.css';
 
@@ -21,6 +22,21 @@ const TileLayer = dynamic(() => import('react-leaflet').then((mod) => mod.TileLa
 });
 const Marker = dynamic(() => import('react-leaflet').then((mod) => mod.Marker), { ssr: false });
 const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
+
+// Sign with pre-computed status to avoid redundant calculateSignStatus calls
+interface SignWithStatus extends AfterCareSign {
+  status: SignStatus;
+  jobName: string;
+  roadId: string;
+  roadName: string;
+}
+
+// Color by status
+const getColor = (status: SignStatus) => {
+  if (status === 'due-retrieval') return '#ef4444';
+  if (status === 'due-maintenance' || status === 'maintained') return '#eab308';
+  return '#22c55e';
+};
 
 // Create colored circle marker (client-side only)
 const createIcon = (color: string) => {
@@ -36,12 +52,11 @@ const createIcon = (color: string) => {
   });
 };
 
-// Color by status
-const getColor = (sign: AfterCareSign) => {
-  const s = calculateSignStatus(sign);
-  if (s === 'due-retrieval') return '#ef4444';
-  if (s === 'due-maintenance' || s === 'maintained') return '#eab308';
-  return '#22c55e';
+// Status label for display
+const getStatusLabel = (status: SignStatus) => {
+  if (status === 'due-retrieval') return '🔴 Due for Retrieval';
+  if (status === 'due-maintenance' || status === 'maintained') return '🟡 Due for Maintenance';
+  return '🟢 Active';
 };
 
 export default function SignageMapPage() {
@@ -54,36 +69,48 @@ export default function SignageMapPage() {
     setMounted(true);
   }, []);
 
-  // Get signs with GPS based on filter
-  const signs = jobs.flatMap((job) =>
-    job.signs
-      .filter((s) => {
-        if (!s.lat || !s.lon) return false;
-        const status = calculateSignStatus(s);
-        if (status === 'retrieved') return false;
-        if (filter === 'all') return true;
-        if (filter === 'retrieval') return status === 'due-retrieval';
-        if (filter === 'maintenance')
-          return status === 'due-maintenance' || status === 'maintained';
-        if (filter === 'active') return status === 'placed';
-        return true;
-      })
-      .map((s) => ({ ...s, jobName: job.job_name, roadId: job.road_id, roadName: job.road_name }))
-  );
+  // Compute status once per sign (was 6 calls per sign per render)
+  const signsWithStatus = useMemo(() => {
+    const result: SignWithStatus[] = [];
+    for (const job of jobs) {
+      for (const s of job.signs) {
+        if (s.lat && s.lon) {
+          result.push({
+            ...s,
+            status: calculateSignStatus(s),
+            jobName: job.job_name,
+            roadId: job.road_id,
+            roadName: job.road_name,
+          });
+        }
+      }
+    }
+    return result;
+  }, [jobs]);
 
-  // Count by status
-  const counts = { all: 0, retrieval: 0, maintenance: 0, active: 0 };
-  jobs.forEach((job) =>
-    job.signs.forEach((s) => {
-      if (!s.lat || !s.lon) return;
-      const status = calculateSignStatus(s);
-      if (status === 'retrieved') return;
-      counts.all++;
-      if (status === 'due-retrieval') counts.retrieval++;
-      if (status === 'due-maintenance' || status === 'maintained') counts.maintenance++;
-      if (status === 'placed') counts.active++;
-    })
-  );
+  // Filter based on selected filter
+  const signs = useMemo(() => {
+    if (filter === 'all') return signsWithStatus;
+    return signsWithStatus.filter((s) => {
+      if (filter === 'retrieval') return s.status === 'due-retrieval';
+      if (filter === 'maintenance')
+        return s.status === 'due-maintenance' || s.status === 'maintained';
+      if (filter === 'active') return s.status === 'placed';
+      return true;
+    });
+  }, [signsWithStatus, filter]);
+
+  // Count by status (from pre-computed statuses — zero extra calculateSignStatus calls)
+  const counts = useMemo(() => {
+    const c = { all: 0, retrieval: 0, maintenance: 0, active: 0 };
+    for (const s of signsWithStatus) {
+      c.all++;
+      if (s.status === 'due-retrieval') c.retrieval++;
+      else if (s.status === 'due-maintenance' || s.status === 'maintained') c.maintenance++;
+      else if (s.status === 'placed') c.active++;
+    }
+    return c;
+  }, [signsWithStatus]);
 
   if (!mounted)
     return (
@@ -165,7 +192,7 @@ export default function SignageMapPage() {
                 <Marker
                   key={sign.id}
                   position={[sign.lat!, sign.lon!]}
-                  icon={createIcon(getColor(sign))}
+                  icon={createIcon(getColor(sign.status))}
                 >
                   <Popup>
                     <div className="text-sm min-w-[180px]">
@@ -184,13 +211,8 @@ export default function SignageMapPage() {
                       {sign.description && (
                         <div className="text-gray-600 text-xs mt-1">{sign.description}</div>
                       )}
-                      <div className="mt-2 pt-1 border-t" style={{ color: getColor(sign) }}>
-                        {calculateSignStatus(sign) === 'due-retrieval'
-                          ? '🔴 Due for Retrieval'
-                          : calculateSignStatus(sign) === 'due-maintenance' ||
-                              calculateSignStatus(sign) === 'maintained'
-                            ? '🟡 Due for Maintenance'
-                            : '🟢 Active'}
+                      <div className="mt-2 pt-1 border-t" style={{ color: getColor(sign.status) }}>
+                        {getStatusLabel(sign.status)}
                       </div>
                     </div>
                   </Popup>

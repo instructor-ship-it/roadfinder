@@ -112,12 +112,6 @@ export async function findCrossRoad(
     // Extract multiple road name variations for flexible matching
     const roadNameVariations = getRoadNameVariations(currentRoadName);
 
-    // Debug: log road name variations
-    console.log(
-      `[RC 1.7.28] Cross road search for "${currentRoadName}" - variations:`,
-      roadNameVariations
-    );
-
     // Filter out invalid intersections (end/start roads)
     const validIntersections: IntersectionAPI[] = data.intersections.filter(
       (int: IntersectionAPI) => {
@@ -130,14 +124,6 @@ export async function findCrossRoad(
     const matchingIntersections = validIntersections.filter((int: IntersectionAPI) => {
       const nodeName = int.nodeName.toLowerCase();
       return roadNameVariations.some((variation) => nodeName.includes(variation));
-    });
-
-    // Debug: log matching intersections
-    console.log(
-      `[RC 1.7.28] Found ${matchingIntersections.length} matching intersections for "${currentRoadName}":`
-    );
-    matchingIntersections.slice(0, 5).forEach((int, i) => {
-      console.log(`  ${i + 1}. ${int.nodeName} (${int.distanceM}m)`);
     });
 
     // Step 2: For matching intersections, extract the cross road

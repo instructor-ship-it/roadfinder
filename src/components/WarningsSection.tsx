@@ -2,7 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronRight, AlertTriangle, Loader2, ExternalLink, Wind, CloudRain, Thermometer } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronRight,
+  AlertTriangle,
+  Loader2,
+  ExternalLink,
+  Wind,
+  CloudRain,
+  Thermometer,
+} from 'lucide-react';
 
 interface BomWarning {
   id: string;
@@ -43,6 +52,7 @@ export function WarningsSection({ state = 'WA', regions, enabled = true }: Warni
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
+  // Fetch warnings — fetchWarnings is unstable; state/regions/enabled are correct triggers
   useEffect(() => {
     if (!enabled) return;
     fetchWarnings();
@@ -50,13 +60,15 @@ export function WarningsSection({ state = 'WA', regions, enabled = true }: Warni
     // Refresh every 5 minutes
     const interval = setInterval(fetchWarnings, 5 * 60 * 1000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, regions, enabled]);
 
-  // Auto-expand when warnings are loaded
+  // Auto-expand on initial load only — expanded excluded to avoid re-expanding on user collapse
   useEffect(() => {
     if (warnings.length > 0 && !expanded) {
       setExpanded(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [warnings.length]);
 
   async function fetchWarnings() {
@@ -94,7 +106,7 @@ export function WarningsSection({ state = 'WA', regions, enabled = true }: Warni
           border: 'border-purple-500/50',
           text: 'text-purple-400',
           icon: '🚨',
-          label: 'EMERGENCY'
+          label: 'EMERGENCY',
         };
       case 'warning':
         return {
@@ -102,7 +114,7 @@ export function WarningsSection({ state = 'WA', regions, enabled = true }: Warni
           border: 'border-red-500/50',
           text: 'text-red-400',
           icon: '🔴',
-          label: 'WARNING'
+          label: 'WARNING',
         };
       case 'watch':
         return {
@@ -110,7 +122,7 @@ export function WarningsSection({ state = 'WA', regions, enabled = true }: Warni
           border: 'border-orange-500/50',
           text: 'text-orange-400',
           icon: '🟠',
-          label: 'WATCH'
+          label: 'WATCH',
         };
       default:
         return {
@@ -118,7 +130,7 @@ export function WarningsSection({ state = 'WA', regions, enabled = true }: Warni
           border: 'border-blue-500/50',
           text: 'text-blue-400',
           icon: '🔵',
-          label: 'ADVICE'
+          label: 'ADVICE',
         };
     }
   }
@@ -182,10 +194,10 @@ export function WarningsSection({ state = 'WA', regions, enabled = true }: Warni
   function formatIssuedTime(dateStr: string): string {
     try {
       const date = new Date(dateStr);
-      return date.toLocaleTimeString('en-AU', { 
-        hour: 'numeric', 
+      return date.toLocaleTimeString('en-AU', {
+        hour: 'numeric',
         minute: '2-digit',
-        hour12: true 
+        hour12: true,
       });
     } catch {
       return dateStr;
@@ -193,9 +205,9 @@ export function WarningsSection({ state = 'WA', regions, enabled = true }: Warni
   }
 
   // Count by severity
-  const emergencyCount = warnings.filter(w => w.severity === 'emergency').length;
-  const warningCount = warnings.filter(w => w.severity === 'warning').length;
-  const watchCount = warnings.filter(w => w.severity === 'watch').length;
+  const emergencyCount = warnings.filter((w) => w.severity === 'emergency').length;
+  const warningCount = warnings.filter((w) => w.severity === 'warning').length;
+  const watchCount = warnings.filter((w) => w.severity === 'watch').length;
 
   if (!enabled) return null;
 
@@ -212,7 +224,9 @@ export function WarningsSection({ state = 'WA', regions, enabled = true }: Warni
           ) : (
             <ChevronRight className="h-4 w-4 text-gray-400" />
           )}
-          <AlertTriangle className={`h-4 w-4 ${warnings.length > 0 ? 'text-amber-400' : 'text-gray-400'}`} />
+          <AlertTriangle
+            className={`h-4 w-4 ${warnings.length > 0 ? 'text-amber-400' : 'text-gray-400'}`}
+          />
           <span className="font-medium text-sm">
             🌩️ Weather Warnings
             {warnings.length > 0 && (
@@ -266,12 +280,9 @@ export function WarningsSection({ state = 'WA', regions, enabled = true }: Warni
                 const styles = getSeverityStyles(warning.severity);
                 const warningIcon = getWarningIcon(warning.type);
                 const typeLabel = getWarningTypeLabel(warning.type);
-                
+
                 return (
-                  <div
-                    key={warning.id}
-                    className={`p-3 ${styles.bg} border-l-2 ${styles.border}`}
-                  >
+                  <div key={warning.id} className={`p-3 ${styles.bg} border-l-2 ${styles.border}`}>
                     {/* Header row */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex items-center gap-2">
@@ -288,9 +299,7 @@ export function WarningsSection({ state = 'WA', regions, enabled = true }: Warni
                     {/* Warning type & icon */}
                     <div className="mt-2 flex items-center gap-2">
                       <span className="text-xl">{warningIcon}</span>
-                      <span className={`text-sm font-medium ${styles.text}`}>
-                        {typeLabel}
-                      </span>
+                      <span className={`text-sm font-medium ${styles.text}`}>{typeLabel}</span>
                     </div>
 
                     {/* Affected regions */}

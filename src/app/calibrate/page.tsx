@@ -1,41 +1,42 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useCallback } from 'react'
-import { Button } from '@/components/ui/button'
+import { useState, useEffect, useCallback } from 'react';
+import { Button } from '@/components/ui/button';
+import { APP_VERSION } from '@/components/SettingsDrawer';
 
 // Calibration data types
 interface CalibrationCapture {
-  timestamp: string
-  buttonType: 'target' | 'pass'
-  runNumber: number
-  targetSpeed: number
-  calculatedSlk: number
-  gpsLat: number
-  gpsLon: number
-  gpsAccuracy: number
-  gpsSpeed: number
-  gpsHeading: number | null
+  timestamp: string;
+  buttonType: 'target' | 'pass';
+  runNumber: number;
+  targetSpeed: number;
+  calculatedSlk: number;
+  gpsLat: number;
+  gpsLon: number;
+  gpsAccuracy: number;
+  gpsSpeed: number;
+  gpsHeading: number | null;
 }
 
 interface CalibrationResult {
-  runNumber: number
-  targetSpeed: number
-  targetSlk: number
-  passSlk: number
-  slkError: number // km (negative = behind)
-  distanceError: number // meters
-  timeError: number // seconds
-  targetAccuracy: number
-  passAccuracy: number
-  timestamp: string
+  runNumber: number;
+  targetSpeed: number;
+  targetSlk: number;
+  passSlk: number;
+  slkError: number; // km (negative = behind)
+  distanceError: number; // meters
+  timeError: number; // seconds
+  targetAccuracy: number;
+  passAccuracy: number;
+  timestamp: string;
 }
 
 interface CalibrationSettings {
-  lagCompensation: number // seconds
-  calibratedDate: string | null
-  testRuns: number
-  results: CalibrationResult[]
-  rawData: CalibrationCapture[]
+  lagCompensation: number; // seconds
+  calibratedDate: string | null;
+  testRuns: number;
+  results: CalibrationResult[];
+  rawData: CalibrationCapture[];
 }
 
 const DEFAULT_SETTINGS: CalibrationSettings = {
@@ -44,62 +45,61 @@ const DEFAULT_SETTINGS: CalibrationSettings = {
   testRuns: 0,
   results: [],
   rawData: [],
-}
+};
 
-// Version constant
-const APP_VERSION = '5.3.4'
+// Version constant (imported from SettingsDrawer)
 
 export default function CalibratePage() {
-  const [isTracking, setIsTracking] = useState(false)
+  const [isTracking, setIsTracking] = useState(false);
   const [currentPosition, setCurrentPosition] = useState<{
-    lat: number
-    lon: number
-    accuracy: number
-    speed: number
-    heading: number | null
-  } | null>(null)
+    lat: number;
+    lon: number;
+    accuracy: number;
+    speed: number;
+    heading: number | null;
+  } | null>(null);
   const [roadInfo, setRoadInfo] = useState<{
-    road_id: string
-    road_name: string
-    slk: number
-  } | null>(null)
-  const [error, setError] = useState<string>('')
-  
+    road_id: string;
+    road_name: string;
+    slk: number;
+  } | null>(null);
+  const [error, setError] = useState<string>('');
+
   // Calibration state
   const [settings, setSettings] = useState<CalibrationSettings>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('gpsCalibration')
+      const saved = localStorage.getItem('gpsCalibration');
       if (saved) {
         try {
-          return JSON.parse(saved)
+          return JSON.parse(saved);
         } catch (e) {
-          console.error('Failed to load calibration settings:', e)
+          console.error('Failed to load calibration settings:', e);
         }
       }
     }
-    return DEFAULT_SETTINGS
-  })
-  const [targetSpeed, setTargetSpeed] = useState<number>(80)
-  const [runNumber, setRunNumber] = useState<number>(1)
-  const [targetSet, setTargetSet] = useState(false)
-  const [targetData, setTargetData] = useState<CalibrationCapture | null>(null)
-  const [watchId, setWatchId] = useState<number | null>(null)
+    return DEFAULT_SETTINGS;
+  });
+  const [targetSpeed, setTargetSpeed] = useState<number>(80);
+  const [runNumber, setRunNumber] = useState<number>(1);
+  const [targetSet, setTargetSet] = useState(false);
+  const [targetData, setTargetData] = useState<CalibrationCapture | null>(null);
+  const [watchId, setWatchId] = useState<number | null>(null);
 
   // Save settings to localStorage
   const saveSettings = useCallback((newSettings: CalibrationSettings) => {
-    localStorage.setItem('gpsCalibration', JSON.stringify(newSettings))
-    setSettings(newSettings)
-  }, [])
+    localStorage.setItem('gpsCalibration', JSON.stringify(newSettings));
+    setSettings(newSettings);
+  }, []);
 
   // Start GPS tracking
   const startTracking = useCallback(() => {
     if (!navigator.geolocation) {
-      setError('Geolocation not supported')
-      return
+      setError('Geolocation not supported');
+      return;
     }
 
-    setIsTracking(true)
-    setError('')
+    setIsTracking(true);
+    setError('');
 
     const id = navigator.geolocation.watchPosition(
       async (position) => {
@@ -109,55 +109,53 @@ export default function CalibratePage() {
           accuracy: position.coords.accuracy,
           speed: (position.coords.speed ?? 0) * 3.6, // m/s to km/h
           heading: position.coords.heading,
-        }
-        setCurrentPosition(pos)
+        };
+        setCurrentPosition(pos);
 
         // Try to get road info
         try {
-          const response = await fetch(
-            `/api/gps?lat=${pos.lat}&lon=${pos.lon}`
-          )
+          const response = await fetch(`/api/gps?lat=${pos.lat}&lon=${pos.lon}`);
           if (response.ok) {
-            const data = await response.json()
+            const data = await response.json();
             setRoadInfo({
               road_id: data.road_id,
               road_name: data.road_name,
               slk: data.slk,
-            })
+            });
           }
         } catch (e) {
           // Ignore road lookup errors
         }
       },
       (err) => {
-        setError(`GPS Error: ${err.message}`)
+        setError(`GPS Error: ${err.message}`);
       },
       {
         enableHighAccuracy: true,
         maximumAge: 0,
         timeout: 10000,
       }
-    )
+    );
 
-    setWatchId(id)
-  }, [])
+    setWatchId(id);
+  }, []);
 
   // Stop GPS tracking
   const stopTracking = useCallback(() => {
     if (watchId !== null) {
-      navigator.geolocation.clearWatch(watchId)
-      setWatchId(null)
+      navigator.geolocation.clearWatch(watchId);
+      setWatchId(null);
     }
-    setIsTracking(false)
-    setCurrentPosition(null)
-    setRoadInfo(null)
-  }, [watchId])
+    setIsTracking(false);
+    setCurrentPosition(null);
+    setRoadInfo(null);
+  }, [watchId]);
 
   // Capture target position
   const captureTarget = useCallback(() => {
     if (!currentPosition || !roadInfo) {
-      setError('No GPS position available')
-      return
+      setError('No GPS position available');
+      return;
     }
 
     const capture: CalibrationCapture = {
@@ -171,18 +169,18 @@ export default function CalibratePage() {
       gpsAccuracy: currentPosition.accuracy,
       gpsSpeed: currentPosition.speed,
       gpsHeading: currentPosition.heading,
-    }
+    };
 
-    setTargetData(capture)
-    setTargetSet(true)
-    setError('')
-  }, [currentPosition, roadInfo, runNumber, targetSpeed])
+    setTargetData(capture);
+    setTargetSet(true);
+    setError('');
+  }, [currentPosition, roadInfo, runNumber, targetSpeed]);
 
   // Capture pass position and calculate result
   const capturePass = useCallback(() => {
     if (!currentPosition || !roadInfo || !targetData) {
-      setError('Set target first or no GPS position')
-      return
+      setError('Set target first or no GPS position');
+      return;
     }
 
     const passCapture: CalibrationCapture = {
@@ -196,14 +194,15 @@ export default function CalibratePage() {
       gpsAccuracy: currentPosition.accuracy,
       gpsSpeed: currentPosition.speed,
       gpsHeading: currentPosition.heading,
-    }
+    };
 
     // Calculate result
-    const slkError = targetData.calculatedSlk - passCapture.calculatedSlk // positive = behind
-    const distanceError = slkError * 1000 // km to meters
-    const timeError = currentPosition.speed > 0 
-      ? Math.abs(distanceError) / (currentPosition.speed / 3.6) // seconds
-      : 0
+    const slkError = targetData.calculatedSlk - passCapture.calculatedSlk; // positive = behind
+    const distanceError = slkError * 1000; // km to meters
+    const timeError =
+      currentPosition.speed > 0
+        ? Math.abs(distanceError) / (currentPosition.speed / 3.6) // seconds
+        : 0;
 
     const result: CalibrationResult = {
       runNumber,
@@ -216,15 +215,15 @@ export default function CalibratePage() {
       targetAccuracy: targetData.gpsAccuracy,
       passAccuracy: passCapture.gpsAccuracy,
       timestamp: passCapture.timestamp,
-    }
+    };
 
     // Update settings
-    const newRawData = [...settings.rawData, targetData, passCapture]
-    const newResults = [...settings.results, result]
-    
+    const newRawData = [...settings.rawData, targetData, passCapture];
+    const newResults = [...settings.results, result];
+
     // Calculate average lag
-    const avgLag = newResults.reduce((sum, r) => sum + r.timeError, 0) / newResults.length
-    
+    const avgLag = newResults.reduce((sum, r) => sum + r.timeError, 0) / newResults.length;
+
     const newSettings: CalibrationSettings = {
       ...settings,
       lagCompensation: Math.round(avgLag * 10) / 10,
@@ -232,34 +231,34 @@ export default function CalibratePage() {
       testRuns: newResults.length,
       results: newResults,
       rawData: newRawData,
-    }
+    };
 
-    saveSettings(newSettings)
+    saveSettings(newSettings);
 
     // Reset for next run
-    setTargetData(null)
-    setTargetSet(false)
-    setRunNumber(runNumber + 1)
-    setError('')
-  }, [currentPosition, roadInfo, targetData, runNumber, targetSpeed, settings, saveSettings])
+    setTargetData(null);
+    setTargetSet(false);
+    setRunNumber(runNumber + 1);
+    setError('');
+  }, [currentPosition, roadInfo, targetData, runNumber, targetSpeed, settings, saveSettings]);
 
   // Clear all calibration data
   const clearCalibration = useCallback(() => {
     const newSettings: CalibrationSettings = {
       ...DEFAULT_SETTINGS,
-    }
-    saveSettings(newSettings)
-    setTargetData(null)
-    setTargetSet(false)
-    setRunNumber(1)
-    setError('')
-  }, [saveSettings])
+    };
+    saveSettings(newSettings);
+    setTargetData(null);
+    setTargetSet(false);
+    setRunNumber(1);
+    setError('');
+  }, [saveSettings]);
 
   // Export to CSV
   const exportCsv = useCallback(() => {
     if (settings.results.length === 0) {
-      setError('No results to export')
-      return
+      setError('No results to export');
+      return;
     }
 
     const headers = [
@@ -273,9 +272,9 @@ export default function CalibratePage() {
       'Target Accuracy (m)',
       'Pass Accuracy (m)',
       'Timestamp',
-    ]
+    ];
 
-    const rows = settings.results.map(r => [
+    const rows = settings.results.map((r) => [
       r.runNumber,
       r.targetSpeed,
       r.targetSlk.toFixed(3),
@@ -286,50 +285,56 @@ export default function CalibratePage() {
       r.targetAccuracy.toFixed(1),
       r.passAccuracy.toFixed(1),
       r.timestamp,
-    ])
+    ]);
 
-    const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n')
-    
-    const blob = new Blob([csv], { type: 'text/csv' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `gps-calibration-${new Date().toISOString().split('T')[0]}.csv`
-    a.click()
-    URL.revokeObjectURL(url)
-  }, [settings.results])
+    const csv = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `gps-calibration-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [settings.results]);
 
   // Apply lag compensation to GPS settings
   const applyLagCompensation = useCallback(() => {
     // Update the main GPS settings
-    const gpsSettings = localStorage.getItem('gpsSettings')
+    const gpsSettings = localStorage.getItem('gpsSettings');
     if (gpsSettings) {
       try {
-        const parsed = JSON.parse(gpsSettings)
-        parsed.gpsLagCompensation = settings.lagCompensation
-        localStorage.setItem('gpsSettings', JSON.stringify(parsed))
+        const parsed = JSON.parse(gpsSettings);
+        parsed.gpsLagCompensation = settings.lagCompensation;
+        localStorage.setItem('gpsSettings', JSON.stringify(parsed));
       } catch (e) {
         // If no existing settings, create new
-        localStorage.setItem('gpsSettings', JSON.stringify({
-          gpsLagCompensation: settings.lagCompensation,
-        }))
+        localStorage.setItem(
+          'gpsSettings',
+          JSON.stringify({
+            gpsLagCompensation: settings.lagCompensation,
+          })
+        );
       }
     } else {
-      localStorage.setItem('gpsSettings', JSON.stringify({
-        gpsLagCompensation: settings.lagCompensation,
-      }))
+      localStorage.setItem(
+        'gpsSettings',
+        JSON.stringify({
+          gpsLagCompensation: settings.lagCompensation,
+        })
+      );
     }
-    setError(`Applied ${settings.lagCompensation}s lag compensation to GPS settings`)
-  }, [settings.lagCompensation])
+    setError(`Applied ${settings.lagCompensation}s lag compensation to GPS settings`);
+  }, [settings.lagCompensation]);
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (watchId !== null) {
-        navigator.geolocation.clearWatch(watchId)
+        navigator.geolocation.clearWatch(watchId);
       }
-    }
-  }, [watchId])
+    };
+  }, [watchId]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
@@ -452,9 +457,7 @@ export default function CalibratePage() {
             >
               🏁 MARK PASS
             </Button>
-            <p className="text-xs text-gray-500 mt-1 text-center">
-              Press when alongside target
-            </p>
+            <p className="text-xs text-gray-500 mt-1 text-center">Press when alongside target</p>
           </div>
         </div>
 
@@ -500,7 +503,9 @@ export default function CalibratePage() {
                         <td className="py-1">#{r.runNumber}</td>
                         <td className="py-1">{r.targetSpeed} km/h</td>
                         <td className="py-1 text-right">{r.distanceError.toFixed(0)}m</td>
-                        <td className="py-1 text-right text-yellow-400">{r.timeError.toFixed(1)}s</td>
+                        <td className="py-1 text-right text-yellow-400">
+                          {r.timeError.toFixed(1)}s
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -527,10 +532,7 @@ export default function CalibratePage() {
             >
               ✓ Apply
             </Button>
-            <Button
-              onClick={clearCalibration}
-              className="bg-red-600 hover:bg-red-700 text-xs py-2"
-            >
+            <Button onClick={clearCalibration} className="bg-red-600 hover:bg-red-700 text-xs py-2">
               🗑️ Clear
             </Button>
           </div>
@@ -552,12 +554,12 @@ export default function CalibratePage() {
 
         {/* Back Button */}
         <Button
-          onClick={() => window.location.href = '/'}
+          onClick={() => (window.location.href = '/')}
           className="w-full h-12 bg-blue-800 hover:bg-blue-900"
         >
           ← Back to Work Zone Locator
         </Button>
       </div>
     </div>
-  )
+  );
 }

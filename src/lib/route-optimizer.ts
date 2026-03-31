@@ -2,6 +2,7 @@
 // Uses TSP (Travelling Salesman Problem) with Nearest Neighbor algorithm
 // Supports both online (OSRM) and offline (Haversine) distance calculation
 
+import { haversineDistanceKm } from './utils';
 import { AfterCareSign, AfterCareJob, calculateSignStatus } from './aftercare';
 
 // ============================================
@@ -24,33 +25,6 @@ export interface RouteSign extends AfterCareSign {
 // HAVERSINE DISTANCE (OFFLINE)
 // ============================================
 
-/**
- * Calculate straight-line distance between two GPS coordinates (Haversine formula)
- * Returns distance in kilometers
- */
-export function haversineDistance(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number
-): number {
-  const R = 6371; // Earth's radius in km
-  const dLat = toRadians(lat2 - lat1);
-  const dLon = toRadians(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRadians(lat1)) *
-      Math.cos(toRadians(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-}
-
-function toRadians(degrees: number): number {
-  return degrees * (Math.PI / 180);
-}
-
 // ============================================
 // OSRM DISTANCE (ONLINE)
 // ============================================
@@ -69,15 +43,15 @@ export async function getOSRMDistance(
     const response = await fetch(
       `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`
     );
-    
+
     if (!response.ok) return null;
-    
+
     const data = await response.json();
-    
+
     if (data.code === 'Ok' && data.routes && data.routes[0]) {
       return {
         distance: data.routes[0].distance / 1000, // Convert m to km
-        duration: data.routes[0].duration / 60    // Convert s to min
+        duration: data.routes[0].duration / 60, // Convert s to min
       };
     }
     return null;
@@ -94,21 +68,21 @@ export async function getOSRMDistanceMatrix(
   points: { lat: number; lon: number }[]
 ): Promise<{ distances: number[][]; durations: number[][] } | null> {
   if (points.length < 2) return null;
-  
+
   try {
-    const coords = points.map(p => `${p.lon},${p.lat}`).join(';');
+    const coords = points.map((p) => `${p.lon},${p.lat}`).join(';');
     const response = await fetch(
       `https://router.project-osrm.org/table/v1/driving/${coords}?annotations=distance,duration`
     );
-    
+
     if (!response.ok) return null;
-    
+
     const data = await response.json();
-    
+
     if (data.code === 'Ok' && data.distances && data.durations) {
       return {
-        distances: data.distances.map((row: number[]) => row.map(d => d / 1000)), // km
-        durations: data.durations.map((row: number[]) => row.map(d => d / 60))    // min
+        distances: data.distances.map((row: number[]) => row.map((d) => d / 1000)), // km
+        durations: data.durations.map((row: number[]) => row.map((d) => d / 60)), // min
       };
     }
     return null;
@@ -125,37 +99,34 @@ export async function getOSRMDistanceMatrix(
  * Solve TSP using Nearest Neighbor algorithm
  * Fast but approximate - good enough for route planning
  */
-export function solveTSPNearestNeighbor(
-  distances: number[][],
-  startIndex: number = 0
-): number[] {
+export function solveTSPNearestNeighbor(distances: number[][], startIndex: number = 0): number[] {
   const n = distances.length;
   if (n <= 1) return [0];
-  
+
   const visited = new Set<number>();
   const route: number[] = [startIndex];
   visited.add(startIndex);
-  
+
   let current = startIndex;
-  
+
   while (visited.size < n) {
     let nearestDist = Infinity;
     let nearestIdx = -1;
-    
+
     for (let i = 0; i < n; i++) {
       if (!visited.has(i) && distances[current][i] < nearestDist) {
         nearestDist = distances[current][i];
         nearestIdx = i;
       }
     }
-    
+
     if (nearestIdx >= 0) {
       route.push(nearestIdx);
       visited.add(nearestIdx);
       current = nearestIdx;
     }
   }
-  
+
   return route;
 }
 
@@ -169,9 +140,9 @@ export function solveTSPNearestNeighbor(
 export async function checkConnectivity(): Promise<boolean> {
   try {
     // Try to reach OSRM server
-    const response = await fetch('https://router.project-osrm.org/', { 
+    const response = await fetch('https://router.project-osrm.org/', {
       method: 'HEAD',
-      signal: AbortSignal.timeout(3000)
+      signal: AbortSignal.timeout(3000),
     });
     return response.ok;
   } catch {
@@ -182,26 +153,26 @@ export async function checkConnectivity(): Promise<boolean> {
 /**
  * Calculate distance matrix using Haversine (offline)
  */
-function calculateHaversineMatrix(
-  points: { lat: number; lon: number }[]
-): number[][] {
+function calculateHaversineMatrix(points: { lat: number; lon: number }[]): number[][] {
   const n = points.length;
   const distances: number[][] = [];
-  
+
   for (let i = 0; i < n; i++) {
     distances[i] = [];
     for (let j = 0; j < n; j++) {
       if (i === j) {
         distances[i][j] = 0;
       } else {
-        distances[i][j] = haversineDistance(
-          points[i].lat, points[i].lon,
-          points[j].lat, points[j].lon
+        distances[i][j] = haversineDistanceKm(
+          points[i].lat,
+          points[i].lon,
+          points[j].lat,
+          points[j].lon
         );
       }
     }
   }
-  
+
   return distances;
 }
 
@@ -209,14 +180,12 @@ function calculateHaversineMatrix(
  * Optimize route for signs
  * Automatically uses OSRM (online) if available, falls back to Haversine (offline)
  */
-export async function optimizeRoute(
-  signs: RouteSign[]
-): Promise<OptimizedRoute | null> {
+export async function optimizeRoute(signs: RouteSign[]): Promise<OptimizedRoute | null> {
   // Filter signs that have GPS coordinates
-  const validSigns = signs.filter(s => s.lat !== null && s.lon !== null);
-  
+  const validSigns = signs.filter((s) => s.lat !== null && s.lon !== null);
+
   if (validSigns.length === 0) return null;
-  
+
   if (validSigns.length === 1) {
     // Single sign - no optimization needed
     const sign = validSigns[0];
@@ -225,20 +194,20 @@ export async function optimizeRoute(
       totalDistance: 0,
       estimatedDuration: 0,
       googleMapsUrl: `https://www.google.com/maps/dir//${sign.lat},${sign.lon}`,
-      optimizationMode: 'offline'
+      optimizationMode: 'offline',
     };
   }
-  
+
   // Check connectivity and try OSRM
   const isOnline = await checkConnectivity();
   let distances: number[][];
   let durations: number[][] = [];
   let mode: 'online' | 'offline' = 'offline';
-  
+
   if (isOnline) {
-    const points = validSigns.map(s => ({ lat: s.lat!, lon: s.lon! }));
+    const points = validSigns.map((s) => ({ lat: s.lat!, lon: s.lon! }));
     const osrmResult = await getOSRMDistanceMatrix(points);
-    
+
     if (osrmResult) {
       distances = osrmResult.distances;
       durations = osrmResult.durations;
@@ -247,19 +216,19 @@ export async function optimizeRoute(
       distances = calculateHaversineMatrix(points);
     }
   } else {
-    const points = validSigns.map(s => ({ lat: s.lat!, lon: s.lon! }));
+    const points = validSigns.map((s) => ({ lat: s.lat!, lon: s.lon! }));
     distances = calculateHaversineMatrix(points);
   }
-  
+
   // Solve TSP - index 0 is "current location" concept, but we use double-slash URL
   // So we just optimize the order of signs
   const orderedIndices = solveTSPNearestNeighbor(distances);
-  const orderedSigns = orderedIndices.map(i => validSigns[i]);
-  
+  const orderedSigns = orderedIndices.map((i) => validSigns[i]);
+
   // Calculate total distance and duration
   let totalDistance = 0;
   let totalDuration = 0;
-  
+
   for (let i = 0; i < orderedIndices.length - 1; i++) {
     totalDistance += distances[orderedIndices[i]][orderedIndices[i + 1]];
     if (durations.length > 0) {
@@ -269,17 +238,17 @@ export async function optimizeRoute(
       totalDuration += (distances[orderedIndices[i]][orderedIndices[i + 1]] / 50) * 60;
     }
   }
-  
+
   // Generate Google Maps URL with optimized order
-  const coords = orderedSigns.map(s => `${s.lat},${s.lon}`).join('/');
+  const coords = orderedSigns.map((s) => `${s.lat},${s.lon}`).join('/');
   const googleMapsUrl = `https://www.google.com/maps/dir//${coords}`;
-  
+
   return {
     signs: orderedSigns,
     totalDistance,
     estimatedDuration: Math.round(totalDuration),
     googleMapsUrl,
-    optimizationMode: mode
+    optimizationMode: mode,
   };
 }
 
@@ -292,7 +261,7 @@ export async function optimizeRoute(
  */
 export function getAllSignsDueForRetrieval(jobs: AfterCareJob[]): RouteSign[] {
   const signs: RouteSign[] = [];
-  
+
   for (const job of jobs) {
     for (const sign of job.signs) {
       const status = calculateSignStatus(sign);
@@ -301,7 +270,7 @@ export function getAllSignsDueForRetrieval(jobs: AfterCareJob[]): RouteSign[] {
       }
     }
   }
-  
+
   return signs;
 }
 
@@ -310,7 +279,7 @@ export function getAllSignsDueForRetrieval(jobs: AfterCareJob[]): RouteSign[] {
  */
 export function getAllSignsDueForMaintenance(jobs: AfterCareJob[]): RouteSign[] {
   const signs: RouteSign[] = [];
-  
+
   for (const job of jobs) {
     for (const sign of job.signs) {
       const status = calculateSignStatus(sign);
@@ -319,7 +288,7 @@ export function getAllSignsDueForMaintenance(jobs: AfterCareJob[]): RouteSign[] 
       }
     }
   }
-  
+
   return signs;
 }
 
@@ -337,7 +306,7 @@ export function countSignsByStatus(jobs: AfterCareJob[]): {
   let dueMaintenance = 0;
   let active = 0;
   let retrieved = 0;
-  
+
   for (const job of jobs) {
     for (const sign of job.signs) {
       const status = calculateSignStatus(sign);
@@ -357,13 +326,13 @@ export function countSignsByStatus(jobs: AfterCareJob[]): {
       }
     }
   }
-  
+
   return {
     dueRetrieval,
     dueMaintenance,
     active,
     retrieved,
-    total: dueRetrieval + dueMaintenance + active + retrieved
+    total: dueRetrieval + dueMaintenance + active + retrieved,
   };
 }
 
@@ -396,14 +365,14 @@ export interface AfterCareReport {
  */
 export function generateReport(jobs: AfterCareJob[]): AfterCareReport {
   const statusCounts = countSignsByStatus(jobs);
-  
+
   const jobsByStatus = {
-    dueRetrieval: jobs.filter(j => calculateJobStatusForReport(j) === 'due-retrieval'),
-    dueMaintenance: jobs.filter(j => calculateJobStatusForReport(j) === 'due-maintenance'),
-    active: jobs.filter(j => calculateJobStatusForReport(j) === 'active'),
-    retrieved: jobs.filter(j => calculateJobStatusForReport(j) === 'retrieved')
+    dueRetrieval: jobs.filter((j) => calculateJobStatusForReport(j) === 'due-retrieval'),
+    dueMaintenance: jobs.filter((j) => calculateJobStatusForReport(j) === 'due-maintenance'),
+    active: jobs.filter((j) => calculateJobStatusForReport(j) === 'active'),
+    retrieved: jobs.filter((j) => calculateJobStatusForReport(j) === 'retrieved'),
   };
-  
+
   return {
     generatedAt: new Date(),
     summary: {
@@ -412,11 +381,11 @@ export function generateReport(jobs: AfterCareJob[]): AfterCareReport {
       dueRetrieval: statusCounts.dueRetrieval,
       dueMaintenance: statusCounts.dueMaintenance,
       active: statusCounts.active,
-      retrieved: statusCounts.retrieved
+      retrieved: statusCounts.retrieved,
     },
     jobsByStatus,
     allSignsDueRetrieval: getAllSignsDueForRetrieval(jobs),
-    allSignsDueMaintenance: getAllSignsDueForMaintenance(jobs)
+    allSignsDueMaintenance: getAllSignsDueForMaintenance(jobs),
   };
 }
 
@@ -426,11 +395,11 @@ export function generateReport(jobs: AfterCareJob[]): AfterCareReport {
 function calculateJobStatusForReport(job: AfterCareJob): string {
   if (job.status === 'archived') return 'archived';
   if (job.signs.length === 0) return 'active';
-  
+
   let hasDueRetrieval = false;
   let hasDueMaintenance = false;
   let allRetrieved = true;
-  
+
   for (const sign of job.signs) {
     const status = calculateSignStatus(sign);
     if (status !== 'retrieved') {
@@ -439,7 +408,7 @@ function calculateJobStatusForReport(job: AfterCareJob): string {
       if (status === 'due-maintenance' || status === 'maintained') hasDueMaintenance = true;
     }
   }
-  
+
   if (allRetrieved) return 'retrieved';
   if (hasDueRetrieval) return 'due-retrieval';
   if (hasDueMaintenance) return 'due-maintenance';

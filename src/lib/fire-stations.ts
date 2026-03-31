@@ -204,9 +204,11 @@ async function fetchGAAddresses(
           }
         }
 
-        console.log(
-          `[FireStations] GA Layer ${layer === 3 ? 'Metro' : 'Rural'}: ${features.length} address records`
-        );
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(
+            `[FireStations] GA Layer ${layer === 3 ? 'Metro' : 'Rural'}: ${features.length} address records`
+          );
+        }
       } catch (error) {
         console.error(`[FireStations] GA Layer ${layer} error:`, error);
       }
@@ -274,9 +276,11 @@ export async function findFireStationsNear(
     fetchGAAddresses(lat, lon, radiusKm),
   ]);
 
-  console.log(
-    `[FireStations] DFES: ${dfesFeatures.length} features, GA: ${gaAddresses.size} address records`
-  );
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(
+      `[FireStations] DFES: ${dfesFeatures.length} features, GA: ${gaAddresses.size} address records`
+    );
+  }
 
   // Process DFES results and enrich with GA addresses
   const stations: FireStation[] = [];
@@ -323,9 +327,11 @@ export async function findFireStationsNear(
   });
 
   const enriched = stations.filter((s) => s.address);
-  console.log(
-    `[FireStations] Found ${stations.length} fire stations (${enriched.length} with GNAF addresses). Nearest professional: ${stations.find((s) => PROFESSIONAL_TYPES.has(s.type))?.name || 'none'}, nearest volunteer: ${stations.find((s) => !PROFESSIONAL_TYPES.has(s.type))?.name || 'none'}`
-  );
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(
+      `[FireStations] Found ${stations.length} fire stations (${enriched.length} with GNAF addresses). Nearest professional: ${stations.find((s) => PROFESSIONAL_TYPES.has(s.type))?.name || 'none'}, nearest volunteer: ${stations.find((s) => !PROFESSIONAL_TYPES.has(s.type))?.name || 'none'}`
+    );
+  }
 
   return stations.slice(0, limit);
 }

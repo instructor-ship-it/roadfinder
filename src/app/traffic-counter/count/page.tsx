@@ -10,9 +10,8 @@ import {
   calculateHeavyPercentage,
   createTrafficCountRecord,
 } from '@/lib/traffic-counter-storage';
+import { APP_VERSION } from '@/components/SettingsDrawer';
 import { calculateMaxHoldTime, PREPARE_TO_STOP_DISTANCE_M } from '@/lib/max-hold-time';
-
-const APP_VERSION = 'RC 1.9.9';
 const MINIMUM_DURATION_SECONDS = 180; // 3 minutes minimum
 
 // ============================================
