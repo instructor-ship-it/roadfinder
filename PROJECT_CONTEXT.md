@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
 > **Last Updated:** 2026-04-03
-> **Current Version:** 1.20.0
+> **Current Version:** 1.20.1
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -425,7 +425,29 @@ See `scripts/README.md` for full documentation of available scripts.
 
 ## Recent Changes (v5.x)
 
-### 1.20.0 (Current) - Phase 4 Optimization: Type Safety & Lint Hygiene
+### 1.20.1 (Current) - Turbo Mode for GPS Tracking
+
+- **Turbo Mode Toggle** on SLK Tracking page
+  - Fast 200ms GPS refresh for precise SLK positioning
+  - One-tap toggle between Default (adaptive) and Precision (200ms) modes
+  - 5-minute auto-revert with countdown timer to prevent battery drain
+  - Visual feedback: pulsing green button when Turbo active
+- **Use Cases**
+  - Creeping up to exact SLK marker at slow speed
+  - Precise positioning for signage placement
+  - Finding exact work zone boundaries
+- **Technical Changes**
+  - Modified `getThrottleInterval()` in useGpsTracking to respect `updateInterval` setting
+  - Created `RefreshRateToggle` component with auto-revert countdown
+  - Added turbo mode state management to drive page
+- **Files Changed**
+  - `src/hooks/useGpsTracking.ts` (precision mode override in throttle)
+  - `src/components/drive/RefreshRateToggle.tsx` (NEW)
+  - `src/app/drive/page.tsx` (turbo mode state, toggle UI)
+  - `src/components/SettingsDrawer.tsx` (version 1.20.1)
+  - `package.json` (version 1.20.1)
+
+### 1.20.0 - Phase 4 Optimization: Type Safety & Lint Hygiene
 
 - **TypeScript strict mode fully enabled**
   - Changed `noImplicitAny: false` → `true` in tsconfig.json

@@ -293,13 +293,23 @@ export function useGpsTracking(
     [destRoadId, destSlk, fetchSpeedZones, fullConfig]
   );
 
-  // Adaptive throttle based on speed
-  const getThrottleInterval = useCallback((speed: number) => {
-    if (speed > 80) return 2000;
-    if (speed > 40) return 1000;
-    if (speed > 10) return 750;
-    return 1500;
-  }, []);
+  // Adaptive throttle based on speed, with precision mode override
+  const getThrottleInterval = useCallback(
+    (speed: number) => {
+      // Precision mode: use updateInterval directly when set to fast refresh (≤500ms)
+      // This allows "Turbo" mode for precise SLK positioning
+      if (fullConfig.updateInterval <= 500) {
+        return fullConfig.updateInterval;
+      }
+
+      // Adaptive throttle for normal driving (saves battery)
+      if (speed > 80) return 2000;
+      if (speed > 40) return 1000;
+      if (speed > 10) return 750;
+      return 1500;
+    },
+    [fullConfig.updateInterval]
+  );
   // Process GPS Update
   const processGpsUpdate = useCallback(
     (position: GeolocationPosition) => {

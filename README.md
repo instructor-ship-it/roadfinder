@@ -1,7 +1,7 @@
 # TC Work Zone Locator
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.20.0-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
+[![Version](https://img.shields.io/badge/version-1.20.1-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
@@ -241,7 +241,13 @@ src/
 
 ## Version History
 
-### 1.20.0 (Current) - Phase 4 Optimization: Type Safety & Lint Hygiene
+### 1.20.1 (Current) - Turbo Mode for GPS Tracking
+
+- **Turbo Mode Toggle** — fast 200ms GPS refresh for precise SLK positioning
+- **5-minute auto-revert** — prevents battery drain with countdown display
+- **Visual feedback** — pulsing green button when Turbo active
+
+### 1.20.0 - Phase 4 Optimization: Type Safety & Lint Hygiene
 
 - **TypeScript strict mode enabled** (`noImplicitAny: true`)
 - **ESLint zero-warning baseline** — fixed 3 genuine React hooks bugs, documented 14 intentional omissions

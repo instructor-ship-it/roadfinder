@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, Suspense, useMemo } from 'react';
+import { useState, useEffect, useRef, Suspense, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,7 @@ import { useGpsTracking, useGpsSettings, type GpsTrackingConfig } from '@/hooks/
 import { useOrientation } from '@/hooks/useOrientation';
 import { IncidentWarningBanner } from '@/components/IncidentWarningBanner';
 import { WeatherWarningBanner } from '@/components/WeatherWarningBanner';
+import RefreshRateToggle from '@/components/drive/RefreshRateToggle';
 
 // GPS lag compensation from localStorage
 interface GpsLagSettings {
@@ -108,6 +109,73 @@ function DriveContent() {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  // ════════════════════════════════════════════════════════════
+  // TURBO MODE (Fast GPS Refresh for Precise Positioning)
+  // ════════════════════════════════════════════════════════════
+
+  type RefreshModeType = 'default' | 'precision';
+
+  const [refreshMode, setRefreshMode] = useState<RefreshModeType>(() => {
+    if (typeof window === 'undefined') return 'default';
+    return (localStorage.getItem('drive-refresh-mode') as RefreshModeType) || 'default';
+  });
+
+  // Auto-revert countdown (in seconds)
+  const [autoRevertCountdown, setAutoRevertCountdown] = useState<number | null>(null);
+
+  // Calculate effective updateInterval based on mode
+  const effectiveUpdateInterval = refreshMode === 'precision' ? 200 : 2000;
+
+  // Toggle handler
+  const handleRefreshToggle = useCallback(() => {
+    setRefreshMode((prev) => {
+      const newMode = prev === 'precision' ? 'default' : 'precision';
+      localStorage.setItem('drive-refresh-mode', newMode);
+      return newMode;
+    });
+  }, []);
+
+  // Auto-revert after 5 minutes when in precision mode
+  useEffect(() => {
+    if (refreshMode !== 'precision') {
+      setAutoRevertCountdown(null);
+      return;
+    }
+
+    const totalTime = 5 * 60; // 5 minutes in seconds
+    let remaining = totalTime;
+    setAutoRevertCountdown(remaining);
+
+    // Update countdown every second
+    const countdownInterval = setInterval(() => {
+      remaining -= 1;
+      setAutoRevertCountdown(remaining);
+    }, 1000);
+
+    // Auto-revert after 5 minutes
+    const revertTimer = setTimeout(() => {
+      setRefreshMode('default');
+      localStorage.setItem('drive-refresh-mode', 'default');
+      setAutoRevertCountdown(null);
+    }, totalTime * 1000);
+
+    return () => {
+      clearTimeout(revertTimer);
+      clearInterval(countdownInterval);
+    };
+  }, [refreshMode]);
+
+  // Create effective settings with updateInterval override
+  const effectiveSettings = useMemo(
+    () => ({
+      ...settings,
+      updateInterval: effectiveUpdateInterval,
+    }),
+    [settings, effectiveUpdateInterval]
+  );
+
+  // ════════════════════════════════════════════════════════════
+
   // GPS tracking with EKF
   const {
     position,
@@ -132,7 +200,7 @@ function DriveContent() {
     startTracking,
     stopTracking,
     getEkfInfo,
-  } = useGpsTracking(destRoadId, destSlk, settings as Partial<GpsTrackingConfig>);
+  } = useGpsTracking(destRoadId, destSlk, effectiveSettings as Partial<GpsTrackingConfig>);
 
   // Check if currently in an override zone
   const currentOverrideZone = useMemo(() => {
@@ -871,6 +939,12 @@ function DriveContent() {
           </div>
           <div className="flex items-center gap-3">
             {offlineReady && <span className="text-xs text-green-400">Offline Ready</span>}
+            {/* Turbo Mode Toggle */}
+            <RefreshRateToggle
+              currentMode={refreshMode}
+              onToggle={handleRefreshToggle}
+              autoRevertSeconds={autoRevertCountdown ?? undefined}
+            />
             {/* Emergency Button */}
             <button
               onClick={getEmergencyLocation}
@@ -1400,6 +1474,14 @@ function DriveContent() {
           )}
         </div>
         <div className="flex items-center gap-1">
+          {/* Turbo Mode Toggle - only show when tracking */}
+          {isTracking && (
+            <RefreshRateToggle
+              currentMode={refreshMode}
+              onToggle={handleRefreshToggle}
+              autoRevertSeconds={autoRevertCountdown ?? undefined}
+            />
+          )}
           <SettingsDrawer
             variant="drive"
             offlineReady={offlineReady}

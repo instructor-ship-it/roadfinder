@@ -1,7 +1,52 @@
 # TC Work Zone Locator - Work Log
 
 > **Last Updated:** 2026-04-03
-> **Current Version:** 1.20.0
+> **Current Version:** 1.20.1
+
+---
+
+## Task ID: 2026-04-03-002
+
+**Agent:** Main Agent
+**Task:** Turbo Mode for GPS Tracking (v1.20.1)
+
+### Work Log:
+
+- **Feature: Turbo Mode Toggle**
+  - Added fast 200ms GPS refresh mode for precise SLK positioning
+  - Created `RefreshRateToggle` component with visual feedback
+  - Integrated toggle into both portrait and landscape layouts on drive page
+
+- **Implementation Details**
+  - Modified `getThrottleInterval()` in useGpsTracking to respect `updateInterval` setting when ≤500ms
+  - Added `effectiveSettings` memo to pass `updateInterval` override to GPS hook
+  - 5-minute auto-revert timer with countdown display
+  - State persisted to localStorage for session continuity
+
+- **Auto-Revert Safety**
+  - Countdown timer shows remaining time in MM:SS format
+  - Auto-reverts to default mode after 5 minutes
+  - Cleanup on component unmount
+
+### Files Changed:
+
+- `src/hooks/useGpsTracking.ts` (precision mode override in getThrottleInterval)
+- `src/components/drive/RefreshRateToggle.tsx` (NEW - toggle button component)
+- `src/app/drive/page.tsx` (turbo mode state, toggle UI in both layouts)
+- `src/components/SettingsDrawer.tsx` (version 1.20.1)
+- `package.json` (version 1.20.1)
+- `PROJECT_CONTEXT.md` (version header, Recent Changes section)
+- `README.md` (version badge, Version History)
+- `worklog.md` (this entry)
+
+### Stage Summary:
+
+- Turbo Mode feature complete and functional
+- One-tap toggle between Default (adaptive) and Precision (200ms) modes
+- 5-minute auto-revert with visual countdown
+- Works in both portrait and landscape orientations
+- Version: 1.20.1
+- Ready for push to GitHub
 
 ---
 
