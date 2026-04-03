@@ -296,7 +296,7 @@ export function useGpsTracking(
   
 
   // Adaptive throttle based on speed
-  const getThrottleInterval = useCallback((speed) => {
+  const getThrottleInterval = useCallback((speed: number) => {
     if (speed > 80) return 2000;
     if (speed > 40) return 1000;
     if (speed > 10) return 750;
@@ -537,4 +537,5 @@ export function useGpsSettings() {
     resetSettings,
   };
 }
+
 
