@@ -33,6 +33,7 @@ interface SignWithStatus extends AfterCareSign {
 
 // Color by status
 const getColor = (status: SignStatus) => {
+  if (status === 'retrieved') return '#3b82f6'; // Blue for retrieved
   if (status === 'due-retrieval') return '#ef4444';
   if (status === 'due-maintenance' || status === 'maintained') return '#eab308';
   return '#22c55e';
@@ -54,6 +55,7 @@ const createIcon = (color: string) => {
 
 // Status label for display
 const getStatusLabel = (status: SignStatus) => {
+  if (status === 'retrieved') return '✓ Retrieved';
   if (status === 'due-retrieval') return '🔴 Due for Retrieval';
   if (status === 'due-maintenance' || status === 'maintained') return '🟡 Due for Maintenance';
   return '🟢 Active';
@@ -62,7 +64,9 @@ const getStatusLabel = (status: SignStatus) => {
 export default function SignageMapPage() {
   const [mounted, setMounted] = useState(false);
   const [jobs, setJobs] = useState<AfterCareJob[]>(() => getAfterCareJobs());
-  const [filter, setFilter] = useState<'all' | 'retrieval' | 'maintenance' | 'active'>('all');
+  const [filter, setFilter] = useState<
+    'all' | 'retrieval' | 'maintenance' | 'active' | 'retrieved'
+  >('all');
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional for SSR-safe client-side rendering
@@ -90,24 +94,31 @@ export default function SignageMapPage() {
 
   // Filter based on selected filter
   const signs = useMemo(() => {
-    if (filter === 'all') return signsWithStatus;
+    if (filter === 'all') {
+      // Show all except retrieved by default
+      return signsWithStatus.filter((s) => s.status !== 'retrieved');
+    }
     return signsWithStatus.filter((s) => {
       if (filter === 'retrieval') return s.status === 'due-retrieval';
       if (filter === 'maintenance')
         return s.status === 'due-maintenance' || s.status === 'maintained';
       if (filter === 'active') return s.status === 'placed';
+      if (filter === 'retrieved') return s.status === 'retrieved';
       return true;
     });
   }, [signsWithStatus, filter]);
 
   // Count by status (from pre-computed statuses — zero extra calculateSignStatus calls)
   const counts = useMemo(() => {
-    const c = { all: 0, retrieval: 0, maintenance: 0, active: 0 };
+    const c = { all: 0, retrieval: 0, maintenance: 0, active: 0, retrieved: 0 };
     for (const s of signsWithStatus) {
-      c.all++;
-      if (s.status === 'due-retrieval') c.retrieval++;
-      else if (s.status === 'due-maintenance' || s.status === 'maintained') c.maintenance++;
-      else if (s.status === 'placed') c.active++;
+      if (s.status === 'retrieved') c.retrieved++;
+      else {
+        c.all++; // 'all' excludes retrieved
+        if (s.status === 'due-retrieval') c.retrieval++;
+        else if (s.status === 'due-maintenance' || s.status === 'maintained') c.maintenance++;
+        else if (s.status === 'placed') c.active++;
+      }
     }
     return c;
   }, [signsWithStatus]);
@@ -167,6 +178,13 @@ export default function SignageMapPage() {
           className={`flex-1 text-xs ${filter === 'active' ? 'bg-green-700' : 'bg-gray-700'}`}
         >
           🟢 ({counts.active})
+        </Button>
+        <Button
+          onClick={() => setFilter('retrieved')}
+          size="sm"
+          className={`flex-1 text-xs ${filter === 'retrieved' ? 'bg-blue-700' : 'bg-gray-700'}`}
+        >
+          ✓ ({counts.retrieved})
         </Button>
       </div>
 
@@ -228,6 +246,7 @@ export default function SignageMapPage() {
             <span>🟢 Active</span>
             <span>🟡 Maintenance</span>
             <span>🔴 Retrieval</span>
+            <span style={{ color: '#3b82f6' }}>✓ Retrieved</span>
           </div>
         </div>
       </div>
