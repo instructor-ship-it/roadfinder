@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
-> **Last Updated:** 2026-03-30
-> **Current Version:** RC 1.9.9
+> **Last Updated:** 2026-04-03
+> **Current Version:** 1.20.0
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -425,7 +425,34 @@ See `scripts/README.md` for full documentation of available scripts.
 
 ## Recent Changes (v5.x)
 
-### RC 1.9.9 (Current) - Work Zone Report Overhaul, Traffic Override, Speed Zone Layout
+### 1.20.0 (Current) - Phase 4 Optimization: Type Safety & Lint Hygiene
+
+- **TypeScript strict mode fully enabled**
+  - Changed `noImplicitAny: false` → `true` in tsconfig.json
+  - Fixed 4 implicit any type errors with proper type annotations
+- **ESLint zero-warning baseline achieved** (18 → 0 warnings)
+  - Fixed 3 genuine React hooks dependency bugs:
+    - `src/app/manual/page.tsx` — Added `sections` to useMemo deps
+    - `src/app/page.tsx` — Added `updateSelectedRegion` to useEffect deps
+    - `src/hooks/useGpsTracking.ts` — Added `state.roadInfo` to useEffect deps
+  - Documented 14 intentional omissions with eslint-disable comments
+- **Build verification clean**
+  - TypeScript: 0 errors (with noImplicitAny: true)
+  - ESLint: 0 errors, 0 warnings
+  - Tests: 57 passing
+  - Next.js build: successful
+- **Files Changed**
+  - `tsconfig.json` (noImplicitAny: true)
+  - `src/app/api/incidents/route.ts` (type annotation)
+  - `src/app/api/speed-compare/route.ts` (type annotation)
+  - `src/lib/mrwa_api.ts` (type annotation)
+  - `src/lib/offline-db.ts` (type annotation)
+  - `src/app/manual/page.tsx` (useMemo deps fix)
+  - `src/app/page.tsx` (useEffect deps fix + eslint-disable comments)
+  - `src/hooks/useGpsTracking.ts` (fullConfig useMemo wrapper + roadInfo dep)
+  - Multiple components with eslint-disable comments for intentional omissions
+
+### RC 1.9.9 - Work Zone Report Overhaul, Traffic Override, Speed Zone Layout
 
 - **User Traffic Count Override** on Work Zone Info page
   - Blue "Using live count data" banner with revert button

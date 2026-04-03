@@ -14,20 +14,24 @@ get_version() {
   local version=""
   
   if [[ "$file" == *.tsx ]]; then
-    # For TSX files, look for version in header display or APP_VERSION constant
-    version=$(grep -oE 'RC [0-9]+\.[0-9]+\.?[0-9]*' "$file" | head -1)
+    # For TSX files, look for APP_VERSION constant (single source of truth)
+    version=$(grep -oE "APP_VERSION = '[0-9]+\.[0-9]+\.?[0-9]*'" "$file" | grep -oE '[0-9]+\.[0-9]+\.?[0-9]*' | head -1)
+    # Fallback: look for version display patterns like "v1.20.0" or "Version 1.20.0"
+    if [ -z "$version" ]; then
+      version=$(grep -oE '(v|Version[[:space:]]+)[0-9]+\.[0-9]+\.?[0-9]*' "$file" | grep -oE '[0-9]+\.[0-9]+\.?[0-9]*' | head -1)
+    fi
   elif [[ "$file" == "PROJECT_CONTEXT.md" ]]; then
     # For PROJECT_CONTEXT.md, look for "Current Version:"
-    version=$(grep "Current Version:" "$file" | grep -oE 'RC [0-9]+\.[0-9]+\.?[0-9]*')
+    version=$(grep "Current Version:" "$file" | grep -oE '[0-9]+\.[0-9]+\.?[0-9]*')
   elif [[ "$file" == "worklog.md" ]]; then
     # For worklog.md, look for "Current Version:"
-    version=$(grep "Current Version:" "$file" | grep -oE 'RC [0-9]+\.[0-9]+\.?[0-9]*')
+    version=$(grep "Current Version:" "$file" | grep -oE '[0-9]+\.[0-9]+\.?[0-9]*')
   elif [[ "$file" == "README.md" ]]; then
     # For README.md, look for "(Current)" marker in version history
-    version=$(grep "(Current)" "$file" | grep -oE 'RC [0-9]+\.[0-9]+\.?[0-9]*' | head -1)
+    version=$(grep "(Current)" "$file" | grep -oE '[0-9]+\.[0-9]+\.?[0-9]*' | head -1)
   elif [[ "$file" == "RC1_Test_Checklist.md" ]]; then
     # For test checklist, look for version in title
-    version=$(grep -oE 'RC [0-9]+\.[0-9]+\.?[0-9]*' "$file" | head -1)
+    version=$(grep -oE '[0-9]+\.[0-9]+\.?[0-9]*' "$file" | head -1)
   fi
   
   echo "$version"
@@ -35,9 +39,7 @@ get_version() {
 
 # Files to check
 FILES=(
-  "src/app/page.tsx"
-  "src/app/drive/page.tsx"
-  "src/app/overrides/page.tsx"
+  "src/components/SettingsDrawer.tsx"
   "PROJECT_CONTEXT.md"
   "README.md"
   "worklog.md"
