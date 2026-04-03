@@ -1,6 +1,6 @@
 {
   "name": "tc-work-zone-locator",
-  "version": "1.10.0",
+  "version": "1.20.0",
   "license": "MIT",
   "private": true,
   "scripts": {

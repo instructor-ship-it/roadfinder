@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Work Log
 
 > **Last Updated:** 2026-03-31
-> **Current Version:** RC 1.10.0
+> **Current Version:** 1.20.0
 
 ---
 
