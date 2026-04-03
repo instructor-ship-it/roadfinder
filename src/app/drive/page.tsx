@@ -1473,65 +1473,57 @@ function DriveContent() {
             <p className="text-xs text-purple-400">📡 EKF Filtering Active</p>
           )}
         </div>
-        <div className="flex items-center gap-1">
-          {/* Turbo Mode Toggle - only show when tracking */}
-          {isTracking && (
-            <RefreshRateToggle
-              currentMode={refreshMode}
-              onToggle={handleRefreshToggle}
-              autoRevertSeconds={autoRevertCountdown ?? undefined}
-            />
-          )}
-          <SettingsDrawer
-            variant="drive"
-            offlineReady={offlineReady}
-            gpsSettings={settings}
-            onUpdateGpsSetting={(key, value) => {
-              const newSettings = { ...settings, [key]: value };
-              localStorage.setItem('gpsTrackingConfig', JSON.stringify(newSettings));
-              window.dispatchEvent(new StorageEvent('storage'));
-            }}
-            showSpeedDisplay={showSpeedDisplay}
-            onToggleSpeedDisplay={(value) => {
-              setShowSpeedDisplay(value);
-              localStorage.setItem('showSpeedDisplay', String(value));
-            }}
-            showAfterCareOnDrive={showAfterCareOnDrive}
-            onToggleAfterCare={(value) => {
-              setShowAfterCareOnDrive(value);
-              localStorage.setItem('showAfterCareOnDrive', String(value));
-            }}
-            afterCareLookaheadKm={afterCareLookaheadKm}
-            onUpdateAfterCareLookahead={(km) => {
-              setAfterCareLookaheadKm(km);
-              localStorage.setItem('afterCareLookaheadKm', String(km));
-            }}
-          />
-        </div>
+        <SettingsDrawer
+          variant="drive"
+          offlineReady={offlineReady}
+          gpsSettings={settings}
+          onUpdateGpsSetting={(key, value) => {
+            const newSettings = { ...settings, [key]: value };
+            localStorage.setItem('gpsTrackingConfig', JSON.stringify(newSettings));
+            window.dispatchEvent(new StorageEvent('storage'));
+          }}
+          showSpeedDisplay={showSpeedDisplay}
+          onToggleSpeedDisplay={(value) => {
+            setShowSpeedDisplay(value);
+            localStorage.setItem('showSpeedDisplay', String(value));
+          }}
+          showAfterCareOnDrive={showAfterCareOnDrive}
+          onToggleAfterCare={(value) => {
+            setShowAfterCareOnDrive(value);
+            localStorage.setItem('showAfterCareOnDrive', String(value));
+          }}
+          afterCareLookaheadKm={afterCareLookaheadKm}
+          onUpdateAfterCareLookahead={(km) => {
+            setAfterCareLookaheadKm(km);
+            localStorage.setItem('afterCareLookaheadKm', String(km));
+          }}
+        />
       </div>
 
       {/* GPS Controls */}
       <div className="bg-gray-800 rounded-lg p-4 mb-4">
         <div className="flex items-center justify-between mb-3">
-          {/* Left side: Internet signal + SLK Tracking label */}
-          <div className="flex items-center gap-2">
-            {/* Internet Signal Indicator */}
-            <div className="flex items-center gap-1" title={isOnline ? 'Online' : 'Offline'}>
-              <span className="text-xs text-gray-400">NET</span>
-              {[1, 2, 3, 4, 5].map((bar) => {
-                const isFilled = isOnline ? bar <= 5 : bar <= 0;
-                const barColor = isOnline ? 'bg-green-400' : 'bg-red-400';
-                return (
-                  <div
-                    key={bar}
-                    className={`w-1 rounded-sm ${isFilled ? barColor : 'bg-gray-600'}`}
-                    style={{ height: `${bar * 2 + 4}px` }}
-                  />
-                );
-              })}
-            </div>
-            <span className="text-sm text-gray-400">SLK Tracking</span>
+          {/* Left side: Internet signal */}
+          <div className="flex items-center gap-1" title={isOnline ? 'Online' : 'Offline'}>
+            <span className="text-xs text-gray-400">NET</span>
+            {[1, 2, 3, 4, 5].map((bar) => {
+              const isFilled = isOnline ? bar <= 5 : bar <= 0;
+              const barColor = isOnline ? 'bg-green-400' : 'bg-red-400';
+              return (
+                <div
+                  key={bar}
+                  className={`w-1 rounded-sm ${isFilled ? barColor : 'bg-gray-600'}`}
+                  style={{ height: `${bar * 2 + 4}px` }}
+                />
+              );
+            })}
           </div>
+          {/* Center: Turbo Mode Toggle */}
+          <RefreshRateToggle
+            currentMode={refreshMode}
+            onToggle={handleRefreshToggle}
+            autoRevertSeconds={autoRevertCountdown ?? undefined}
+          />
           {/* Right side: GPS signal */}
           {isTracking && position ? (
             <div
