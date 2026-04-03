@@ -6994,7 +6994,7 @@ export default function Home() {
                   <div className="flex gap-2">
                     <Button
                       onClick={() => {
-                        const text = `Emergency on ${emergencyData.roadName}${emergencyData.crossRoad ? `, approximately ${formatEmergencyDistance(emergencyData.crossRoad.distance)} ${emergencyData.crossRoad.direction} of ${emergencyData.crossRoad.name}` : ''}${emergencyData.nearestTown ? `, about ${formatEmergencyDistance(emergencyData.nearestTown.distance)} ${emergencyData.nearestTown.direction} of ${emergencyData.nearestTown.name}` : ''}. GPS coordinates: ${emergencyData.lat.toFixed(6)}, ${emergencyData.lon.toFixed(6)}. [v1.20.0 | crossRoad: ${emergencyData.crossRoad ? `${emergencyData.crossRoad.name}(${Math.round(emergencyData.crossRoad.distanceM || 0)}m)` : 'none'} | src: Layer6 | limit: 200]`;
+                        const text = `Emergency on ${emergencyData.roadName}${emergencyData.crossRoad ? `, approximately ${formatEmergencyDistance(emergencyData.crossRoad.distance)} ${emergencyData.crossRoad.direction} of ${emergencyData.crossRoad.name}` : ''}${emergencyData.nearestTown ? `, about ${formatEmergencyDistance(emergencyData.nearestTown.distance)} ${emergencyData.nearestTown.direction} of ${emergencyData.nearestTown.name}` : ''}. GPS coordinates: ${emergencyData.lat.toFixed(6)}, ${emergencyData.lon.toFixed(6)}. [v1.20.1 | crossRoad: ${emergencyData.crossRoad ? `${emergencyData.crossRoad.name}(${Math.round(emergencyData.crossRoad.distanceM || 0)}m)` : 'none'} | src: Layer6 | limit: 200]`;
                         navigator.clipboard.writeText(text);
                         alert('Location copied to clipboard!');
                       }}

@@ -514,7 +514,7 @@ export default function UserManualPage() {
           <div className="w-16"></div>
         </div>
 
-        <p className="text-xs text-gray-400 text-center mb-4">Version 1.20.0 • April 2026</p>
+        <p className="text-xs text-gray-400 text-center mb-4">Version 1.20.1 • April 2026</p>
 
         {/* Search Bar */}
         <div className="mb-4">
