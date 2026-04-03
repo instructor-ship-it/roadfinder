@@ -293,7 +293,16 @@ export function useGpsTracking(
     [destRoadId, destSlk, fetchSpeedZones, fullConfig]
   );
 
-  // Process GPS update
+  
+
+  // Adaptive throttle based on speed
+  const getThrottleInterval = useCallback((speed) => {
+    if (speed > 80) return 2000;
+    if (speed > 40) return 1000;
+    if (speed > 10) return 750;
+    return 1500;
+  }, []);
+// Process GPS Update
   const processGpsUpdate = useCallback(
     (position: GeolocationPosition) => {
       const now = Date.now();
@@ -364,7 +373,7 @@ export function useGpsTracking(
       }));
 
       // Fetch road info at throttled rate
-      if (now - lastRoadFetchRef.current > fullConfig.updateInterval) {
+      if (now - lastRoadFetchRef.current > getThrottleInterval(currentSpeed)) {
         lastRoadFetchRef.current = now;
         fetchRoadInfo(useLat, useLon);
       }
@@ -528,3 +537,4 @@ export function useGpsSettings() {
     resetSettings,
   };
 }
+
