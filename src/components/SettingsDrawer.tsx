@@ -202,7 +202,7 @@ export function SettingsDrawer({
     }
     setAiTestingKey(true);
     try {
-      const response = await fetch('/api/ai/test', {
+      const response = await fetch('/api/ai/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ apiKey: aiApiKey }),
