@@ -41,7 +41,8 @@ export default function QaPage() {
   const [copied, setCopied] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  // AI direct chat state (built-in, always enabled)
+  // AI direct chat state
+  const [aiApiKey, setAiApiKey] = useState('');
   const [aiAnswer, setAiAnswer] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -95,6 +96,10 @@ export default function QaPage() {
 
     loadDocuments();
     loadSavedQAs();
+
+    // Load API key from localStorage
+    const savedKey = localStorage.getItem('ai_api_key') || '';
+    setAiApiKey(savedKey);
   }, []);
 
   // Toggle document selection
@@ -157,9 +162,16 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
     setGeneratedPrompt(prompt);
   };
 
-  // Ask AI directly (built-in)
+  // Ask AI directly (requires API key)
   const askAiDirectly = async () => {
     if (!question.trim()) return;
+
+    // Check for API key
+    const key = localStorage.getItem('ai_api_key') || aiApiKey;
+    if (!key) {
+      setAiError('Please configure your z.ai API key in Settings first.');
+      return;
+    }
 
     const docsToSearch =
       selectedDocs.size > 0 ? documents.filter((d) => selectedDocs.has(d.id)) : documents;
@@ -179,6 +191,7 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          apiKey: key,
           messages: [{ role: 'user', content: question }],
           context,
         }),
@@ -362,13 +375,25 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
 
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
         {/* Mode indicator */}
-        <div className="bg-green-900/30 border border-green-700 rounded-lg p-4 text-sm">
-          <h3 className="font-semibold text-green-300 mb-2">🤖 AI Chat Ready</h3>
-          <p className="text-green-200">
-            Ask questions about traffic management, WHS, and road work procedures. AI answers are
-            powered by the built-in assistant.
-          </p>
-        </div>
+        {aiApiKey ? (
+          <div className="bg-green-900/30 border border-green-700 rounded-lg p-4 text-sm">
+            <h3 className="font-semibold text-green-300 mb-2">🤖 AI Chat Ready</h3>
+            <p className="text-green-200">
+              Ask questions about traffic management, WHS, and road work procedures. Your API key is
+              configured.
+            </p>
+          </div>
+        ) : (
+          <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-4 text-sm">
+            <h3 className="font-semibold text-blue-300 mb-2">📋 Setup Required</h3>
+            <p className="text-blue-200 mb-2">
+              Configure your z.ai API key in Settings to enable direct AI chat.
+            </p>
+            <Link href="/library">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-sm">⚙️ Go to Settings</Button>
+            </Link>
+          </div>
+        )}
 
         {/* Question Input */}
         <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
@@ -381,13 +406,13 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
               placeholder="e.g., What are the speed zone requirements for TC positions?"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && askAiDirectly()}
+              onKeyDown={(e) => e.key === 'Enter' && aiApiKey && askAiDirectly()}
               className="bg-gray-700 border-gray-600 text-white flex-1"
             />
             <Button
               onClick={askAiDirectly}
-              disabled={!question.trim() || aiLoading}
-              className="bg-green-600 hover:bg-green-700 px-6"
+              disabled={!question.trim() || aiLoading || !aiApiKey}
+              className="bg-green-600 hover:bg-green-700 px-6 disabled:opacity-50"
             >
               {aiLoading ? '🤔 Thinking...' : '🤖 Ask AI'}
             </Button>

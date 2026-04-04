@@ -1,18 +1,16 @@
 import { NextResponse } from 'next/server';
-import ZAI from 'z-ai-web-dev-sdk';
 
 /**
- * Chat with z.ai API using the built-in SDK
+ * Chat with z.ai API
  * POST /api/ai/chat
- * Body: { messages: ChatMessage[], context?: string }
+ * Body: { apiKey?: string, messages: ChatMessage[], context?: string }
  *
- * Note: Uses internal z.ai SDK configured in this environment.
- * No API key required from users.
+ * Uses internal endpoint if no API key provided, or user's key with public API.
  */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { messages, context } = body;
+    const { apiKey, messages, context } = body;
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -33,21 +31,75 @@ export async function POST(request: Request) {
             'You are a helpful assistant for Traffic Controllers in Western Australia. Answer questions about traffic management, WHS, and road work procedures. Be concise and practical.',
         };
 
-    // Create SDK instance (uses internal config from /etc/.z-ai-config)
-    const zai = await ZAI.create();
+    // Use internal endpoint if no user API key provided
+    const useInternal = !apiKey;
+    const apiUrl = useInternal
+      ? 'http://172.25.136.193:8080/v1/chat/completions'
+      : 'https://z.ai/api/v1/chat/completions';
 
-    // Make the chat completion request
-    const response = await zai.chat.completions.create({
-      messages: [systemMessage, ...messages],
+    // Build headers based on which endpoint we're using
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    if (useInternal) {
+      // Internal endpoint needs X-Token (currently not configured)
+      headers['Authorization'] = 'Bearer Z.ai';
+      headers['X-Z-AI-From'] = 'Z';
+      headers['X-Token'] = 'Z.ai';
+    } else {
+      // Public API with user's key
+      headers['Authorization'] = `Bearer ${apiKey}`;
+    }
+
+    // Make the API request
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        messages: [systemMessage, ...messages],
+      }),
     });
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('AI API error:', response.status, errorText);
+
+      // Parse error for better messages
+      try {
+        const errorJson = JSON.parse(errorText);
+        if (errorJson.error?.code === 'insufficient_balance') {
+          return NextResponse.json(
+            {
+              success: false,
+              error: 'Insufficient API balance. Please add credits to your z.ai account.',
+              needsCredits: true,
+            },
+            { status: 200 }
+          );
+        }
+      } catch {
+        // Not JSON, continue with raw error
+      }
+
+      return NextResponse.json(
+        {
+          success: false,
+          error: `API returned ${response.status}: ${errorText.slice(0, 500)}`,
+        },
+        { status: 200 }
+      );
+    }
+
+    const data = await response.json();
+
     // Extract the assistant's response
-    const assistantMessage = response.choices?.[0]?.message?.content || '';
+    const assistantMessage = data.choices?.[0]?.message?.content || '';
 
     return NextResponse.json({
       success: true,
       answer: assistantMessage,
-      usage: response.usage,
+      usage: data.usage,
     });
   } catch (error) {
     console.error('AI chat error:', error);
