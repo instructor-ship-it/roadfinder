@@ -172,60 +172,37 @@ export function SettingsDrawer({
   const [showOfflineData, setShowOfflineData] = useState(false); // Always start collapsed
   const [showAiSettings, setShowAiSettings] = useState(false);
 
-  // AI settings state
-  const [aiApiKey, setAiApiKey] = useState('');
-  const [aiEnabled, setAiEnabled] = useState(false);
+  // AI settings state - built-in AI, no key needed
   const [aiTestingKey, setAiTestingKey] = useState(false);
-  const [aiKeyVisible, setAiKeyVisible] = useState(false);
-
-  // Load AI settings from localStorage
-  useEffect(() => {
-    const savedKey = localStorage.getItem('ai_api_key') || '';
-    const savedEnabled = localStorage.getItem('ai_chat_enabled') === 'true';
-    setAiApiKey(savedKey);
-    setAiEnabled(savedEnabled && savedKey.length > 0);
-  }, []);
+  const [aiStatus, setAiStatus] = useState<'ready' | 'testing' | 'ok' | 'error'>('ready');
 
   // Keep in sync: when data is downloaded, collapse; when cleared, also collapse
   useEffect(() => {
     if (offlineStats) setShowOfflineData(false);
   }, [offlineStats]);
 
-  // Save AI settings
-  const saveAiSettings = (key: string, enabled: boolean) => {
-    localStorage.setItem('ai_api_key', key);
-    localStorage.setItem('ai_chat_enabled', enabled.toString());
-    setAiApiKey(key);
-    setAiEnabled(enabled && key.length > 0);
-  };
-
   // Test AI connection
   const testAiConnection = async () => {
-    if (!aiApiKey) return;
     setAiTestingKey(true);
+    setAiStatus('testing');
     try {
       const response = await fetch('/api/ai/test', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apiKey: aiApiKey }),
       });
       const data = await response.json();
       if (data.success) {
-        alert('✓ Connection successful! API key is valid.');
+        setAiStatus('ok');
+        alert('✓ AI connection successful!');
       } else {
-        alert('✗ Connection failed: ' + (data.error || 'Invalid API key'));
+        setAiStatus('error');
+        alert('✗ Connection failed: ' + (data.error || 'Unknown error'));
       }
     } catch (err) {
+      setAiStatus('error');
       alert('✗ Connection failed: Network error');
     } finally {
       setAiTestingKey(false);
-    }
-  };
-
-  // Clear AI settings
-  const clearAiSettings = () => {
-    if (confirm('Clear AI API key? You will need to re-enter it to use direct AI chat.')) {
-      saveAiSettings('', false);
     }
   };
 
@@ -1135,104 +1112,48 @@ export function SettingsDrawer({
                 ›
               </span>
               🤖 AI Assistant
-              {aiEnabled && (
-                <span className="text-xs text-green-400 bg-green-900/30 px-1.5 py-0.5 rounded ml-1">
-                  ✓ Configured
-                </span>
-              )}
+              <span className="text-xs text-green-400 bg-green-900/30 px-1.5 py-0.5 rounded ml-1">
+                ✓ Built-in
+              </span>
             </button>
 
             {showAiSettings && (
               <div className="space-y-3 mt-2 pl-3 border-l-4 border-purple-500/60">
                 <div className="bg-gray-900/50 rounded-lg p-3 text-xs">
-                  <p className="text-gray-400 mb-2">
-                    Configure your z.ai API key for direct AI chat in the Q&A Assistant. Without a
-                    key, the Q&A page generates prompts for you to copy to external AI chats.
+                  <p className="text-green-400 mb-2">
+                    ✓ AI Assistant is built-in and ready to use!
                   </p>
-                  <a
-                    href="https://z.ai/manage-apikey/apikey-list"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-400 hover:underline"
-                  >
-                    Get your API key at z.ai →
-                  </a>
+                  <p className="text-gray-400">
+                    Go to the Q&A Assistant to ask questions about traffic management, WHS, and road
+                    work procedures.
+                  </p>
                 </div>
 
-                {/* Enable Toggle */}
+                {/* Status */}
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-white">Enable Direct AI Chat</span>
-                  <button
-                    onClick={() => saveAiSettings(aiApiKey, !aiEnabled)}
-                    disabled={!aiApiKey}
-                    className={`w-12 h-6 rounded-full transition-colors ${
-                      aiEnabled ? 'bg-green-600' : 'bg-gray-600'
-                    } ${!aiApiKey ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  <span className="text-sm text-gray-400">Status</span>
+                  <span
+                    className={`text-sm ${aiStatus === 'ok' ? 'text-green-400' : aiStatus === 'error' ? 'text-red-400' : 'text-gray-400'}`}
                   >
-                    <span
-                      className={`block w-4 h-4 rounded-full bg-white transition-transform ${
-                        aiEnabled ? 'translate-x-6' : 'translate-x-0'
-                      }`}
-                    ></span>
-                  </button>
+                    {aiStatus === 'ok' ? '✓ Connected' : aiStatus === 'error' ? '✗ Error' : 'Ready'}
+                  </span>
                 </div>
 
-                {/* API Key Input */}
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">API Key</label>
-                  <div className="relative">
-                    <input
-                      type={aiKeyVisible ? 'text' : 'password'}
-                      value={aiApiKey}
-                      onChange={(e) => setAiApiKey(e.target.value)}
-                      placeholder="{API Key ID}.{secret}"
-                      className="w-full bg-gray-700 border border-gray-600 text-white rounded px-3 py-2 pr-10 text-sm font-mono"
-                    />
-                    <button
-                      onClick={() => setAiKeyVisible(!aiKeyVisible)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
-                    >
-                      {aiKeyVisible ? '🙈' : '👁️'}
-                    </button>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Format: {`{ID}.{secret}`} • Stored locally on this device
-                  </p>
-                </div>
+                {/* Test Connection Button */}
+                <Button
+                  onClick={testAiConnection}
+                  disabled={aiTestingKey}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-sm"
+                >
+                  {aiTestingKey ? 'Testing...' : '🧪 Test Connection'}
+                </Button>
 
-                {/* Action Buttons */}
-                <div className="flex gap-2">
-                  <Button
-                    onClick={testAiConnection}
-                    disabled={!aiApiKey || aiTestingKey}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-sm"
-                  >
-                    {aiTestingKey ? 'Testing...' : 'Test Connection'}
+                {/* Link to Q&A */}
+                <Link href="/qa">
+                  <Button className="w-full bg-green-600 hover:bg-green-700 text-sm">
+                    🤖 Open Q&A Assistant
                   </Button>
-                  <Button
-                    onClick={() => saveAiSettings(aiApiKey, aiEnabled)}
-                    disabled={!aiApiKey}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-sm"
-                  >
-                    Save
-                  </Button>
-                  {aiApiKey && (
-                    <Button
-                      onClick={clearAiSettings}
-                      className="bg-red-600 hover:bg-red-700 text-sm"
-                    >
-                      Clear
-                    </Button>
-                  )}
-                </div>
-
-                {/* Warning */}
-                <div className="bg-amber-900/30 border border-amber-700/50 rounded p-2 text-xs">
-                  <p className="text-amber-300">
-                    ⚠️ Your API key is stored on this device only. You are responsible for any API
-                    usage costs.
-                  </p>
-                </div>
+                </Link>
               </div>
             )}
           </div>

@@ -1,18 +1,18 @@
 import { NextResponse } from 'next/server';
+import ZAI from 'z-ai-web-dev-sdk';
 
 /**
- * Chat with z.ai API
+ * Chat with z.ai API using the built-in SDK
  * POST /api/ai/chat
- * Body: { apiKey: string, baseUrl?: string, messages: ChatMessage[], context?: string }
+ * Body: { messages: ChatMessage[], context?: string }
+ *
+ * Note: Uses internal z.ai SDK configured in this environment.
+ * No API key required from users.
  */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { apiKey, baseUrl, messages, context } = body;
-
-    if (!apiKey) {
-      return NextResponse.json({ success: false, error: 'API key is required' }, { status: 400 });
-    }
+    const { messages, context } = body;
 
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
@@ -30,46 +30,24 @@ export async function POST(request: Request) {
       : {
           role: 'system' as const,
           content:
-            'You are a helpful assistant for Traffic Controllers in Western Australia. Answer questions about traffic management, WHS, and road work procedures.',
+            'You are a helpful assistant for Traffic Controllers in Western Australia. Answer questions about traffic management, WHS, and road work procedures. Be concise and practical.',
         };
 
-    // Default base URL for z.ai API
-    const apiUrl = baseUrl || 'https://api.z.ai/v1/chat/completions';
+    // Create SDK instance (uses internal config from /etc/.z-ai-config)
+    const zai = await ZAI.create();
 
-    // Make the API request
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-        'X-Z-AI-From': 'Z',
-      },
-      body: JSON.stringify({
-        messages: [systemMessage, ...messages],
-      }),
+    // Make the chat completion request
+    const response = await zai.chat.completions.create({
+      messages: [systemMessage, ...messages],
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('AI API error:', response.status, errorText);
-      return NextResponse.json(
-        {
-          success: false,
-          error: `API returned ${response.status}: ${errorText.slice(0, 500)}`,
-        },
-        { status: 200 }
-      );
-    }
-
-    const data = await response.json();
-
     // Extract the assistant's response
-    const assistantMessage = data.choices?.[0]?.message?.content || '';
+    const assistantMessage = response.choices?.[0]?.message?.content || '';
 
     return NextResponse.json({
       success: true,
       answer: assistantMessage,
-      usage: data.usage,
+      usage: response.usage,
     });
   } catch (error) {
     console.error('AI chat error:', error);

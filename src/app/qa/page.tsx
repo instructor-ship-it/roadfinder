@@ -41,8 +41,7 @@ export default function QaPage() {
   const [copied, setCopied] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  // AI direct chat state
-  const [aiEnabled, setAiEnabled] = useState(false);
+  // AI direct chat state (built-in, always enabled)
   const [aiAnswer, setAiAnswer] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -96,11 +95,6 @@ export default function QaPage() {
 
     loadDocuments();
     loadSavedQAs();
-
-    // Check if AI is configured
-    const savedKey = localStorage.getItem('ai_api_key') || '';
-    const savedEnabled = localStorage.getItem('ai_chat_enabled') === 'true';
-    setAiEnabled(savedEnabled && savedKey.length > 0);
   }, []);
 
   // Toggle document selection
@@ -163,15 +157,9 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
     setGeneratedPrompt(prompt);
   };
 
-  // Ask AI directly (when configured)
+  // Ask AI directly (built-in)
   const askAiDirectly = async () => {
     if (!question.trim()) return;
-
-    const apiKey = localStorage.getItem('ai_api_key') || '';
-    if (!apiKey) {
-      setAiError('API key not configured. Go to Settings to configure.');
-      return;
-    }
 
     const docsToSearch =
       selectedDocs.size > 0 ? documents.filter((d) => selectedDocs.has(d.id)) : documents;
@@ -191,7 +179,6 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          apiKey,
           messages: [{ role: 'user', content: question }],
           context,
         }),
@@ -375,26 +362,13 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
 
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
         {/* Mode indicator */}
-        {aiEnabled ? (
-          <div className="bg-green-900/30 border border-green-700 rounded-lg p-4 text-sm">
-            <h3 className="font-semibold text-green-300 mb-2">🤖 Direct AI Chat Mode</h3>
-            <p className="text-green-200">
-              Your API key is configured. Ask questions directly and get AI-powered answers!
-            </p>
-          </div>
-        ) : (
-          <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-4 text-sm">
-            <h3 className="font-semibold text-blue-300 mb-2">📋 Prompt Generator Mode</h3>
-            <p className="text-blue-200 mb-2">
-              Configure your z.ai API key in Settings to enable direct AI chat.
-            </p>
-            <ol className="text-blue-200 space-y-1 list-decimal list-inside text-xs">
-              <li>Select documents to search (or search all)</li>
-              <li>Type your question</li>
-              <li>Generate and copy the prompt to your AI chat</li>
-            </ol>
-          </div>
-        )}
+        <div className="bg-green-900/30 border border-green-700 rounded-lg p-4 text-sm">
+          <h3 className="font-semibold text-green-300 mb-2">🤖 AI Chat Ready</h3>
+          <p className="text-green-200">
+            Ask questions about traffic management, WHS, and road work procedures. AI answers are
+            powered by the built-in assistant.
+          </p>
+        </div>
 
         {/* Question Input */}
         <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
@@ -407,33 +381,21 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
               placeholder="e.g., What are the speed zone requirements for TC positions?"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              onKeyDown={(e) =>
-                e.key === 'Enter' && (aiEnabled ? askAiDirectly() : generatePrompt())
-              }
+              onKeyDown={(e) => e.key === 'Enter' && askAiDirectly()}
               className="bg-gray-700 border-gray-600 text-white flex-1"
             />
-            {aiEnabled ? (
-              <Button
-                onClick={askAiDirectly}
-                disabled={!question.trim() || aiLoading}
-                className="bg-green-600 hover:bg-green-700 px-6"
-              >
-                {aiLoading ? '🤔 Thinking...' : '🤖 Ask AI'}
-              </Button>
-            ) : (
-              <Button
-                onClick={generatePrompt}
-                disabled={!question.trim()}
-                className="bg-blue-600 hover:bg-blue-700 px-4"
-              >
-                Generate Prompt
-              </Button>
-            )}
+            <Button
+              onClick={askAiDirectly}
+              disabled={!question.trim() || aiLoading}
+              className="bg-green-600 hover:bg-green-700 px-6"
+            >
+              {aiLoading ? '🤔 Thinking...' : '🤖 Ask AI'}
+            </Button>
           </div>
         </div>
 
-        {/* AI Answer (when direct mode) */}
-        {aiEnabled && (aiAnswer || aiError) && (
+        {/* AI Answer */}
+        {(aiAnswer || aiError) && (
           <div
             className={`rounded-lg p-4 border ${aiError ? 'bg-red-900/30 border-red-700' : 'bg-green-900/30 border-green-700'}`}
           >
@@ -532,8 +494,8 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
           </p>
         </div>
 
-        {/* Generated Prompt (when prompt generator mode) */}
-        {!aiEnabled && generatedPrompt && (
+        {/* Generated Prompt (fallback) */}
+        {generatedPrompt && (
           <div className="bg-green-900/30 border border-green-700 rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold text-green-300">✅ Your Prompt is Ready!</h3>
