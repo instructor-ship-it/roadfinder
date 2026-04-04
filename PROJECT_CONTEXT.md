@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
 > **Last Updated:** 2026-04-03
-> **Current Version:** 1.20.1
+> **Current Version:** 1.21.0
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -425,7 +425,33 @@ See `scripts/README.md` for full documentation of available scripts.
 
 ## Recent Changes (v5.x)
 
-### 1.20.1 (Current) - Turbo Mode for GPS Tracking
+### 1.21.0 (Current) - Direct AI Chat for Q&A Assistant
+
+- **AI Q&A Direct Chat Mode**
+  - Configure z.ai API key in Settings for direct AI-powered answers
+  - No key configured: Prompt generator mode (copy/paste to external AI)
+  - Key configured: Direct AI chat with real-time responses
+- **Settings → AI Assistant Section**
+  - API key input with show/hide toggle
+  - Enable/disable direct AI chat
+  - Test Connection button to verify API key
+  - Clear button to remove stored credentials
+  - Security warning about localStorage storage
+- **Q&A Page Dual Mode**
+  - Auto-detects API key configuration
+  - Shows appropriate interface based on configuration
+  - Save AI responses to Q&A history
+- **API Routes**
+  - `/api/ai/test` - Test API key validity
+  - `/api/ai/chat` - Chat completion endpoint
+- **Files Changed**
+  - `src/components/SettingsDrawer.tsx` (AI settings UI, version 1.21.0)
+  - `src/app/qa/page.tsx` (dual mode support)
+  - `src/app/api/ai/test/route.ts` (NEW)
+  - `src/app/api/ai/chat/route.ts` (NEW)
+  - `package.json` (version 1.21.0)
+
+### 1.20.1 - Turbo Mode for GPS Tracking
 
 - **Turbo Mode Toggle** on SLK Tracking page
   - Fast 200ms GPS refresh for precise SLK positioning

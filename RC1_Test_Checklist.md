@@ -1,4 +1,4 @@
-# TC Work Zone Locator - 1.20.1 Test Checklist
+# TC Work Zone Locator - 1.21.0 Test Checklist
 
 ## Pre-Test Setup
 
@@ -181,7 +181,7 @@
 
 ### Page Load
 
-- [ ] Version shows "1.20.1"
+- [ ] Version shows "1.21.0"
 - [ ] "EKF Filtering Active" shows in purple
 - [ ] "Offline Ready" shows in green if data downloaded
 
@@ -264,7 +264,7 @@
 
 ### Page Load
 
-- [ ] Version shows "1.20.1"
+- [ ] Version shows "1.21.0"
 - [ ] Storage mode shows "Local Storage"
 - [ ] Existing overrides displayed in table
 
@@ -303,7 +303,7 @@
 
 ### Page Load
 
-- [ ] Version shows "1.20.1"
+- [ ] Version shows "1.21.0"
 - [ ] Job list shows grouped by status (Due, TBA, Active, Archived)
 - [ ] Empty state shows "No jobs yet" message
 
@@ -523,7 +523,7 @@
 
 ## Final Checks
 
-- [ ] Version displays "1.20.1" on all pages
+- [ ] Version displays "1.21.0" on all pages
 - [ ] No console errors in browser dev tools
 - [ ] No TypeScript build errors
 - [ ] All features documented in Word docs

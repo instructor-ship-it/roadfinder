@@ -1,7 +1,70 @@
 # TC Work Zone Locator - Work Log
 
-> **Last Updated:** 2026-04-03
-> **Current Version:** 1.20.1
+> **Last Updated:** 2026-04-04
+> **Current Version:** 1.21.0
+
+---
+
+## Task ID: 2026-04-04-001
+
+**Agent:** Main Agent
+**Task:** Direct AI Chat for Q&A Assistant (v1.21.0)
+
+### Work Log:
+
+- **Feature: AI Q&A Direct Chat Mode**
+  - Added ability to configure z.ai API key for direct AI-powered answers
+  - Q&A page auto-detects configuration and switches between modes
+  - Prompt Generator mode: copy/paste to external AI (no setup required)
+  - Direct AI Chat mode: real-time answers from z.ai API
+
+- **Settings → AI Assistant Section**
+  - API key input with show/hide toggle
+  - Enable/disable direct AI chat toggle
+  - Test Connection button to verify API key validity
+  - Clear button to remove stored credentials
+  - Security warning about localStorage storage
+  - Link to z.ai API key management page
+
+- **API Routes Created**
+  - `/api/ai/test` - Tests API key by making a simple request
+  - `/api/ai/chat` - Chat completion endpoint with context support
+  - Uses Bearer token authentication with user's API key
+  - Passes document context to AI for relevant answers
+
+- **Q&A Page Dual Mode**
+  - Green banner: Direct AI Chat Mode (key configured)
+  - Blue banner: Prompt Generator Mode (no key)
+  - Ask AI button (green) when configured
+  - Generate Prompt button (blue) when not configured
+  - Save AI responses to Q&A history
+  - Copy answers to clipboard
+
+### Files Changed:
+
+- `src/components/SettingsDrawer.tsx` (AI settings UI, version 1.21.0)
+- `src/app/qa/page.tsx` (dual mode support, direct AI chat)
+- `src/app/api/ai/test/route.ts` (NEW - API key test endpoint)
+- `src/app/api/ai/chat/route.ts` (NEW - chat completion endpoint)
+- `package.json` (version 1.21.0)
+- `PROJECT_CONTEXT.md` (version header, Recent Changes section)
+- `worklog.md` (this entry)
+
+### Key Learnings:
+
+- **Progressive enhancement**: App works without API key, better with it
+- **User owns their key**: No server-side key storage needed
+- **Dual mode approach**: Backward compatible with existing workflow
+- **Clear UI feedback**: Different colors for different modes
+
+### Stage Summary:
+
+- AI Q&A Direct Chat feature complete and functional
+- Dual mode: Prompt Generator (no key) or Direct AI Chat (key configured)
+- Settings drawer has AI configuration section
+- API routes for testing and chat
+- Version: 1.21.0
+- Ready for push to GitHub
 
 ---
 
@@ -33,8 +96,8 @@
 - `src/hooks/useGpsTracking.ts` (precision mode override in getThrottleInterval)
 - `src/components/drive/RefreshRateToggle.tsx` (NEW - toggle button component)
 - `src/app/drive/page.tsx` (turbo mode state, toggle UI in both layouts)
-- `src/components/SettingsDrawer.tsx` (version 1.20.1)
-- `package.json` (version 1.20.1)
+- `src/components/SettingsDrawer.tsx` (version 1.21.0)
+- `package.json` (version 1.21.0)
 - `PROJECT_CONTEXT.md` (version header, Recent Changes section)
 - `README.md` (version badge, Version History)
 - `worklog.md` (this entry)
@@ -45,7 +108,7 @@
 - One-tap toggle between Default (adaptive) and Precision (200ms) modes
 - 5-minute auto-revert with visual countdown
 - Works in both portrait and landscape orientations
-- Version: 1.20.1
+- Version: 1.21.0
 - Ready for push to GitHub
 
 ---
@@ -2134,7 +2197,7 @@
 
 - `src/app/page.tsx` (generateWorkZoneReport text and HTML sections)
   - Lines 954-1017: Text report signage filtering
-  - Lines 1420-1507: HTML report signage filtering
+  - Lines 1.21.0507: HTML report signage filtering
   - Both now filter signage to ±700m, intersections to ±100m
 
 ### Files Changed:

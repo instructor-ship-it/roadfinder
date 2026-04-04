@@ -16,6 +16,7 @@ import {
   clearQaHistory,
   exportQaHistory,
   importQaHistory,
+  saveQaEntry,
   type QaEntry,
 } from '@/lib/qa-storage';
 
@@ -39,6 +40,12 @@ export default function QaPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [copied, setCopied] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  // AI direct chat state
+  const [aiEnabled, setAiEnabled] = useState(false);
+  const [aiAnswer, setAiAnswer] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
 
   // Load documents and saved Q&As on mount
   useEffect(() => {
@@ -89,6 +96,11 @@ export default function QaPage() {
 
     loadDocuments();
     loadSavedQAs();
+
+    // Check if AI is configured
+    const savedKey = localStorage.getItem('ai_api_key') || '';
+    const savedEnabled = localStorage.getItem('ai_chat_enabled') === 'true';
+    setAiEnabled(savedEnabled && savedKey.length > 0);
   }, []);
 
   // Toggle document selection
@@ -114,7 +126,7 @@ export default function QaPage() {
     setSelectedDocs(new Set());
   };
 
-  // Generate prompt for AI
+  // Generate prompt for AI (for external use)
   const generatePrompt = () => {
     if (!question.trim()) return;
 
@@ -149,6 +161,75 @@ Please answer this question based on the documents listed above. After answering
 Save this to: \`public/library/qa-saved.json\` (append to the array)`;
 
     setGeneratedPrompt(prompt);
+  };
+
+  // Ask AI directly (when configured)
+  const askAiDirectly = async () => {
+    if (!question.trim()) return;
+
+    const apiKey = localStorage.getItem('ai_api_key') || '';
+    if (!apiKey) {
+      setAiError('API key not configured. Go to Settings to configure.');
+      return;
+    }
+
+    const docsToSearch =
+      selectedDocs.size > 0 ? documents.filter((d) => selectedDocs.has(d.id)) : documents;
+
+    // Build context from document titles
+    const context = docsToSearch
+      .slice(0, 10)
+      .map((d) => `Document: ${d.title} (${d.id})`)
+      .join('\n');
+
+    setAiLoading(true);
+    setAiError(null);
+    setAiAnswer(null);
+
+    try {
+      const response = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          apiKey,
+          messages: [{ role: 'user', content: question }],
+          context,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setAiAnswer(data.answer);
+      } else {
+        setAiError(data.error || 'Failed to get answer');
+      }
+    } catch (err) {
+      setAiError(err instanceof Error ? err.message : 'Network error');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  // Save AI answer to history
+  const saveAiAnswer = () => {
+    if (!aiAnswer || !question) return;
+
+    const docsToSearch =
+      selectedDocs.size > 0 ? documents.filter((d) => selectedDocs.has(d.id)) : documents;
+
+    const entry = saveQaEntry({
+      question,
+      answer: aiAnswer,
+      documents: docsToSearch.slice(0, 10).map((d) => d.id),
+      documentNames: docsToSearch.slice(0, 10).map((d) => d.shortTitle),
+      category: 'AI Chat',
+    });
+
+    setSavedQAs((prev) => [entry, ...prev]);
+    setAiAnswer(null);
+    setQuestion('');
+    alert('Saved to Q&A history!');
   };
 
   // Copy to clipboard
@@ -293,19 +374,27 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
-        {/* How it works */}
-        <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-4 text-sm">
-          <h3 className="font-semibold text-blue-300 mb-2">📋 How to use:</h3>
-          <ol className="text-blue-200 space-y-1 list-decimal list-inside">
-            <li>Select documents to search (or search all)</li>
-            <li>Type your question</li>
-            <li>
-              Click <strong>Generate Prompt</strong> and copy it
-            </li>
-            <li>Paste in the AI chat and get your answer</li>
-            <li>Save useful Q&As here for future reference</li>
-          </ol>
-        </div>
+        {/* Mode indicator */}
+        {aiEnabled ? (
+          <div className="bg-green-900/30 border border-green-700 rounded-lg p-4 text-sm">
+            <h3 className="font-semibold text-green-300 mb-2">🤖 Direct AI Chat Mode</h3>
+            <p className="text-green-200">
+              Your API key is configured. Ask questions directly and get AI-powered answers!
+            </p>
+          </div>
+        ) : (
+          <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-4 text-sm">
+            <h3 className="font-semibold text-blue-300 mb-2">📋 Prompt Generator Mode</h3>
+            <p className="text-blue-200 mb-2">
+              Configure your z.ai API key in Settings to enable direct AI chat.
+            </p>
+            <ol className="text-blue-200 space-y-1 list-decimal list-inside text-xs">
+              <li>Select documents to search (or search all)</li>
+              <li>Type your question</li>
+              <li>Generate and copy the prompt to your AI chat</li>
+            </ol>
+          </div>
+        )}
 
         {/* Question Input */}
         <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
@@ -318,17 +407,76 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
               placeholder="e.g., What are the speed zone requirements for TC positions?"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
+              onKeyDown={(e) =>
+                e.key === 'Enter' && (aiEnabled ? askAiDirectly() : generatePrompt())
+              }
               className="bg-gray-700 border-gray-600 text-white flex-1"
             />
-            <Button
-              onClick={generatePrompt}
-              disabled={!question.trim()}
-              className="bg-blue-600 hover:bg-blue-700 px-4"
-            >
-              Generate Prompt
-            </Button>
+            {aiEnabled ? (
+              <Button
+                onClick={askAiDirectly}
+                disabled={!question.trim() || aiLoading}
+                className="bg-green-600 hover:bg-green-700 px-6"
+              >
+                {aiLoading ? '🤔 Thinking...' : '🤖 Ask AI'}
+              </Button>
+            ) : (
+              <Button
+                onClick={generatePrompt}
+                disabled={!question.trim()}
+                className="bg-blue-600 hover:bg-blue-700 px-4"
+              >
+                Generate Prompt
+              </Button>
+            )}
           </div>
         </div>
+
+        {/* AI Answer (when direct mode) */}
+        {aiEnabled && (aiAnswer || aiError) && (
+          <div
+            className={`rounded-lg p-4 border ${aiError ? 'bg-red-900/30 border-red-700' : 'bg-green-900/30 border-green-700'}`}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <h3 className={`font-semibold ${aiError ? 'text-red-300' : 'text-green-300'}`}>
+                {aiError ? '❌ Error' : '✅ AI Answer'}
+              </h3>
+              {aiAnswer && (
+                <div className="flex gap-2">
+                  <Button
+                    onClick={saveAiAnswer}
+                    className="bg-purple-600 hover:bg-purple-700 text-sm"
+                  >
+                    💾 Save to History
+                  </Button>
+                  <Button
+                    onClick={() => copyToClipboard(aiAnswer)}
+                    className="bg-blue-600 hover:bg-blue-700 text-sm"
+                  >
+                    {copied ? '✓ Copied!' : '📋 Copy'}
+                  </Button>
+                </div>
+              )}
+            </div>
+            {aiError ? (
+              <p className="text-red-200">{aiError}</p>
+            ) : aiAnswer ? (
+              <div className="prose prose-invert prose-sm max-w-none text-gray-200">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{aiAnswer}</ReactMarkdown>
+              </div>
+            ) : null}
+            {aiAnswer && selectedDocs.size > 0 && (
+              <p className="text-xs text-gray-500 mt-3">
+                Sources:{' '}
+                {documents
+                  .filter((d) => selectedDocs.has(d.id))
+                  .slice(0, 10)
+                  .map((d) => d.shortTitle)
+                  .join(', ')}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Document Selection */}
         <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
@@ -384,8 +532,8 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
           </p>
         </div>
 
-        {/* Generated Prompt */}
-        {generatedPrompt && (
+        {/* Generated Prompt (when prompt generator mode) */}
+        {!aiEnabled && generatedPrompt && (
           <div className="bg-green-900/30 border border-green-700 rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold text-green-300">✅ Your Prompt is Ready!</h3>

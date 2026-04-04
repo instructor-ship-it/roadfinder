@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 
 // App version constant - single source of truth
-export const APP_VERSION = '1.20.1';
+export const APP_VERSION = '1.21.0';
 
 // Offline toggles type - shared with page.tsx
 export interface OfflineToggles {
@@ -170,10 +170,64 @@ export function SettingsDrawer({
   const [showAdminSync, setShowAdminSync] = useState(false);
   const [showGpsTracking, setShowGpsTracking] = useState(false);
   const [showOfflineData, setShowOfflineData] = useState(false); // Always start collapsed
+  const [showAiSettings, setShowAiSettings] = useState(false);
+
+  // AI settings state
+  const [aiApiKey, setAiApiKey] = useState('');
+  const [aiEnabled, setAiEnabled] = useState(false);
+  const [aiTestingKey, setAiTestingKey] = useState(false);
+  const [aiKeyVisible, setAiKeyVisible] = useState(false);
+
+  // Load AI settings from localStorage
+  useEffect(() => {
+    const savedKey = localStorage.getItem('ai_api_key') || '';
+    const savedEnabled = localStorage.getItem('ai_chat_enabled') === 'true';
+    setAiApiKey(savedKey);
+    setAiEnabled(savedEnabled && savedKey.length > 0);
+  }, []);
+
   // Keep in sync: when data is downloaded, collapse; when cleared, also collapse
   useEffect(() => {
     if (offlineStats) setShowOfflineData(false);
   }, [offlineStats]);
+
+  // Save AI settings
+  const saveAiSettings = (key: string, enabled: boolean) => {
+    localStorage.setItem('ai_api_key', key);
+    localStorage.setItem('ai_chat_enabled', enabled.toString());
+    setAiApiKey(key);
+    setAiEnabled(enabled && key.length > 0);
+  };
+
+  // Test AI connection
+  const testAiConnection = async () => {
+    if (!aiApiKey) return;
+    setAiTestingKey(true);
+    try {
+      const response = await fetch('/api/ai/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apiKey: aiApiKey }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        alert('✓ Connection successful! API key is valid.');
+      } else {
+        alert('✗ Connection failed: ' + (data.error || 'Invalid API key'));
+      }
+    } catch (err) {
+      alert('✗ Connection failed: Network error');
+    } finally {
+      setAiTestingKey(false);
+    }
+  };
+
+  // Clear AI settings
+  const clearAiSettings = () => {
+    if (confirm('Clear AI API key? You will need to re-enter it to use direct AI chat.')) {
+      saveAiSettings('', false);
+    }
+  };
 
   // Page-specific info
   const pageName = variant === 'home' ? 'TC Work Zone Locator' : 'SLK Tracking';
@@ -1068,6 +1122,120 @@ export function SettingsDrawer({
               )}
             </div>
           )}
+
+          {/* AI ASSISTANT Section */}
+          <div className="mb-3">
+            <button
+              onClick={() => setShowAiSettings(!showAiSettings)}
+              className="w-full text-left text-sm font-semibold text-purple-400 py-2 flex items-center gap-2 border-b border-gray-700/50"
+            >
+              <span
+                className={`transition-transform duration-200 ${showAiSettings ? 'rotate-90' : ''}`}
+              >
+                ›
+              </span>
+              🤖 AI Assistant
+              {aiEnabled && (
+                <span className="text-xs text-green-400 bg-green-900/30 px-1.5 py-0.5 rounded ml-1">
+                  ✓ Configured
+                </span>
+              )}
+            </button>
+
+            {showAiSettings && (
+              <div className="space-y-3 mt-2 pl-3 border-l-4 border-purple-500/60">
+                <div className="bg-gray-900/50 rounded-lg p-3 text-xs">
+                  <p className="text-gray-400 mb-2">
+                    Configure your z.ai API key for direct AI chat in the Q&A Assistant. Without a
+                    key, the Q&A page generates prompts for you to copy to external AI chats.
+                  </p>
+                  <a
+                    href="https://z.ai/manage-apikey/apikey-list"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:underline"
+                  >
+                    Get your API key at z.ai →
+                  </a>
+                </div>
+
+                {/* Enable Toggle */}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-white">Enable Direct AI Chat</span>
+                  <button
+                    onClick={() => saveAiSettings(aiApiKey, !aiEnabled)}
+                    disabled={!aiApiKey}
+                    className={`w-12 h-6 rounded-full transition-colors ${
+                      aiEnabled ? 'bg-green-600' : 'bg-gray-600'
+                    } ${!aiApiKey ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    <span
+                      className={`block w-4 h-4 rounded-full bg-white transition-transform ${
+                        aiEnabled ? 'translate-x-6' : 'translate-x-0'
+                      }`}
+                    ></span>
+                  </button>
+                </div>
+
+                {/* API Key Input */}
+                <div>
+                  <label className="block text-sm text-gray-400 mb-1">API Key</label>
+                  <div className="relative">
+                    <input
+                      type={aiKeyVisible ? 'text' : 'password'}
+                      value={aiApiKey}
+                      onChange={(e) => setAiApiKey(e.target.value)}
+                      placeholder="{API Key ID}.{secret}"
+                      className="w-full bg-gray-700 border border-gray-600 text-white rounded px-3 py-2 pr-10 text-sm font-mono"
+                    />
+                    <button
+                      onClick={() => setAiKeyVisible(!aiKeyVisible)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                    >
+                      {aiKeyVisible ? '🙈' : '👁️'}
+                    </button>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Format: {`{ID}.{secret}`} • Stored locally on this device
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-2">
+                  <Button
+                    onClick={testAiConnection}
+                    disabled={!aiApiKey || aiTestingKey}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-sm"
+                  >
+                    {aiTestingKey ? 'Testing...' : 'Test Connection'}
+                  </Button>
+                  <Button
+                    onClick={() => saveAiSettings(aiApiKey, aiEnabled)}
+                    disabled={!aiApiKey}
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-sm"
+                  >
+                    Save
+                  </Button>
+                  {aiApiKey && (
+                    <Button
+                      onClick={clearAiSettings}
+                      className="bg-red-600 hover:bg-red-700 text-sm"
+                    >
+                      Clear
+                    </Button>
+                  )}
+                </div>
+
+                {/* Warning */}
+                <div className="bg-amber-900/30 border border-amber-700/50 rounded p-2 text-xs">
+                  <p className="text-amber-300">
+                    ⚠️ Your API key is stored on this device only. You are responsible for any API
+                    usage costs.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </DrawerContent>
     </Drawer>
