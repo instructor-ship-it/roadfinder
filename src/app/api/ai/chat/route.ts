@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
  * POST /api/ai/chat
  * Body: { apiKey?: string, messages: ChatMessage[], context?: string }
  *
- * Uses internal endpoint if no API key provided, or user's key with public API.
+ * Uses z.ai public API: https://api.z.ai/api/paas/v4/chat/completions
  */
 export async function POST(request: Request) {
   try {
@@ -15,6 +15,13 @@ export async function POST(request: Request) {
     if (!messages || !Array.isArray(messages)) {
       return NextResponse.json(
         { success: false, error: 'Messages array is required' },
+        { status: 400 }
+      );
+    }
+
+    if (!apiKey) {
+      return NextResponse.json(
+        { success: false, error: 'API key is required. Configure it in Settings.' },
         { status: 400 }
       );
     }
@@ -31,32 +38,18 @@ export async function POST(request: Request) {
             'You are a helpful assistant for Traffic Controllers in Western Australia. Answer questions about traffic management, WHS, and road work procedures. Be concise and practical.',
         };
 
-    // Use internal endpoint if no user API key provided
-    const useInternal = !apiKey;
-    const apiUrl = useInternal
-      ? 'http://172.25.136.193:8080/v1/chat/completions'
-      : 'https://z.ai/api/v1/chat/completions';
-
-    // Build headers based on which endpoint we're using
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-
-    if (useInternal) {
-      // Internal endpoint needs X-Token (currently not configured)
-      headers['Authorization'] = 'Bearer Z.ai';
-      headers['X-Z-AI-From'] = 'Z';
-      headers['X-Token'] = 'Z.ai';
-    } else {
-      // Public API with user's key
-      headers['Authorization'] = `Bearer ${apiKey}`;
-    }
+    // z.ai API endpoint (from docs.z.ai)
+    const apiUrl = 'https://api.z.ai/api/paas/v4/chat/completions';
 
     // Make the API request
     const response = await fetch(apiUrl, {
       method: 'POST',
-      headers,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
       body: JSON.stringify({
+        model: 'glm-4-plus',
         messages: [systemMessage, ...messages],
       }),
     });
@@ -68,27 +61,36 @@ export async function POST(request: Request) {
       // Parse error for better messages
       try {
         const errorJson = JSON.parse(errorText);
-        if (errorJson.error?.code === 'insufficient_balance') {
-          return NextResponse.json(
-            {
-              success: false,
-              error: 'Insufficient API balance. Please add credits to your z.ai account.',
-              needsCredits: true,
-            },
-            { status: 200 }
-          );
-        }
-      } catch {
-        // Not JSON, continue with raw error
-      }
+        const errorCode = errorJson.error?.code;
+        const errorMsg = errorJson.error?.message || errorJson.error?.code;
 
-      return NextResponse.json(
-        {
+        if (errorCode === '1113' || errorMsg?.includes('Insufficient balance')) {
+          return NextResponse.json({
+            success: false,
+            error:
+              'Insufficient API balance. Please add credits to your z.ai account at z.ai/manage-apikey/billing',
+            needsCredits: true,
+          });
+        }
+
+        if (errorCode === '1211' || errorMsg?.includes('Unknown Model')) {
+          return NextResponse.json({
+            success: false,
+            error: 'API key may be invalid or not have access to this model.',
+          });
+        }
+
+        return NextResponse.json({
           success: false,
-          error: `API returned ${response.status}: ${errorText.slice(0, 500)}`,
-        },
-        { status: 200 }
-      );
+          error: errorMsg || `API error: ${response.status}`,
+        });
+      } catch {
+        // Not JSON, return raw error
+        return NextResponse.json({
+          success: false,
+          error: `API returned ${response.status}: ${errorText.slice(0, 200)}`,
+        });
+      }
     }
 
     const data = await response.json();
@@ -103,12 +105,9 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('AI chat error:', error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
   }
 }
