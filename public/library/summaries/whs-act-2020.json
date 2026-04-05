@@ -1,8 +1,28 @@
 {
   "title": "Work Health and Safety Act 2020",
-  "abstract": "The Work Health and Safety Act 2020 is Western Australia's primary work health and safety legislation, which replaced the Occupational Safety and Health Act 1984. The Act commenced on 31 March 2022 and brings WA into the nationally harmonized WHS framework adopted across most Australian jurisdictions.\n\nThe Act establishes a primary duty of care for persons conducting a business or undertaking (PCBUs) to ensure, so far as is reasonably practicable, the health and safety of workers and others affected by the work. Officers (directors and senior executives) must exercise due diligence to ensure compliance with these duties.\n\nKey provisions include worker representation through Health and Safety Representatives (HSRs), enforcement powers for WorkSafe WA including improvement and prohibition notices, and industrial manslaughter provisions for negligent conduct causing death. The Act covers all workplaces in WA except mines and petroleum operations.",
-  "keywords": ["legislation", "primary", "legal"],
-  "targetAudience": [],
+  "abstract": "The Work Health and Safety Act 2020 establishes Western Australia's primary legislative framework for workplace health and safety. The Act defines key stakeholders including persons conducting businesses or undertakings (PCBUs), officers, workers, and other persons at workplaces, each with specific duties and obligations. It outlines primary duty of care requirements, incident notification obligations, and consultation requirements. The legislation introduces industrial manslaughter provisions and establishes a tiered penalty structure for non-compliance ranging from Category 1 to Category 3 offences. This Act provides the foundational legal requirements for all workplace health and safety practices in Western Australia, including traffic management operations.",
+  "keywords": [
+    "WHS legislation",
+    "primary duty of care",
+    "PCBU",
+    "reasonably practicable",
+    "incident notification",
+    "industrial manslaughter",
+    "workplace safety",
+    "officer duties",
+    "consultation",
+    "compliance penalties"
+  ],
+  "targetAudience": [
+    "PCBUs",
+    "Officers and Senior Management",
+    "Traffic Controllers",
+    "Site Managers",
+    "Health and Safety Representatives",
+    "Workers",
+    "Workplace Inspectors",
+    "Project Managers"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Part 1",
@@ -900,12 +920,12 @@
     },
     {
       "sectionNumber": "161",
-      "sectionTitle": "Conditions on inspectors\u2019 compliance powers",
+      "sectionTitle": "Conditions on inspectors’ compliance powers",
       "page": 112
     },
     {
       "sectionNumber": "162",
-      "sectionTitle": "Inspectors subject to regulator\u2019s directions",
+      "sectionTitle": "Inspectors subject to regulator’s directions",
       "page": 112
     },
     {
@@ -1598,9 +1618,77 @@
       "page": 177
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Primary duty of care to ensure, so far as is reasonably practicable, the health and safety of workers engaged or caused to be engaged by the person, and workers whose activities are influenced or directed by the person",
+      "section": "Section 19",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Officers must exercise due diligence to ensure that the PCBU complies with its duties and obligations",
+      "section": "Section 27",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Workers must take reasonable care for their own health and safety and take reasonable care that their acts or omissions do not adversely affect the health and safety of other persons",
+      "section": "Section 28",
+      "priority": "high"
+    },
+    {
+      "requirement": "Duty to notify the regulator of notifiable incidents immediately after becoming aware of the incident",
+      "section": "Section 38",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Duty to preserve incident sites for investigation purposes",
+      "section": "Section 39",
+      "priority": "high"
+    },
+    {
+      "requirement": "Consultation with workers on health and safety matters that directly affect them",
+      "section": "Section 47",
+      "priority": "high"
+    },
+    {
+      "requirement": "Management of risks to health and safety associated with the business or undertaking",
+      "section": "Section 17",
+      "priority": "critical"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "Industrial manslaughter is now a criminal offence under Section 30A with severe penalties for negligent conduct causing death",
+      "reference": "Section 30A",
+      "consequence": "Criminal prosecution with significant imprisonment terms and substantial fines"
+    },
+    {
+      "note": "Category 1 offences apply to reckless conduct exposing an individual to a risk of death or serious injury or illness",
+      "reference": "Section 31",
+      "consequence": "Maximum penalties include imprisonment and substantial fines for individuals and corporations"
+    },
+    {
+      "note": "All duty holders must understand and apply the principle of what is reasonably practicable in ensuring health and safety",
+      "reference": "Section 18",
+      "consequence": "Failure to meet reasonably practicable standard may result in Category 2 or 3 offences and associated penalties"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "whs-general-regs-2022",
+      "reason": "Supporting regulations that provide detailed requirements for implementing the Act provisions",
+      "relevance": "supplementary"
+    },
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "Specific guidance for traffic management activities under the WHS Act framework",
+      "relevance": "supplementary"
+    },
+    {
+      "documentId": "mrwa-whs-controls",
+      "reason": "Minimum WHS control standards for MRWA projects",
+      "relevance": "related"
+    }
+  ],
   "lastUpdated": "Current",
   "issuingAuthority": "WA Government",
   "pages": 312,
@@ -1608,5 +1696,6 @@
   "documentId": "whs-act-2020",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:12:37.986Z"
 }

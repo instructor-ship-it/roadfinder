@@ -1,8 +1,24 @@
 {
   "title": "AGTTM Part 6 - Field Staff Implementation",
-  "abstract": "AGTTM Part 6 is a practical implementation guide for field personnel involved in setting up, monitoring, and removing temporary traffic management. It translates the technical requirements of other AGTTM parts into practical on-site procedures.\n\nThe guide covers the day-to-day activities of traffic management crews including pre-start checks, equipment inspection, signage installation sequences, ongoing monitoring requirements, and pack-down procedures. It provides step-by-step guidance for common tasks and decision-making frameworks for unexpected situations.\n\nThis part is particularly valuable for Traffic Controllers and traffic management crew members. It addresses practical considerations like positioning of vehicles, communication methods, dealing with public inquiries, and responding to incidents. The guide complements formal training by providing a reference for field implementation of traffic management requirements.",
-  "keywords": ["agttm", "field-staff", "implementation"],
-  "targetAudience": [],
+  "abstract": "AGTTM Part 6 provides practical implementation guidance for field personnel responsible for traffic management at roadwork sites. This guide translates technical requirements from AGTTM Parts 1-5 into operational on-site procedures, serving as a field-ready reference for traffic controllers, site supervisors, and work crews. The document covers essential field operations including pre-start safety checks, equipment inspection protocols, signage installation sequences, ongoing site monitoring requirements, and pack-down procedures. It provides step-by-step guidance for common traffic management tasks and decision-making frameworks for handling unexpected situations.",
+  "keywords": [
+    "field staff",
+    "traffic controller",
+    "on-site procedures",
+    "pre-start checks",
+    "equipment inspection",
+    "signage installation",
+    "site monitoring",
+    "pack-down procedures"
+  ],
+  "targetAudience": [
+    "Traffic controllers",
+    "Site supervisors",
+    "Work crew members",
+    "Field personnel",
+    "Roadwork contractors",
+    "Traffic management implementers"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Part 6",
@@ -140,9 +156,50 @@
       "sectionTitle": "TTM Relationships"
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Conduct mandatory pre-start safety checks before commencing traffic management activities",
+      "section": "Section 3",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Perform comprehensive equipment inspections to verify condition and compliance",
+      "section": "Section 4",
+      "priority": "high"
+    },
+    {
+      "requirement": "Follow prescribed signage installation sequences as per approved TGS",
+      "section": "Section 5",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Apply decision-making frameworks for unexpected situations",
+      "section": "Section 7",
+      "priority": "high"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "Field personnel must hold appropriate competency certifications as required by jurisdiction"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "agttm-part-3",
+      "reason": "Technical requirements being implemented",
+      "relevance": "prerequisite"
+    },
+    {
+      "documentId": "agttm-part-7",
+      "reason": "Traffic controller specific guidance",
+      "relevance": "related"
+    },
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "WA-specific field implementation requirements",
+      "relevance": "supplementary"
+    }
+  ],
   "lastUpdated": "Edition 1.1, 2021",
   "issuingAuthority": "Austroads",
   "pages": 59,
@@ -150,5 +207,6 @@
   "documentId": "agttm-part-6",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:18:28.539Z"
 }

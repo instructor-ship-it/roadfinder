@@ -1,8 +1,25 @@
 {
   "title": "AGTTM Part 2 - Traffic Management Planning",
-  "abstract": "AGTTM Part 2 provides the framework for planning temporary traffic management on roads across Australia and New Zealand. It establishes the principles and processes for developing traffic management plans that maintain safety and traffic flow during road works.\n\nThe guide covers traffic management planning fundamentals including traffic flow analysis, capacity calculations, and delay assessments. It provides methodologies for determining appropriate traffic management approaches based on traffic volumes, road characteristics, and work activities. The planning process considers road user needs, worker safety, and the broader traffic network impacts.\n\nTraffic Management Supervisors use this guide when developing Traffic Management Plans (TMPs) for complex or high-impact works. The guide provides the technical basis for decisions about lane closures, detours, contraflow arrangements, and work scheduling to minimize traffic disruption while maintaining safety.",
-  "keywords": ["agttm", "planning", "traffic-volumes"],
-  "targetAudience": [],
+  "abstract": "AGTTM Part 2 provides a comprehensive framework for planning temporary traffic management in Australia and New Zealand. It establishes systematic approaches to traffic flow analysis, capacity calculations, and delay assessments for road work activities. The document guides practitioners in determining appropriate traffic management strategies by considering traffic volumes, road characteristics, and work activities. It serves as the primary reference for developing Traffic Management Plans (TMPs) for complex road works, ensuring safe and efficient traffic flow through and around work sites while maintaining acceptable service levels for road users.",
+  "keywords": [
+    "traffic management planning",
+    "temporary traffic management",
+    "traffic flow analysis",
+    "capacity calculations",
+    "delay assessment",
+    "traffic management plans",
+    "TMP development",
+    "road works"
+  ],
+  "targetAudience": [
+    "Traffic Management Supervisors",
+    "Traffic Management Planners",
+    "Road Design Engineers",
+    "Project Managers",
+    "Road Authorities",
+    "Construction Contractors",
+    "Traffic Engineers"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Part 2",
@@ -106,9 +123,50 @@
       "sectionTitle": "How the Traffic Management Plan is Used"
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Conduct comprehensive traffic flow analysis before implementing temporary traffic management",
+      "section": "Section 2",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Perform capacity calculations to ensure road network can accommodate diverted traffic",
+      "section": "Section 3",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Assess and minimize delays to acceptable levels for all road users",
+      "section": "Section 4",
+      "priority": "high"
+    },
+    {
+      "requirement": "Document all planning decisions and rationale in formal Traffic Management Plans",
+      "section": "Section 5",
+      "priority": "high"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "TMPs developed under this framework must be reviewed and approved by qualified personnel before implementation"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "WA-specific requirements that supplement Part 2",
+      "relevance": "supplementary"
+    },
+    {
+      "documentId": "agttm-part-1",
+      "reason": "Foundation principles",
+      "relevance": "prerequisite"
+    },
+    {
+      "documentId": "agttm-part-3",
+      "reason": "Static worksite requirements based on planning guidance",
+      "relevance": "related"
+    }
+  ],
   "lastUpdated": "Edition 1.1, 2021",
   "issuingAuthority": "Austroads",
   "pages": 68,
@@ -116,5 +174,6 @@
   "documentId": "agttm-part-2",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:18:28.534Z"
 }

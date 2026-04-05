@@ -1,8 +1,25 @@
 {
   "title": "AGTTM Part 8 - Processes and Procedures",
-  "abstract": "AGTTM Part 8 establishes the organizational framework for temporary traffic management including roles, responsibilities, and administrative processes. It defines the functional relationships between road authorities, contractors, and personnel involved in traffic management.\n\nThe guide details the responsibilities of key roles including the Traffic Management Designer, Traffic Management Supervisor, and Traffic Controller. It establishes the competency framework and certification requirements for each role. The processes for planning, approving, implementing, and auditing traffic management are comprehensively documented.\n\nAdministrative requirements including documentation, record keeping, incident reporting, and variations are covered. The guide also addresses the process for seeking approval to vary from standards and the risk assessment methodology required. This part is essential for understanding the governance framework and ensuring compliance with procedural requirements.",
-  "keywords": ["agttm", "processes", "roles"],
-  "targetAudience": [],
+  "abstract": "AGTTM Part 8 establishes the organizational framework for temporary traffic management, defining roles, responsibilities, and administrative processes essential for effective traffic management operations. This standard details the functional relationships between road authorities, contractors, and personnel involved in temporary traffic management. It provides comprehensive guidance on the competency framework, certification requirements, documentation standards, record keeping obligations, incident reporting procedures, and the process for managing variations to traffic management plans.",
+  "keywords": [
+    "temporary traffic management",
+    "organizational framework",
+    "roles and responsibilities",
+    "Traffic Management Designer",
+    "Traffic Management Supervisor",
+    "Traffic Controller",
+    "competency framework",
+    "certification requirements"
+  ],
+  "targetAudience": [
+    "Traffic Management Designers",
+    "Traffic Management Supervisors",
+    "Traffic Controllers",
+    "Road authorities",
+    "Contractors and subcontractors",
+    "Project managers",
+    "Certification bodies"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Part 8",
@@ -84,9 +101,50 @@
       "sectionTitle": "Roles and responsibilities"
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Defined organizational structure with clear reporting lines between road authorities, contractors, and personnel",
+      "section": "Section 2",
+      "priority": "high"
+    },
+    {
+      "requirement": "Documented roles and responsibilities for TMD, TMS, and TC",
+      "section": "Section 3",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Competency framework ensuring all personnel meet minimum qualification standards",
+      "section": "Section 4",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Formal variations process for modifications to approved traffic management plans",
+      "section": "Section 7",
+      "priority": "high"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "All personnel must hold current certifications appropriate to their role and responsibilities"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "agttm-part-1",
+      "reason": "Introduction to AGTTM",
+      "relevance": "prerequisite"
+    },
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "WA-specific roles and responsibilities",
+      "relevance": "supplementary"
+    },
+    {
+      "documentId": "whs-act-2020",
+      "reason": "Legal framework for workplace safety roles",
+      "relevance": "essential"
+    }
+  ],
   "lastUpdated": "Edition 2.0, 2025",
   "issuingAuthority": "Austroads",
   "pages": 116,
@@ -94,5 +152,6 @@
   "documentId": "agttm-part-8",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:18:28.540Z"
 }

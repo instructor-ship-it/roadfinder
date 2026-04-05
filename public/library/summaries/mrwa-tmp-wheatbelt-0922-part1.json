@@ -1,8 +1,26 @@
 {
   "title": "Non-Complex Traffic Management Arrangements - Wheatbelt Region (Part 1)",
-  "abstract": "This Traffic Management Plan provides pre-approved traffic guidance schemes for non-complex traffic management arrangements on state roads in the Wheatbelt region of Western Australia. It is designed for use by accredited Traffic Management personnel on MRWA-maintained roads within the Wheatbelt region.\n\nPart 1 contains the introduction, scope, and the first section of Traffic Guidance Scheme (TGS) diagrams covering pages 1-290. The TGS diagrams cover various work scenarios including lane closures, shoulder closures, mobile works, and short-term low-impact works specific to rural road environments.\n\nThe diagrams are categorized by type: Setup and Guidance (IW), Lane Closures (LC), Lateral Shifts (LS), Reversible Flow (RF), Emergency Setups (EW), and Aftercare (AC). Each diagram includes speed zone requirements, signage schedules, and implementation notes. This TMP should be used in conjunction with the MRWA Code of Practice and requires site-specific adaptation by a Traffic Management Supervisor.",
-  "keywords": ["tmp", "wheatbelt", "non-complex", "tgs"],
-  "targetAudience": ["Traffic Management Supervisors", "Traffic Controllers"],
+  "abstract": "Pre-approved traffic guidance schemes (TGS) for non-complex traffic management arrangements on state roads in the Wheatbelt region of Western Australia. This document provides standardized TGS diagrams organized into six categories: Setup and Guidance (IW), Lane Closures (LC), Lateral Shifts (LS), Reversible Flow (RF), Emergency Setups (EW), and Aftercare (AC). Each diagram includes speed zone requirements, signage schedules, and implementation notes specifically adapted for rural road environments.",
+  "keywords": [
+    "traffic management plan",
+    "MRWA",
+    "Wheatbelt region",
+    "traffic guidance scheme",
+    "TGS",
+    "lane closure",
+    "lateral shift",
+    "rural roads",
+    "state roads",
+    "Western Australia"
+  ],
+  "targetAudience": [
+    "Traffic management planners",
+    "Road construction contractors",
+    "Local government authorities",
+    "MRWA regional officers",
+    "Traffic controllers",
+    "Road maintenance crews"
+  ],
   "completeSections": [
     {
       "sectionNumber": "1",
@@ -625,5 +643,45 @@
   "documentId": "mrwa-tmp-wheatbelt-0922-part1",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "keyRequirements": [
+    {
+      "requirement": "All TGS implementations must comply with speed zone requirements specified for each diagram type",
+      "section": "General",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Signage schedules must be followed as documented for each traffic guidance scheme",
+      "section": "General",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Diagrams are pre-approved for non-complex arrangements only on state roads",
+      "section": "Scope",
+      "priority": "high"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "Schemes are pre-approved only for non-complex traffic management scenarios"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "Primary reference document",
+      "relevance": "essential"
+    },
+    {
+      "documentId": "agttm-part-3",
+      "reason": "National standards reference",
+      "relevance": "related"
+    },
+    {
+      "documentId": "as-1742-3",
+      "reason": "Australian Standard compliance",
+      "relevance": "related"
+    }
+  ],
+  "lastProcessed": "2026-04-05T18:20:07.544Z"
 }

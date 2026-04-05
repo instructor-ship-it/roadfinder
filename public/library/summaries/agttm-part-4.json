@@ -1,8 +1,24 @@
 {
   "title": "AGTTM Part 4 - Mobile Works",
-  "abstract": "AGTTM Part 4 addresses traffic management for mobile works where the work activity and traffic control devices move continuously or intermittently along the road. This includes line marking, vegetation control, road sweeping, and inspection activities.\n\nThe guide distinguishes between different types of mobile operations: continuously moving works, intermittent moving works, and works that move at intervals. Each type has different traffic management requirements based on the speed of movement, road environment, and risk profile. The guide covers the use of vehicle-mounted signage, shadow vehicles, and pilot vehicles.\n\nMobile works present unique challenges as the traffic management setup is constantly changing. The guide addresses the requirements for advance warning vehicles, spacing between vehicles, communication protocols, and the roles of personnel involved in mobile operations. It is essential reading for crews conducting any form of moving road work.",
-  "keywords": ["agttm", "mobile-works", "moving-operations"],
-  "targetAudience": [],
+  "abstract": "AGTTM Part 4 - Mobile Works provides comprehensive guidance for traffic management during mobile work activities where both the work operation and traffic control devices move continuously or intermittently along roadways. This standard addresses the unique challenges of managing traffic around moving work zones, covering activities such as line marking, vegetation control, road sweeping, and inspection activities. Key operational elements include requirements for vehicle-mounted signage, shadow vehicles, pilot vehicles, appropriate spacing between vehicles in the work convoy, and communication protocols.",
+  "keywords": [
+    "mobile works",
+    "line marking",
+    "vegetation control",
+    "road sweeping",
+    "vehicle-mounted signage",
+    "shadow vehicles",
+    "pilot vehicles",
+    "moving work zones",
+    "continuously moving works"
+  ],
+  "targetAudience": [
+    "Road work contractors and supervisors",
+    "Traffic management planners",
+    "Line marking crews",
+    "Road maintenance personnel",
+    "Vegetation management teams"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Part 4",
@@ -77,9 +93,52 @@
       "sectionTitle": "Essential Design Principles"
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Classification of mobile works into three categories: continuously moving, intermittent moving, and works moving at intervals",
+      "section": "Section 2",
+      "priority": "high"
+    },
+    {
+      "requirement": "Use of vehicle-mounted signage appropriate to the work type and road environment",
+      "section": "Section 4",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Deployment of shadow vehicles to protect work operations",
+      "section": "Section 5",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Maintenance of minimum spacing distances between vehicles in mobile work convoys",
+      "section": "Section 6",
+      "priority": "high"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "Mobile works must comply with WHS legislation requirements",
+      "reference": "Section 1.2",
+      "consequence": "Non-compliance may result in WHS prosecution"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "agttm-part-1",
+      "reason": "Foundation principles",
+      "relevance": "prerequisite"
+    },
+    {
+      "documentId": "agttm-part-3",
+      "reason": "Complementary guidance for static worksites",
+      "relevance": "related"
+    },
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "WA-specific mobile work requirements",
+      "relevance": "supplementary"
+    }
+  ],
   "lastUpdated": "Edition 1.1, 2021",
   "issuingAuthority": "Austroads",
   "pages": 43,
@@ -87,5 +146,6 @@
   "documentId": "agttm-part-4",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:17:04.209Z"
 }

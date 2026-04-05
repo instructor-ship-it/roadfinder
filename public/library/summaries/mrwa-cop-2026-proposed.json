@@ -1,13 +1,63 @@
 {
   "title": "COP Proposed Updates March 2026",
-  "abstract": "This draft document outlines proposed amendments to the Traffic Management for Works on Roads Code of Practice scheduled for release in March 2026. It provides advance notice of changes that will affect traffic management practices in Western Australia.\n\nThe document is intended for industry consultation and feedback before the changes are finalized. Traffic management companies and practitioners are encouraged to review proposed changes and provide input through the MRWA consultation process.\n\nPlease note that this is a draft document only - the current May 2025 edition of the Code of Practice remains the authoritative reference until the March 2026 edition is officially released. Users should monitor MRWA communications for the official release and transition period.",
-  "keywords": ["code-of-practice", "draft", "updates"],
-  "targetAudience": [],
+  "abstract": "Draft consultation document outlining proposed amendments to the Traffic Management for Works on Roads Code of Practice, scheduled for official release in March 2026. Provides advance notice of anticipated changes to traffic management practices for road works in Western Australia. Intended to facilitate industry consultation and feedback prior to finalization of amendments. The current May 2025 edition remains the authoritative reference until official release.",
+  "keywords": [
+    "traffic management",
+    "code of practice",
+    "proposed amendments",
+    "industry consultation",
+    "Western Australia",
+    "MRWA",
+    "draft",
+    "regulatory update",
+    "March 2026"
+  ],
+  "targetAudience": [
+    "Traffic management practitioners",
+    "Road work contractors",
+    "Local government authorities",
+    "Infrastructure project managers",
+    "Traffic control companies",
+    "Road safety officers"
+  ],
   "completeSections": [],
   "source": "repo",
   "note": "External document - no local file for section extraction",
   "documentId": "mrwa-cop-2026-proposed",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "keyRequirements": [
+    {
+      "requirement": "Review proposed amendments during consultation period",
+      "section": "Consultation",
+      "priority": "medium"
+    },
+    {
+      "requirement": "Continue compliance with current May 2025 edition until official release",
+      "section": "Status",
+      "priority": "high"
+    },
+    {
+      "requirement": "Monitor MRWA communications for consultation timeline",
+      "section": "Consultation",
+      "priority": "medium"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "This document is a draft for consultation purposes only and has no regulatory effect"
+    },
+    {
+      "note": "Current May 2025 edition of the Code of Practice remains legally binding"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "Current authoritative edition",
+      "relevance": "essential"
+    }
+  ],
+  "lastProcessed": "2026-04-05T18:20:07.545Z"
 }

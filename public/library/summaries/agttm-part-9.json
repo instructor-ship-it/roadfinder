@@ -1,8 +1,25 @@
 {
   "title": "AGTTM Part 9 - Sample Layouts",
-  "abstract": "AGTTM Part 9 is a comprehensive visual reference containing sample Traffic Guidance Scheme layouts for a wide range of traffic management scenarios. It provides standardized diagram templates that can be adapted to specific site conditions.\n\nThe guide contains hundreds of sample layouts organized by work type and road environment. Categories include lane closures on multi-lane roads, single lane closures on two-way roads, shoulder closures, intersection treatments, pedestrian management, and road closures with detours. Each layout includes signage schedules, taper lengths, and spacing requirements.\n\nThese sample layouts form the basis for most pre-approved Traffic Management Plans including MRWA's regional TMPs. Traffic Management Designers use these layouts as templates, adapting them to site-specific conditions. The layouts illustrate the application of requirements from Parts 3, 4, and 5, showing how theoretical requirements translate into practical setups.",
-  "keywords": ["agttm", "sample-layouts", "diagrams"],
-  "targetAudience": [],
+  "abstract": "AGTTM Part 9 provides a comprehensive collection of sample traffic guidance scheme layouts for various traffic management scenarios. The document serves as an essential reference guide containing detailed diagrams for lane closures, shoulder closures, mobile works, short-term setups, and emergency configurations. Each layout includes speed zone requirements, signage schedules, and spacing tables to assist traffic management designers in creating compliant site-specific traffic management plans.",
+  "keywords": [
+    "traffic guidance schemes",
+    "sample layouts",
+    "lane closures",
+    "shoulder closures",
+    "mobile works",
+    "short-term traffic management",
+    "emergency traffic control",
+    "speed zones",
+    "signage schedules"
+  ],
+  "targetAudience": [
+    "Traffic management designers",
+    "Road construction supervisors",
+    "Traffic controllers",
+    "Road safety auditors",
+    "Local government traffic engineers",
+    "Construction project managers"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Part 9",
@@ -108,9 +125,50 @@
       "sectionTitle": "Worked Examples"
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Use sample layouts as templates for site-specific traffic guidance schemes",
+      "section": "Section 1",
+      "priority": "high"
+    },
+    {
+      "requirement": "Apply speed zone requirements as specified in each layout diagram",
+      "section": "Section 2",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Implement signage schedules according to the documented sequences",
+      "section": "Section 3",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Adhere to spacing tables for sign placement distances",
+      "section": "Section 4",
+      "priority": "high"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "Sample layouts must be adapted to site-specific conditions"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "agttm-part-3",
+      "reason": "Technical requirements for layouts",
+      "relevance": "prerequisite"
+    },
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "WA-specific layout requirements",
+      "relevance": "supplementary"
+    },
+    {
+      "documentId": "as-1742-3",
+      "reason": "Australian Standard for traffic control devices",
+      "relevance": "related"
+    }
+  ],
   "lastUpdated": "Edition 1.1, 2021",
   "issuingAuthority": "Austroads",
   "pages": 76,
@@ -118,5 +176,6 @@
   "documentId": "agttm-part-9",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:20:07.539Z"
 }

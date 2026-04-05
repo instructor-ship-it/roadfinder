@@ -1,8 +1,27 @@
 {
   "title": "Work Health and Safety (General) Regulations 2022",
-  "abstract": "The Work Health and Safety (General) Regulations 2022 provide the detailed regulatory requirements that support the WHS Act 2020 in Western Australia. These regulations specify how duties under the Act must be fulfilled and set out prescriptive requirements for various workplace hazards and situations.\n\nThe regulations cover a wide range of topics including management of risks, hazardous manual tasks, noise, plant and equipment, hazardous chemicals, construction work, confined spaces, and falling objects. They establish specific control measures and competency requirements that go beyond the general duties in the Act.\n\nFor traffic management and road work, the regulations are particularly relevant for construction work provisions, high-risk construction work requirements, and the management of mobile plant and equipment. Compliance with these regulations is mandatory and enforceable by WorkSafe WA inspectors.",
-  "keywords": ["legislation", "regulations"],
-  "targetAudience": [],
+  "abstract": "The Work Health and Safety (General) Regulations 2022 provides comprehensive regulatory framework supporting the WHS Act 2020 in Western Australia. These regulations establish detailed requirements for managing workplace health and safety risks across various hazardous work activities including confined spaces, falls prevention, and high risk work licensing. The regulations prescribe specific control measures following the hierarchy of controls, exposure standards for noise and hazardous substances, and administrative requirements such as permits and licenses. Key provisions address plant and structures safety, hazardous chemicals management, construction work requirements, and demolition procedures. This legislative instrument ensures duty holders implement systematic approaches to risk management with clear compliance obligations and enforcement mechanisms.",
+  "keywords": [
+    "risk management",
+    "hierarchy of controls",
+    "confined spaces",
+    "high risk work licensing",
+    "fall protection",
+    "hazardous chemicals",
+    "construction safety",
+    "exposure standards",
+    "plant safety",
+    "demolition requirements"
+  ],
+  "targetAudience": [
+    "PCBUs",
+    "Health and Safety Representatives",
+    "Safety Officers and Managers",
+    "Site Supervisors and Project Managers",
+    "High Risk Work License Holders",
+    "Construction Industry Workers",
+    "WHS Regulators and Inspectors"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Chapter 1",
@@ -1230,7 +1249,7 @@
     },
     {
       "sectionNumber": "184G",
-      "sectionTitle": "Record of commercial vehicle drivers\u2019 time",
+      "sectionTitle": "Record of commercial vehicle drivers’ time",
       "page": 210
     },
     {
@@ -1384,9 +1403,52 @@
       "page": 233
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Implement risk management processes identifying hazards, assessing risks, and applying the hierarchy of control measures",
+      "section": "Part 3.1",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Obtain and maintain high risk work licenses for specified classes of work",
+      "section": "Part 4.5",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Establish confined space entry permit systems with atmospheric monitoring and emergency procedures",
+      "section": "Part 4.3",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Implement fall protection measures for work at heights exceeding 2 meters",
+      "section": "Part 4.4",
+      "priority": "critical"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "All high risk work must be performed by licensed operators",
+      "reference": "Regulation 4.5.10",
+      "consequence": "Penalties up to $30,000 for individuals and $150,000 for body corporates"
+    },
+    {
+      "note": "Confined space entry requires written authority specifying hazard controls",
+      "reference": "Regulation 4.3.15",
+      "consequence": "Prohibition notices and prosecution for unauthorized entry"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "whs-act-2020",
+      "reason": "Primary legislation establishing duties and obligations",
+      "relevance": "essential"
+    },
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "Code of Practice for traffic management",
+      "relevance": "high"
+    }
+  ],
   "lastUpdated": "Mar 2024",
   "issuingAuthority": "WA Government",
   "pages": 608,
@@ -1394,5 +1456,6 @@
   "documentId": "whs-general-regs-2022",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:14:41.919Z"
 }

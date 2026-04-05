@@ -1,22 +1,23 @@
 {
   "title": "Minimum WHS Control Standards",
-  "abstract": "The Minimum WHS Control Standards document supplements MRWA Specification 203 and establishes the mandatory work health and safety requirements for all traffic management work conducted under MRWA contracts. This specification sets out the minimum controls that must be implemented on MRWA projects.\n\nThe document covers personal protective equipment (PPE) requirements, site establishment procedures, hazard identification and risk assessment processes, emergency response planning, and incident reporting requirements. It establishes the minimum competency requirements for personnel and specifies the documentation that must be maintained on site.\n\nFor Traffic Controllers and traffic management companies working on MRWA projects, this specification is mandatory reading. It forms part of the contract documents and compliance is required for contractual compliance in addition to WHS legal requirements. The standards are designed to integrate with the WHS Act 2020 and supporting regulations.",
+  "abstract": "This document establishes mandatory Work Health and Safety (WHS) requirements for traffic management work under Main Roads Western Australia (MRWA) contracts. It supplements MRWA Specification 203 and provides comprehensive controls covering personal protective equipment requirements, site establishment procedures, hazard identification and risk assessment methodologies, emergency response planning, and incident reporting protocols. The standard defines minimum competency requirements for personnel engaged in traffic management activities and specifies documentation requirements to ensure compliance and accountability.",
   "keywords": [
-    "whs",
-    "specification",
-    "controls",
-    "MRWA",
-    "safety",
-    "traffic-management",
-    "PPE",
-    "risk-assessment"
+    "WHS controls",
+    "traffic management",
+    "personal protective equipment",
+    "hazard identification",
+    "risk assessment",
+    "emergency response",
+    "incident reporting",
+    "site establishment",
+    "competency requirements"
   ],
   "targetAudience": [
-    "traffic management companies",
-    "traffic controllers",
-    "site supervisors",
-    "safety managers",
-    "contractors working on MRWA projects"
+    "Traffic management contractors",
+    "WHS managers and officers",
+    "Site supervisors and traffic controllers",
+    "Project managers overseeing MRWA roadworks",
+    "Safety advisors"
   ],
   "completeSections": [
     {
@@ -578,5 +579,52 @@
   "documentId": "mrwa-whs-controls",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "keyRequirements": [
+    {
+      "requirement": "Mandatory PPE standards for all personnel engaged in traffic management work",
+      "section": "Section 3",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Prescribed procedures for establishing traffic management sites",
+      "section": "Section 4",
+      "priority": "high"
+    },
+    {
+      "requirement": "Systematic processes for identifying workplace hazards and conducting risk assessments",
+      "section": "Section 5",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Development and implementation of emergency response procedures",
+      "section": "Section 6",
+      "priority": "critical"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "All requirements are mandatory for traffic management work performed under MRWA contracts",
+      "reference": "Section 1.1",
+      "consequence": "Contractual breach and potential WHS prosecution"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "whs-act-2020",
+      "reason": "Primary legislation establishing WHS duties",
+      "relevance": "essential"
+    },
+    {
+      "documentId": "whs-general-regs-2022",
+      "reason": "Regulatory requirements for hazard identification and risk assessment",
+      "relevance": "essential"
+    },
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "Code of Practice for traffic management safety controls",
+      "relevance": "high"
+    }
+  ],
+  "lastProcessed": "2026-04-05T18:17:04.209Z"
 }

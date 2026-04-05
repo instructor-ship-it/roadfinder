@@ -1,8 +1,26 @@
 {
   "title": "Traffic Management for Works on Roads Code of Practice",
-  "abstract": "The Traffic Management for Works on Roads Code of Practice is the primary reference document for all traffic management activities on Western Australian roads. Published by Main Roads Western Australia (MRWA), this code establishes the mandatory requirements and standards that must be followed when conducting any work on roads.\n\nThe code adopts and adapts the Austroads Guide to Temporary Traffic Management (AGTTM) for Western Australian conditions. It covers the roles and responsibilities of all parties involved in traffic management, from Traffic Management Supervisors to Traffic Controllers, and establishes the requirements for traffic management plans, variations, and notifications.\n\nKey topics include traffic guidance scheme requirements, signage standards, speed zoning, pedestrian management, mobile works, short-term low-impact works, and emergency setups. All Traffic Controllers must be familiar with this code as it forms the basis of competency requirements and legal compliance for traffic management work in WA. The May 2025 edition is the current version and supersedes all previous editions.",
-  "keywords": ["code-of-practice", "traffic-management", "standards"],
-  "targetAudience": [],
+  "abstract": "The Traffic Management for Works on Roads Code of Practice is the primary regulatory document governing traffic management activities on Western Australian roads. It establishes comprehensive requirements for Traffic Management Plan (TMP) preparation, approval processes, and implementation procedures for all roadwork activities. The code specifies technical standards for signage, temporary speed zones, traffic control devices, and safety equipment including Truck Mounted Attenuators (TMAs) and Portable Traffic Control Devices (PTCDs). It defines competency and accreditation requirements for traffic controllers and supervisors, while addressing specialized scenarios including mobile works, short-term works, and emergency responses.",
+  "keywords": [
+    "traffic management plan",
+    "temporary traffic control",
+    "roadwork safety",
+    "speed zone management",
+    "traffic controller accreditation",
+    "TMA operations",
+    "vulnerable road users",
+    "signage specifications",
+    "work health safety",
+    "MRWA compliance"
+  ],
+  "targetAudience": [
+    "Traffic Controllers",
+    "Traffic Management Supervisors",
+    "Roadwork Project Managers",
+    "Local Government Engineers",
+    "Construction Contractors",
+    "Work Health and Safety Officers"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Appendix 5",
@@ -34,7 +52,7 @@
     },
     {
       "sectionNumber": "Appendix 1",
-      "sectionTitle": "Addition of \u2018State Road\u2019 definition"
+      "sectionTitle": "Addition of ‘State Road’ definition"
     },
     {
       "sectionNumber": "Appendix 4",
@@ -46,7 +64,7 @@
     },
     {
       "sectionNumber": "Appendix 1",
-      "sectionTitle": "Addition of \u2018Must\u2019 definition"
+      "sectionTitle": "Addition of ‘Must’ definition"
     },
     {
       "sectionNumber": "Appendix 5",
@@ -239,9 +257,62 @@
       "page": 84
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": ["agttm-part-3", "as-1742-3", "mrwa-spec-203"],
+  "keyRequirements": [
+    {
+      "requirement": "All traffic management plans must be prepared by accredited personnel and submitted for approval prior to commencing works",
+      "section": "Section 4.2",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Traffic controllers must hold current Main Roads WA accreditation",
+      "section": "Section 8",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Temporary speed zones must be established in accordance with approved criteria",
+      "section": "Section 6.5",
+      "priority": "high"
+    },
+    {
+      "requirement": "Truck Mounted Attenuators (TMAs) must be deployed for mobile and stationary works on high-speed roads",
+      "section": "Section 6.9",
+      "priority": "high"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "Failure to obtain TMP approval before commencing works constitutes a breach of the Code",
+      "reference": "Section 4.2.1",
+      "consequence": "Work stoppage, potential prosecution"
+    },
+    {
+      "note": "Operation of traffic control activities without valid accreditation is a statutory offence",
+      "reference": "Section 8.1",
+      "consequence": "Fines up to $50,000 for individuals"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "whs-act-2020",
+      "reason": "Primary legislation establishing duty of care obligations",
+      "relevance": "essential"
+    },
+    {
+      "documentId": "as-1742-3",
+      "reason": "Australian Standard for traffic control devices",
+      "relevance": "supplementary"
+    },
+    {
+      "documentId": "agttm-part-3",
+      "reason": "National framework for static worksites",
+      "relevance": "supplementary"
+    },
+    {
+      "documentId": "agttm-part-7",
+      "reason": "Traffic controller standards",
+      "relevance": "supplementary"
+    }
+  ],
   "lastUpdated": "May 2025",
   "issuingAuthority": "MRWA",
   "pages": 158,
@@ -249,5 +320,6 @@
   "documentId": "mrwa-cop-2025",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:15:20.186Z"
 }

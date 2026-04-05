@@ -1,8 +1,23 @@
 {
   "title": "AGTTM Part 7 - Traffic Controllers",
-  "abstract": "AGTTM Part 7 is the definitive guide for Traffic Controllers performing stop-slow baton duties. It establishes the competency requirements, operational procedures, and safety standards for this critical role in traffic management.\n\nThe guide covers the full scope of Traffic Controller duties including positioning, signaling techniques, communication protocols, and hazard awareness. It addresses the specific requirements for different work situations including single controller operations, multiple controller coordination, and night work. The guide also covers emergency procedures and incident response.\n\nCompetency requirements are detailed including the necessary training, assessment, and accreditation processes. The guide establishes the minimum standards that must be met before a person can work as a Traffic Controller. This part is essential reading for all Traffic Controllers and their supervisors, forming the basis for competency-based training and assessment.",
-  "keywords": ["agttm", "traffic-controller", "stop-slow"],
-  "targetAudience": [],
+  "abstract": "AGTTM Part 7 establishes the definitive framework for Traffic Controllers performing stop-slow baton duties within temporary traffic management environments. The document specifies competency requirements, operational procedures, and positioning protocols essential for safe traffic control operations. It details signaling techniques, communication protocols, and hazard awareness practices that ensure controller safety and effective traffic flow management. The standard addresses emergency procedures and outlines comprehensive training and accreditation requirements for personnel.",
+  "keywords": [
+    "Traffic Controller",
+    "stop-slow baton",
+    "temporary traffic management",
+    "competency requirements",
+    "signaling techniques",
+    "accreditation",
+    "hazard awareness"
+  ],
+  "targetAudience": [
+    "Traffic Controllers",
+    "Traffic Management Supervisors",
+    "Traffic Management Planners",
+    "Road Safety Officers",
+    "Training Providers",
+    "WHS Officers"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Part 7",
@@ -64,9 +79,52 @@
       "sectionTitle": "Fitness for Duty"
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Traffic Controllers must hold current accredited competency certification",
+      "section": "Section 2",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Controllers must maintain clear visibility and appropriate positioning",
+      "section": "Section 4",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Standardized stop-slow baton signaling techniques must be applied consistently",
+      "section": "Section 5",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Personal protective equipment including high-visibility clothing must be worn at all times",
+      "section": "Section 8",
+      "priority": "critical"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "Traffic Controller accreditation must be obtained from a registered training organization",
+      "reference": "Section 2",
+      "consequence": "Non-compliant controllers cannot legally perform traffic control duties"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "WA-specific traffic controller requirements",
+      "relevance": "supplementary"
+    },
+    {
+      "documentId": "whs-act-2020",
+      "reason": "Legal obligations for safe work practices",
+      "relevance": "prerequisite"
+    },
+    {
+      "documentId": "agttm-part-3",
+      "reason": "Broader temporary traffic management principles",
+      "relevance": "related"
+    }
+  ],
   "lastUpdated": "Edition 1.1, 2021",
   "issuingAuthority": "Austroads",
   "pages": 41,
@@ -74,5 +132,6 @@
   "documentId": "agttm-part-7",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:15:20.192Z"
 }

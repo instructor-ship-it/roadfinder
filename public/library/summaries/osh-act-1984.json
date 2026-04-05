@@ -1,8 +1,24 @@
 {
   "title": "Occupational Safety and Health Act 1984",
-  "abstract": "The Occupational Safety and Health Act 1984 was Western Australia's primary workplace safety legislation until it was repealed and replaced by the WHS Act 2020 on 31 March 2022. This Act had governed workplace safety in WA for 38 years.\n\nWhile the Act is now repealed, it remains relevant for transitional provisions and understanding the historical framework. Some matters that began under the OSH Act may still be governed by its provisions during the transition period.\n\nThe Act established the general duty of care for employers and employees, requirements for consultation, and the powers of safety inspectors. It differed from the new WHS Act in several key areas including the use of 'employer/employee' terminology rather than 'PCBU/worker', and did not include officer due diligence duties or industrial manslaughter provisions.",
-  "keywords": ["legislation", "repealed", "transitional"],
-  "targetAudience": [],
+  "abstract": "The Occupational Safety and Health Act 1984 (OSH Act) was the primary workplace health and safety legislation in Western Australia prior to its repeal and replacement by the Work Health and Safety Act 2020 (WHS Act) on 31 March 2022. The OSH Act established the foundational framework for workplace safety duties, including the general duty of care obligations for employers to provide and maintain a safe working environment, and for employees to take reasonable care of their own safety and that of others. While now repealed, the OSH Act remains relevant for transitional provisions and understanding the evolution of Western Australian workplace safety regulation.",
+  "keywords": [
+    "Occupational Safety and Health Act 1984",
+    "OSH Act",
+    "workplace safety",
+    "duty of care",
+    "employer obligations",
+    "employee responsibilities",
+    "safety inspectors",
+    "repealed legislation",
+    "transitional provisions"
+  ],
+  "targetAudience": [
+    "Legal practitioners handling historical OSH matters",
+    "WHS professionals",
+    "Organizations managing transitional compliance issues",
+    "Regulatory bodies",
+    "Researchers"
+  ],
   "completeSections": [
     {
       "sectionNumber": "1",
@@ -621,9 +637,42 @@
       "sectionTitle": "Subject matter for"
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Employer duty of care to provide and maintain a safe working environment",
+      "section": "Section 19",
+      "priority": "historical"
+    },
+    {
+      "requirement": "Employee duty of care for their own health and safety and that of others",
+      "section": "Section 20",
+      "priority": "historical"
+    },
+    {
+      "requirement": "Workplace consultation on safety matters",
+      "section": "Section 24",
+      "priority": "historical"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "The OSH Act 1984 was repealed and replaced by the WHS Act 2020 on 31 March 2022",
+      "reference": "Transitional Provisions",
+      "consequence": "Replaced by WHS Act 2020"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "whs-act-2020",
+      "reason": "Successor legislation that replaced the OSH Act",
+      "relevance": "successor"
+    },
+    {
+      "documentId": "whs-general-regs-2022",
+      "reason": "Supporting regulations for the WHS Act",
+      "relevance": "related"
+    }
+  ],
   "lastUpdated": "Repealed (transitional)",
   "issuingAuthority": "WA Government",
   "pages": 156,
@@ -631,5 +680,6 @@
   "documentId": "osh-act-1984",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:17:04.210Z"
 }

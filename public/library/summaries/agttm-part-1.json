@@ -1,8 +1,24 @@
 {
   "title": "AGTTM Part 1 - Introduction",
-  "abstract": "AGTTM Part 1 introduces the Austroads Guide to Temporary Traffic Management series and establishes the overarching framework for temporary traffic management across Australia and New Zealand. It provides the context and principles that underpin all other parts of the guide.\n\nThe guide explains the purpose and structure of the AGTTM series, its relationship with other standards including AS 1742.3, and how the guide is adopted and adapted by different jurisdictions. It establishes key definitions and terminology used throughout the series, ensuring consistent interpretation across all parts.\n\nFundamental concepts covered include the safe system approach to road safety, the hierarchy of controls, risk management principles, and the roles and responsibilities of various parties in temporary traffic management. Understanding Part 1 is essential before delving into the more technical later parts, as it provides the conceptual foundation for why certain requirements exist and how the parts relate to each other. This part should be read by anyone new to traffic management or seeking a deeper understanding of the framework.",
-  "keywords": ["agttm", "introduction", "framework"],
-  "targetAudience": [],
+  "abstract": "AGTTM Part 1 establishes the foundational framework and principles for temporary traffic management across Australia and New Zealand. It defines key terminology, roles, and responsibilities that underpin the entire AGTTM series. The document introduces the safe system approach and hierarchy of controls as fundamental concepts for protecting road users and workers during temporary traffic management activities. It outlines the relationship between AGTTM and other standards including AS 1742.3, providing context for how the series integrates with existing regulatory frameworks.",
+  "keywords": [
+    "AGTTM",
+    "temporary traffic management",
+    "framework",
+    "safe system approach",
+    "hierarchy of controls",
+    "road safety",
+    "Austroads",
+    "risk management"
+  ],
+  "targetAudience": [
+    "Traffic management designers",
+    "Road safety auditors",
+    "Site supervisors",
+    "Project managers",
+    "Regulatory authorities",
+    "Traffic controllers"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Part 1",
@@ -79,9 +95,47 @@
       "sectionTitle": "Processes and Part 10: Supporting"
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Apply the safe system approach to all temporary traffic management activities",
+      "section": "Section 2",
+      "priority": "high"
+    },
+    {
+      "requirement": "Implement hierarchy of controls with elimination as the highest priority",
+      "section": "Section 3",
+      "priority": "high"
+    },
+    {
+      "requirement": "Ensure all personnel understand defined roles and responsibilities",
+      "section": "Section 4",
+      "priority": "high"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "Safe system principles must be demonstrably applied in all traffic management plans",
+      "reference": "Section 2.3",
+      "consequence": "Non-compliance may result in regulatory action"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "WA-specific requirements that supplement AGTTM principles",
+      "relevance": "supplementary"
+    },
+    {
+      "documentId": "agttm-part-2",
+      "reason": "Operational guidance builds on Part 1 framework",
+      "relevance": "related"
+    },
+    {
+      "documentId": "as-1742-3",
+      "reason": "Australian Standard that complements AGTTM framework",
+      "relevance": "related"
+    }
+  ],
   "lastUpdated": "Edition 1.0, 2021",
   "issuingAuthority": "Austroads",
   "pages": 29,
@@ -89,5 +143,6 @@
   "documentId": "agttm-part-1",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:15:20.192Z"
 }

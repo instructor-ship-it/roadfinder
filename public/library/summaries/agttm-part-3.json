@@ -1,8 +1,27 @@
 {
   "title": "AGTTM Part 3 - Static Worksites",
-  "abstract": "AGTTM Part 3 is the most frequently referenced part for Traffic Controllers working on static worksites. It provides comprehensive guidance on setting up and managing traffic control at fixed work locations where road workers and equipment remain in one place for extended periods.\n\nThe guide covers the full range of static worksite configurations including single lane closures, multiple lane closures, road closures with detours, shoulder closures, and median works. It details the requirements for advance warning, transition zones, buffer zones, and termination areas. Speed zoning requirements are comprehensively addressed, including the relationship between temporary speed limits and traffic management setups.\n\nSpecific requirements for excavations in the road, footpath closures, and works near intersections are included. The guide establishes minimum sight distances, taper lengths, and signage spacing based on speed zones. This part is essential reading for all Traffic Management Supervisors and forms the technical basis for most Traffic Guidance Schemes.",
-  "keywords": ["agttm", "static-worksites", "speed-zones"],
-  "targetAudience": [],
+  "abstract": "AGTTM Part 3 - Static Worksites is the most frequently referenced part for Traffic Controllers working on static worksites in Australia. This standard provides comprehensive guidance on the full range of static worksite configurations including single lane closures, multiple lane closures, road closures with detours, shoulder closures, and median works. The document details critical requirements for advance warning systems, transition zones, buffer zones, termination areas, speed zoning requirements, minimum sight distances, taper lengths, and signage spacing.",
+  "keywords": [
+    "static worksites",
+    "lane closures",
+    "road closures",
+    "shoulder closures",
+    "median works",
+    "advance warning",
+    "transition zones",
+    "buffer zones",
+    "speed zoning",
+    "taper lengths",
+    "signage spacing"
+  ],
+  "targetAudience": [
+    "Traffic Controllers",
+    "Traffic Management Planners",
+    "Road Work Supervisors",
+    "Site Safety Officers",
+    "Construction Contractors",
+    "WHS Officers"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Part 3",
@@ -85,9 +104,52 @@
       "sectionTitle": "Risk Assessment"
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Adequate advance warning signs must be placed upstream of worksites",
+      "section": "Section 4",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Proper taper lengths and angles must be used when closing lanes",
+      "section": "Section 5",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Sufficient buffer zones must be maintained between traffic and work areas",
+      "section": "Section 6",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Minimum sight distances must be maintained for signage visibility",
+      "section": "Section 7",
+      "priority": "high"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "Referenced extensively by MRWA COP and forms technical basis for static worksite traffic management",
+      "reference": "AGTTM Part 3",
+      "consequence": "Non-compliance may result in regulatory action"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "WA-specific requirements that supplement AGTTM Part 3",
+      "relevance": "supplementary"
+    },
+    {
+      "documentId": "agttm-part-1",
+      "reason": "Foundation principles for Part 3 requirements",
+      "relevance": "prerequisite"
+    },
+    {
+      "documentId": "as-1742-3",
+      "reason": "Australian Standard for traffic control devices",
+      "relevance": "related"
+    }
+  ],
   "lastUpdated": "Edition 1.1, 2021",
   "issuingAuthority": "Austroads",
   "pages": 117,
@@ -95,5 +157,6 @@
   "documentId": "agttm-part-3",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:17:04.203Z"
 }

@@ -1,8 +1,24 @@
 {
   "title": "Non-Complex Traffic Management Arrangements - Wheatbelt Region (Part 2)",
-  "abstract": "This is Part 2 of the Wheatbelt region Non-Complex Traffic Management Arrangements, continuing the Traffic Guidance Scheme (TGS) diagrams from Part 1. Together, these documents provide comprehensive coverage of standard traffic management setups for the Wheatbelt region.\n\nPart 2 covers pages 291-369, completing the TGS diagram collection with additional setups for mobile works, emergency response configurations, and aftercare arrangements. The diagrams are pre-approved for non-complex traffic management scenarios on state roads.\n\nUsers should note that this TMP is specific to the Wheatbelt region and its road characteristics, including single carriageway roads, varying road widths, and rural speed environments. The diagrams must be adapted to site-specific conditions by a qualified Traffic Management Supervisor, and variations from these standard setups require formal approval through the MRWA variation process.",
-  "keywords": ["tmp", "wheatbelt", "non-complex", "tgs"],
-  "targetAudience": ["Traffic Management Supervisors", "Traffic Controllers"],
+  "abstract": "Part 2 of the Non-Complex Traffic Management Arrangements for the Wheatbelt Region, continuing the Traffic Guidance Scheme (TGS) diagrams from Part 1. Contains additional TGS setups covering remaining scenarios for rural state roads in the Wheatbelt region. Together with Part 1, provides comprehensive coverage of standard traffic management arrangements for rural road environments in Western Australia.",
+  "keywords": [
+    "traffic management plan",
+    "MRWA",
+    "Wheatbelt region",
+    "traffic guidance scheme",
+    "TGS",
+    "rural roads",
+    "state roads",
+    "Western Australia",
+    "continuation"
+  ],
+  "targetAudience": [
+    "Traffic management planners",
+    "Road construction contractors",
+    "MRWA regional officers",
+    "Traffic controllers",
+    "Road maintenance crews"
+  ],
   "completeSections": [
     {
       "sectionNumber": "F",
@@ -17,5 +33,35 @@
   "documentId": "mrwa-tmp-wheatbelt-0922-part2",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "keyRequirements": [
+    {
+      "requirement": "Use in conjunction with Part 1 for complete TGS coverage",
+      "section": "General",
+      "priority": "high"
+    },
+    {
+      "requirement": "Apply same compliance requirements as Part 1",
+      "section": "General",
+      "priority": "critical"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "Must be used together with Part 1 for complete coverage"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "mrwa-tmp-wheatbelt-0922-part1",
+      "reason": "Primary Part containing main TGS diagrams",
+      "relevance": "essential"
+    },
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "Code of Practice requirements",
+      "relevance": "essential"
+    }
+  ],
+  "lastProcessed": "2026-04-05T18:20:07.545Z"
 }

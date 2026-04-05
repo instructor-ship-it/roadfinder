@@ -1,8 +1,25 @@
 {
   "title": "AGTTM Part 5 - Short Term Low Impact Worksites",
-  "abstract": "AGTTM Part 5 provides simplified traffic management requirements for short-term and low-impact works. These are works that have minimal impact on traffic and are completed quickly, typically within one shift, where the full requirements of Part 3 may be excessive.\n\nThe guide defines what constitutes short-term low-impact work based on duration, traffic impact, and road environment. It provides reduced traffic management requirements while still maintaining safety. Common applications include minor repairs, pothole patching, sign installation, and utility inspections.\n\nThe guide covers the use of simplified setups, reduced signage requirements, and specific provisions for different speed environments. It includes guidance on when short-term low-impact provisions can and cannot be used. Traffic Controllers must understand these limits to ensure the simplified provisions are not inappropriately applied to higher-risk situations.",
-  "keywords": ["agttm", "short-term", "low-impact"],
-  "targetAudience": [],
+  "abstract": "AGTTM Part 5 provides simplified traffic management requirements for short-term and low-impact worksites in Australia and New Zealand. The standard establishes criteria for qualifying as short-term low-impact work based on work duration, traffic impact assessment, and road environment characteristics. It enables reduced traffic management protocols while maintaining equivalent safety outcomes, applying to activities such as minor road repairs, pothole patching, sign installation, and utility inspections.",
+  "keywords": [
+    "short-term works",
+    "low-impact worksites",
+    "traffic management",
+    "work duration",
+    "traffic impact assessment",
+    "minor repairs",
+    "pothole patching",
+    "sign installation",
+    "utility inspections"
+  ],
+  "targetAudience": [
+    "Road maintenance crews",
+    "Utility service providers",
+    "Local government works teams",
+    "Traffic management planners",
+    "Contractors performing minor works",
+    "Traffic controllers"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Part 5",
@@ -83,9 +100,45 @@
       "sectionTitle": "Essential Design Principles"
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Works must meet defined duration thresholds to qualify as short-term",
+      "section": "Section 2",
+      "priority": "high"
+    },
+    {
+      "requirement": "Traffic impact must be assessed and confirmed as low-impact",
+      "section": "Section 3",
+      "priority": "high"
+    },
+    {
+      "requirement": "Reduced traffic management measures may be applied when criteria are met",
+      "section": "Section 4",
+      "priority": "medium"
+    },
+    {
+      "requirement": "Safety of workers and road users must be maintained at all times",
+      "section": "Section 1",
+      "priority": "critical"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "If work extends beyond planned duration, standard traffic management requirements may apply"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "agttm-part-3",
+      "reason": "Full requirements when short-term criteria not met",
+      "relevance": "alternative"
+    },
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "WA-specific short-term work provisions",
+      "relevance": "supplementary"
+    }
+  ],
   "lastUpdated": "Edition 1.1, 2021",
   "issuingAuthority": "Austroads",
   "pages": 57,
@@ -93,5 +146,6 @@
   "documentId": "agttm-part-5",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:18:28.539Z"
 }

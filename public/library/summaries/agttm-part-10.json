@@ -1,8 +1,26 @@
 {
   "title": "AGTTM Part 10 - Supporting Guidance",
-  "abstract": "AGTTM Part 10 provides supplementary guidance that supports the application of the other AGTTM parts. It addresses specialized situations, emerging issues, and provides additional technical information not covered in the main parts.\n\nThe guide covers a range of supporting topics including traffic management at special events, works near railways, works on bridges and structures, and traffic management in tunnels. It also addresses emerging technologies and their application in temporary traffic management, including electronic signage and intelligent transport systems.\n\nAdditional technical information includes detailed guidance on sight distance calculations, queue length assessments, and the impact of road works on heavy vehicles. This part serves as a reference for less common situations and provides the technical depth needed for complex traffic management scenarios. It should be consulted when situations fall outside the scope of the main AGTTM parts.",
-  "keywords": ["agttm", "supporting-guidance", "reference"],
-  "targetAudience": [],
+  "abstract": "AGTTM Part 10 provides supplementary guidance supporting the broader AGTTM series. It addresses specialized topics and complex scenarios not fully covered in other parts, including works on freeways, motorways, and high-speed roads. The guide covers incident management, special events traffic management, emergency works, and unique situations requiring tailored approaches. It provides additional risk assessment frameworks, review and inspection procedures, and road safety audit guidance.",
+  "keywords": [
+    "supporting guidance",
+    "risk management",
+    "incident management",
+    "special events",
+    "emergency works",
+    "freeways",
+    "motorways",
+    "high-speed roads",
+    "road safety audit"
+  ],
+  "targetAudience": [
+    "Traffic management planners",
+    "Road safety auditors",
+    "TTM designers",
+    "Site supervisors",
+    "Project managers",
+    "Road authority personnel",
+    "Event organizers"
+  ],
   "completeSections": [
     {
       "sectionNumber": "Part 10",
@@ -83,9 +101,45 @@
       "sectionTitle": "Elements of Best Practice"
     }
   ],
-  "keyRequirements": [],
-  "complianceNotes": [],
-  "crossReferences": [],
+  "keyRequirements": [
+    {
+      "requirement": "Apply risk management framework to all TTM activities",
+      "section": "Section 2",
+      "priority": "high"
+    },
+    {
+      "requirement": "Conduct reviews, inspections, and road safety audits as specified",
+      "section": "Section 3",
+      "priority": "high"
+    },
+    {
+      "requirement": "Follow specialized procedures for events on roads",
+      "section": "Section 4",
+      "priority": "medium"
+    },
+    {
+      "requirement": "Implement emergency works protocols when urgent responses required",
+      "section": "Section 5",
+      "priority": "critical"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "Part 10 supplements all other AGTTM parts with specialized guidance"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "agttm-part-1",
+      "reason": "Foundation principles",
+      "relevance": "prerequisite"
+    },
+    {
+      "documentId": "mrwa-cop-2025",
+      "reason": "WA-specific supplementary guidance",
+      "relevance": "supplementary"
+    }
+  ],
   "lastUpdated": "Edition 1.1, 2021",
   "issuingAuthority": "Austroads",
   "pages": 51,
@@ -93,5 +147,6 @@
   "documentId": "agttm-part-10",
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "version": "2.0",
+  "lastProcessed": "2026-04-05T18:20:07.544Z"
 }
