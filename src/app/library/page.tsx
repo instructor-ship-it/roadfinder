@@ -26,6 +26,15 @@ import {
   getDeletedCacheIds,
   type OfflineDocument,
 } from '@/lib/offline-storage';
+import {
+  getAllSummaries,
+  saveSummary,
+  downloadSummaries,
+  importSummariesFromJson,
+  getStorageStats,
+  type SummariesCollection,
+  type DocumentSummary,
+} from '@/lib/summaries-storage';
 
 // Types
 interface RegistryDocument {
@@ -106,6 +115,12 @@ function LibraryPageContent() {
   const [processResult, setProcessResult] = useState<string | null>(null);
   const [processError, setProcessError] = useState<string | null>(null);
   const [aiApiKey, setAiApiKey] = useState('');
+  
+  // Summaries storage
+  const [summaries, setSummaries] = useState<SummariesCollection>({});
+  const [storageStats, setStorageStats] = useState({ localCount: 0, localStorageSize: '0 KB' });
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [importResult, setImportResult] = useState<{ success: boolean; imported: number; error?: string } | null>(null);
 
   // Load registry and offline status
   useEffect(() => {
@@ -163,6 +178,16 @@ function LibraryPageContent() {
     }
   }, [searchParams]);
 
+  // Load summaries from repo + localStorage
+  useEffect(() => {
+    const loadSummaries = async () => {
+      const allSummaries = await getAllSummaries();
+      setSummaries(allSummaries);
+      setStorageStats(getStorageStats());
+    };
+    loadSummaries();
+  }, []);
+
   // Handle document processing
   const handleProcessDocument = useCallback(async (doc: RegistryDocument) => {
     if (!aiApiKey) {
@@ -190,6 +215,22 @@ function LibraryPageContent() {
 
       if (data.success) {
         setProcessResult(data.extractedContent);
+        
+        // Save summary to localStorage
+        const summary: DocumentSummary = {
+          generatedAt: new Date().toISOString(),
+          generatedBy: 'AI Processing',
+          title: doc.title,
+          abstract: data.extractedContent,
+          type: 'abstract',
+          source: 'user',
+        };
+        saveSummary(doc.id, summary);
+        
+        // Update local state
+        const updatedSummaries = await getAllSummaries();
+        setSummaries(updatedSummaries);
+        setStorageStats(getStorageStats());
       } else {
         setProcessError(data.error || 'Failed to process document');
       }
@@ -990,8 +1031,47 @@ function LibraryPageContent() {
                 <div className="bg-gray-900 rounded p-3 max-h-60 overflow-y-auto">
                   <p className="text-gray-300 text-sm whitespace-pre-line">{processResult}</p>
                 </div>
+                <p className="text-green-400 text-xs mt-2">
+                  ✓ Summary saved locally ({storageStats.localStorageSize})
+                </p>
+              </div>
+            )}
+
+            {/* Storage Stats & Export/Import */}
+            {!processingDoc && !processResult && (
+              <div className="bg-gray-700/30 border border-gray-600 rounded-lg p-3">
+                <h4 className="text-gray-300 font-semibold text-sm mb-2">📦 Summary Storage</h4>
+                <div className="grid grid-cols-2 gap-2 text-xs mb-3">
+                  <div className="bg-gray-800 rounded p-2">
+                    <span className="text-gray-400">Total Summaries:</span>
+                    <span className="text-white ml-2">{Object.keys(summaries).length}</span>
+                  </div>
+                  <div className="bg-gray-800 rounded p-2">
+                    <span className="text-gray-400">Local Storage:</span>
+                    <span className="text-white ml-2">{storageStats.localStorageSize}</span>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => downloadSummaries()}
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 bg-blue-600/30 border-blue-500 text-blue-300 hover:bg-blue-600/50"
+                    disabled={storageStats.localCount === 0}
+                  >
+                    📤 Export
+                  </Button>
+                  <Button
+                    onClick={() => setShowImportDialog(true)}
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 bg-green-600/30 border-green-500 text-green-300 hover:bg-green-600/50"
+                  >
+                    📥 Import
+                  </Button>
+                </div>
                 <p className="text-gray-500 text-xs mt-2">
-                  Summary saved to generated-summaries.json
+                  Export your summaries to share with team members, or import from another device.
                 </p>
               </div>
             )}
@@ -1025,6 +1105,83 @@ function LibraryPageContent() {
                 setProcessError(null);
               }}
               className="flex-1 bg-gray-600 hover:bg-gray-500 text-white"
+            >
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Import Summaries Dialog */}
+      <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
+        <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-white text-lg">📥 Import Summaries</DialogTitle>
+            <DialogDescription className="text-gray-400 text-sm">
+              Import summaries from a JSON file
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="bg-gray-700/50 rounded-lg p-4">
+              <input
+                type="file"
+                accept=".json"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  
+                  try {
+                    const text = await file.text();
+                    const result = importSummariesFromJson(text);
+                    setImportResult(result);
+                    
+                    if (result.success) {
+                      // Reload summaries
+                      const updated = await getAllSummaries();
+                      setSummaries(updated);
+                      setStorageStats(getStorageStats());
+                    }
+                  } catch (err) {
+                    setImportResult({
+                      success: false,
+                      imported: 0,
+                      error: err instanceof Error ? err.message : 'Failed to read file'
+                    });
+                  }
+                }}
+                className="block w-full text-sm text-gray-400
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-blue-600 file:text-white
+                  hover:file:bg-blue-700"
+              />
+            </div>
+            
+            {importResult && (
+              <div className={`rounded-lg p-3 ${importResult.success ? 'bg-green-900/30 border border-green-700' : 'bg-red-900/30 border border-red-700'}`}>
+                {importResult.success ? (
+                  <p className="text-green-300 text-sm">✓ Imported {importResult.imported} summaries</p>
+                ) : (
+                  <p className="text-red-300 text-sm">❌ {importResult.error}</p>
+                )}
+              </div>
+            )}
+            
+            <p className="text-gray-500 text-xs">
+              Select a JSON file previously exported from this app. 
+              Imported summaries will be merged with your existing summaries.
+            </p>
+          </div>
+          
+          <div className="pt-4 border-t border-gray-700">
+            <Button
+              onClick={() => {
+                setShowImportDialog(false);
+                setImportResult(null);
+              }}
+              className="w-full bg-gray-600 hover:bg-gray-500 text-white"
             >
               Close
             </Button>
