@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 
 /**
  * Document Processing API
  * GET /api/documents - List all documents with metadata
- * POST /api/documents - Process a document for knowledge extraction
+ * Uses HTTP fetch to access files (avoids Vercel function size limits)
  */
 
 // Document metadata type
@@ -22,19 +20,36 @@ interface DocumentMetadata {
   fileSize?: string;
 }
 
+// Get the base URL for fetching static files
+function getBaseUrl(request: Request): string {
+  const url = new URL(request.url);
+  return url.origin;
+}
+
 // GET - List all documents with their processing status
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const registryPath = path.join(process.cwd(), 'public/library/registry.json');
-    const registryContent = fs.readFileSync(registryPath, 'utf-8');
-    const registry = JSON.parse(registryContent);
+    const baseUrl = getBaseUrl(request);
 
-    // Check for existing generated summaries
-    const summariesPath = path.join(process.cwd(), 'public/library/generated-summaries.json');
+    // Fetch registry via HTTP (avoids bundling public files)
+    const registryResponse = await fetch(`${baseUrl}/library/registry.json`);
+    if (!registryResponse.ok) {
+      return NextResponse.json(
+        { success: false, error: 'Failed to load document registry' },
+        { status: 500 }
+      );
+    }
+    const registry = await registryResponse.json();
+
+    // Try to fetch generated summaries (may not exist)
     let existingSummaries: Record<string, { generatedAt: string; abstract: string }> = {};
-
-    if (fs.existsSync(summariesPath)) {
-      existingSummaries = JSON.parse(fs.readFileSync(summariesPath, 'utf-8'));
+    try {
+      const summariesResponse = await fetch(`${baseUrl}/library/generated-summaries.json`);
+      if (summariesResponse.ok) {
+        existingSummaries = await summariesResponse.json();
+      }
+    } catch {
+      // Summaries file doesn't exist yet - that's okay
     }
 
     // Build document list with status

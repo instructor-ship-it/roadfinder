@@ -1,18 +1,17 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 
 /**
  * Document Summarization API
  * POST /api/documents/summarize
- * 
- * Body: { 
- *   documentId: string, 
+ *
+ * Body: {
+ *   documentId: string,
  *   apiKey: string,
  *   extractType: 'abstract' | 'keywords' | 'sections' | 'full'
  * }
- * 
+ *
  * Generates AI-powered summaries and extracts knowledge from documents
+ * Uses HTTP fetch to access files (avoids Vercel function size limits)
  */
 
 // Extraction prompts for different types
@@ -76,20 +75,18 @@ Respond in JSON format:
 }`
 };
 
-// Simple PDF text extraction (basic - for production use pdf-parse)
-async function extractTextFromPdf(filePath: string): Promise<string> {
+// Simple PDF text extraction from buffer
+function extractTextFromPdfBuffer(buffer: Buffer): string {
   try {
-    const buffer = fs.readFileSync(filePath);
-    
     // Basic text extraction from PDF buffer
     // Look for text streams between BT and ET markers
     const pdfText = buffer.toString('latin1');
-    
+
     // Extract text between stream markers
     const streamRegex = /stream[\r\n]+([\s\S]*?)[\r\n]+endstream/g;
     let match;
     let extractedText = '';
-    
+
     while ((match = streamRegex.exec(pdfText)) !== null) {
       const streamContent = match[1];
       // Try to decode if it looks like text
@@ -103,7 +100,7 @@ async function extractTextFromPdf(filePath: string): Promise<string> {
         }
       }
     }
-    
+
     // If basic extraction didn't work well, try another approach
     if (extractedText.length < 100) {
       // Fallback: extract readable text
@@ -113,12 +110,19 @@ async function extractTextFromPdf(filePath: string): Promise<string> {
         .trim();
       extractedText = readableText.slice(0, 15000); // Limit for API
     }
-    
+
     return extractedText.slice(0, 20000); // Limit text size for API
   } catch (error) {
     console.error('PDF extraction error:', error);
     return '';
   }
+}
+
+// Get the base URL for fetching static files
+function getBaseUrl(request: Request): string {
+  const url = new URL(request.url);
+  // Use the request origin for internal fetches
+  return url.origin;
 }
 
 export async function POST(request: Request) {
@@ -140,9 +144,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // Load registry to find document
-    const registryPath = path.join(process.cwd(), 'public/library/registry.json');
-    const registry = JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
+    // Get base URL for fetching files via HTTP
+    const baseUrl = getBaseUrl(request);
+
+    // Fetch registry via HTTP (avoids bundling public files)
+    const registryResponse = await fetch(`${baseUrl}/library/registry.json`);
+    if (!registryResponse.ok) {
+      return NextResponse.json(
+        { success: false, error: 'Failed to load document registry' },
+        { status: 500 }
+      );
+    }
+    const registry = await registryResponse.json();
     const doc = registry.documents.find((d: { id: string }) => d.id === documentId);
 
     if (!doc) {
@@ -153,25 +166,27 @@ export async function POST(request: Request) {
     }
 
     // Check if document has a local file
-    if (!doc.file && !doc.file?.startsWith('/library/')) {
+    if (!doc.file || doc.file.startsWith('http')) {
       return NextResponse.json(
         { success: false, error: 'Document does not have a local file for processing' },
         { status: 400 }
       );
     }
 
-    // Extract text from PDF
-    const pdfPath = path.join(process.cwd(), 'public', doc.file);
-    
-    if (!fs.existsSync(pdfPath)) {
+    // Fetch PDF via HTTP (avoids bundling public files)
+    console.log(`Processing document: ${doc.id}`);
+    const pdfResponse = await fetch(`${baseUrl}${doc.file}`);
+
+    if (!pdfResponse.ok) {
       return NextResponse.json(
         { success: false, error: 'PDF file not found on server' },
         { status: 404 }
       );
     }
 
-    console.log(`Processing document: ${doc.id}`);
-    const extractedText = await extractTextFromPdf(pdfPath);
+    // Extract text from PDF
+    const pdfBuffer = Buffer.from(await pdfResponse.arrayBuffer());
+    const extractedText = extractTextFromPdfBuffer(pdfBuffer);
 
     if (!extractedText || extractedText.length < 50) {
       return NextResponse.json(
@@ -187,7 +202,7 @@ export async function POST(request: Request) {
     // Call z.ai API
     const apiUrl = 'https://api.z.ai/api/paas/v4/chat/completions';
 
-    const response = await fetch(apiUrl, {
+    const aiResponse = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -209,43 +224,30 @@ export async function POST(request: Request) {
       }),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('AI API error:', response.status, errorText);
+    if (!aiResponse.ok) {
+      const errorText = await aiResponse.text();
+      console.error('AI API error:', aiResponse.status, errorText);
 
       try {
         const errorJson = JSON.parse(errorText);
         return NextResponse.json({
           success: false,
-          error: errorJson.error?.message || `API error: ${response.status}`,
+          error: errorJson.error?.message || `API error: ${aiResponse.status}`,
         });
       } catch {
         return NextResponse.json({
           success: false,
-          error: `API returned ${response.status}`,
+          error: `API returned ${aiResponse.status}`,
         });
       }
     }
 
-    const data = await response.json();
+    const data = await aiResponse.json();
     const extractedContent = data.choices?.[0]?.message?.content || '';
 
-    // Save generated summary
-    const summariesPath = path.join(process.cwd(), 'public/library/generated-summaries.json');
-    let existingSummaries: Record<string, { generatedAt: string; abstract: string; keywords?: string[]; type?: string }> = {};
-
-    if (fs.existsSync(summariesPath)) {
-      existingSummaries = JSON.parse(fs.readFileSync(summariesPath, 'utf-8'));
-    }
-
-    existingSummaries[documentId] = {
-      generatedAt: new Date().toISOString(),
-      abstract: extractedContent,
-      type: extractType,
-    };
-
-    fs.writeFileSync(summariesPath, JSON.stringify(existingSummaries, null, 2));
-
+    // Return the generated summary (client will handle saving)
+    // Note: On Vercel serverless, we can't write to public/ directory
+    // The client should save to localStorage or a database
     return NextResponse.json({
       success: true,
       documentId,
@@ -253,6 +255,12 @@ export async function POST(request: Request) {
       extractedContent,
       textLength: extractedText.length,
       usage: data.usage,
+      // Include summary data for client-side saving
+      summary: {
+        generatedAt: new Date().toISOString(),
+        abstract: extractedContent,
+        type: extractType,
+      }
     });
 
   } catch (error) {
