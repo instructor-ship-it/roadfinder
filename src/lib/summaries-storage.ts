@@ -99,6 +99,13 @@ export interface DiagramAnalysis {
   imageData?: string;
 }
 
+// Complete section structure from PDF TOC extraction
+export interface CompleteSection {
+  sectionNumber: string;
+  sectionTitle: string;
+  page?: number;
+}
+
 // Summary structure
 export interface DocumentSummary {
   generatedAt: string;
@@ -113,6 +120,13 @@ export interface DocumentSummary {
   crossReferences?: string[];
   type?: string;
   source?: 'repo' | 'user';
+
+  // Phase 1: Complete document sections from TOC extraction
+  completeSections?: CompleteSection[];
+  pages?: number;
+  issuingAuthority?: string;
+  lastUpdated?: string;
+  tgsDiagramsReferenced?: string[];
 
   // Phase 2: Structured extraction data
   extractedData?: ExtractedData;
