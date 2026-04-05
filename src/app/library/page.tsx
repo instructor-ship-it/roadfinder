@@ -1520,6 +1520,38 @@ function LibraryPageContent() {
                             </div>
                           </div>
                         )}
+                        {/* Complete Sections - ALL sections from document */}
+                        {summary.completeSections && summary.completeSections.length > 0 && (
+                          <div className="mt-4">
+                            <details className="group">
+                              <summary className="text-xs font-semibold text-indigo-400 mb-2 uppercase flex items-center gap-2 cursor-pointer">
+                                <span>📚</span> Complete Document Structure (
+                                {summary.completeSections.length} sections)
+                                <span className="ml-auto text-gray-500">▼ Click to expand</span>
+                              </summary>
+                              <div className="max-h-60 overflow-y-auto space-y-1 pr-2 bg-gray-700/30 rounded text-xs">
+                                {summary.completeSections.map((section, i) => (
+                                  <div
+                                    key={i}
+                                    className="flex items-start gap-2 py-1 border-b border-gray-600 first:border-0 last:border-0 hover:bg-gray-600/50 px-2 rounded"
+                                  >
+                                    <span className="text-indigo-300 font-mono min-w-[40px] shrink-0">
+                                      {section.sectionNumber}
+                                    </span>
+                                    <span className="text-gray-300 flex-1">
+                                      {section.sectionTitle}
+                                    </span>
+                                    {section.page && (
+                                      <span className="text-gray-500 text-[10px]">
+                                        p.{section.page}
+                                      </span>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </details>
+                          </div>
+                        )}
                         {summary.keyRequirements && summary.keyRequirements.length > 0 && (
                           <div>
                             <h4 className="text-xs font-semibold text-red-400 mb-1 uppercase flex items-center gap-2">
