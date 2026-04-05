@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -83,7 +83,7 @@ interface Registry {
   quickLinks: Array<{ label: string; documentId: string; icon: string }>;
 }
 
-export default function LibraryPage() {
+function LibraryPageContent() {
   const searchParams = useSearchParams();
   const [registry, setRegistry] = useState<Registry | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -1032,5 +1032,26 @@ export default function LibraryPage() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+// Loading fallback for Suspense
+function LibraryLoading() {
+  return (
+    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+        <p className="text-gray-400">Loading library...</p>
+      </div>
+    </div>
+  );
+}
+
+// Wrap with Suspense for useSearchParams support in Next.js 16
+export default function LibraryPage() {
+  return (
+    <Suspense fallback={<LibraryLoading />}>
+      <LibraryPageContent />
+    </Suspense>
   );
 }
