@@ -322,22 +322,117 @@ function LibraryPageContent() {
     }
   }, []);
 
-  // Filter documents by search and category
+  // Filter documents by search and category (Phase 4: Enhanced search with extracted data)
   const filteredDocuments =
     registry?.documents.filter((doc) => {
-      const matchesSearch =
-        !searchQuery.trim() ||
-        doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.shortTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doc.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        doc.description.toLowerCase().includes(searchQuery.toLowerCase());
+      if (!searchQuery.trim()) {
+        const matchesCategory =
+          !selectedParent ||
+          registry.categories.find((c) => c.id === doc.category)?.parent === selectedParent;
+        return matchesCategory;
+      }
+
+      const query = searchQuery.toLowerCase();
+
+      // Basic document fields
+      const matchesBasicSearch =
+        doc.title.toLowerCase().includes(query) ||
+        doc.shortTitle.toLowerCase().includes(query) ||
+        doc.tags.some((tag) => tag.toLowerCase().includes(query)) ||
+        doc.description.toLowerCase().includes(query);
+
+      // Phase 4: Search in extracted data
+      const summary = summaries[doc.id];
+      const extracted = summary?.extractedData;
+      const diagramAnalyses = summary?.diagramAnalyses;
+
+      // Search in speed zones
+      const matchesSpeedZone =
+        extracted?.speedZonesMentioned?.some(
+          (zone) => zone.toString().includes(query) || `${zone} km/h`.includes(query)
+        ) || false;
+
+      // Search in TGS diagrams referenced
+      const matchesTgsDiagram =
+        extracted?.tgsDiagramsReferenced?.some((tgs) => tgs.toLowerCase().includes(query)) || false;
+
+      // Search in requirements
+      const matchesRequirements =
+        extracted?.requirements?.some((req) => req.requirement.toLowerCase().includes(query)) ||
+        summary?.keyRequirements?.some((req) => req.toLowerCase().includes(query)) ||
+        false;
+
+      // Search in role definitions
+      const matchesRoles =
+        extracted?.roleDefinitions?.some((role) => role.toLowerCase().includes(query)) || false;
+
+      // Search in diagram analyses
+      const matchesDiagrams =
+        diagramAnalyses?.some(
+          (diagram) =>
+            diagram.description?.toLowerCase().includes(query) ||
+            diagram.setupType?.toLowerCase().includes(query) ||
+            diagram.signs?.some((sign) => sign.toLowerCase().includes(query)) ||
+            diagram.trafficControlDevices?.some((device) => device.toLowerCase().includes(query)) ||
+            diagram.safetyNotes?.some((note) => note.toLowerCase().includes(query))
+        ) || false;
+
+      // Search in keywords
+      const matchesKeywords =
+        summary?.keywords?.some((kw) => kw.toLowerCase().includes(query)) || false;
+
+      // Search in abstract
+      const matchesAbstract = summary?.abstract?.toLowerCase().includes(query) || false;
+
+      // Search in compliance notes
+      const matchesCompliance =
+        summary?.complianceNotes?.some((note) => note.toLowerCase().includes(query)) || false;
 
       const matchesCategory =
         !selectedParent ||
         registry.categories.find((c) => c.id === doc.category)?.parent === selectedParent;
 
-      return matchesSearch && matchesCategory;
+      return (
+        matchesCategory &&
+        (matchesBasicSearch ||
+          matchesSpeedZone ||
+          matchesTgsDiagram ||
+          matchesRequirements ||
+          matchesRoles ||
+          matchesDiagrams ||
+          matchesKeywords ||
+          matchesAbstract ||
+          matchesCompliance)
+      );
     }) || [];
+
+  // Phase 4: Calculate extraction statistics
+  const extractionStats = {
+    totalDocuments: registry?.documents.length || 0,
+    documentsWithSummaries: Object.keys(summaries).length,
+    structuredExtractions: Object.values(summaries).filter((s) => s.extractionType === 'structured')
+      .length,
+    diagramExtractions: Object.values(summaries).filter((s) => s.extractionType === 'diagrams')
+      .length,
+    totalDiagramsAnalyzed: Object.values(summaries).reduce(
+      (acc, s) => acc + (s.diagramAnalyses?.length || 0),
+      0
+    ),
+    uniqueSpeedZones: [
+      ...new Set(
+        Object.values(summaries)
+          .flatMap((s) => s.extractedData?.speedZonesMentioned || [])
+          .filter(Boolean)
+      ),
+    ].sort((a, b) => a - b),
+    uniqueTgsCodes: [
+      ...new Set(
+        Object.values(summaries)
+          .flatMap((s) => s.extractedData?.tgsDiagramsReferenced || [])
+          .filter(Boolean)
+      ),
+    ].sort(),
+  };
 
   // Group documents by parent category
   const documentsByParent =
@@ -476,8 +571,21 @@ function LibraryPageContent() {
                   ☑
                 </span>
               )}
-              {/* AI Summary indicator */}
-              {summaries[doc.id] && (
+              {/* Phase 4: Enhanced AI Summary indicators */}
+              {summaries[doc.id]?.extractionType === 'diagrams' && (
+                <span
+                  className="text-cyan-400 text-xs"
+                  title={`Diagrams analyzed (${summaries[doc.id]?.diagramAnalyses?.length || 0} TGS)`}
+                >
+                  🖼️
+                </span>
+              )}
+              {summaries[doc.id]?.extractionType === 'structured' && (
+                <span className="text-purple-400 text-xs" title="Structured extraction">
+                  🔬
+                </span>
+              )}
+              {summaries[doc.id] && !summaries[doc.id]?.extractionType && (
                 <span className="text-purple-400" title="AI Summary Available">
                   🧠
                 </span>
@@ -656,8 +764,148 @@ function LibraryPageContent() {
               </Link>
             );
           })}
+          {/* Phase 4: Quick Process Button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowProcessModal(true)}
+            disabled={!aiApiKey}
+            className="bg-purple-700 border-purple-600 hover:bg-purple-600 text-white"
+            title={!aiApiKey ? 'Configure AI API key in Settings' : 'Process documents with AI'}
+          >
+            🧠 Process Docs
+          </Button>
         </div>
       </div>
+
+      {/* Phase 4: Extraction Dashboard */}
+      {(extractionStats.documentsWithSummaries > 0 || aiApiKey) && (
+        <div className="max-w-7xl mx-auto px-4 pb-4">
+          <div className="bg-gradient-to-r from-purple-900/30 to-cyan-900/30 border border-purple-700/50 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-bold text-lg text-white flex items-center gap-2">
+                🧠 AI Extraction Dashboard
+                <Badge variant="secondary" className="text-xs">
+                  Phase 4
+                </Badge>
+              </h3>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowProcessModal(true)}
+                  disabled={!aiApiKey}
+                  className="text-xs"
+                >
+                  + Process More
+                </Button>
+                <Button variant="outline" size="sm" onClick={downloadSummaries} className="text-xs">
+                  📥 Export
+                </Button>
+              </div>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
+              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                <div className="text-2xl font-bold text-white">
+                  {extractionStats.documentsWithSummaries}
+                </div>
+                <div className="text-xs text-gray-400">Summaries</div>
+              </div>
+              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                <div className="text-2xl font-bold text-purple-400">
+                  {extractionStats.structuredExtractions}
+                </div>
+                <div className="text-xs text-gray-400">Structured</div>
+              </div>
+              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                <div className="text-2xl font-bold text-cyan-400">
+                  {extractionStats.diagramExtractions}
+                </div>
+                <div className="text-xs text-gray-400">Diagram Sets</div>
+              </div>
+              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                <div className="text-2xl font-bold text-amber-400">
+                  {extractionStats.totalDiagramsAnalyzed}
+                </div>
+                <div className="text-xs text-gray-400">TGS Diagrams</div>
+              </div>
+              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
+                <div className="text-2xl font-bold text-green-400">
+                  {storageStats.localStorageSize}
+                </div>
+                <div className="text-xs text-gray-400">Storage Used</div>
+              </div>
+            </div>
+
+            {/* Quick Filters from Extracted Data */}
+            {(extractionStats.uniqueSpeedZones.length > 0 ||
+              extractionStats.uniqueTgsCodes.length > 0) && (
+              <div className="space-y-2">
+                {/* Speed Zone Quick Filters */}
+                {extractionStats.uniqueSpeedZones.length > 0 && (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs text-gray-400">Speed Zones:</span>
+                    {extractionStats.uniqueSpeedZones.slice(0, 8).map((zone) => (
+                      <button
+                        key={zone}
+                        onClick={() => setSearchQuery(searchQuery === `${zone}` ? '' : `${zone}`)}
+                        className={`px-2 py-0.5 rounded text-xs transition-colors ${
+                          searchQuery === `${zone}`
+                            ? 'bg-amber-500 text-black'
+                            : 'bg-amber-900/50 text-amber-300 hover:bg-amber-800/50'
+                        }`}
+                      >
+                        {zone} km/h
+                      </button>
+                    ))}
+                    {extractionStats.uniqueSpeedZones.length > 8 && (
+                      <span className="text-xs text-gray-500">
+                        +{extractionStats.uniqueSpeedZones.length - 8} more
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* TGS Code Quick Filters */}
+                {extractionStats.uniqueTgsCodes.length > 0 && (
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-xs text-gray-400">TGS Codes:</span>
+                    {extractionStats.uniqueTgsCodes.slice(0, 6).map((code) => (
+                      <button
+                        key={code}
+                        onClick={() => setSearchQuery(searchQuery === code ? '' : code)}
+                        className={`px-2 py-0.5 rounded text-xs transition-colors ${
+                          searchQuery === code
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-blue-900/50 text-blue-300 hover:bg-blue-800/50'
+                        }`}
+                      >
+                        {code}
+                      </button>
+                    ))}
+                    {extractionStats.uniqueTgsCodes.length > 6 && (
+                      <span className="text-xs text-gray-500">
+                        +{extractionStats.uniqueTgsCodes.length - 6} more
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Search Tips */}
+            <div className="mt-3 pt-3 border-t border-gray-700">
+              <p className="text-xs text-gray-400">
+                💡 <strong>Enhanced Search:</strong> Searches now include extracted speed zones, TGS
+                diagrams, requirements, sign codes, and diagram descriptions. Try searching for
+                &quot;60&quot;, &quot;T1-1&quot;, or &quot;lane closure&quot;.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Document Categories */}
       <div className="max-w-7xl mx-auto px-4 pb-6">
@@ -753,20 +1001,18 @@ function LibraryPageContent() {
         {/* Legend */}
         <div className="mt-8 p-4 bg-gray-800 rounded-lg border border-gray-700">
           <h3 className="font-bold text-lg mb-3 text-white">📋 Document Indicators</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
             <div className="flex items-center gap-2">
               <span className="text-green-400">📥</span>
-              <span className="text-gray-300">Cached - Available offline in browser storage</span>
+              <span className="text-gray-300">Cached - Available offline</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-blue-400">💾</span>
-              <span className="text-gray-300">Downloaded - Saved to your device (permanent)</span>
+              <span className="text-gray-300">Downloaded to device</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-red-400">⚠️</span>
-              <span className="text-gray-300">
-                Cache cleared - Re-cache needed for offline access
-              </span>
+              <span className="text-gray-300">Cache cleared - re-cache needed</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-red-400">☑</span>
@@ -778,12 +1024,29 @@ function LibraryPageContent() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-purple-400">🧠</span>
-              <span className="text-gray-300">AI Summary - Pre-generated summary available</span>
+              <span className="text-gray-300">AI Summary available</span>
+            </div>
+            {/* Phase 4: New indicators */}
+            <div className="flex items-center gap-2">
+              <span className="text-cyan-400">🔬</span>
+              <span className="text-gray-300">Structured extraction (Phase 2)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-cyan-400">🖼️</span>
+              <span className="text-gray-300">Diagrams analyzed (Phase 3)</span>
             </div>
           </div>
 
-          {/* Download tip */}
+          {/* Phase 4: Search tips */}
           <div className="mt-4 pt-3 border-t border-gray-700">
+            <p className="text-sm text-purple-300">
+              🔍 <strong>Enhanced Search (Phase 4):</strong> Search now includes extracted speed
+              zones, TGS codes, requirements, sign codes, and diagram descriptions.
+            </p>
+          </div>
+
+          {/* Download tip */}
+          <div className="mt-3 pt-3 border-t border-gray-700">
             <p className="text-sm text-amber-300">
               💡 <strong>Tip:</strong> Create a folder called{' '}
               <code className="bg-gray-700 px-1.5 py-0.5 rounded text-white">
