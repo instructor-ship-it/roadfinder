@@ -115,7 +115,9 @@ function LibraryPageContent() {
   const [processResult, setProcessResult] = useState<string | null>(null);
   const [processError, setProcessError] = useState<string | null>(null);
   const [aiApiKey, setAiApiKey] = useState('');
-  const [extractType, setExtractType] = useState<'abstract' | 'structured'>('abstract');
+  const [extractType, setExtractType] = useState<'abstract' | 'structured' | 'diagrams'>(
+    'abstract'
+  );
 
   // Summaries storage
   const [summaries, setSummaries] = useState<SummariesCollection>({});
@@ -195,7 +197,7 @@ function LibraryPageContent() {
 
   // Handle document processing
   const handleProcessDocument = useCallback(
-    async (doc: RegistryDocument, type: 'abstract' | 'structured' = 'abstract') => {
+    async (doc: RegistryDocument, type: 'abstract' | 'structured' | 'diagrams' = 'abstract') => {
       if (!aiApiKey) {
         setProcessError('Please configure your AI API key in Settings first.');
         return;
@@ -207,39 +209,65 @@ function LibraryPageContent() {
       setProcessError(null);
 
       try {
-        const response = await fetch('/api/documents/summarize', {
+        // Use different API endpoint for diagram analysis
+        const endpoint =
+          type === 'diagrams' ? '/api/documents/analyze-diagrams' : '/api/documents/summarize';
+
+        const response = await fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             documentId: doc.id,
             apiKey: aiApiKey,
-            extractType: type,
+            extractType: type === 'diagrams' ? undefined : type,
+            maxDiagrams: 5,
           }),
         });
 
         const data = await response.json();
 
         if (data.success) {
-          setProcessResult(data.extractedContent);
+          if (type === 'diagrams') {
+            // Handle diagram analysis result
+            const diagramCount = data.diagramAnalyses?.length || 0;
+            setProcessResult(`Analyzed ${diagramCount} TGS diagrams from the document.`);
 
-          // Save summary to localStorage - use structured data if available
-          const summary: DocumentSummary = {
-            generatedAt: new Date().toISOString(),
-            generatedBy: 'AI Processing',
-            title: doc.title,
-            abstract: data.summary?.abstract || data.extractedContent,
-            keywords: data.summary?.keywords || [],
-            targetAudience: data.summary?.targetAudience || [],
-            keyRequirements: data.summary?.keyRequirements || [],
-            crossReferences: data.summary?.crossReferences || [],
-            complianceNotes: data.summary?.complianceNotes || [],
-            extractedData: data.summary?.extractedData || undefined,
-            type: type,
-            extractionType: type === 'structured' ? 'structured' : 'basic',
-            extractionVersion: type === 'structured' ? '2.0' : undefined,
-            source: 'user',
-          };
-          saveSummary(doc.id, summary);
+            // Save summary with diagram analyses
+            const summary: DocumentSummary = {
+              generatedAt: new Date().toISOString(),
+              generatedBy: 'VLM Processing',
+              title: doc.title,
+              abstract: `This document contains ${diagramCount} analyzed TGS diagrams.`,
+              type: 'diagrams',
+              extractionType: 'diagrams',
+              extractionVersion: '3.0',
+              diagramAnalyses: data.diagramAnalyses || [],
+              source: 'user',
+            };
+            saveSummary(doc.id, summary);
+          } else {
+            // Handle text extraction result
+            setProcessResult(data.extractedContent);
+
+            // Save summary to localStorage - use structured data if available
+            const summary: DocumentSummary = {
+              generatedAt: new Date().toISOString(),
+              generatedBy: 'AI Processing',
+              title: doc.title,
+              abstract: data.summary?.abstract || data.extractedContent,
+              keywords: data.summary?.keywords || [],
+              targetAudience: data.summary?.targetAudience || [],
+              keyRequirements: data.summary?.keyRequirements || [],
+              crossReferences: data.summary?.crossReferences || [],
+              complianceNotes: data.summary?.complianceNotes || [],
+              extractedData: data.summary?.extractedData || undefined,
+              type: type,
+              extractionType: type === 'structured' ? 'structured' : 'basic',
+              extractionVersion: type === 'structured' ? '2.0' : undefined,
+              source: 'user',
+            };
+            saveSummary(doc.id, summary);
+          }
 
           // Update local state
           const updatedSummaries = await getAllSummaries();
@@ -1014,6 +1042,11 @@ function LibraryPageContent() {
                   Structured v{summaries[infoDoc.id]?.extractionVersion || '2.0'}
                 </span>
               )}
+              {infoDoc && summaries[infoDoc.id]?.extractionType === 'diagrams' && (
+                <span className="text-xs text-cyan-400 bg-cyan-900/50 px-2 py-1 rounded">
+                  Diagrams v{summaries[infoDoc.id]?.extractionVersion || '3.0'}
+                </span>
+              )}
             </DialogTitle>
             <DialogDescription className="text-gray-400 text-sm">
               {infoDoc?.title}
@@ -1229,6 +1262,108 @@ function LibraryPageContent() {
                         )}
                       </>
                     )}
+
+                    {/* Phase 3: Diagram Analyses */}
+                    {summary.diagramAnalyses && summary.diagramAnalyses.length > 0 && (
+                      <div className="space-y-4 pt-3 border-t border-gray-700">
+                        <h4 className="text-xs font-semibold text-cyan-400 mb-3 uppercase flex items-center gap-2">
+                          <span>🖼️</span> Analyzed TGS Diagrams ({summary.diagramAnalyses.length})
+                        </h4>
+                        {summary.diagramAnalyses.map((diagram, idx) => (
+                          <div key={idx} className="bg-gray-700/30 rounded-lg p-3 space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium text-white">
+                                Page {diagram.pageNumber}
+                              </span>
+                              <div className="flex items-center gap-2">
+                                {diagram.diagramType && (
+                                  <Badge className="bg-cyan-900/50 text-cyan-300 text-xs">
+                                    {diagram.diagramType}
+                                  </Badge>
+                                )}
+                                {diagram.speedZone && (
+                                  <Badge className="bg-amber-900/50 text-amber-300 text-xs">
+                                    {diagram.speedZone} km/h
+                                  </Badge>
+                                )}
+                              </div>
+                            </div>
+
+                            {diagram.setupType && (
+                              <p className="text-xs text-gray-300">
+                                <span className="text-gray-500">Setup:</span> {diagram.setupType}
+                              </p>
+                            )}
+
+                            {diagram.description && (
+                              <p className="text-xs text-gray-400">{diagram.description}</p>
+                            )}
+
+                            {diagram.signs && diagram.signs.length > 0 && (
+                              <div>
+                                <h5 className="text-xs text-gray-500 mb-1">Signs:</h5>
+                                <div className="flex flex-wrap gap-1">
+                                  {diagram.signs.map((sign, i) => (
+                                    <Badge
+                                      key={i}
+                                      variant="outline"
+                                      className="text-xs border-blue-600 text-blue-300"
+                                    >
+                                      {sign}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {diagram.trafficControlDevices &&
+                              diagram.trafficControlDevices.length > 0 && (
+                                <div>
+                                  <h5 className="text-xs text-gray-500 mb-1">Traffic Control:</h5>
+                                  <div className="flex flex-wrap gap-1">
+                                    {diagram.trafficControlDevices.map((device, i) => (
+                                      <span
+                                        key={i}
+                                        className="text-xs bg-gray-600 px-2 py-0.5 rounded text-gray-300"
+                                      >
+                                        {device}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+
+                            {diagram.measurements && diagram.measurements.length > 0 && (
+                              <div>
+                                <h5 className="text-xs text-gray-500 mb-1">Measurements:</h5>
+                                <div className="grid grid-cols-2 gap-1">
+                                  {diagram.measurements.map((m, i) => (
+                                    <div key={i} className="text-xs bg-gray-600/50 p-1.5 rounded">
+                                      <span className="text-gray-400">{m.label}:</span>{' '}
+                                      <span className="text-white">
+                                        {m.value}
+                                        {m.unit && ` ${m.unit}`}
+                                      </span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {diagram.safetyNotes && diagram.safetyNotes.length > 0 && (
+                              <div>
+                                <h5 className="text-xs text-gray-500 mb-1">Safety Notes:</h5>
+                                <ul className="text-xs text-amber-300 space-y-0.5 list-disc list-inside">
+                                  {diagram.safetyNotes.map((note, i) => (
+                                    <li key={i}>{note}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </>
                 );
               })()
@@ -1281,7 +1416,7 @@ function LibraryPageContent() {
                 {/* Extraction Type Selector */}
                 <div className="mb-4">
                   <h4 className="font-semibold text-amber-400 mb-2">Extraction Type</h4>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-3 gap-2">
                     <button
                       onClick={() => setExtractType('abstract')}
                       className={`p-3 rounded-lg text-left transition-colors ${
@@ -1290,10 +1425,8 @@ function LibraryPageContent() {
                           : 'bg-gray-700/50 border border-gray-600 hover:bg-gray-700'
                       }`}
                     >
-                      <div className="font-medium text-sm text-white">📝 Basic Summary</div>
-                      <div className="text-xs text-gray-400 mt-1">
-                        Quick abstract generation (~10s)
-                      </div>
+                      <div className="font-medium text-sm text-white">📝 Basic</div>
+                      <div className="text-xs text-gray-400 mt-1">Abstract (~10s)</div>
                     </button>
                     <button
                       onClick={() => setExtractType('structured')}
@@ -1303,11 +1436,21 @@ function LibraryPageContent() {
                           : 'bg-gray-700/50 border border-gray-600 hover:bg-gray-700'
                       }`}
                     >
-                      <div className="font-medium text-sm text-white">🔬 Structured Extraction</div>
-                      <div className="text-xs text-gray-400 mt-1">
-                        Speed zones, TGS, requirements (~30s)
-                      </div>
+                      <div className="font-medium text-sm text-white">🔬 Structured</div>
+                      <div className="text-xs text-gray-400 mt-1">Full data (~30s)</div>
                       <span className="text-xs text-purple-400 mt-1 block">Phase 2</span>
+                    </button>
+                    <button
+                      onClick={() => setExtractType('diagrams')}
+                      className={`p-3 rounded-lg text-left transition-colors ${
+                        extractType === 'diagrams'
+                          ? 'bg-cyan-900/50 border-2 border-cyan-500'
+                          : 'bg-gray-700/50 border border-gray-600 hover:bg-gray-700'
+                      }`}
+                    >
+                      <div className="font-medium text-sm text-white">🖼️ Diagrams</div>
+                      <div className="text-xs text-gray-400 mt-1">TGS Analysis (~60s)</div>
+                      <span className="text-xs text-cyan-400 mt-1 block">Phase 3</span>
                     </button>
                   </div>
                 </div>
@@ -1322,6 +1465,8 @@ function LibraryPageContent() {
                     .map((doc) => {
                       const hasAiSummary = !!summaries[doc.id];
                       const hasStructured = summaries[doc.id]?.extractionType === 'structured';
+                      const hasDiagrams = summaries[doc.id]?.extractionType === 'diagrams';
+                      const diagramCount = summaries[doc.id]?.diagramAnalyses?.length || 0;
                       return (
                         <button
                           key={doc.id}
@@ -1339,12 +1484,17 @@ function LibraryPageContent() {
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
-                              {hasStructured && (
+                              {hasDiagrams && (
+                                <span className="text-cyan-400 text-xs flex items-center gap-1">
+                                  🖼️ {diagramCount} Diagrams
+                                </span>
+                              )}
+                              {hasStructured && !hasDiagrams && (
                                 <span className="text-purple-400 text-xs flex items-center gap-1">
                                   🔬 Structured
                                 </span>
                               )}
-                              {hasAiSummary && !hasStructured && (
+                              {hasAiSummary && !hasStructured && !hasDiagrams && (
                                 <span className="text-purple-400 text-xs flex items-center gap-1">
                                   🧠 AI Summary
                                 </span>

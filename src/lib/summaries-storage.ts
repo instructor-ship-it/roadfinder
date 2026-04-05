@@ -50,6 +50,55 @@ export interface ExtractedData {
   }>;
 }
 
+// Phase 3: Diagram analysis data
+export interface DiagramAnalysis {
+  // Diagram identifier (e.g., "IW-01", "LC-05")
+  diagramId?: string;
+
+  // Page number in PDF
+  pageNumber: number;
+
+  // Diagram type classification
+  diagramType?: 'TGS' | 'TMP' | 'sign_schedule' | 'taper_diagram' | 'layout' | 'other';
+
+  // Setup type (e.g., "Intersection Works", "Lane Closure")
+  setupType?: string;
+
+  // Speed zone this diagram applies to
+  speedZone?: number;
+
+  // Signs shown in the diagram
+  signs?: string[];
+
+  // Traffic control devices shown
+  trafficControlDevices?: string[];
+
+  // Number of lanes affected
+  lanesAffected?: number;
+
+  // Work area description
+  workAreaDescription?: string;
+
+  // Key measurements from diagram
+  measurements?: Array<{
+    label: string;
+    value: string;
+    unit?: string;
+  }>;
+
+  // Safety notes extracted
+  safetyNotes?: string[];
+
+  // Detailed description of the diagram
+  description?: string;
+
+  // Confidence score (0-1)
+  confidence?: number;
+
+  // Base64 image data for preview
+  imageData?: string;
+}
+
 // Summary structure
 export interface DocumentSummary {
   generatedAt: string;
@@ -70,7 +119,10 @@ export interface DocumentSummary {
 
   // Extraction metadata
   extractionVersion?: string;
-  extractionType?: 'basic' | 'structured' | 'full';
+  extractionType?: 'basic' | 'structured' | 'full' | 'diagrams';
+
+  // Phase 3: Diagram analyses
+  diagramAnalyses?: DiagramAnalysis[];
 }
 
 export interface SummariesCollection {
