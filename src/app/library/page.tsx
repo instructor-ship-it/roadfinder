@@ -1501,10 +1501,29 @@ function LibraryPageContent() {
                             </div>
                           </div>
                         )}
+                        {summary.keySections && summary.keySections.length > 0 && (
+                          <div>
+                            <h4 className="text-xs font-semibold text-blue-400 mb-2 uppercase flex items-center gap-2">
+                              <span>📑</span> Key Sections
+                            </h4>
+                            <div className="space-y-2">
+                              {summary.keySections.map((section, i) => (
+                                <div key={i} className="bg-gray-700/50 p-2 rounded">
+                                  <div className="text-blue-300 text-xs font-medium">
+                                    {section.section}
+                                  </div>
+                                  <div className="text-gray-400 text-xs mt-1">
+                                    {section.summary}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                         {summary.keyRequirements && summary.keyRequirements.length > 0 && (
                           <div>
-                            <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">
-                              Key Requirements
+                            <h4 className="text-xs font-semibold text-red-400 mb-1 uppercase flex items-center gap-2">
+                              <span>📋</span> Key Requirements
                             </h4>
                             <ul className="text-gray-300 text-xs space-y-1 list-disc list-inside">
                               {summary.keyRequirements.map((req, i) => (
@@ -1513,14 +1532,52 @@ function LibraryPageContent() {
                             </ul>
                           </div>
                         )}
+                        {summary.complianceNotes && summary.complianceNotes.length > 0 && (
+                          <div>
+                            <h4 className="text-xs font-semibold text-amber-400 mb-1 uppercase flex items-center gap-2">
+                              <span>⚠️</span> Compliance Notes
+                            </h4>
+                            <ul className="text-gray-300 text-xs space-y-1 list-disc list-inside">
+                              {summary.complianceNotes.map((note, i) => (
+                                <li key={i}>{note}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                         {summary.targetAudience && summary.targetAudience.length > 0 && (
                           <div>
-                            <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">
-                              Target Audience
+                            <h4 className="text-xs font-semibold text-green-400 mb-1 uppercase flex items-center gap-2">
+                              <span>👥</span> Target Audience
                             </h4>
-                            <p className="text-gray-300 text-xs">
-                              {summary.targetAudience.join(', ')}
-                            </p>
+                            <div className="flex flex-wrap gap-1">
+                              {summary.targetAudience.map((audience, i) => (
+                                <Badge
+                                  key={i}
+                                  variant="outline"
+                                  className="text-xs border-green-600 text-green-300"
+                                >
+                                  {audience}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {summary.crossReferences && summary.crossReferences.length > 0 && (
+                          <div>
+                            <h4 className="text-xs font-semibold text-purple-400 mb-1 uppercase flex items-center gap-2">
+                              <span>🔗</span> Related Documents
+                            </h4>
+                            <div className="flex flex-wrap gap-1">
+                              {summary.crossReferences.map((ref, i) => (
+                                <Badge
+                                  key={i}
+                                  variant="outline"
+                                  className="text-xs border-purple-600 text-purple-300"
+                                >
+                                  {ref}
+                                </Badge>
+                              ))}
+                            </div>
                           </div>
                         )}
                       </>

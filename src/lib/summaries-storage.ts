@@ -235,7 +235,15 @@ export async function getAllSummaries(): Promise<SummariesCollection> {
   try {
     const response = await fetch('/library/generated-summaries.json');
     if (response.ok) {
-      repoSummaries = await response.json();
+      const data = await response.json();
+      // Handle both old flat format and new nested format
+      // New format: { generatedAt, generatedBy, version, documents: { ... } }
+      // Old format: { docId: { ... }, docId2: { ... } }
+      if (data.documents && typeof data.documents === 'object') {
+        repoSummaries = data.documents;
+      } else {
+        repoSummaries = data;
+      }
     }
   } catch (error) {
     console.error('Error loading repo summaries:', error);
