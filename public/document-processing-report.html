@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Document Processing Report - TMP Wheatbelt Part 1</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .gradient-bg { background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 50%, #164e63 100%); }
+    .card { backdrop-filter: blur(10px); background: rgba(30, 41, 59, 0.8); }
+    .phase-badge { animation: pulse 2s infinite; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .diagram-card:hover { transform: translateY(-2px); transition: all 0.3s; }
+  </style>
+</head>
+<body class="gradient-bg min-h-screen text-white">
+  <!-- Header -->
+  <header class="border-b border-slate-700/50 sticky top-0 z-50 backdrop-blur-md bg-slate-900/80">
+    <div class="max-w-7xl mx-auto px-4 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <span class="text-3xl">📚</span>
+          <div>
+            <h1 class="text-xl font-bold">AI Document Processing Report</h1>
+            <p class="text-slate-400 text-sm">Phase 1-4 Complete Analysis</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm font-medium">
+            ✓ Processing Complete
+          </span>
+          <span class="text-slate-400 text-sm">4/5/2026</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+    
+    <!-- Document Info Card -->
+    <div class="card rounded-xl border border-slate-700/50 p-6">
+      <div class="flex items-start gap-4">
+        <div class="p-3 rounded-lg bg-cyan-500/20">
+          <span class="text-4xl">📋</span>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-lg font-semibold text-white">Non-Complex Traffic Management Arrangements - Wheatbelt Region (Part 1)</h2>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <span class="px-2 py-1 rounded bg-amber-500/20 text-amber-400 text-xs">MRWA</span>
+            <span class="px-2 py-1 rounded bg-blue-500/20 text-blue-400 text-xs">Wheatbelt Region</span>
+            <span class="px-2 py-1 rounded bg-purple-500/20 text-purple-400 text-xs">TGS Diagrams</span>
+            <span class="px-2 py-1 rounded bg-green-500/20 text-green-400 text-xs">290 Pages</span>
+          </div>
+          <div class="grid grid-cols-4 gap-4 mt-4">
+            <div class="text-center p-2 rounded bg-slate-800/50">
+              <div class="text-2xl font-bold text-white">50,000</div>
+              <div class="text-xs text-slate-400">Characters Extracted</div>
+            </div>
+            <div class="text-center p-2 rounded bg-slate-800/50">
+              <div class="text-2xl font-bold text-white">369</div>
+              <div class="text-xs text-slate-400">Preview Images</div>
+            </div>
+            <div class="text-center p-2 rounded bg-slate-800/50">
+              <div class="text-2xl font-bold text-white">4</div>
+              <div class="text-xs text-slate-400">Phases Complete</div>
+            </div>
+            <div class="text-center p-2 rounded bg-slate-800/50">
+              <div class="text-2xl font-bold text-white">~45 seconds</div>
+              <div class="text-xs text-slate-400">Processing Time</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase Progress -->
+    <div class="grid grid-cols-4 gap-4">
+      <div class="card rounded-lg border border-green-500/50 p-4 text-center">
+        <div class="text-green-400 text-2xl mb-1">📝</div>
+        <div class="font-semibold text-white">Phase 1</div>
+        <div class="text-xs text-slate-400">Basic Summary</div>
+        <div class="mt-2 text-green-400 text-sm">✓ Complete</div>
+      </div>
+      <div class="card rounded-lg border border-purple-500/50 p-4 text-center">
+        <div class="text-purple-400 text-2xl mb-1">🔬</div>
+        <div class="font-semibold text-white">Phase 2</div>
+        <div class="text-xs text-slate-400">Structured Extraction</div>
+        <div class="mt-2 text-purple-400 text-sm">✓ Complete</div>
+      </div>
+      <div class="card rounded-lg border border-cyan-500/50 p-4 text-center">
+        <div class="text-cyan-400 text-2xl mb-1">🖼️</div>
+        <div class="font-semibold text-white">Phase 3</div>
+        <div class="text-xs text-slate-400">Diagram Analysis</div>
+        <div class="mt-2 text-cyan-400 text-sm">✓ 5 Diagrams</div>
+      </div>
+      <div class="card rounded-lg border border-amber-500/50 p-4 text-center">
+        <div class="text-amber-400 text-2xl mb-1">📊</div>
+        <div class="font-semibold text-white">Phase 4</div>
+        <div class="text-xs text-slate-400">Integration</div>
+        <div class="mt-2 text-amber-400 text-sm">✓ Complete</div>
+      </div>
+    </div>
+
+    <!-- Phase 1: Basic Summary -->
+    <div class="card rounded-xl border border-slate-700/50 overflow-hidden">
+      <div class="bg-green-900/30 px-6 py-4 border-b border-slate-700/50 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">📝</span>
+          <div>
+            <h3 class="font-semibold text-white">Phase 1: Basic Summary</h3>
+            <p class="text-xs text-slate-400">AI-generated abstract and keywords</p>
+          </div>
+        </div>
+        <span class="phase-badge px-2 py-1 rounded bg-green-500/30 text-green-400 text-xs">~10s</span>
+      </div>
+      <div class="p-6">
+        <h4 class="text-sm font-semibold text-green-400 mb-3 uppercase tracking-wide">Abstract</h4>
+        <div class="prose prose-invert max-w-none text-slate-300 text-sm leading-relaxed whitespace-pre-line">
+This Traffic Management Plan provides pre-approved Traffic Guidance Scheme (TGS) diagrams for non-complex traffic management arrangements on state roads in the Wheatbelt region of Western Australia. The document is designed for use by accredited Traffic Management Supervisors and Traffic Controllers working on MRWA-maintained roads within the Wheatbelt region.
+
+The collection covers various work scenarios including lane closures, shoulder closures, mobile works, and short-term low-impact works specific to rural road environments. The diagrams are categorized by type: Setup and Guidance (IW), Lane Closures (LC), Lateral Shifts (LS), Reversible Flow (RF), Emergency Setups (EW), and Aftercare (AC).
+
+Each diagram includes speed zone requirements ranging from 40 km/h to 110 km/h, signage schedules with appropriate T-series signs, and implementation notes for site-specific adaptation. This TMP should be used in conjunction with the MRWA Code of Practice and requires site-specific assessment by a qualified Traffic Management Supervisor.
+        </div>
+        
+        <div class="mt-6 pt-4 border-t border-slate-700/50">
+          <h4 class="text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wide">Keywords</h4>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">traffic management</span><span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">TGS</span><span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">wheatbelt</span><span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">lane closure</span><span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">speed zone</span><span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">MRWA</span><span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">temporary traffic</span><span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">traffic controller</span><span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">signage</span><span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-xs">work zone</span>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-slate-700/50">
+          <h4 class="text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wide">Target Audience</h4>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-2 py-1 rounded bg-blue-900/50 text-blue-300 text-xs">Traffic Management Supervisor</span><span class="px-2 py-1 rounded bg-blue-900/50 text-blue-300 text-xs">Traffic Controller</span><span class="px-2 py-1 rounded bg-blue-900/50 text-blue-300 text-xs">Road Work Crew</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 2: Structured Extraction -->
+    <div class="card rounded-xl border border-slate-700/50 overflow-hidden">
+      <div class="bg-purple-900/30 px-6 py-4 border-b border-slate-700/50 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🔬</span>
+          <div>
+            <h3 class="font-semibold text-white">Phase 2: Structured Extraction</h3>
+            <p class="text-xs text-slate-400">Typed data extraction for Traffic Controllers</p>
+          </div>
+        </div>
+        <span class="phase-badge px-2 py-1 rounded bg-purple-500/30 text-purple-400 text-xs">~30s</span>
+      </div>
+      <div class="p-6 space-y-6">
+        
+        <!-- Speed Zones -->
+        <div>
+          <h4 class="text-sm font-semibold text-amber-400 mb-3 uppercase tracking-wide flex items-center gap-2">
+            <span>🚗</span> Speed Zones Mentioned
+          </h4>
+          <div class="flex flex-wrap gap-2">
+            
+              <span class="px-3 py-1.5 rounded-lg bg-amber-900/50 text-amber-300 border border-amber-700 font-medium">
+                40 km/h
+              </span>
+            
+              <span class="px-3 py-1.5 rounded-lg bg-amber-900/50 text-amber-300 border border-amber-700 font-medium">
+                50 km/h
+              </span>
+            
+              <span class="px-3 py-1.5 rounded-lg bg-amber-900/50 text-amber-300 border border-amber-700 font-medium">
+                60 km/h
+              </span>
+            
+              <span class="px-3 py-1.5 rounded-lg bg-amber-900/50 text-amber-300 border border-amber-700 font-medium">
+                70 km/h
+              </span>
+            
+              <span class="px-3 py-1.5 rounded-lg bg-amber-900/50 text-amber-300 border border-amber-700 font-medium">
+                80 km/h
+              </span>
+            
+              <span class="px-3 py-1.5 rounded-lg bg-amber-900/50 text-amber-300 border border-amber-700 font-medium">
+                100 km/h
+              </span>
+            
+              <span class="px-3 py-1.5 rounded-lg bg-amber-900/50 text-amber-300 border border-amber-700 font-medium">
+                110 km/h
+              </span>
+            
+          </div>
+        </div>
+
+        <!-- TGS Diagrams Referenced -->
+        <div>
+          <h4 class="text-sm font-semibold text-blue-400 mb-3 uppercase tracking-wide flex items-center gap-2">
+            <span>📐</span> TGS Diagrams Referenced (13)
+          </h4>
+          <div class="flex flex-wrap gap-1">
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">IW-01</span>
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">IW-02</span>
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">IW-03</span>
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">LC-01</span>
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">LC-02</span>
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">LC-03</span>
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">LC-04</span>
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">LC-05</span>
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">LS-01</span>
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">LS-02</span>
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">EW-01</span>
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">EW-02</span>
+            
+              <span class="px-2 py-1 rounded text-xs border border-blue-600 text-blue-300">AC-01</span>
+            
+          </div>
+        </div>
+
+        <!-- Taper Lengths -->
+        <div>
+          <h4 class="text-sm font-semibold text-cyan-400 mb-3 uppercase tracking-wide flex items-center gap-2">
+            <span>📏</span> Taper Lengths by Speed Zone
+          </h4>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg">
+                <div class="text-cyan-300 font-semibold">40 km/h</div>
+                <div class="text-white text-lg">29m</div>
+                <div class="text-slate-500 text-xs mt-1">Minimum taper length for 40 km/h</div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg">
+                <div class="text-cyan-300 font-semibold">50 km/h</div>
+                <div class="text-white text-lg">36m</div>
+                <div class="text-slate-500 text-xs mt-1">Minimum taper length for 50 km/h</div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg">
+                <div class="text-cyan-300 font-semibold">60 km/h</div>
+                <div class="text-white text-lg">57m</div>
+                <div class="text-slate-500 text-xs mt-1">Minimum taper length for 60 km/h</div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg">
+                <div class="text-cyan-300 font-semibold">70 km/h</div>
+                <div class="text-white text-lg">77m</div>
+                <div class="text-slate-500 text-xs mt-1">Minimum taper length for 70 km/h</div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg">
+                <div class="text-cyan-300 font-semibold">80 km/h</div>
+                <div class="text-white text-lg">114m</div>
+                <div class="text-slate-500 text-xs mt-1">Minimum taper length for 80 km/h</div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg">
+                <div class="text-cyan-300 font-semibold">100 km/h</div>
+                <div class="text-white text-lg">179m</div>
+                <div class="text-slate-500 text-xs mt-1">Minimum taper length for 100 km/h</div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg">
+                <div class="text-cyan-300 font-semibold">110 km/h</div>
+                <div class="text-white text-lg">216m</div>
+                <div class="text-slate-500 text-xs mt-1">Minimum taper length for 110 km/h</div>
+              </div>
+            
+          </div>
+        </div>
+
+        <!-- Notification Thresholds -->
+        <div>
+          <h4 class="text-sm font-semibold text-orange-400 mb-3 uppercase tracking-wide flex items-center gap-2">
+            <span>⏰</span> Notification Thresholds
+          </h4>
+          <div class="space-y-1">
+            
+              <div class="flex justify-between items-center bg-slate-800/50 p-2 rounded">
+                <span class="text-slate-400 capitalize text-sm">road Closure</span>
+                <span class="text-orange-300 font-semibold">7 days</span>
+              </div>
+            
+              <div class="flex justify-between items-center bg-slate-800/50 p-2 rounded">
+                <span class="text-slate-400 capitalize text-sm">speed Reduction</span>
+                <span class="text-orange-300 font-semibold">24 hours</span>
+              </div>
+            
+              <div class="flex justify-between items-center bg-slate-800/50 p-2 rounded">
+                <span class="text-slate-400 capitalize text-sm">lane Closure</span>
+                <span class="text-orange-300 font-semibold">48 hours</span>
+              </div>
+            
+              <div class="flex justify-between items-center bg-slate-800/50 p-2 rounded">
+                <span class="text-slate-400 capitalize text-sm">shoulder Closure</span>
+                <span class="text-orange-300 font-semibold">24 hours</span>
+              </div>
+            
+          </div>
+        </div>
+
+        <!-- Requirements -->
+        <div>
+          <h4 class="text-sm font-semibold text-red-400 mb-3 uppercase tracking-wide flex items-center gap-2">
+            <span>📋</span> Key Requirements
+          </h4>
+          <div class="space-y-2">
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg flex items-start gap-3">
+                <span class="px-2 py-0.5 rounded text-xs bg-red-900/50 text-red-300">mandatory</span>
+                <div class="flex-1">
+                  <span class="text-slate-300 text-sm">All traffic control devices must comply with AS 1742.3</span>
+                  <span class="text-slate-500 text-xs ml-2">§2.1</span>
+                </div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg flex items-start gap-3">
+                <span class="px-2 py-0.5 rounded text-xs bg-red-900/50 text-red-300">mandatory</span>
+                <div class="flex-1">
+                  <span class="text-slate-300 text-sm">Traffic Controllers must hold current accreditation</span>
+                  <span class="text-slate-500 text-xs ml-2">§2.3</span>
+                </div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg flex items-start gap-3">
+                <span class="px-2 py-0.5 rounded text-xs bg-red-900/50 text-red-300">mandatory</span>
+                <div class="flex-1">
+                  <span class="text-slate-300 text-sm">TGS must be approved before implementation</span>
+                  <span class="text-slate-500 text-xs ml-2">§3.1</span>
+                </div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg flex items-start gap-3">
+                <span class="px-2 py-0.5 rounded text-xs bg-red-900/50 text-red-300">mandatory</span>
+                <div class="flex-1">
+                  <span class="text-slate-300 text-sm">Daily inspections required for long-term setups</span>
+                  <span class="text-slate-500 text-xs ml-2">§4.2</span>
+                </div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg flex items-start gap-3">
+                <span class="px-2 py-0.5 rounded text-xs bg-yellow-900/50 text-yellow-300">recommended</span>
+                <div class="flex-1">
+                  <span class="text-slate-300 text-sm">Shadow vehicle required for mobile works</span>
+                  <span class="text-slate-500 text-xs ml-2">§5.1</span>
+                </div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg flex items-start gap-3">
+                <span class="px-2 py-0.5 rounded text-xs bg-red-900/50 text-red-300">mandatory</span>
+                <div class="flex-1">
+                  <span class="text-slate-300 text-sm">Two-way radio communication between all personnel</span>
+                  <span class="text-slate-500 text-xs ml-2">§4.5</span>
+                </div>
+              </div>
+            
+          </div>
+        </div>
+
+        <!-- Sign Schedules -->
+        <div>
+          <h4 class="text-sm font-semibold text-green-400 mb-3 uppercase tracking-wide flex items-center gap-2">
+            <span>🪧</span> Sign Schedules
+          </h4>
+          <div class="space-y-2">
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-white font-medium text-sm">Lane Closure (60 km/h)</span>
+                  <span class="text-amber-400 text-xs">60 km/h</span>
+                </div>
+                <div class="flex flex-wrap gap-1">
+                  <span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T1-1</span><span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T1-2</span><span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T1-3-1</span><span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T1-4</span><span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T2-1</span><span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T2-3</span>
+                </div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-white font-medium text-sm">Shoulder Works (80 km/h)</span>
+                  <span class="text-amber-400 text-xs">80 km/h</span>
+                </div>
+                <div class="flex flex-wrap gap-1">
+                  <span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T1-1</span><span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T1-2</span><span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T2-1</span>
+                </div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-white font-medium text-sm">Mobile Works</span>
+                  
+                </div>
+                <div class="flex flex-wrap gap-1">
+                  <span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T1-5</span><span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T2-1</span>
+                </div>
+              </div>
+            
+              <div class="bg-slate-800/50 p-3 rounded-lg">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-white font-medium text-sm">Emergency Setup</span>
+                  
+                </div>
+                <div class="flex flex-wrap gap-1">
+                  <span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T1-6</span><span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T2-1</span><span class="px-2 py-0.5 rounded bg-green-900/30 text-green-300 text-xs">T2-4</span>
+                </div>
+              </div>
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Phase 3: Diagram Analysis -->
+    <div class="card rounded-xl border border-slate-700/50 overflow-hidden">
+      <div class="bg-cyan-900/30 px-6 py-4 border-b border-slate-700/50 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">🖼️</span>
+          <div>
+            <h3 class="font-semibold text-white">Phase 3: Diagram Analysis (VLM)</h3>
+            <p class="text-xs text-slate-400">TGS diagram extraction using Vision Language Model</p>
+          </div>
+        </div>
+        <span class="phase-badge px-2 py-1 rounded bg-cyan-500/30 text-cyan-400 text-xs">~60s</span>
+      </div>
+      <div class="p-6">
+        <div class="mb-4 p-3 rounded bg-slate-800/50 flex items-center justify-between">
+          <div>
+            <span class="text-slate-400 text-sm">TGS Diagrams in Document:</span>
+            <span class="text-white font-semibold ml-2">Pages 139-290</span>
+          </div>
+          <div>
+            <span class="text-slate-400 text-sm">Analyzed:</span>
+            <span class="text-cyan-400 font-semibold ml-2">5 diagrams</span>
+          </div>
+        </div>
+        
+        <div class="space-y-4">
+          
+            <div class="diagram-card bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <span class="text-lg font-semibold text-white">Page 140</span>
+                  <span class="px-2 py-0.5 rounded bg-cyan-900/50 text-cyan-300 text-xs">TGS</span>
+                  <span class="px-2 py-0.5 rounded bg-amber-900/50 text-amber-300 text-xs">60 km/h</span>
+                </div>
+                <span class="text-slate-500 text-xs">Confidence: 85%</span>
+              </div>
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Setup Type:</span>
+                  <span class="text-slate-300 text-sm ml-2">Intersection Works - Single Lane Closure</span>
+                </div>
+              
+              
+              <p class="text-slate-400 text-sm mb-3">Traffic Guidance Scheme for intersection works showing a single lane closure with traffic controller. The diagram illustrates the positioning of advance warning signs, taper zone, buffer zone, and work area. Traffic controller position is marked at the beginning of the taper with clear sight lines to approaching traffic.</p>
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Signs:</span>
+                  <div class="flex flex-wrap gap-1 mt-1">
+                    <span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-1</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-2</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-3-1</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-4</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T2-1</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T2-3</span>
+                  </div>
+                </div>
+              
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Traffic Control Devices:</span>
+                  <div class="flex flex-wrap gap-1 mt-1">
+                    <span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">traffic cones</span><span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">temporary barricades</span><span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">roadwork signs</span>
+                  </div>
+                </div>
+              
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Measurements:</span>
+                  <div class="grid grid-cols-3 gap-2 mt-1">
+                    
+                      <div class="bg-slate-700/50 p-2 rounded text-center">
+                        <div class="text-slate-400 text-xs">Advance Warning</div>
+                        <div class="text-white font-medium">120 m</div>
+                      </div>
+                    
+                      <div class="bg-slate-700/50 p-2 rounded text-center">
+                        <div class="text-slate-400 text-xs">Taper Length</div>
+                        <div class="text-white font-medium">57 m</div>
+                      </div>
+                    
+                      <div class="bg-slate-700/50 p-2 rounded text-center">
+                        <div class="text-slate-400 text-xs">Buffer Zone</div>
+                        <div class="text-white font-medium">30 m</div>
+                      </div>
+                    
+                  </div>
+                </div>
+              
+              
+              
+                <div class="mt-3 p-2 rounded bg-amber-900/20 border border-amber-800/50">
+                  <span class="text-amber-400 text-xs font-semibold">⚠️ Safety Notes:</span>
+                  <ul class="mt-1 space-y-1">
+                    <li class="text-amber-300 text-xs">• Traffic Controller required at all times</li><li class="text-amber-300 text-xs">• Minimum sight distance 150m required</li>
+                  </ul>
+                </div>
+              
+            </div>
+          
+            <div class="diagram-card bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <span class="text-lg font-semibold text-white">Page 150</span>
+                  <span class="px-2 py-0.5 rounded bg-cyan-900/50 text-cyan-300 text-xs">TGS</span>
+                  <span class="px-2 py-0.5 rounded bg-amber-900/50 text-amber-300 text-xs">80 km/h</span>
+                </div>
+                <span class="text-slate-500 text-xs">Confidence: 82%</span>
+              </div>
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Setup Type:</span>
+                  <span class="text-slate-300 text-sm ml-2">Lane Closure - Two Lane Road</span>
+                </div>
+              
+              
+              <p class="text-slate-400 text-sm mb-3">TGS diagram for lane closure on a two-lane rural road at 80 km/h. Shows pilot vehicle operation with shadow vehicle protection. The diagram includes longitudinal taper, buffer zone, and termination area with appropriate signage positioning.</p>
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Signs:</span>
+                  <div class="flex flex-wrap gap-1 mt-1">
+                    <span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-1</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-2</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-3-2</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-4</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T2-1</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T2-3</span>
+                  </div>
+                </div>
+              
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Traffic Control Devices:</span>
+                  <div class="flex flex-wrap gap-1 mt-1">
+                    <span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">traffic cones</span><span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">barrier boards</span><span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">arrow board</span>
+                  </div>
+                </div>
+              
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Measurements:</span>
+                  <div class="grid grid-cols-3 gap-2 mt-1">
+                    
+                      <div class="bg-slate-700/50 p-2 rounded text-center">
+                        <div class="text-slate-400 text-xs">Advance Warning</div>
+                        <div class="text-white font-medium">200 m</div>
+                      </div>
+                    
+                      <div class="bg-slate-700/50 p-2 rounded text-center">
+                        <div class="text-slate-400 text-xs">Taper Length</div>
+                        <div class="text-white font-medium">114 m</div>
+                      </div>
+                    
+                      <div class="bg-slate-700/50 p-2 rounded text-center">
+                        <div class="text-slate-400 text-xs">Work Zone</div>
+                        <div class="text-white font-medium">200 m</div>
+                      </div>
+                    
+                  </div>
+                </div>
+              
+              
+              
+                <div class="mt-3 p-2 rounded bg-amber-900/20 border border-amber-800/50">
+                  <span class="text-amber-400 text-xs font-semibold">⚠️ Safety Notes:</span>
+                  <ul class="mt-1 space-y-1">
+                    <li class="text-amber-300 text-xs">• Pilot vehicle required for speeds 80 km/h and above</li><li class="text-amber-300 text-xs">• Two-way radio communication mandatory</li>
+                  </ul>
+                </div>
+              
+            </div>
+          
+            <div class="diagram-card bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <span class="text-lg font-semibold text-white">Page 160</span>
+                  <span class="px-2 py-0.5 rounded bg-cyan-900/50 text-cyan-300 text-xs">TGS</span>
+                  <span class="px-2 py-0.5 rounded bg-amber-900/50 text-amber-300 text-xs">100 km/h</span>
+                </div>
+                <span class="text-slate-500 text-xs">Confidence: 88%</span>
+              </div>
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Setup Type:</span>
+                  <span class="text-slate-300 text-sm ml-2">Shoulder Works - Short Term</span>
+                </div>
+              
+              
+              <p class="text-slate-400 text-sm mb-3">TGS for short-term shoulder works on a 100 km/h road. The diagram shows vehicle-mounted signage configuration with shadow vehicle protection. Work area is on the shoulder with no lane encroachment. Duration limited to short-term works only.</p>
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Signs:</span>
+                  <div class="flex flex-wrap gap-1 mt-1">
+                    <span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-1</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-2</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T2-1</span>
+                  </div>
+                </div>
+              
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Traffic Control Devices:</span>
+                  <div class="flex flex-wrap gap-1 mt-1">
+                    <span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">traffic cones</span><span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">vehicle-mounted signs</span><span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">flashing lights</span>
+                  </div>
+                </div>
+              
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Measurements:</span>
+                  <div class="grid grid-cols-3 gap-2 mt-1">
+                    
+                      <div class="bg-slate-700/50 p-2 rounded text-center">
+                        <div class="text-slate-400 text-xs">Advance Warning</div>
+                        <div class="text-white font-medium">300 m</div>
+                      </div>
+                    
+                      <div class="bg-slate-700/50 p-2 rounded text-center">
+                        <div class="text-slate-400 text-xs">Shadow Vehicle Distance</div>
+                        <div class="text-white font-medium">50 m</div>
+                      </div>
+                    
+                  </div>
+                </div>
+              
+              
+              
+                <div class="mt-3 p-2 rounded bg-amber-900/20 border border-amber-800/50">
+                  <span class="text-amber-400 text-xs font-semibold">⚠️ Safety Notes:</span>
+                  <ul class="mt-1 space-y-1">
+                    <li class="text-amber-300 text-xs">• Shadow vehicle with arrow board required</li><li class="text-amber-300 text-xs">• High-visibility clothing mandatory</li><li class="text-amber-300 text-xs">• Work duration under 30 minutes</li>
+                  </ul>
+                </div>
+              
+            </div>
+          
+            <div class="diagram-card bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <span class="text-lg font-semibold text-white">Page 170</span>
+                  <span class="px-2 py-0.5 rounded bg-cyan-900/50 text-cyan-300 text-xs">TGS</span>
+                  <span class="px-2 py-0.5 rounded bg-amber-900/50 text-amber-300 text-xs">80 km/h</span>
+                </div>
+                <span class="text-slate-500 text-xs">Confidence: 80%</span>
+              </div>
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Setup Type:</span>
+                  <span class="text-slate-300 text-sm ml-2">Mobile Works - Line Marking</span>
+                </div>
+              
+              
+              <p class="text-slate-400 text-sm mb-3">Mobile works TGS for line marking operations at 80 km/h. The diagram shows a convoy configuration with advance warning vehicle, work vehicle, and shadow vehicle. Arrow boards indicate lane closure with traffic guided around the moving work area.</p>
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Signs:</span>
+                  <div class="flex flex-wrap gap-1 mt-1">
+                    <span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-5</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T2-1</span>
+                  </div>
+                </div>
+              
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Traffic Control Devices:</span>
+                  <div class="flex flex-wrap gap-1 mt-1">
+                    <span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">vehicle-mounted signs</span><span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">arrow board</span><span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">flashing lights</span><span class="px-2 py-0.5 rounded bg-slate-700 text-slate-300 text-xs">traffic cones</span>
+                  </div>
+                </div>
+              
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Measurements:</span>
+                  <div class="grid grid-cols-3 gap-2 mt-1">
+                    
+                      <div class="bg-slate-700/50 p-2 rounded text-center">
+                        <div class="text-slate-400 text-xs">Advance Vehicle Distance</div>
+                        <div class="text-white font-medium">150 m</div>
+                      </div>
+                    
+                      <div class="bg-slate-700/50 p-2 rounded text-center">
+                        <div class="text-slate-400 text-xs">Shadow Vehicle Distance</div>
+                        <div class="text-white font-medium">30 m</div>
+                      </div>
+                    
+                      <div class="bg-slate-700/50 p-2 rounded text-center">
+                        <div class="text-slate-400 text-xs">Work Zone Length</div>
+                        <div class="text-white font-medium">Variable m</div>
+                      </div>
+                    
+                  </div>
+                </div>
+              
+              
+              
+                <div class="mt-3 p-2 rounded bg-amber-900/20 border border-amber-800/50">
+                  <span class="text-amber-400 text-xs font-semibold">⚠️ Safety Notes:</span>
+                  <ul class="mt-1 space-y-1">
+                    <li class="text-amber-300 text-xs">• Convoy communication required</li><li class="text-amber-300 text-xs">• Speed limited to 20 km/h during operation</li><li class="text-amber-300 text-xs">• Spotter required for traffic awareness</li>
+                  </ul>
+                </div>
+              
+            </div>
+          
+            <div class="diagram-card bg-slate-800/30 rounded-lg p-4 border border-slate-700/50">
+              <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <span class="text-lg font-semibold text-white">Page 180</span>
+                  <span class="px-2 py-0.5 rounded bg-cyan-900/50 text-cyan-300 text-xs">sign_schedule</span>
+                  
+                </div>
+                <span class="text-slate-500 text-xs">Confidence: 90%</span>
+              </div>
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Setup Type:</span>
+                  <span class="text-slate-300 text-sm ml-2">Sign Schedule Reference</span>
+                </div>
+              
+              
+              <p class="text-slate-400 text-sm mb-3">Sign schedule reference table showing the standard signage requirements for different traffic management setups. Lists sign codes, descriptions, and typical positioning distances based on speed zones.</p>
+              
+              
+                <div class="mb-2">
+                  <span class="text-slate-500 text-xs">Signs:</span>
+                  <div class="flex flex-wrap gap-1 mt-1">
+                    <span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-1</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-2</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-3-1</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-3-2</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-4</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T1-5</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T2-1</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T2-3</span><span class="px-2 py-0.5 rounded border border-blue-600 text-blue-300 text-xs">T2-4</span>
+                  </div>
+                </div>
+              
+              
+              
+              
+              
+              
+              
+            </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 4: Integration Dashboard -->
+    <div class="card rounded-xl border border-slate-700/50 overflow-hidden">
+      <div class="bg-amber-900/30 px-6 py-4 border-b border-slate-700/50 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">📊</span>
+          <div>
+            <h3 class="font-semibold text-white">Phase 4: Integration Dashboard</h3>
+            <p class="text-xs text-slate-400">Unified view with search and export capabilities</p>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button class="px-3 py-1.5 rounded bg-purple-600 hover:bg-purple-500 text-white text-xs font-medium transition-colors">
+            🧠 Process More
+          </button>
+          <button class="px-3 py-1.5 rounded bg-slate-700 hover:bg-slate-600 text-white text-xs font-medium transition-colors">
+            📥 Export JSON
+          </button>
+        </div>
+      </div>
+      <div class="p-6">
+        
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-5 gap-3 mb-6">
+          <div class="bg-slate-800/50 rounded-lg p-4 text-center">
+            <div class="text-3xl font-bold text-white">1</div>
+            <div class="text-xs text-slate-400 mt-1">Summaries</div>
+          </div>
+          <div class="bg-slate-800/50 rounded-lg p-4 text-center">
+            <div class="text-3xl font-bold text-purple-400">1</div>
+            <div class="text-xs text-slate-400 mt-1">Structured</div>
+          </div>
+          <div class="bg-slate-800/50 rounded-lg p-4 text-center">
+            <div class="text-3xl font-bold text-cyan-400">1</div>
+            <div class="text-xs text-slate-400 mt-1">Diagram Sets</div>
+          </div>
+          <div class="bg-slate-800/50 rounded-lg p-4 text-center">
+            <div class="text-3xl font-bold text-amber-400">5</div>
+            <div class="text-xs text-slate-400 mt-1">TGS Diagrams</div>
+          </div>
+          <div class="bg-slate-800/50 rounded-lg p-4 text-center">
+            <div class="text-3xl font-bold text-green-400">~250KB</div>
+            <div class="text-xs text-slate-400 mt-1">Storage Used</div>
+          </div>
+        </div>
+
+        <!-- Quick Filters -->
+        <div class="space-y-3 mb-6">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-xs text-slate-400">Speed Zones:</span>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-amber-900/50 text-amber-300 hover:bg-amber-800/50 transition-colors">
+                40 km/h
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-amber-900/50 text-amber-300 hover:bg-amber-800/50 transition-colors">
+                50 km/h
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-amber-900/50 text-amber-300 hover:bg-amber-800/50 transition-colors">
+                60 km/h
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-amber-900/50 text-amber-300 hover:bg-amber-800/50 transition-colors">
+                70 km/h
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-amber-900/50 text-amber-300 hover:bg-amber-800/50 transition-colors">
+                80 km/h
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-amber-900/50 text-amber-300 hover:bg-amber-800/50 transition-colors">
+                100 km/h
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-amber-900/50 text-amber-300 hover:bg-amber-800/50 transition-colors">
+                110 km/h
+              </button>
+            
+          </div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-xs text-slate-400">TGS Codes:</span>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-blue-900/50 text-blue-300 hover:bg-blue-800/50 transition-colors">
+                IW-01
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-blue-900/50 text-blue-300 hover:bg-blue-800/50 transition-colors">
+                IW-02
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-blue-900/50 text-blue-300 hover:bg-blue-800/50 transition-colors">
+                IW-03
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-blue-900/50 text-blue-300 hover:bg-blue-800/50 transition-colors">
+                LC-01
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-blue-900/50 text-blue-300 hover:bg-blue-800/50 transition-colors">
+                LC-02
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-blue-900/50 text-blue-300 hover:bg-blue-800/50 transition-colors">
+                LC-03
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-blue-900/50 text-blue-300 hover:bg-blue-800/50 transition-colors">
+                LC-04
+              </button>
+            
+              <button class="px-2 py-0.5 rounded text-xs bg-blue-900/50 text-blue-300 hover:bg-blue-800/50 transition-colors">
+                LC-05
+              </button>
+            
+            <span class="text-xs text-slate-500">+5 more</span>
+          </div>
+        </div>
+
+        <!-- Enhanced Search Tip -->
+        <div class="p-3 rounded bg-slate-800/30 border border-slate-700/50">
+          <p class="text-xs text-slate-400">
+            💡 <strong class="text-purple-300">Enhanced Search (Phase 4):</strong> 
+            Search now includes extracted speed zones, TGS codes, requirements, sign codes, and diagram descriptions. 
+            Try searching for "60", "T1-1", or "lane closure".
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export Section -->
+    <div class="card rounded-xl border border-slate-700/50 p-6">
+      <h3 class="font-semibold text-white mb-4 flex items-center gap-2">
+        <span>📦</span> Export Data
+      </h3>
+      <div class="grid grid-cols-3 gap-4">
+        <button class="p-4 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 transition-colors text-left">
+          <div class="text-white font-medium">JSON Export</div>
+          <div class="text-slate-400 text-xs mt-1">Full extraction data with all phases</div>
+        </button>
+        <button class="p-4 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 transition-colors text-left">
+          <div class="text-white font-medium">CSV Report</div>
+          <div class="text-slate-400 text-xs mt-1">Tabular data for spreadsheets</div>
+        </button>
+        <button class="p-4 rounded-lg bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 transition-colors text-left">
+          <div class="text-white font-medium">PDF Summary</div>
+          <div class="text-slate-400 text-xs mt-1">Printable summary report</div>
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-700/50 mt-8 py-6">
+    <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+      <p>AI Document Processing System • TC Work Zone Locator v1.25.0</p>
+      <p class="mt-1">Processed at 2026-04-05T13:22:34.972Z</p>
+    </div>
+  </footer>
+
+</body>
+</html>
