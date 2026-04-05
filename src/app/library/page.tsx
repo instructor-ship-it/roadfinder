@@ -360,7 +360,14 @@ function LibraryPageContent() {
       // Search in requirements
       const matchesRequirements =
         extracted?.requirements?.some((req) => req.requirement.toLowerCase().includes(query)) ||
-        summary?.keyRequirements?.some((req) => req.toLowerCase().includes(query)) ||
+        summary?.keyRequirements?.some((req) => {
+          // Handle both string and object format
+          const text =
+            typeof req === 'object' && req !== null
+              ? (req as { requirement?: string }).requirement
+              : req;
+          return text?.toLowerCase().includes(query) || false;
+        }) ||
         false;
 
       // Search in role definitions
@@ -387,7 +394,12 @@ function LibraryPageContent() {
 
       // Search in compliance notes
       const matchesCompliance =
-        summary?.complianceNotes?.some((note) => note.toLowerCase().includes(query)) || false;
+        summary?.complianceNotes?.some((note) => {
+          // Handle both string and object format
+          const text =
+            typeof note === 'object' && note !== null ? (note as { note?: string }).note : note;
+          return text?.toLowerCase().includes(query) || false;
+        }) || false;
 
       const matchesCategory =
         !selectedParent ||
@@ -1579,10 +1591,46 @@ function LibraryPageContent() {
                             <h4 className="text-xs font-semibold text-red-400 mb-1 uppercase flex items-center gap-2">
                               <span>📋</span> Key Requirements
                             </h4>
-                            <ul className="text-gray-300 text-xs space-y-1 list-disc list-inside">
-                              {summary.keyRequirements.map((req, i) => (
-                                <li key={i}>{req}</li>
-                              ))}
+                            <ul className="text-gray-300 text-xs space-y-2">
+                              {summary.keyRequirements.map((req, i) => {
+                                // Handle both string and object format
+                                const isObject = typeof req === 'object' && req !== null;
+                                const requirementText = isObject
+                                  ? (req as { requirement?: string }).requirement
+                                  : req;
+                                const section = isObject
+                                  ? (req as { section?: string }).section
+                                  : null;
+                                const priority = isObject
+                                  ? (req as { priority?: string }).priority
+                                  : null;
+
+                                return (
+                                  <li key={i} className="bg-gray-700/30 p-2 rounded">
+                                    <div className="flex items-start gap-2">
+                                      {priority && (
+                                        <span
+                                          className={`px-1.5 py-0.5 rounded text-[10px] uppercase shrink-0 ${
+                                            priority === 'critical'
+                                              ? 'bg-red-900/50 text-red-300'
+                                              : priority === 'high'
+                                                ? 'bg-orange-900/50 text-orange-300'
+                                                : 'bg-yellow-900/50 text-yellow-300'
+                                          }`}
+                                        >
+                                          {priority}
+                                        </span>
+                                      )}
+                                      <span className="flex-1">{requirementText}</span>
+                                      {section && (
+                                        <span className="text-gray-500 text-[10px] shrink-0">
+                                          {section}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </li>
+                                );
+                              })}
                             </ul>
                           </div>
                         )}
@@ -1591,10 +1639,37 @@ function LibraryPageContent() {
                             <h4 className="text-xs font-semibold text-amber-400 mb-1 uppercase flex items-center gap-2">
                               <span>⚠️</span> Compliance Notes
                             </h4>
-                            <ul className="text-gray-300 text-xs space-y-1 list-disc list-inside">
-                              {summary.complianceNotes.map((note, i) => (
-                                <li key={i}>{note}</li>
-                              ))}
+                            <ul className="text-gray-300 text-xs space-y-2">
+                              {summary.complianceNotes.map((note, i) => {
+                                // Handle both string and object format
+                                const isObject = typeof note === 'object' && note !== null;
+                                const noteText = isObject ? (note as { note?: string }).note : note;
+                                const reference = isObject
+                                  ? (note as { reference?: string }).reference
+                                  : null;
+                                const consequence = isObject
+                                  ? (note as { consequence?: string }).consequence
+                                  : null;
+
+                                return (
+                                  <li
+                                    key={i}
+                                    className="bg-amber-900/20 p-2 rounded border-l-2 border-amber-600"
+                                  >
+                                    <div className="text-gray-300">{noteText}</div>
+                                    {reference && (
+                                      <div className="text-amber-400 text-[10px] mt-1">
+                                        Ref: {reference}
+                                      </div>
+                                    )}
+                                    {consequence && (
+                                      <div className="text-red-400 text-[10px] mt-1">
+                                        ⚠️ {consequence}
+                                      </div>
+                                    )}
+                                  </li>
+                                );
+                              })}
                             </ul>
                           </div>
                         )}
@@ -1621,17 +1696,40 @@ function LibraryPageContent() {
                             <h4 className="text-xs font-semibold text-purple-400 mb-1 uppercase flex items-center gap-2">
                               <span>🔗</span> Related Documents
                             </h4>
-                            <div className="flex flex-wrap gap-1">
-                              {summary.crossReferences.map((ref, i) => (
-                                <Badge
-                                  key={i}
-                                  variant="outline"
-                                  className="text-xs border-purple-600 text-purple-300"
-                                >
-                                  {ref}
-                                </Badge>
-                              ))}
-                            </div>
+                            <ul className="space-y-2">
+                              {summary.crossReferences.map((ref, i) => {
+                                // Handle both string and object format
+                                const isObject = typeof ref === 'object' && ref !== null;
+                                const docId = isObject
+                                  ? (ref as { documentId?: string }).documentId
+                                  : ref;
+                                const reason = isObject
+                                  ? (ref as { reason?: string }).reason
+                                  : null;
+                                const relevance = isObject
+                                  ? (ref as { relevance?: string }).relevance
+                                  : null;
+
+                                return (
+                                  <li
+                                    key={i}
+                                    className="bg-purple-900/20 p-2 rounded border-l-2 border-purple-600"
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-purple-300 font-medium">{docId}</span>
+                                      {relevance && (
+                                        <span className="text-[10px] bg-purple-800/50 px-1.5 py-0.5 rounded text-purple-300 uppercase">
+                                          {relevance}
+                                        </span>
+                                      )}
+                                    </div>
+                                    {reason && (
+                                      <div className="text-gray-400 text-xs mt-1">{reason}</div>
+                                    )}
+                                  </li>
+                                );
+                              })}
+                            </ul>
                           </div>
                         )}
                       </>
