@@ -128,6 +128,7 @@ function LibraryPageContent() {
     imported: number;
     error?: string;
   } | null>(null);
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
 
   // Load registry and offline status
   useEffect(() => {
@@ -482,6 +483,19 @@ function LibraryPageContent() {
         next.delete(categoryId);
       } else {
         next.add(categoryId);
+      }
+      return next;
+    });
+  };
+
+  // Toggle complete sections expansion
+  const toggleCompleteSections = (docId: string) => {
+    setExpandedSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(docId)) {
+        next.delete(docId);
+      } else {
+        next.add(docId);
       }
       return next;
     });
@@ -1523,17 +1537,25 @@ function LibraryPageContent() {
                         {/* Complete Sections - ALL sections from document */}
                         {summary.completeSections && summary.completeSections.length > 0 && (
                           <div className="mt-4">
-                            <details className="group">
-                              <summary className="text-xs font-semibold text-indigo-400 mb-2 uppercase flex items-center gap-2 cursor-pointer">
-                                <span>📚</span> Complete Document Structure (
-                                {summary.completeSections.length} sections)
-                                <span className="ml-auto text-gray-500">▼ Click to expand</span>
-                              </summary>
-                              <div className="max-h-60 overflow-y-auto space-y-1 pr-2 bg-gray-700/30 rounded text-xs">
+                            <button
+                              type="button"
+                              onClick={() => toggleCompleteSections(infoDoc?.id || '')}
+                              className="w-full text-left text-xs font-semibold text-indigo-400 mb-2 uppercase flex items-center gap-2 cursor-pointer hover:text-indigo-300 transition-colors"
+                            >
+                              <span>📚</span> Complete Document Structure (
+                              {summary.completeSections.length} sections)
+                              <span className="ml-auto text-gray-500 flex items-center gap-1">
+                                {expandedSections.has(infoDoc?.id || '')
+                                  ? '▲ Collapse'
+                                  : '▼ Expand'}
+                              </span>
+                            </button>
+                            {expandedSections.has(infoDoc?.id || '') && (
+                              <div className="max-h-80 overflow-y-auto space-y-1 pr-2 bg-gray-700/30 rounded text-xs border border-gray-600">
                                 {summary.completeSections.map((section, i) => (
                                   <div
                                     key={i}
-                                    className="flex items-start gap-2 py-1 border-b border-gray-600 first:border-0 last:border-0 hover:bg-gray-600/50 px-2 rounded"
+                                    className="flex items-start gap-2 py-1 border-b border-gray-600/50 first:border-0 last:border-0 hover:bg-gray-600/50 px-2 rounded"
                                   >
                                     <span className="text-indigo-300 font-mono min-w-[40px] shrink-0">
                                       {section.sectionNumber}
@@ -1549,7 +1571,7 @@ function LibraryPageContent() {
                                   </div>
                                 ))}
                               </div>
-                            </details>
+                            )}
                           </div>
                         )}
                         {summary.keyRequirements && summary.keyRequirements.length > 0 && (
