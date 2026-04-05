@@ -1,0 +1,97 @@
+{
+  "title": "AGTTM Part 5 - Short Term Low Impact Worksites",
+  "abstract": "AGTTM Part 5 provides simplified traffic management requirements for short-term and low-impact works. These are works that have minimal impact on traffic and are completed quickly, typically within one shift, where the full requirements of Part 3 may be excessive.\n\nThe guide defines what constitutes short-term low-impact work based on duration, traffic impact, and road environment. It provides reduced traffic management requirements while still maintaining safety. Common applications include minor repairs, pothole patching, sign installation, and utility inspections.\n\nThe guide covers the use of simplified setups, reduced signage requirements, and specific provisions for different speed environments. It includes guidance on when short-term low-impact provisions can and cannot be used. Traffic Controllers must understand these limits to ensure the simplified provisions are not inappropriately applied to higher-risk situations.",
+  "keywords": ["agttm", "short-term", "low-impact"],
+  "targetAudience": [],
+  "completeSections": [
+    {
+      "sectionNumber": "Part 5",
+      "sectionTitle": "Short Term Low Impact Worksites"
+    },
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Introduction .............................................................................................................................................",
+      "page": 1
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "Design Process .......................................................................................................................................",
+      "page": 5
+    },
+    {
+      "sectionNumber": "3",
+      "sectionTitle": "General Considerations .......................................................................................................................",
+      "page": 14
+    },
+    {
+      "sectionNumber": "4",
+      "sectionTitle": "Works on Road - Within Traffic Lane.................................................................................................",
+      "page": 17
+    },
+    {
+      "sectionNumber": "5",
+      "sectionTitle": "Works Outside of Traffic Lane ............................................................................................................",
+      "page": 37
+    },
+    {
+      "sectionNumber": "1.1",
+      "sectionTitle": "Purpose"
+    },
+    {
+      "sectionNumber": "1.2",
+      "sectionTitle": "Structure of AGTTM"
+    },
+    {
+      "sectionNumber": "Part 1",
+      "sectionTitle": "Introduction to Temporary Traffic Management Practice. Within the AGTTM, the terminology that"
+    },
+    {
+      "sectionNumber": "Part 5",
+      "sectionTitle": "Short Term Low"
+    },
+    {
+      "sectionNumber": "Part 6",
+      "sectionTitle": "Field Staff - Implementation and"
+    },
+    {
+      "sectionNumber": "Part 8",
+      "sectionTitle": "Processes and Part 10: Supporting"
+    },
+    {
+      "sectionNumber": "1.3",
+      "sectionTitle": "Scope of Part",
+      "page": 5
+    },
+    {
+      "sectionNumber": "1.5",
+      "sectionTitle": "Definitions"
+    },
+    {
+      "sectionNumber": "2.1",
+      "sectionTitle": "General"
+    },
+    {
+      "sectionNumber": "2.2",
+      "sectionTitle": "Risk Assessment"
+    },
+    {
+      "sectionNumber": "2.3",
+      "sectionTitle": "Design Balance"
+    },
+    {
+      "sectionNumber": "2.4",
+      "sectionTitle": "Essential Design Principles"
+    }
+  ],
+  "keyRequirements": [],
+  "complianceNotes": [],
+  "crossReferences": [],
+  "lastUpdated": "Edition 1.1, 2021",
+  "issuingAuthority": "Austroads",
+  "pages": 57,
+  "tgsDiagramsReferenced": [],
+  "documentId": "agttm-part-5",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

@@ -1,0 +1,21 @@
+{
+  "title": "Non-Complex Traffic Management Arrangements - Wheatbelt Region (Part 2)",
+  "abstract": "This is Part 2 of the Wheatbelt region Non-Complex Traffic Management Arrangements, continuing the Traffic Guidance Scheme (TGS) diagrams from Part 1. Together, these documents provide comprehensive coverage of standard traffic management setups for the Wheatbelt region.\n\nPart 2 covers pages 291-369, completing the TGS diagram collection with additional setups for mobile works, emergency response configurations, and aftercare arrangements. The diagrams are pre-approved for non-complex traffic management scenarios on state roads.\n\nUsers should note that this TMP is specific to the Wheatbelt region and its road characteristics, including single carriageway roads, varying road widths, and rural speed environments. The diagrams must be adapted to site-specific conditions by a qualified Traffic Management Supervisor, and variations from these standard setups require formal approval through the MRWA variation process.",
+  "keywords": ["tmp", "wheatbelt", "non-complex", "tgs"],
+  "targetAudience": ["Traffic Management Supervisors", "Traffic Controllers"],
+  "completeSections": [
+    {
+      "sectionNumber": "F",
+      "sectionTitle": "Traffic Guidance Schemes (TGS Diagrams) - Continued",
+      "page": 291
+    }
+  ],
+  "pages": 79,
+  "source": "repo",
+  "tgsDiagramsReferenced": "Contains TGS diagrams from pages 291-369",
+  "note": "Part 2 contains continuation of TGS diagrams from Part 1. These are graphical traffic guidance schemes rather than traditional document sections.",
+  "documentId": "mrwa-tmp-wheatbelt-0922-part2",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

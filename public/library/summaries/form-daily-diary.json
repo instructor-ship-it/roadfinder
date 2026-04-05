@@ -1,0 +1,13 @@
+{
+  "title": "Daily Diary Template",
+  "abstract": "The Daily Diary is a mandatory site record that documents all activities, events, and conditions during traffic management operations. It serves as the primary evidence of work activities and forms a crucial legal document in the event of disputes or incidents.\n\nThe diary should record the date and weather conditions, personnel on site including their roles and competencies, the Traffic Management Plan being implemented, any variations from the plan, inspections conducted, incidents or near misses, communications with road users or authorities, and equipment deployed. Entries should be made throughout the day, not just at the end of the shift.\n\nDaily Diaries must be retained for a minimum of 7 years under WHS record-keeping requirements. In the event of a serious incident, the diary becomes critical evidence for investigators and may be subject to legal proceedings. Accurate, contemporaneous diary entries can protect workers and companies by demonstrating compliance with their duties. The diary should be completed legibly, signed by the responsible person, and stored securely.",
+  "keywords": ["form", "daily-diary", "records"],
+  "targetAudience": [],
+  "completeSections": [],
+  "source": "repo",
+  "note": "External document - no local file for section extraction",
+  "documentId": "form-daily-diary",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

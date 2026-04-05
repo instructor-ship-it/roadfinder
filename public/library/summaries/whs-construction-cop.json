@@ -1,0 +1,13 @@
+{
+  "title": "Construction Work Code of Practice",
+  "abstract": "The Construction Work Code of Practice is an approved code of practice under the WHS Act that provides practical guidance on managing health and safety risks in construction work. It is admissible in court proceedings as evidence of what is known about a hazard and appropriate control measures.\n\nThe code covers the definition of construction work, duty holder responsibilities, and risk management requirements. It specifically addresses high-risk construction work which requires a Safe Work Method Statement (SWMS), including work on roads, work near traffic, work at heights, and work involving mobile plant.\n\nFor Traffic Controllers and road workers, this code is essential reading as it establishes the legal requirement for SWMS for road work and provides guidance on consultation, training, and supervision. Non-compliance with the code may be used as evidence of a breach of the WHS Act, though alternative methods may be used if they provide equivalent or better protection.",
+  "keywords": ["code-of-practice", "construction", "swms"],
+  "targetAudience": [],
+  "completeSections": [],
+  "source": "repo",
+  "note": "External document - no local file for section extraction",
+  "documentId": "whs-construction-cop",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

@@ -1,0 +1,1398 @@
+{
+  "title": "Work Health and Safety (General) Regulations 2022",
+  "abstract": "The Work Health and Safety (General) Regulations 2022 provide the detailed regulatory requirements that support the WHS Act 2020 in Western Australia. These regulations specify how duties under the Act must be fulfilled and set out prescriptive requirements for various workplace hazards and situations.\n\nThe regulations cover a wide range of topics including management of risks, hazardous manual tasks, noise, plant and equipment, hazardous chemicals, construction work, confined spaces, and falling objects. They establish specific control measures and competency requirements that go beyond the general duties in the Act.\n\nFor traffic management and road work, the regulations are particularly relevant for construction work provisions, high-risk construction work requirements, and the management of mobile plant and equipment. Compliance with these regulations is mandatory and enforceable by WorkSafe WA inspectors.",
+  "keywords": ["legislation", "regulations"],
+  "targetAudience": [],
+  "completeSections": [
+    {
+      "sectionNumber": "Chapter 1",
+      "sectionTitle": "Preliminary"
+    },
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Citation",
+      "page": 1
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "Commencement",
+      "page": 1
+    },
+    {
+      "sectionNumber": "3",
+      "sectionTitle": "Not used",
+      "page": 1
+    },
+    {
+      "sectionNumber": "4",
+      "sectionTitle": "Not used",
+      "page": 2
+    },
+    {
+      "sectionNumber": "5",
+      "sectionTitle": "Terms used",
+      "page": 2
+    },
+    {
+      "sectionNumber": "6",
+      "sectionTitle": "Determination of safety management system",
+      "page": 39
+    },
+    {
+      "sectionNumber": "6A",
+      "sectionTitle": "Corresponding WHS laws prescribed",
+      "page": 40
+    },
+    {
+      "sectionNumber": "8",
+      "sectionTitle": "Meaning of supply",
+      "page": 41
+    },
+    {
+      "sectionNumber": "9",
+      "sectionTitle": "Provisions linked to health and safety duties in Act",
+      "page": 41
+    },
+    {
+      "sectionNumber": "11",
+      "sectionTitle": "Application of regulations",
+      "page": 42
+    },
+    {
+      "sectionNumber": "14",
+      "sectionTitle": "Inconsistencies between provisions",
+      "page": 43
+    },
+    {
+      "sectionNumber": "15",
+      "sectionTitle": "References to standards",
+      "page": 43
+    },
+    {
+      "sectionNumber": "Chapter 2",
+      "sectionTitle": "Representation and"
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "Work groups"
+    },
+    {
+      "sectionNumber": "16",
+      "sectionTitle": "Negotiations for and determination of work groups",
+      "page": 44
+    },
+    {
+      "sectionNumber": "17",
+      "sectionTitle": "Matters to be taken into account in negotiations",
+      "page": 44
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "Health and safety representatives"
+    },
+    {
+      "sectionNumber": "20",
+      "sectionTitle": "Removal of health and safety representatives",
+      "page": 46
+    },
+    {
+      "sectionNumber": "21",
+      "sectionTitle": "Training for health and safety representatives",
+      "page": 48
+    },
+    {
+      "sectionNumber": "22",
+      "sectionTitle": "Agreed procedure: minimum requirements",
+      "page": 49
+    },
+    {
+      "sectionNumber": "23",
+      "sectionTitle": "Default procedure",
+      "page": 49
+    },
+    {
+      "sectionNumber": "24",
+      "sectionTitle": "Continuity of engagement of worker",
+      "page": 51
+    },
+    {
+      "sectionNumber": "25",
+      "sectionTitle": "Not used",
+      "page": 51
+    },
+    {
+      "sectionNumber": "26",
+      "sectionTitle": "Not used",
+      "page": 51
+    },
+    {
+      "sectionNumber": "27",
+      "sectionTitle": "Not used",
+      "page": 51
+    },
+    {
+      "sectionNumber": "28",
+      "sectionTitle": "Not used",
+      "page": 51
+    },
+    {
+      "sectionNumber": "29",
+      "sectionTitle": "Not used",
+      "page": 51
+    },
+    {
+      "sectionNumber": "30",
+      "sectionTitle": "Not used",
+      "page": 51
+    },
+    {
+      "sectionNumber": "31",
+      "sectionTitle": "Not used",
+      "page": 51
+    },
+    {
+      "sectionNumber": "Chapter 3",
+      "sectionTitle": "General risk and"
+    },
+    {
+      "sectionNumber": "32",
+      "sectionTitle": "Application of Part",
+      "page": 52
+    },
+    {
+      "sectionNumber": "33",
+      "sectionTitle": "Specific requirements must be complied with",
+      "page": 52
+    },
+    {
+      "sectionNumber": "34",
+      "sectionTitle": "Duty to identify hazards",
+      "page": 52
+    },
+    {
+      "sectionNumber": "35",
+      "sectionTitle": "Managing risks to health and safety",
+      "page": 52
+    },
+    {
+      "sectionNumber": "36",
+      "sectionTitle": "Hierarchy of control measures",
+      "page": 53
+    },
+    {
+      "sectionNumber": "37",
+      "sectionTitle": "Maintenance of control measures",
+      "page": 53
+    },
+    {
+      "sectionNumber": "38",
+      "sectionTitle": "Review of control measures",
+      "page": 54
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "Information, training and instruction"
+    },
+    {
+      "sectionNumber": "39",
+      "sectionTitle": "Provision of information, training and instruction",
+      "page": 55
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "General working environment"
+    },
+    {
+      "sectionNumber": "40",
+      "sectionTitle": "Duty in relation to general workplace facilities",
+      "page": 56
+    },
+    {
+      "sectionNumber": "41A",
+      "sectionTitle": "Duty to protect from extremes of heat and cold",
+      "page": 58
+    },
+    {
+      "sectionNumber": "41B",
+      "sectionTitle": "Duty to provide adequate seating",
+      "page": 58
+    },
+    {
+      "sectionNumber": "Division 3",
+      "sectionTitle": "First aid"
+    },
+    {
+      "sectionNumber": "42",
+      "sectionTitle": "Duty to provide first aid",
+      "page": 59
+    },
+    {
+      "sectionNumber": "Division 4",
+      "sectionTitle": "Emergency plans"
+    },
+    {
+      "sectionNumber": "Division 5",
+      "sectionTitle": "Personal protective equipment"
+    },
+    {
+      "sectionNumber": "46",
+      "sectionTitle": "Duties of worker",
+      "page": 64
+    },
+    {
+      "sectionNumber": "47",
+      "sectionTitle": "Duty of person other than worker",
+      "page": 65
+    },
+    {
+      "sectionNumber": "Division 6",
+      "sectionTitle": "Remote or isolated work"
+    },
+    {
+      "sectionNumber": "48",
+      "sectionTitle": "Remote or isolated work",
+      "page": 65
+    },
+    {
+      "sectionNumber": "Division 7",
+      "sectionTitle": "Managing risks from airborne"
+    },
+    {
+      "sectionNumber": "50",
+      "sectionTitle": "Monitoring airborne contaminant levels",
+      "page": 67
+    },
+    {
+      "sectionNumber": "50A",
+      "sectionTitle": "Terms used",
+      "page": 68
+    },
+    {
+      "sectionNumber": "50B",
+      "sectionTitle": "Meaning of enclosed workplace",
+      "page": 68
+    },
+    {
+      "sectionNumber": "50C",
+      "sectionTitle": "Assessment of notional vertical surface area",
+      "page": 70
+    },
+    {
+      "sectionNumber": "50D",
+      "sectionTitle": "Persons not to smoke in enclosed workplace",
+      "page": 70
+    },
+    {
+      "sectionNumber": "50I",
+      "sectionTitle": "Exposure to secondhand smoke",
+      "page": 72
+    },
+    {
+      "sectionNumber": "Division 8",
+      "sectionTitle": "Hazardous atmospheres"
+    },
+    {
+      "sectionNumber": "51",
+      "sectionTitle": "Managing risks to health and safety",
+      "page": 72
+    },
+    {
+      "sectionNumber": "52",
+      "sectionTitle": "Ignition sources",
+      "page": 73
+    },
+    {
+      "sectionNumber": "Division 9",
+      "sectionTitle": "Storage of flammable or combustible"
+    },
+    {
+      "sectionNumber": "Division 10",
+      "sectionTitle": "Falling objects"
+    },
+    {
+      "sectionNumber": "54",
+      "sectionTitle": "Management of risk of falling objects",
+      "page": 74
+    },
+    {
+      "sectionNumber": "55",
+      "sectionTitle": "Minimising risk associated with falling objects",
+      "page": 74
+    },
+    {
+      "sectionNumber": "Division 11",
+      "sectionTitle": "Psychosocial risks"
+    },
+    {
+      "sectionNumber": "55A",
+      "sectionTitle": "Meaning of psychosocial hazard",
+      "page": 75
+    },
+    {
+      "sectionNumber": "55B",
+      "sectionTitle": "Meaning of psychosocial risk",
+      "page": 75
+    },
+    {
+      "sectionNumber": "55C",
+      "sectionTitle": "Managing psychosocial risks",
+      "page": 75
+    },
+    {
+      "sectionNumber": "55D",
+      "sectionTitle": "Control measures",
+      "page": 75
+    },
+    {
+      "sectionNumber": "Division 12",
+      "sectionTitle": "Directed medical examinations"
+    },
+    {
+      "sectionNumber": "55E",
+      "sectionTitle": "Meaning of medical examination notice",
+      "page": 77
+    },
+    {
+      "sectionNumber": "55G",
+      "sectionTitle": "Worker to choose registered medical practitioner",
+      "page": 77
+    },
+    {
+      "sectionNumber": "Chapter 4",
+      "sectionTitle": "Hazardous work"
+    },
+    {
+      "sectionNumber": "56",
+      "sectionTitle": "Meaning of exposure standard for noise",
+      "page": 81
+    },
+    {
+      "sectionNumber": "57",
+      "sectionTitle": "Managing risk of hearing loss from noise",
+      "page": 81
+    },
+    {
+      "sectionNumber": "58",
+      "sectionTitle": "Audiometric testing",
+      "page": 82
+    },
+    {
+      "sectionNumber": "60",
+      "sectionTitle": "Managing risks to health and safety",
+      "page": 85
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "Preliminary"
+    },
+    {
+      "sectionNumber": "62",
+      "sectionTitle": "Confined spaces to which Part applies",
+      "page": 88
+    },
+    {
+      "sectionNumber": "63",
+      "sectionTitle": "Application to emergency service workers",
+      "page": 88
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "Duties of designer, manufacturer,"
+    },
+    {
+      "sectionNumber": "64",
+      "sectionTitle": "Duty to eliminate or minimise risk",
+      "page": 88
+    },
+    {
+      "sectionNumber": "Division 3",
+      "sectionTitle": "Duties of person conducting business or"
+    },
+    {
+      "sectionNumber": "66",
+      "sectionTitle": "Managing risks to health and safety",
+      "page": 90
+    },
+    {
+      "sectionNumber": "67",
+      "sectionTitle": "Confined space entry permit",
+      "page": 91
+    },
+    {
+      "sectionNumber": "68",
+      "sectionTitle": "Signage",
+      "page": 92
+    },
+    {
+      "sectionNumber": "69",
+      "sectionTitle": "Communication and safety monitoring",
+      "page": 93
+    },
+    {
+      "sectionNumber": "70",
+      "sectionTitle": "Specific control: connected plant and services",
+      "page": 93
+    },
+    {
+      "sectionNumber": "71",
+      "sectionTitle": "Specific control: atmosphere",
+      "page": 94
+    },
+    {
+      "sectionNumber": "72",
+      "sectionTitle": "Specific control: flammable gases and vapours",
+      "page": 95
+    },
+    {
+      "sectionNumber": "73",
+      "sectionTitle": "Specific control: fire and explosion",
+      "page": 96
+    },
+    {
+      "sectionNumber": "74",
+      "sectionTitle": "Emergency procedures",
+      "page": 96
+    },
+    {
+      "sectionNumber": "75",
+      "sectionTitle": "Personal protective equipment in emergencies",
+      "page": 97
+    },
+    {
+      "sectionNumber": "76",
+      "sectionTitle": "Information, training and instruction for workers",
+      "page": 98
+    },
+    {
+      "sectionNumber": "78",
+      "sectionTitle": "Management of risk of fall",
+      "page": 101
+    },
+    {
+      "sectionNumber": "79",
+      "sectionTitle": "Specific requirements to minimise risk of fall",
+      "page": 102
+    },
+    {
+      "sectionNumber": "80",
+      "sectionTitle": "Emergency and rescue procedures",
+      "page": 106
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "Licensing of high risk work"
+    },
+    {
+      "sectionNumber": "Subdivision 1",
+      "sectionTitle": "Requirement to be licensed"
+    },
+    {
+      "sectionNumber": "81",
+      "sectionTitle": "Licence required to carry out high risk work",
+      "page": 107
+    },
+    {
+      "sectionNumber": "82",
+      "sectionTitle": "Exceptions",
+      "page": 107
+    },
+    {
+      "sectionNumber": "Subdivision 2",
+      "sectionTitle": "Licensing process"
+    },
+    {
+      "sectionNumber": "86",
+      "sectionTitle": "Who may apply for a licence",
+      "page": 112
+    },
+    {
+      "sectionNumber": "87",
+      "sectionTitle": "Application for high risk work licence",
+      "page": 112
+    },
+    {
+      "sectionNumber": "88",
+      "sectionTitle": "Additional information",
+      "page": 113
+    },
+    {
+      "sectionNumber": "89",
+      "sectionTitle": "Decision on application",
+      "page": 114
+    },
+    {
+      "sectionNumber": "90",
+      "sectionTitle": "Matters to be taken into account",
+      "page": 115
+    },
+    {
+      "sectionNumber": "91",
+      "sectionTitle": "Refusal to grant high risk work licence: process",
+      "page": 116
+    },
+    {
+      "sectionNumber": "91A",
+      "sectionTitle": "Conditions of licence",
+      "page": 117
+    },
+    {
+      "sectionNumber": "92",
+      "sectionTitle": "Duration of licence",
+      "page": 117
+    },
+    {
+      "sectionNumber": "93",
+      "sectionTitle": "Licence document",
+      "page": 117
+    },
+    {
+      "sectionNumber": "94",
+      "sectionTitle": "Licence document to be available",
+      "page": 118
+    },
+    {
+      "sectionNumber": "95",
+      "sectionTitle": "Reassessment of competency of licence holder",
+      "page": 119
+    },
+    {
+      "sectionNumber": "Subdivision 3",
+      "sectionTitle": "Amendment of licence document"
+    },
+    {
+      "sectionNumber": "96",
+      "sectionTitle": "Notice of change of address",
+      "page": 119
+    },
+    {
+      "sectionNumber": "97",
+      "sectionTitle": "Licence holder to return licence",
+      "page": 119
+    },
+    {
+      "sectionNumber": "98",
+      "sectionTitle": "Replacement licence document",
+      "page": 120
+    },
+    {
+      "sectionNumber": "99",
+      "sectionTitle": "Voluntary surrender of licence",
+      "page": 121
+    },
+    {
+      "sectionNumber": "Subdivision 4",
+      "sectionTitle": "Renewal of high risk work licence"
+    },
+    {
+      "sectionNumber": "100",
+      "sectionTitle": "Regulator may renew licence",
+      "page": 121
+    },
+    {
+      "sectionNumber": "101",
+      "sectionTitle": "Application for renewal",
+      "page": 121
+    },
+    {
+      "sectionNumber": "103",
+      "sectionTitle": "Renewal of expired licence",
+      "page": 122
+    },
+    {
+      "sectionNumber": "104",
+      "sectionTitle": "Provisions relating to renewal of licence",
+      "page": 122
+    },
+    {
+      "sectionNumber": "105",
+      "sectionTitle": "Status of licence during review",
+      "page": 123
+    },
+    {
+      "sectionNumber": "Subdivision 5",
+      "sectionTitle": "Suspension and cancellation of high"
+    },
+    {
+      "sectionNumber": "106",
+      "sectionTitle": "Suspension or cancellation of licence",
+      "page": 124
+    },
+    {
+      "sectionNumber": "107",
+      "sectionTitle": "Matters taken into account",
+      "page": 125
+    },
+    {
+      "sectionNumber": "108",
+      "sectionTitle": "Notice to and submissions by licence holder",
+      "page": 126
+    },
+    {
+      "sectionNumber": "109",
+      "sectionTitle": "Notice of decision",
+      "page": 126
+    },
+    {
+      "sectionNumber": "110",
+      "sectionTitle": "Immediate suspension",
+      "page": 128
+    },
+    {
+      "sectionNumber": "111",
+      "sectionTitle": "Licence holder to return licence document",
+      "page": 129
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "Accreditation of assessors"
+    },
+    {
+      "sectionNumber": "Subdivision 1",
+      "sectionTitle": "Requirement to be accredited"
+    },
+    {
+      "sectionNumber": "Subdivision 2",
+      "sectionTitle": "Accreditation process"
+    },
+    {
+      "sectionNumber": "115",
+      "sectionTitle": "Regulator may accredit assessors",
+      "page": 130
+    },
+    {
+      "sectionNumber": "116",
+      "sectionTitle": "Application for accreditation",
+      "page": 130
+    },
+    {
+      "sectionNumber": "117",
+      "sectionTitle": "Additional information",
+      "page": 132
+    },
+    {
+      "sectionNumber": "118",
+      "sectionTitle": "Decision on application",
+      "page": 132
+    },
+    {
+      "sectionNumber": "119",
+      "sectionTitle": "Matters to be taken into account",
+      "page": 134
+    },
+    {
+      "sectionNumber": "120",
+      "sectionTitle": "Refusal to grant accreditation: process",
+      "page": 135
+    },
+    {
+      "sectionNumber": "121",
+      "sectionTitle": "Conditions of accreditation",
+      "page": 135
+    },
+    {
+      "sectionNumber": "122",
+      "sectionTitle": "Duration of accreditation",
+      "page": 136
+    },
+    {
+      "sectionNumber": "123",
+      "sectionTitle": "Accreditation document",
+      "page": 136
+    },
+    {
+      "sectionNumber": "124",
+      "sectionTitle": "Accreditation document to be available",
+      "page": 137
+    },
+    {
+      "sectionNumber": "Subdivision 3",
+      "sectionTitle": "Amendment of accreditation"
+    },
+    {
+      "sectionNumber": "125",
+      "sectionTitle": "Changes to information",
+      "page": 137
+    },
+    {
+      "sectionNumber": "127",
+      "sectionTitle": "Replacement accreditation document",
+      "page": 138
+    },
+    {
+      "sectionNumber": "128",
+      "sectionTitle": "Voluntary surrender of accreditation",
+      "page": 139
+    },
+    {
+      "sectionNumber": "Subdivision 4",
+      "sectionTitle": "Renewal of accreditation"
+    },
+    {
+      "sectionNumber": "129",
+      "sectionTitle": "Regulator may renew accreditation",
+      "page": 139
+    },
+    {
+      "sectionNumber": "130",
+      "sectionTitle": "Application for renewal",
+      "page": 140
+    },
+    {
+      "sectionNumber": "132",
+      "sectionTitle": "Provisions relating to application",
+      "page": 140
+    },
+    {
+      "sectionNumber": "Subdivision 5",
+      "sectionTitle": "Suspension and cancellation"
+    },
+    {
+      "sectionNumber": "133",
+      "sectionTitle": "Regulator may suspend or cancel accreditation",
+      "page": 141
+    },
+    {
+      "sectionNumber": "134",
+      "sectionTitle": "Suspension or cancellation of accreditation",
+      "page": 141
+    },
+    {
+      "sectionNumber": "135",
+      "sectionTitle": "Matters to be taken into account",
+      "page": 142
+    },
+    {
+      "sectionNumber": "136",
+      "sectionTitle": "Notice to and submissions by accredited assessor",
+      "page": 143
+    },
+    {
+      "sectionNumber": "137",
+      "sectionTitle": "Notice of decision",
+      "page": 143
+    },
+    {
+      "sectionNumber": "138",
+      "sectionTitle": "Immediate suspension",
+      "page": 145
+    },
+    {
+      "sectionNumber": "Subdivision 6",
+      "sectionTitle": "Agreements with RTOs"
+    },
+    {
+      "sectionNumber": "141",
+      "sectionTitle": "Regulator may enter into agreement with RTO",
+      "page": 146
+    },
+    {
+      "sectionNumber": "141A",
+      "sectionTitle": "RTO to retain records",
+      "page": 146
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "Not used"
+    },
+    {
+      "sectionNumber": "142",
+      "sectionTitle": "Not used",
+      "page": 146
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "Conduct of demolition work"
+    },
+    {
+      "sectionNumber": "142A",
+      "sectionTitle": "Application of Division",
+      "page": 147
+    },
+    {
+      "sectionNumber": "142B",
+      "sectionTitle": "Requirement to hold Class 1 demolition licence",
+      "page": 147
+    },
+    {
+      "sectionNumber": "142F",
+      "sectionTitle": "Regulator to be notified of proposed Class 1 or",
+      "page": 2
+    },
+    {
+      "sectionNumber": "142J",
+      "sectionTitle": "Demolition work other than Class 1 or",
+      "page": 2
+    },
+    {
+      "sectionNumber": "142L",
+      "sectionTitle": "Documents to be kept at demolition workplace",
+      "page": 154
+    },
+    {
+      "sectionNumber": "142M",
+      "sectionTitle": "Requirements for scaffold used in demolition work",
+      "page": 155
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "Licensing process"
+    },
+    {
+      "sectionNumber": "142N",
+      "sectionTitle": "Application for demolition licence",
+      "page": 156
+    },
+    {
+      "sectionNumber": "142O",
+      "sectionTitle": "Nomination of supervisor",
+      "page": 158
+    },
+    {
+      "sectionNumber": "142P",
+      "sectionTitle": "Regulator may request examination",
+      "page": 159
+    },
+    {
+      "sectionNumber": "142Q",
+      "sectionTitle": "Additional information",
+      "page": 159
+    },
+    {
+      "sectionNumber": "142R",
+      "sectionTitle": "Decision on application",
+      "page": 159
+    },
+    {
+      "sectionNumber": "142S",
+      "sectionTitle": "Matters to be taken into account",
+      "page": 161
+    },
+    {
+      "sectionNumber": "142T",
+      "sectionTitle": "Refusal to grant licence: process",
+      "page": 161
+    },
+    {
+      "sectionNumber": "142U",
+      "sectionTitle": "Conditions of licence",
+      "page": 162
+    },
+    {
+      "sectionNumber": "142V",
+      "sectionTitle": "Duration of licence",
+      "page": 163
+    },
+    {
+      "sectionNumber": "142W",
+      "sectionTitle": "Licence document",
+      "page": 163
+    },
+    {
+      "sectionNumber": "142X",
+      "sectionTitle": "Licence document to be available",
+      "page": 163
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "Amendment of licence and licence"
+    },
+    {
+      "sectionNumber": "143",
+      "sectionTitle": "Changes to information",
+      "page": 164
+    },
+    {
+      "sectionNumber": "143A",
+      "sectionTitle": "Change to nominated supervisor",
+      "page": 164
+    },
+    {
+      "sectionNumber": "143B",
+      "sectionTitle": "Amendment imposed by regulator",
+      "page": 165
+    },
+    {
+      "sectionNumber": "143C",
+      "sectionTitle": "Amendment on application by licence holder",
+      "page": 167
+    },
+    {
+      "sectionNumber": "143D",
+      "sectionTitle": "Minor amendments to licence",
+      "page": 168
+    },
+    {
+      "sectionNumber": "143E",
+      "sectionTitle": "Regulator to give amended licence to the holder",
+      "page": 168
+    },
+    {
+      "sectionNumber": "143F",
+      "sectionTitle": "Licence holder to return licence",
+      "page": 169
+    },
+    {
+      "sectionNumber": "143G",
+      "sectionTitle": "Replacement licence document",
+      "page": 169
+    },
+    {
+      "sectionNumber": "143H",
+      "sectionTitle": "Voluntary surrender of licence",
+      "page": 170
+    },
+    {
+      "sectionNumber": "Division 3",
+      "sectionTitle": "Renewal of licence"
+    },
+    {
+      "sectionNumber": "143I",
+      "sectionTitle": "Regulator may renew licence",
+      "page": 170
+    },
+    {
+      "sectionNumber": "143J",
+      "sectionTitle": "Application for renewal",
+      "page": 170
+    },
+    {
+      "sectionNumber": "143K",
+      "sectionTitle": "Provisions relating to renewal of licence",
+      "page": 171
+    },
+    {
+      "sectionNumber": "143M",
+      "sectionTitle": "Status of licence during review",
+      "page": 172
+    },
+    {
+      "sectionNumber": "Division 4",
+      "sectionTitle": "Suspension and cancellation of licence"
+    },
+    {
+      "sectionNumber": "143N",
+      "sectionTitle": "Suspension or cancellation of licence",
+      "page": 173
+    },
+    {
+      "sectionNumber": "143O",
+      "sectionTitle": "Matters taken into account",
+      "page": 175
+    },
+    {
+      "sectionNumber": "143P",
+      "sectionTitle": "Notice to and submissions by licence holder",
+      "page": 176
+    },
+    {
+      "sectionNumber": "143Q",
+      "sectionTitle": "Notice of decision",
+      "page": 176
+    },
+    {
+      "sectionNumber": "143R",
+      "sectionTitle": "Immediate suspension",
+      "page": 177
+    },
+    {
+      "sectionNumber": "143S",
+      "sectionTitle": "Licence holder to return licence document",
+      "page": 178
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "Preliminary"
+    },
+    {
+      "sectionNumber": "144",
+      "sectionTitle": "Meaning of electrical equipment",
+      "page": 179
+    },
+    {
+      "sectionNumber": "145",
+      "sectionTitle": "Meaning of electrical installation",
+      "page": 179
+    },
+    {
+      "sectionNumber": "146",
+      "sectionTitle": "Meaning of electrical work",
+      "page": 179
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "General risk management"
+    },
+    {
+      "sectionNumber": "147",
+      "sectionTitle": "Risk management",
+      "page": 179
+    },
+    {
+      "sectionNumber": "Division 3",
+      "sectionTitle": "Electrical equipment and electrical"
+    },
+    {
+      "sectionNumber": "149",
+      "sectionTitle": "Unsafe electrical equipment",
+      "page": 180
+    },
+    {
+      "sectionNumber": "150",
+      "sectionTitle": "Inspection and testing of electrical equipment",
+      "page": 181
+    },
+    {
+      "sectionNumber": "151",
+      "sectionTitle": "Untested electrical equipment not to be used",
+      "page": 182
+    },
+    {
+      "sectionNumber": "Division 4",
+      "sectionTitle": "Electrical work on energised electrical"
+    },
+    {
+      "sectionNumber": "152",
+      "sectionTitle": "Electrical work",
+      "page": 183
+    },
+    {
+      "sectionNumber": "153",
+      "sectionTitle": "Work in roof spaces",
+      "page": 183
+    },
+    {
+      "sectionNumber": "154",
+      "sectionTitle": "Not used",
+      "page": 186
+    },
+    {
+      "sectionNumber": "155",
+      "sectionTitle": "Not used",
+      "page": 186
+    },
+    {
+      "sectionNumber": "156",
+      "sectionTitle": "Not used",
+      "page": 186
+    },
+    {
+      "sectionNumber": "157",
+      "sectionTitle": "Not used",
+      "page": 186
+    },
+    {
+      "sectionNumber": "158",
+      "sectionTitle": "Not used",
+      "page": 186
+    },
+    {
+      "sectionNumber": "159",
+      "sectionTitle": "Not used",
+      "page": 186
+    },
+    {
+      "sectionNumber": "160",
+      "sectionTitle": "Not used",
+      "page": 186
+    },
+    {
+      "sectionNumber": "161",
+      "sectionTitle": "Not used",
+      "page": 186
+    },
+    {
+      "sectionNumber": "162",
+      "sectionTitle": "Not used",
+      "page": 186
+    },
+    {
+      "sectionNumber": "Division 5",
+      "sectionTitle": "Electrical equipment and installations"
+    },
+    {
+      "sectionNumber": "163",
+      "sectionTitle": "Duty of person conducting business or undertaking",
+      "page": 186
+    },
+    {
+      "sectionNumber": "Division 6",
+      "sectionTitle": "Residual current devices"
+    },
+    {
+      "sectionNumber": "165",
+      "sectionTitle": "Testing of residual current devices",
+      "page": 188
+    },
+    {
+      "sectionNumber": "Division 7",
+      "sectionTitle": "Overhead and underground electric"
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "Preliminary"
+    },
+    {
+      "sectionNumber": "167",
+      "sectionTitle": "Purpose of Part",
+      "page": 191
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "General diving work: fitness and"
+    },
+    {
+      "sectionNumber": "169",
+      "sectionTitle": "Certificate of medical fitness",
+      "page": 192
+    },
+    {
+      "sectionNumber": "170",
+      "sectionTitle": "Duty to keep certificate of medical fitness",
+      "page": 192
+    },
+    {
+      "sectionNumber": "172",
+      "sectionTitle": "Competence of worker: incidental diving work",
+      "page": 194
+    },
+    {
+      "sectionNumber": "Division 3",
+      "sectionTitle": "Managing risks: general diving work"
+    },
+    {
+      "sectionNumber": "176",
+      "sectionTitle": "Management of risks to health and safety",
+      "page": 197
+    },
+    {
+      "sectionNumber": "178",
+      "sectionTitle": "Additional control: dive plan",
+      "page": 198
+    },
+    {
+      "sectionNumber": "179",
+      "sectionTitle": "Dive plan must be complied with",
+      "page": 198
+    },
+    {
+      "sectionNumber": "180",
+      "sectionTitle": "Additional control: dive safety log to be kept",
+      "page": 199
+    },
+    {
+      "sectionNumber": "181",
+      "sectionTitle": "Use of dive safety log",
+      "page": 200
+    },
+    {
+      "sectionNumber": "182",
+      "sectionTitle": "Record keeping",
+      "page": 202
+    },
+    {
+      "sectionNumber": "Division 4",
+      "sectionTitle": "High risk diving work"
+    },
+    {
+      "sectionNumber": "184",
+      "sectionTitle": "Duty of worker: competence",
+      "page": 203
+    },
+    {
+      "sectionNumber": "184A",
+      "sectionTitle": "Use of power tools on engineered stone products",
+      "page": 204
+    },
+    {
+      "sectionNumber": "184B",
+      "sectionTitle": "Application of Part",
+      "page": 205
+    },
+    {
+      "sectionNumber": "184C",
+      "sectionTitle": "Terms used",
+      "page": 205
+    },
+    {
+      "sectionNumber": "184D",
+      "sectionTitle": "Commercial vehicle driver: duties",
+      "page": 207
+    },
+    {
+      "sectionNumber": "184E",
+      "sectionTitle": "Commercial vehicle driver: hours of work",
+      "page": 208
+    },
+    {
+      "sectionNumber": "184F",
+      "sectionTitle": "Requirement for driver fatigue management plan",
+      "page": 209
+    },
+    {
+      "sectionNumber": "184G",
+      "sectionTitle": "Record of commercial vehicle drivers\u2019 time",
+      "page": 210
+    },
+    {
+      "sectionNumber": "Chapter 5",
+      "sectionTitle": "Plant and structures"
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "Preliminary"
+    },
+    {
+      "sectionNumber": "185",
+      "sectionTitle": "Application of Part to plant",
+      "page": 211
+    },
+    {
+      "sectionNumber": "186",
+      "sectionTitle": "Application of Part to structures",
+      "page": 211
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "Duties of persons conducting"
+    },
+    {
+      "sectionNumber": "187",
+      "sectionTitle": "Provision of information to manufacturer",
+      "page": 211
+    },
+    {
+      "sectionNumber": "188",
+      "sectionTitle": "Hazard identified in design during manufacture",
+      "page": 212
+    },
+    {
+      "sectionNumber": "189",
+      "sectionTitle": "Guarding",
+      "page": 213
+    },
+    {
+      "sectionNumber": "190",
+      "sectionTitle": "Operational controls",
+      "page": 215
+    },
+    {
+      "sectionNumber": "191",
+      "sectionTitle": "Emergency stop controls",
+      "page": 216
+    },
+    {
+      "sectionNumber": "192",
+      "sectionTitle": "Warning devices",
+      "page": 217
+    },
+    {
+      "sectionNumber": "Division 3",
+      "sectionTitle": "Duties of persons conducting"
+    },
+    {
+      "sectionNumber": "193",
+      "sectionTitle": "Control of risk",
+      "page": 217
+    },
+    {
+      "sectionNumber": "194",
+      "sectionTitle": "Guarding",
+      "page": 219
+    },
+    {
+      "sectionNumber": "195",
+      "sectionTitle": "Information must be obtained and provided",
+      "page": 220
+    },
+    {
+      "sectionNumber": "Division 4",
+      "sectionTitle": "Duties of persons conducting"
+    },
+    {
+      "sectionNumber": "197",
+      "sectionTitle": "Control of risk",
+      "page": 221
+    },
+    {
+      "sectionNumber": "Division 5",
+      "sectionTitle": "Duties of persons conducting"
+    },
+    {
+      "sectionNumber": "199",
+      "sectionTitle": "Supply of second-hand plant: duties of supplier",
+      "page": 222
+    },
+    {
+      "sectionNumber": "Division 6",
+      "sectionTitle": "Duties of persons conducting"
+    },
+    {
+      "sectionNumber": "Division 7",
+      "sectionTitle": "General duties of a person conducting"
+    },
+    {
+      "sectionNumber": "Subdivision 1",
+      "sectionTitle": "Management of risks"
+    },
+    {
+      "sectionNumber": "203",
+      "sectionTitle": "Management of risks to health and safety",
+      "page": 225
+    },
+    {
+      "sectionNumber": "Subdivision 2",
+      "sectionTitle": "Additional control measures for"
+    },
+    {
+      "sectionNumber": "206",
+      "sectionTitle": "Proper use of plant and controls",
+      "page": 227
+    },
+    {
+      "sectionNumber": "207",
+      "sectionTitle": "Plant not in use",
+      "page": 227
+    },
+    {
+      "sectionNumber": "208",
+      "sectionTitle": "Guarding",
+      "page": 228
+    },
+    {
+      "sectionNumber": "209",
+      "sectionTitle": "Guarding and insulation from heat and cold",
+      "page": 230
+    },
+    {
+      "sectionNumber": "210",
+      "sectionTitle": "Operational controls",
+      "page": 230
+    },
+    {
+      "sectionNumber": "211",
+      "sectionTitle": "Emergency stops",
+      "page": 231
+    },
+    {
+      "sectionNumber": "212",
+      "sectionTitle": "Warning devices",
+      "page": 232
+    },
+    {
+      "sectionNumber": "213",
+      "sectionTitle": "Maintenance and inspection of plant",
+      "page": 233
+    }
+  ],
+  "keyRequirements": [],
+  "complianceNotes": [],
+  "crossReferences": [],
+  "lastUpdated": "Mar 2024",
+  "issuingAuthority": "WA Government",
+  "pages": 608,
+  "tgsDiagramsReferenced": [],
+  "documentId": "whs-general-regs-2022",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

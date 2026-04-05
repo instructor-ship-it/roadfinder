@@ -1,0 +1,120 @@
+{
+  "title": "AGTTM Part 2 - Traffic Management Planning",
+  "abstract": "AGTTM Part 2 provides the framework for planning temporary traffic management on roads across Australia and New Zealand. It establishes the principles and processes for developing traffic management plans that maintain safety and traffic flow during road works.\n\nThe guide covers traffic management planning fundamentals including traffic flow analysis, capacity calculations, and delay assessments. It provides methodologies for determining appropriate traffic management approaches based on traffic volumes, road characteristics, and work activities. The planning process considers road user needs, worker safety, and the broader traffic network impacts.\n\nTraffic Management Supervisors use this guide when developing Traffic Management Plans (TMPs) for complex or high-impact works. The guide provides the technical basis for decisions about lane closures, detours, contraflow arrangements, and work scheduling to minimize traffic disruption while maintaining safety.",
+  "keywords": ["agttm", "planning", "traffic-volumes"],
+  "targetAudience": [],
+  "completeSections": [
+    {
+      "sectionNumber": "Part 2",
+      "sectionTitle": "Traffic Management Planning"
+    },
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Introduction to Traffic Management Planning .....................................................................................",
+      "page": 1
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "Objectives and Principles of Traffic Management Plans ...................................................................",
+      "page": 5
+    },
+    {
+      "sectionNumber": "3",
+      "sectionTitle": "Preparation of a Traffic Management Plan ........................................................................................",
+      "page": 10
+    },
+    {
+      "sectionNumber": "4",
+      "sectionTitle": "Documenting Traffic Management Plans ...........................................................................................",
+      "page": 30
+    },
+    {
+      "sectionNumber": "Appendix A",
+      "sectionTitle": "Checklist of Traffic Management Plan Components ........................................................... 47"
+    },
+    {
+      "sectionNumber": "Appendix B",
+      "sectionTitle": "Traffic Management Plan Risk Considerations Checklist ................................................... 49"
+    },
+    {
+      "sectionNumber": "Appendix C",
+      "sectionTitle": "Identifying, Evaluating and Selecting an Option - Gympie Road (Queensland) .............. 53"
+    },
+    {
+      "sectionNumber": "1.1",
+      "sectionTitle": "Purpose"
+    },
+    {
+      "sectionNumber": "1.2",
+      "sectionTitle": "Structure of AGTTM"
+    },
+    {
+      "sectionNumber": "Part 1",
+      "sectionTitle": "Introduction to Temporary Traffic Management Practice. Within the AGTTM, the terminology that"
+    },
+    {
+      "sectionNumber": "Part 5",
+      "sectionTitle": "Short Term Low"
+    },
+    {
+      "sectionNumber": "Part 6",
+      "sectionTitle": "Field Staff - Implementation and"
+    },
+    {
+      "sectionNumber": "Part 8",
+      "sectionTitle": "Processes and Part 10: Supporting"
+    },
+    {
+      "sectionNumber": "1.3",
+      "sectionTitle": "Scope of Part",
+      "page": 2
+    },
+    {
+      "sectionNumber": "1.4",
+      "sectionTitle": "Definitions"
+    },
+    {
+      "sectionNumber": "2.1",
+      "sectionTitle": "Objectives"
+    },
+    {
+      "sectionNumber": "2.2",
+      "sectionTitle": "Contextualising Traffic Management Plans"
+    },
+    {
+      "sectionNumber": "2.3",
+      "sectionTitle": "Risk"
+    },
+    {
+      "sectionNumber": "2.4",
+      "sectionTitle": "Hierarchy of Control"
+    },
+    {
+      "sectionNumber": "2.5",
+      "sectionTitle": "Policy and Regulatory Context"
+    },
+    {
+      "sectionNumber": "2.6",
+      "sectionTitle": "Review and Approval"
+    },
+    {
+      "sectionNumber": "2.7",
+      "sectionTitle": "Documentation"
+    },
+    {
+      "sectionNumber": "2.8",
+      "sectionTitle": "How the Traffic Management Plan is Used"
+    }
+  ],
+  "keyRequirements": [],
+  "complianceNotes": [],
+  "crossReferences": [],
+  "lastUpdated": "Edition 1.1, 2021",
+  "issuingAuthority": "Austroads",
+  "pages": 68,
+  "tgsDiagramsReferenced": [],
+  "documentId": "agttm-part-2",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

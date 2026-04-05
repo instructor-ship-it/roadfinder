@@ -242,25 +242,66 @@ export function mergeSummaries(
 
 /**
  * Get all summaries (merged from repo + localStorage)
+ *
+ * New architecture: Loads from individual files in /library/summaries/
+ * - index.json lists available documents
+ * - {docId}.json contains individual document summaries
+ * - Falls back to monolithic generated-summaries.json if individual files not found
  */
 export async function getAllSummaries(): Promise<SummariesCollection> {
-  // Load repo summaries (from static JSON)
+  // Load repo summaries (try new individual files first, fallback to monolithic)
   let repoSummaries: SummariesCollection = {};
+
   try {
-    const response = await fetch('/library/generated-summaries.json');
-    if (response.ok) {
-      const data = await response.json();
-      // Handle both old flat format and new nested format
-      // New format: { generatedAt, generatedBy, version, documents: { ... } }
-      // Old format: { docId: { ... }, docId2: { ... } }
-      if (data.documents && typeof data.documents === 'object') {
-        repoSummaries = data.documents;
-      } else {
-        repoSummaries = data;
+    // Try loading from individual files (new architecture)
+    const indexResponse = await fetch('/library/summaries/index.json');
+    if (indexResponse.ok) {
+      const indexData = await indexResponse.json();
+      const documentList = indexData.documents || [];
+
+      // Load all individual summary files in parallel
+      const loadPromises = documentList.map(async (doc: { id: string }) => {
+        try {
+          const response = await fetch(`/library/summaries/${doc.id}.json`);
+          if (response.ok) {
+            const summary = await response.json();
+            return { id: doc.id, summary };
+          }
+        } catch {
+          // Silently skip failed loads
+        }
+        return null;
+      });
+
+      const results = await Promise.all(loadPromises);
+
+      // Build the summaries collection
+      for (const result of results) {
+        if (result) {
+          repoSummaries[result.id] = result.summary;
+        }
       }
     }
   } catch (error) {
-    console.error('Error loading repo summaries:', error);
+    console.error('Error loading from individual summaries:', error);
+  }
+
+  // Fallback: Try loading from monolithic file if no summaries loaded
+  if (Object.keys(repoSummaries).length === 0) {
+    try {
+      const response = await fetch('/library/generated-summaries.json');
+      if (response.ok) {
+        const data = await response.json();
+        // Handle both old flat format and new nested format
+        if (data.documents && typeof data.documents === 'object') {
+          repoSummaries = data.documents;
+        } else {
+          repoSummaries = data;
+        }
+      }
+    } catch (error) {
+      console.error('Error loading repo summaries:', error);
+    }
   }
 
   // Load local summaries
@@ -272,10 +313,41 @@ export async function getAllSummaries(): Promise<SummariesCollection> {
 
 /**
  * Get a single summary by document ID
+ * Uses lazy loading - only loads the specific document file
  */
 export async function getSummary(documentId: string): Promise<DocumentSummary | null> {
-  const all = await getAllSummaries();
-  return all[documentId] || null;
+  // First check localStorage (fastest, user-generated takes precedence)
+  const localSummaries = loadLocalSummaries();
+  if (localSummaries[documentId]) {
+    return { ...localSummaries[documentId], source: 'user' };
+  }
+
+  // Try loading from individual file (new architecture - lazy load)
+  try {
+    const response = await fetch(`/library/summaries/${documentId}.json`);
+    if (response.ok) {
+      const summary = await response.json();
+      return { ...summary, source: 'repo' };
+    }
+  } catch {
+    // Fall through to monolithic fallback
+  }
+
+  // Fallback: Load from monolithic file (old architecture)
+  try {
+    const response = await fetch('/library/generated-summaries.json');
+    if (response.ok) {
+      const data = await response.json();
+      const documents = data.documents || data;
+      if (documents[documentId]) {
+        return { ...documents[documentId], source: 'repo' };
+      }
+    }
+  } catch {
+    // Silently fail
+  }
+
+  return null;
 }
 
 /**

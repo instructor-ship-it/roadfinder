@@ -1,0 +1,13 @@
+{
+  "title": "AS 1742.3 - Manual of Uniform Traffic Control Devices Part 3: Temporary Traffic Management",
+  "abstract": "AS 1742.3 is the Australian Standard that forms part of the Manual of Uniform Traffic Control Devices (MUTCD) series. It specifies the requirements for traffic control devices used in temporary traffic management situations, establishing the national baseline that state codes of practice build upon.\n\nThe standard covers the design, dimensions, colors, and retroreflective properties of temporary traffic control devices including signs, barriers, delineators, and pavement markings. It establishes the standard specifications that all traffic control devices must meet to be used on Australian roads.\n\nWhile AGTTM provides guidance on how to apply traffic management, AS 1742.3 specifies what the physical devices must look like and how they must perform. All traffic control equipment used in Western Australia must comply with this standard. Traffic Management Supervisors should ensure all equipment on site meets AS 1742.3 requirements, particularly regarding sign sizes, colors, and retroreflectivity classes.",
+  "keywords": ["standard", "mutcd", "temporary-traffic"],
+  "targetAudience": [],
+  "completeSections": [],
+  "source": "repo",
+  "note": "External document - no local file for section extraction",
+  "documentId": "as-1742-3",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

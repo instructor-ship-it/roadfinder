@@ -1,0 +1,13 @@
+{
+  "title": "Safe Work Method Statement Template",
+  "abstract": "The Safe Work Method Statement (SWMS) Template is a mandatory document for all high-risk construction work, which includes all traffic management work on or near roads. The SWMS documents the hazards, risks, and control measures for the specific work being undertaken.\n\nThis template provides the standard format for documenting the work activities, associated hazards, risk ratings, and control measures. It must be completed before work commences and must be developed in consultation with workers who will be performing the work. The SWMS should be site-specific, though a generic SWMS can be used as a starting point.\n\nKey elements include the description of high-risk construction work, the hazards present, the risk assessment process, the control measures to be implemented, and how those controls will be monitored. The SWMS must be reviewed and updated if conditions change or if it is found to be ineffective. It must be readily available on site for all workers to access and should be used as a training tool during pre-start briefings.",
+  "keywords": ["form", "swms", "high-risk"],
+  "targetAudience": [],
+  "completeSections": [],
+  "source": "repo",
+  "note": "External document - no local file for section extraction",
+  "documentId": "form-swms-template",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

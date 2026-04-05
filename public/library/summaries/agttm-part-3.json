@@ -1,0 +1,99 @@
+{
+  "title": "AGTTM Part 3 - Static Worksites",
+  "abstract": "AGTTM Part 3 is the most frequently referenced part for Traffic Controllers working on static worksites. It provides comprehensive guidance on setting up and managing traffic control at fixed work locations where road workers and equipment remain in one place for extended periods.\n\nThe guide covers the full range of static worksite configurations including single lane closures, multiple lane closures, road closures with detours, shoulder closures, and median works. It details the requirements for advance warning, transition zones, buffer zones, and termination areas. Speed zoning requirements are comprehensively addressed, including the relationship between temporary speed limits and traffic management setups.\n\nSpecific requirements for excavations in the road, footpath closures, and works near intersections are included. The guide establishes minimum sight distances, taper lengths, and signage spacing based on speed zones. This part is essential reading for all Traffic Management Supervisors and forms the technical basis for most Traffic Guidance Schemes.",
+  "keywords": ["agttm", "static-worksites", "speed-zones"],
+  "targetAudience": [],
+  "completeSections": [
+    {
+      "sectionNumber": "Part 3",
+      "sectionTitle": "Static Worksites"
+    },
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Introduction .............................................................................................................................................",
+      "page": 1
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "Design Process.......................................................................................................................................",
+      "page": 5
+    },
+    {
+      "sectionNumber": "3",
+      "sectionTitle": "Around the Worksite ............................................................................................................................",
+      "page": 20
+    },
+    {
+      "sectionNumber": "4",
+      "sectionTitle": "Through the Worksite ..........................................................................................................................",
+      "page": 41
+    },
+    {
+      "sectionNumber": "5",
+      "sectionTitle": "Past the Worksite .................................................................................................................................",
+      "page": 56
+    },
+    {
+      "sectionNumber": "6",
+      "sectionTitle": "Design for Additional Issues ...............................................................................................................",
+      "page": 98
+    },
+    {
+      "sectionNumber": "7",
+      "sectionTitle": "How to Apply the Traffic Guidance Scheme ....................................................................................",
+      "page": 106
+    },
+    {
+      "sectionNumber": "1.1",
+      "sectionTitle": "Purpose"
+    },
+    {
+      "sectionNumber": "1.2",
+      "sectionTitle": "Structure of AGTTM"
+    },
+    {
+      "sectionNumber": "Part 1",
+      "sectionTitle": "Introduction. Within the AGTTM, the terminology that applies is detailed in Table 1.1."
+    },
+    {
+      "sectionNumber": "Part 5",
+      "sectionTitle": "Short Term Low"
+    },
+    {
+      "sectionNumber": "Part 6",
+      "sectionTitle": "Field Staff - Implementation and"
+    },
+    {
+      "sectionNumber": "Part 8",
+      "sectionTitle": "Processes and Part 10: Supporting"
+    },
+    {
+      "sectionNumber": "1.3",
+      "sectionTitle": "Scope of Part",
+      "page": 3
+    },
+    {
+      "sectionNumber": "1.5",
+      "sectionTitle": "Definitions"
+    },
+    {
+      "sectionNumber": "2.1",
+      "sectionTitle": "General"
+    },
+    {
+      "sectionNumber": "2.2",
+      "sectionTitle": "Risk Assessment"
+    }
+  ],
+  "keyRequirements": [],
+  "complianceNotes": [],
+  "crossReferences": [],
+  "lastUpdated": "Edition 1.1, 2021",
+  "issuingAuthority": "Austroads",
+  "pages": 117,
+  "tgsDiagramsReferenced": [],
+  "documentId": "agttm-part-3",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

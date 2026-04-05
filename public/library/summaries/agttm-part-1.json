@@ -1,0 +1,93 @@
+{
+  "title": "AGTTM Part 1 - Introduction",
+  "abstract": "AGTTM Part 1 introduces the Austroads Guide to Temporary Traffic Management series and establishes the overarching framework for temporary traffic management across Australia and New Zealand. It provides the context and principles that underpin all other parts of the guide.\n\nThe guide explains the purpose and structure of the AGTTM series, its relationship with other standards including AS 1742.3, and how the guide is adopted and adapted by different jurisdictions. It establishes key definitions and terminology used throughout the series, ensuring consistent interpretation across all parts.\n\nFundamental concepts covered include the safe system approach to road safety, the hierarchy of controls, risk management principles, and the roles and responsibilities of various parties in temporary traffic management. Understanding Part 1 is essential before delving into the more technical later parts, as it provides the conceptual foundation for why certain requirements exist and how the parts relate to each other. This part should be read by anyone new to traffic management or seeking a deeper understanding of the framework.",
+  "keywords": ["agttm", "introduction", "framework"],
+  "targetAudience": [],
+  "completeSections": [
+    {
+      "sectionNumber": "Part 1",
+      "sectionTitle": "Introduction"
+    },
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Scope of the Guide to Temporary Traffic Management .....................................................................",
+      "page": 1
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "Structure and Use of AGTTM ................................................................................................................",
+      "page": 6
+    },
+    {
+      "sectionNumber": "3",
+      "sectionTitle": "Definitions / Glossary of Terms ............................................................................................................",
+      "page": 9
+    },
+    {
+      "sectionNumber": "4",
+      "sectionTitle": "Purpose of TTM ....................................................................................................................................",
+      "page": 14
+    },
+    {
+      "sectionNumber": "5",
+      "sectionTitle": "Philosophy and Principles ..................................................................................................................",
+      "page": 15
+    },
+    {
+      "sectionNumber": "6",
+      "sectionTitle": "Governance ...........................................................................................................................................",
+      "page": 20
+    },
+    {
+      "sectionNumber": "Appendix A",
+      "sectionTitle": "AGTTM Feedback Forms ........................................................................................................ 22"
+    },
+    {
+      "sectionNumber": "1.1",
+      "sectionTitle": "Status"
+    },
+    {
+      "sectionNumber": "1.2",
+      "sectionTitle": "Background of AGTTM"
+    },
+    {
+      "sectionNumber": "1.3",
+      "sectionTitle": "Safety at Road Worksites Project Framework"
+    },
+    {
+      "sectionNumber": "1.4",
+      "sectionTitle": "Purpose"
+    },
+    {
+      "sectionNumber": "1.5",
+      "sectionTitle": "Application"
+    },
+    {
+      "sectionNumber": "2.1",
+      "sectionTitle": "Structure of AGTTM"
+    },
+    {
+      "sectionNumber": "Part 5",
+      "sectionTitle": "Short Term Low"
+    },
+    {
+      "sectionNumber": "Part 6",
+      "sectionTitle": "Field Staff - Implementation and"
+    },
+    {
+      "sectionNumber": "Part 8",
+      "sectionTitle": "Processes and Part 10: Supporting"
+    }
+  ],
+  "keyRequirements": [],
+  "complianceNotes": [],
+  "crossReferences": [],
+  "lastUpdated": "Edition 1.0, 2021",
+  "issuingAuthority": "Austroads",
+  "pages": 29,
+  "tgsDiagramsReferenced": [],
+  "documentId": "agttm-part-1",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

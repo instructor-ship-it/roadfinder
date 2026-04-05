@@ -1,0 +1,97 @@
+{
+  "title": "Records Management Including Document Control",
+  "abstract": "This guide provides comprehensive information on WHS records management requirements, including document control, retention periods, and accessibility. Proper records management is both a legal requirement and essential for demonstrating compliance with WHS obligations.\n\nThe guide specifies minimum retention periods for various WHS records: daily diaries must be kept for 7 years, incident reports for serious incidents for 30 years, health monitoring records for 30 years, and training records for the duration of employment plus 7 years. SWMS must be retained for the duration of works plus 2 years.\n\nFor Traffic Controllers and traffic management companies, this guide is essential for establishing compliant record-keeping systems. It covers both electronic and hard copy records, access requirements for regulators, and the consequences of inadequate record keeping. Document control requirements ensure that current versions of procedures, SWMS, and TMPs are always available on site.",
+  "keywords": ["records", "document-control", "retention", "WHS", "compliance", "safety-case"],
+  "targetAudience": [
+    "operators of petroleum and geothermal energy operations",
+    "safety managers",
+    "document controllers",
+    "compliance officers"
+  ],
+  "completeSections": [
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Introduction",
+      "page": 2
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "What is a record?",
+      "page": 3
+    },
+    {
+      "sectionNumber": "3",
+      "sectionTitle": "Maintaining records for safety cases",
+      "page": 4
+    },
+    {
+      "sectionNumber": "4",
+      "sectionTitle": "Records management",
+      "page": 5
+    },
+    {
+      "sectionNumber": "4.1",
+      "sectionTitle": "Design, construction and commissioning",
+      "page": 6
+    },
+    {
+      "sectionNumber": "4.2",
+      "sectionTitle": "Operations and maintenance",
+      "page": 7
+    },
+    {
+      "sectionNumber": "4.3",
+      "sectionTitle": "Abandonment and decommissioning",
+      "page": 8
+    },
+    {
+      "sectionNumber": "4.4",
+      "sectionTitle": "Diving records",
+      "page": 8
+    },
+    {
+      "sectionNumber": "4.5",
+      "sectionTitle": "Retention of records",
+      "page": 8
+    },
+    {
+      "sectionNumber": "4.6",
+      "sectionTitle": "Archiving records",
+      "page": 9
+    },
+    {
+      "sectionNumber": "5",
+      "sectionTitle": "Document control",
+      "page": 10
+    },
+    {
+      "sectionNumber": "5.1",
+      "sectionTitle": "Development of new documentation",
+      "page": 10
+    },
+    {
+      "sectionNumber": "5.2",
+      "sectionTitle": "Periodic review and changes of controlled documents",
+      "page": 11
+    },
+    {
+      "sectionNumber": "5.3",
+      "sectionTitle": "Retention of superseded documentation",
+      "page": 11
+    },
+    {
+      "sectionNumber": "Appendix 1",
+      "sectionTitle": "Glossary",
+      "page": 12
+    },
+    {
+      "sectionNumber": "Appendix 2",
+      "sectionTitle": "Further information",
+      "page": 14
+    }
+  ],
+  "documentId": "whs-records-guide",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

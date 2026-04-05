@@ -1,0 +1,13 @@
+{
+  "title": "Variation to Standards Form",
+  "abstract": "The Variation to Standards Form is used when site conditions prevent compliance with standard traffic management requirements. This formal application process ensures that non-standard arrangements are properly assessed and approved before implementation.\n\nVariations may be required when physical constraints such as narrow road widths, lack of shoulder, intersection proximity, or existing infrastructure prevent full compliance with the MRWA Code of Practice, AGTTM, or AS 1742.3. The variation application must demonstrate why standard requirements cannot be met and what alternative controls will be implemented.\n\nThe application requires a risk assessment following AS/NZS ISO 31000 principles, documenting the hazards, risk analysis, and proposed treatments. Approval must be obtained from the relevant road authority before works commence. Unapproved variations constitute a breach of standards and may result in enforcement action, insurance complications, and liability in the event of an incident. Processing time varies but typically requires at least 5 business days.",
+  "keywords": ["form", "variation", "approval"],
+  "targetAudience": [],
+  "completeSections": [],
+  "source": "repo",
+  "note": "External document - no local file for section extraction",
+  "documentId": "form-variation-standards",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

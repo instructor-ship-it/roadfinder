@@ -1,0 +1,13 @@
+{
+  "title": "Notification of Road Works Form",
+  "abstract": "The Notification of Road Works Form is a mandatory administrative document that must be submitted to relevant authorities before commencing any works on roads. This form ensures that all stakeholders are informed of upcoming works and can coordinate their responses.\n\nThe notification must be submitted to MRWA, WA Police, and in some cases local government authorities, depending on the nature and location of the works. The form captures essential information including the location, duration, nature of works, traffic management arrangements, and contact details for the responsible personnel.\n\nSubmission timeframes vary based on the complexity and impact of the works. For routine works, notification is typically required at least 48 hours in advance. For works requiring temporary speed limit reductions or road closures, longer notice periods apply. Failure to submit required notifications may result in enforcement action and can affect insurance coverage in the event of an incident.",
+  "keywords": ["form", "notification", "agency"],
+  "targetAudience": [],
+  "completeSections": [],
+  "source": "repo",
+  "note": "External document - no local file for section extraction",
+  "documentId": "form-notification-roadworks",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

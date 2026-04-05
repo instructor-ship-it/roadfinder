@@ -1,0 +1,253 @@
+{
+  "title": "Traffic Management for Works on Roads Code of Practice",
+  "abstract": "The Traffic Management for Works on Roads Code of Practice is the primary reference document for all traffic management activities on Western Australian roads. Published by Main Roads Western Australia (MRWA), this code establishes the mandatory requirements and standards that must be followed when conducting any work on roads.\n\nThe code adopts and adapts the Austroads Guide to Temporary Traffic Management (AGTTM) for Western Australian conditions. It covers the roles and responsibilities of all parties involved in traffic management, from Traffic Management Supervisors to Traffic Controllers, and establishes the requirements for traffic management plans, variations, and notifications.\n\nKey topics include traffic guidance scheme requirements, signage standards, speed zoning, pedestrian management, mobile works, short-term low-impact works, and emergency setups. All Traffic Controllers must be familiar with this code as it forms the basis of competency requirements and legal compliance for traffic management work in WA. The May 2025 edition is the current version and supersedes all previous editions.",
+  "keywords": ["code-of-practice", "traffic-management", "standards"],
+  "targetAudience": [],
+  "completeSections": [
+    {
+      "sectionNumber": "Appendix 5",
+      "sectionTitle": "Conditions amended for MMS-ADV-11, MMS-ADV-20,"
+    },
+    {
+      "sectionNumber": "Appendix 1",
+      "sectionTitle": "Traffic Lane definition added"
+    },
+    {
+      "sectionNumber": "Appendix 1",
+      "sectionTitle": "Definitions added for Long Term Works, High Speed"
+    },
+    {
+      "sectionNumber": "Appendix 4",
+      "sectionTitle": "Pilbara Region email updated"
+    },
+    {
+      "sectionNumber": "Appendix 5",
+      "sectionTitle": "MMS-REG-15 added"
+    },
+    {
+      "sectionNumber": "Appendix 5",
+      "sectionTitle": "MMS-ADV-31 may be used in either side of the frame"
+    },
+    {
+      "sectionNumber": "Appendix 4",
+      "sectionTitle": "Distribution List updated"
+    },
+    {
+      "sectionNumber": "Appendix 1",
+      "sectionTitle": "Addition of \u2018State Road\u2019 definition"
+    },
+    {
+      "sectionNumber": "Appendix 4",
+      "sectionTitle": "Distribution list updated"
+    },
+    {
+      "sectionNumber": "Appendix 5",
+      "sectionTitle": "Addition of blank yellow panels"
+    },
+    {
+      "sectionNumber": "Appendix 1",
+      "sectionTitle": "Addition of \u2018Must\u2019 definition"
+    },
+    {
+      "sectionNumber": "Appendix 5",
+      "sectionTitle": "MMS-ADV-22 not to be used in conjunction with a"
+    },
+    {
+      "sectionNumber": "Appendix 1",
+      "sectionTitle": "Removal of definitions within AGTTM Part 1"
+    },
+    {
+      "sectionNumber": "Appendix 4",
+      "sectionTitle": "Notification of Roadworks Form updated - additional"
+    },
+    {
+      "sectionNumber": "Appendix 5",
+      "sectionTitle": "New signs: MMS-ADV-85, MMS-ADV-85, MMS-ADV-"
+    },
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "INTRODUCTION AND SCOPE",
+      "page": 16
+    },
+    {
+      "sectionNumber": "1.1",
+      "sectionTitle": "INTRODUCTION",
+      "page": 16
+    },
+    {
+      "sectionNumber": "1.2",
+      "sectionTitle": "SCOPE",
+      "page": 16
+    },
+    {
+      "sectionNumber": "1.3",
+      "sectionTitle": "AUSTROADS SAFETY AT ROAD WORKSITES",
+      "page": 17
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "APPROVAL TO WORK WITHIN ROAD RESERVES",
+      "page": 20
+    },
+    {
+      "sectionNumber": "2.1",
+      "sectionTitle": "ROADS FOR WHICH MAIN ROADS IS RESPONSIBLE",
+      "page": 20
+    },
+    {
+      "sectionNumber": "2.2",
+      "sectionTitle": "ROADS FOR WHICH LOCAL GOVERNMENT OR OTHERS ARE"
+    },
+    {
+      "sectionNumber": "2.3",
+      "sectionTitle": "WORKS AFFECTING TRAFFIC SIGNAL OPERATION",
+      "page": 23
+    },
+    {
+      "sectionNumber": "2.4",
+      "sectionTitle": "TRAFFIC MODELLING",
+      "page": 23
+    },
+    {
+      "sectionNumber": "3",
+      "sectionTitle": "AUTHORITY TO ERECT TRAFFIC CONTROL DEVICES",
+      "page": 24
+    },
+    {
+      "sectionNumber": "3.1",
+      "sectionTitle": "MAIN ROADS",
+      "page": 24
+    },
+    {
+      "sectionNumber": "3.2",
+      "sectionTitle": "MAIN ROADS AGENTS",
+      "page": 24
+    },
+    {
+      "sectionNumber": "3.3",
+      "sectionTitle": "AUTHORISED BODIES AND THEIR AGENTS",
+      "page": 24
+    },
+    {
+      "sectionNumber": "3.4",
+      "sectionTitle": "OTHERS NOT PARTY TO AN INSTRUMENT OF AUTHORISATION",
+      "page": 24
+    },
+    {
+      "sectionNumber": "3.5",
+      "sectionTitle": "AUTHORISING TRAFFIC MANAGEMENT PLANS",
+      "page": 25
+    },
+    {
+      "sectionNumber": "4",
+      "sectionTitle": "PLANNING THE WORKS",
+      "page": 26
+    },
+    {
+      "sectionNumber": "4.1",
+      "sectionTitle": "DUTY OF CARE",
+      "page": 26
+    },
+    {
+      "sectionNumber": "4.2",
+      "sectionTitle": "TRAFFIC MANAGEMENT PLANS",
+      "page": 26
+    },
+    {
+      "sectionNumber": "4.3",
+      "sectionTitle": "RISK MANAGEMENT",
+      "page": 33
+    },
+    {
+      "sectionNumber": "4.6",
+      "sectionTitle": "VULNERABLE ROAD USERS",
+      "page": 39
+    },
+    {
+      "sectionNumber": "5",
+      "sectionTitle": "REVIEW, INSPECTION, ROAD SAFETY AUDIT AND OPERATION",
+      "page": 41
+    },
+    {
+      "sectionNumber": "5.2",
+      "sectionTitle": "TRAFFIC MANAGEMENT OPERATION AND RECORDS",
+      "page": 43
+    },
+    {
+      "sectionNumber": "6",
+      "sectionTitle": "DEPARTURES FROM DESIGN REQUIRMENTS IN AS1742.3 AND AGTTM",
+      "page": 44
+    },
+    {
+      "sectionNumber": "6.1",
+      "sectionTitle": "TEMPORARY SIGNAGE",
+      "page": 44
+    },
+    {
+      "sectionNumber": "6.2",
+      "sectionTitle": "GUIDELINES FOR MULTI-MESSAGE SIGNS",
+      "page": 53
+    },
+    {
+      "sectionNumber": "6.3",
+      "sectionTitle": "SECURING SIGNS AND DEVICES",
+      "page": 55
+    },
+    {
+      "sectionNumber": "6.4",
+      "sectionTitle": "COVERING EXISTING SIGNAGE AND ROAD MARKING",
+      "page": 57
+    },
+    {
+      "sectionNumber": "6.5",
+      "sectionTitle": "SPEED LIMIT ZONES",
+      "page": 58
+    },
+    {
+      "sectionNumber": "6.6",
+      "sectionTitle": "TEMPORARY ROAD SAFETY BARRIER SYSTEMS",
+      "page": 62
+    },
+    {
+      "sectionNumber": "6.7",
+      "sectionTitle": "MINIMUM LANE WIDTHS",
+      "page": 64
+    },
+    {
+      "sectionNumber": "6.8",
+      "sectionTitle": "TRAFFIC CONTROL",
+      "page": 64
+    },
+    {
+      "sectionNumber": "6.9",
+      "sectionTitle": "TEMPORARY IMPACT PROTECTION DEVICES",
+      "page": 76
+    },
+    {
+      "sectionNumber": "6.10",
+      "sectionTitle": "ILLUMINATED FLASHING ARROW SIGN",
+      "page": 81
+    },
+    {
+      "sectionNumber": "6.11",
+      "sectionTitle": "TRAFFIC VOLUME",
+      "page": 82
+    },
+    {
+      "sectionNumber": "6.12",
+      "sectionTitle": "MOBILE WORKS",
+      "page": 84
+    }
+  ],
+  "keyRequirements": [],
+  "complianceNotes": [],
+  "crossReferences": ["agttm-part-3", "as-1742-3", "mrwa-spec-203"],
+  "lastUpdated": "May 2025",
+  "issuingAuthority": "MRWA",
+  "pages": 158,
+  "tgsDiagramsReferenced": [],
+  "documentId": "mrwa-cop-2025",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

@@ -1,0 +1,13 @@
+{
+  "title": "Incident Report Form",
+  "abstract": "The Incident Report Form is used to document all work-related incidents, injuries, and near misses that occur on traffic management worksites. Immediate and thorough incident reporting is both a legal requirement and essential for preventing future incidents.\n\nThe form captures critical information including the date, time, and location of the incident, details of persons involved, nature of any injuries, witnesses, immediate actions taken, and contributing factors. It should be completed as soon as practicable after the incident occurs, while details are fresh in the minds of those involved.\n\nSerious incidents requiring notification to WorkSafe WA must be reported immediately, and the scene must be preserved until an inspector arrives. The completed incident report forms part of the site records and must be retained for 30 years for serious incidents. Analysis of incident reports helps identify trends and informs improvements to work practices. This template should be customized to company-specific requirements while ensuring all regulatory reporting requirements are met.",
+  "keywords": ["form", "incident", "whs"],
+  "targetAudience": [],
+  "completeSections": [],
+  "source": "repo",
+  "note": "External document - no local file for section extraction",
+  "documentId": "form-incident-report",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

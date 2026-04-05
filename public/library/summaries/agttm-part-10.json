@@ -1,0 +1,97 @@
+{
+  "title": "AGTTM Part 10 - Supporting Guidance",
+  "abstract": "AGTTM Part 10 provides supplementary guidance that supports the application of the other AGTTM parts. It addresses specialized situations, emerging issues, and provides additional technical information not covered in the main parts.\n\nThe guide covers a range of supporting topics including traffic management at special events, works near railways, works on bridges and structures, and traffic management in tunnels. It also addresses emerging technologies and their application in temporary traffic management, including electronic signage and intelligent transport systems.\n\nAdditional technical information includes detailed guidance on sight distance calculations, queue length assessments, and the impact of road works on heavy vehicles. This part serves as a reference for less common situations and provides the technical depth needed for complex traffic management scenarios. It should be consulted when situations fall outside the scope of the main AGTTM parts.",
+  "keywords": ["agttm", "supporting-guidance", "reference"],
+  "targetAudience": [],
+  "completeSections": [
+    {
+      "sectionNumber": "Part 10",
+      "sectionTitle": "Supporting Guidance"
+    },
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Introduction .............................................................................................................................................",
+      "page": 1
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "Risk Management for TTM .....................................................................................................................",
+      "page": 5
+    },
+    {
+      "sectionNumber": "3",
+      "sectionTitle": "Review, Inspection and Road Safety Audit .......................................................................................",
+      "page": 20
+    },
+    {
+      "sectionNumber": "4",
+      "sectionTitle": "Events on Roads ..................................................................................................................................",
+      "page": 32
+    },
+    {
+      "sectionNumber": "5",
+      "sectionTitle": "Emergency Works ................................................................................................................................",
+      "page": 37
+    },
+    {
+      "sectionNumber": "1.1",
+      "sectionTitle": "Purpose"
+    },
+    {
+      "sectionNumber": "1.2",
+      "sectionTitle": "Structure of AGTTM"
+    },
+    {
+      "sectionNumber": "Part 1",
+      "sectionTitle": "Introduction. Within the AGTTM, the terminology that applies is detailed in Table 1.1."
+    },
+    {
+      "sectionNumber": "Part 5",
+      "sectionTitle": "Short Term Low"
+    },
+    {
+      "sectionNumber": "Part 6",
+      "sectionTitle": "Field Staff - Implementation and"
+    },
+    {
+      "sectionNumber": "Part 8",
+      "sectionTitle": "Processes and Part 10: Supporting"
+    },
+    {
+      "sectionNumber": "1.3",
+      "sectionTitle": "Scope of Part",
+      "page": 10
+    },
+    {
+      "sectionNumber": "1.5",
+      "sectionTitle": "Definitions"
+    },
+    {
+      "sectionNumber": "2.1",
+      "sectionTitle": "General"
+    },
+    {
+      "sectionNumber": "2.2",
+      "sectionTitle": "Overview"
+    },
+    {
+      "sectionNumber": "2.3",
+      "sectionTitle": "Application to TTM at Work Sites on Roads"
+    },
+    {
+      "sectionNumber": "2.4",
+      "sectionTitle": "Elements of Best Practice"
+    }
+  ],
+  "keyRequirements": [],
+  "complianceNotes": [],
+  "crossReferences": [],
+  "lastUpdated": "Edition 1.1, 2021",
+  "issuingAuthority": "Austroads",
+  "pages": 51,
+  "tgsDiagramsReferenced": [],
+  "documentId": "agttm-part-10",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

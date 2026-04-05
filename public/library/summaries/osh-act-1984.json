@@ -1,0 +1,635 @@
+{
+  "title": "Occupational Safety and Health Act 1984",
+  "abstract": "The Occupational Safety and Health Act 1984 was Western Australia's primary workplace safety legislation until it was repealed and replaced by the WHS Act 2020 on 31 March 2022. This Act had governed workplace safety in WA for 38 years.\n\nWhile the Act is now repealed, it remains relevant for transitional provisions and understanding the historical framework. Some matters that began under the OSH Act may still be governed by its provisions during the transition period.\n\nThe Act established the general duty of care for employers and employees, requirements for consultation, and the powers of safety inspectors. It differed from the new WHS Act in several key areas including the use of 'employer/employee' terminology rather than 'PCBU/worker', and did not include officer due diligence duties or industrial manslaughter provisions.",
+  "keywords": ["legislation", "repealed", "transitional"],
+  "targetAudience": [],
+  "completeSections": [
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Short title",
+      "page": 2
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "Commencement",
+      "page": 2
+    },
+    {
+      "sectionNumber": "3",
+      "sectionTitle": "Terms used",
+      "page": 2
+    },
+    {
+      "sectionNumber": "3A",
+      "sectionTitle": "Penalty levels defined",
+      "page": 6
+    },
+    {
+      "sectionNumber": "3B",
+      "sectionTitle": "Offences, first and subsequent",
+      "page": 8
+    },
+    {
+      "sectionNumber": "4",
+      "sectionTitle": "Application of this Act",
+      "page": 9
+    },
+    {
+      "sectionNumber": "5",
+      "sectionTitle": "Objects",
+      "page": 11
+    },
+    {
+      "sectionNumber": "6",
+      "sectionTitle": "Commission, creation, membership of etc.",
+      "page": 13
+    },
+    {
+      "sectionNumber": "6A",
+      "sectionTitle": "Deputy chairperson",
+      "page": 15
+    },
+    {
+      "sectionNumber": "7",
+      "sectionTitle": "Acting members",
+      "page": 15
+    },
+    {
+      "sectionNumber": "8",
+      "sectionTitle": "Terms and conditions of appointed members",
+      "page": 16
+    },
+    {
+      "sectionNumber": "9",
+      "sectionTitle": "WorkSafe Western Australia Commissioner",
+      "page": 16
+    },
+    {
+      "sectionNumber": "10",
+      "sectionTitle": "Vacation of office",
+      "page": 17
+    },
+    {
+      "sectionNumber": "11",
+      "sectionTitle": "Leave of absence",
+      "page": 18
+    },
+    {
+      "sectionNumber": "12",
+      "sectionTitle": "Casual vacancies",
+      "page": 18
+    },
+    {
+      "sectionNumber": "13",
+      "sectionTitle": "Meetings of Commission",
+      "page": 18
+    },
+    {
+      "sectionNumber": "14",
+      "sectionTitle": "Functions of Commission",
+      "page": 20
+    },
+    {
+      "sectionNumber": "14A",
+      "sectionTitle": "Mining Industry Advisory Committee",
+      "page": 22
+    },
+    {
+      "sectionNumber": "15",
+      "sectionTitle": "Other advisory committees, appointment of etc.",
+      "page": 23
+    },
+    {
+      "sectionNumber": "16",
+      "sectionTitle": "Annual report",
+      "page": 24
+    },
+    {
+      "sectionNumber": "17",
+      "sectionTitle": "Staff to assist Commission",
+      "page": 24
+    },
+    {
+      "sectionNumber": "18",
+      "sectionTitle": "Commissioner and department",
+      "page": 25
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "Preliminary"
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "General workplace duties"
+    },
+    {
+      "sectionNumber": "19",
+      "sectionTitle": "Duties of employers",
+      "page": 26
+    },
+    {
+      "sectionNumber": "19A",
+      "sectionTitle": "Breaches of s. 19(1)",
+      "page": 28
+    },
+    {
+      "sectionNumber": "20",
+      "sectionTitle": "Duties of employees",
+      "page": 28
+    },
+    {
+      "sectionNumber": "20A",
+      "sectionTitle": "Breaches of s. 20(1) or (3)",
+      "page": 29
+    },
+    {
+      "sectionNumber": "21",
+      "sectionTitle": "Duties of employers and self-employed persons",
+      "page": 30
+    },
+    {
+      "sectionNumber": "21A",
+      "sectionTitle": "Breaches of s. 21",
+      "page": 31
+    },
+    {
+      "sectionNumber": "21C",
+      "sectionTitle": "Breaches of s. 21B",
+      "page": 33
+    },
+    {
+      "sectionNumber": "22",
+      "sectionTitle": "Duties of persons who have control of workplaces",
+      "page": 33
+    },
+    {
+      "sectionNumber": "22A",
+      "sectionTitle": "Breaches of s. 22(1)",
+      "page": 34
+    },
+    {
+      "sectionNumber": "23",
+      "sectionTitle": "Duties of manufacturers etc.",
+      "page": 35
+    },
+    {
+      "sectionNumber": "23A",
+      "sectionTitle": "Prohibited activities in prescribed areas",
+      "page": 38
+    },
+    {
+      "sectionNumber": "23B",
+      "sectionTitle": "Breaches of s. 23A",
+      "page": 38
+    },
+    {
+      "sectionNumber": "Division 3",
+      "sectionTitle": "Certain workplace situations to be"
+    },
+    {
+      "sectionNumber": "23C",
+      "sectionTitle": "Terms used",
+      "page": 39
+    },
+    {
+      "sectionNumber": "23D",
+      "sectionTitle": "Contract work arrangements",
+      "page": 39
+    },
+    {
+      "sectionNumber": "23E",
+      "sectionTitle": "Labour arrangements in general",
+      "page": 41
+    },
+    {
+      "sectionNumber": "23F",
+      "sectionTitle": "Labour hire arrangements",
+      "page": 42
+    },
+    {
+      "sectionNumber": "Division 4",
+      "sectionTitle": "Duty relating to certain"
+    },
+    {
+      "sectionNumber": "23G",
+      "sectionTitle": "Duty of employer to maintain safe premises",
+      "page": 44
+    },
+    {
+      "sectionNumber": "23H",
+      "sectionTitle": "Breaches of s. 23G",
+      "page": 45
+    },
+    {
+      "sectionNumber": "Division 5",
+      "sectionTitle": "Other duties"
+    },
+    {
+      "sectionNumber": "23I",
+      "sectionTitle": "Notification of deaths, injuries and diseases",
+      "page": 46
+    },
+    {
+      "sectionNumber": "23J",
+      "sectionTitle": "Breaches of s. 23I",
+      "page": 48
+    },
+    {
+      "sectionNumber": "Division 6",
+      "sectionTitle": "Resolution of workplace issues,"
+    },
+    {
+      "sectionNumber": "24",
+      "sectionTitle": "Resolution of issues at workplace",
+      "page": 49
+    },
+    {
+      "sectionNumber": "25",
+      "sectionTitle": "Inspector may be notified where issues unresolved",
+      "page": 50
+    },
+    {
+      "sectionNumber": "26",
+      "sectionTitle": "Refusal by employees to work in certain cases",
+      "page": 51
+    },
+    {
+      "sectionNumber": "27",
+      "sectionTitle": "Assignment of other work",
+      "page": 52
+    },
+    {
+      "sectionNumber": "28",
+      "sectionTitle": "Entitlements to continue",
+      "page": 52
+    },
+    {
+      "sectionNumber": "28A",
+      "sectionTitle": "Offences - refusal to work",
+      "page": 52
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "Safety and health representatives"
+    },
+    {
+      "sectionNumber": "30",
+      "sectionTitle": "Consultation on matters relevant to elections",
+      "page": 54
+    },
+    {
+      "sectionNumber": "30A",
+      "sectionTitle": "Election scheme may be established",
+      "page": 56
+    },
+    {
+      "sectionNumber": "30B",
+      "sectionTitle": "What may be included in a scheme",
+      "page": 57
+    },
+    {
+      "sectionNumber": "30C",
+      "sectionTitle": "Appointment of further delegates may be required",
+      "page": 58
+    },
+    {
+      "sectionNumber": "31",
+      "sectionTitle": "Election of safety and health representatives",
+      "page": 58
+    },
+    {
+      "sectionNumber": "32",
+      "sectionTitle": "Terms of office of representatives",
+      "page": 60
+    },
+    {
+      "sectionNumber": "33",
+      "sectionTitle": "Functions of safety and health representatives",
+      "page": 60
+    },
+    {
+      "sectionNumber": "35D",
+      "sectionTitle": "Remedies that Tribunal may grant",
+      "page": 69
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "Safety and health committees"
+    },
+    {
+      "sectionNumber": "36",
+      "sectionTitle": "Terms used",
+      "page": 70
+    },
+    {
+      "sectionNumber": "37",
+      "sectionTitle": "Employees to appoint representatives",
+      "page": 71
+    },
+    {
+      "sectionNumber": "40",
+      "sectionTitle": "Functions of safety and health committees",
+      "page": 78
+    },
+    {
+      "sectionNumber": "41",
+      "sectionTitle": "Procedures",
+      "page": 79
+    },
+    {
+      "sectionNumber": "41A",
+      "sectionTitle": "Terms used",
+      "page": 80
+    },
+    {
+      "sectionNumber": "42",
+      "sectionTitle": "Appointment of inspectors",
+      "page": 80
+    },
+    {
+      "sectionNumber": "42A",
+      "sectionTitle": "Appointment of restricted inspectors",
+      "page": 80
+    },
+    {
+      "sectionNumber": "42B",
+      "sectionTitle": "Functions of restricted inspector",
+      "page": 81
+    },
+    {
+      "sectionNumber": "42C",
+      "sectionTitle": "Certificate of appointment",
+      "page": 81
+    },
+    {
+      "sectionNumber": "43",
+      "sectionTitle": "Powers of inspectors",
+      "page": 82
+    },
+    {
+      "sectionNumber": "44",
+      "sectionTitle": "Interpreters",
+      "page": 84
+    },
+    {
+      "sectionNumber": "45",
+      "sectionTitle": "Notification by inspector",
+      "page": 85
+    },
+    {
+      "sectionNumber": "46",
+      "sectionTitle": "Samples",
+      "page": 86
+    },
+    {
+      "sectionNumber": "47",
+      "sectionTitle": "Offences",
+      "page": 87
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "Issue of notices by inspector"
+    },
+    {
+      "sectionNumber": "47A",
+      "sectionTitle": "Terms used",
+      "page": 89
+    },
+    {
+      "sectionNumber": "48",
+      "sectionTitle": "Improvement notices, issue and effect of",
+      "page": 89
+    },
+    {
+      "sectionNumber": "49",
+      "sectionTitle": "Prohibition notices, issue and effect of",
+      "page": 91
+    },
+    {
+      "sectionNumber": "50",
+      "sectionTitle": "Notices may include directions",
+      "page": 94
+    },
+    {
+      "sectionNumber": "50A",
+      "sectionTitle": "Notices may be issued to Crown",
+      "page": 94
+    },
+    {
+      "sectionNumber": "51",
+      "sectionTitle": "Review of notices by Commissioner",
+      "page": 95
+    },
+    {
+      "sectionNumber": "51A",
+      "sectionTitle": "Review of notices by Tribunal",
+      "page": 97
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "Issue of provisional improvement"
+    },
+    {
+      "sectionNumber": "51B",
+      "sectionTitle": "Safety and health magistrates",
+      "page": 103
+    },
+    {
+      "sectionNumber": "51C",
+      "sectionTitle": "Jurisdiction of safety and health magistrate",
+      "page": 103
+    },
+    {
+      "sectionNumber": "51E",
+      "sectionTitle": "Administrative arrangements",
+      "page": 104
+    },
+    {
+      "sectionNumber": "51F",
+      "sectionTitle": "Terms used",
+      "page": 105
+    },
+    {
+      "sectionNumber": "51I",
+      "sectionTitle": "Practice, procedure and appeals",
+      "page": 106
+    },
+    {
+      "sectionNumber": "51J",
+      "sectionTitle": "Conciliation",
+      "page": 107
+    },
+    {
+      "sectionNumber": "51K",
+      "sectionTitle": "Certain matters to be heard together",
+      "page": 109
+    },
+    {
+      "sectionNumber": "Division 1",
+      "sectionTitle": "General provisions"
+    },
+    {
+      "sectionNumber": "52",
+      "sectionTitle": "Prosecutions",
+      "page": 110
+    },
+    {
+      "sectionNumber": "53",
+      "sectionTitle": "Evidentiary provisions",
+      "page": 110
+    },
+    {
+      "sectionNumber": "54",
+      "sectionTitle": "General penalty",
+      "page": 111
+    },
+    {
+      "sectionNumber": "54A",
+      "sectionTitle": "Continuing offences",
+      "page": 112
+    },
+    {
+      "sectionNumber": "54B",
+      "sectionTitle": "Appeals",
+      "page": 112
+    },
+    {
+      "sectionNumber": "55",
+      "sectionTitle": "Offences by bodies corporate",
+      "page": 113
+    },
+    {
+      "sectionNumber": "55A",
+      "sectionTitle": "No double jeopardy",
+      "page": 114
+    },
+    {
+      "sectionNumber": "Division 2",
+      "sectionTitle": "Criminal proceedings against the"
+    },
+    {
+      "sectionNumber": "55B",
+      "sectionTitle": "Crown may be prosecuted",
+      "page": 114
+    },
+    {
+      "sectionNumber": "55C",
+      "sectionTitle": "Prosecution against body corporate",
+      "page": 114
+    },
+    {
+      "sectionNumber": "55D",
+      "sectionTitle": "Prosecution in other cases",
+      "page": 115
+    },
+    {
+      "sectionNumber": "55E",
+      "sectionTitle": "Provisions applicable to responsible agency",
+      "page": 115
+    },
+    {
+      "sectionNumber": "55F",
+      "sectionTitle": "Proceedings where agency has ceased to exist",
+      "page": 116
+    },
+    {
+      "sectionNumber": "55G",
+      "sectionTitle": "Penalties in proceedings against Crown",
+      "page": 117
+    },
+    {
+      "sectionNumber": "Division 3",
+      "sectionTitle": "Undertaking by offender in lieu of"
+    },
+    {
+      "sectionNumber": "55H",
+      "sectionTitle": "Terms used",
+      "page": 118
+    },
+    {
+      "sectionNumber": "55J",
+      "sectionTitle": "Making of election",
+      "page": 119
+    },
+    {
+      "sectionNumber": "55K",
+      "sectionTitle": "Failure to enter into undertaking",
+      "page": 120
+    },
+    {
+      "sectionNumber": "55L",
+      "sectionTitle": "Time for payment of fines",
+      "page": 120
+    },
+    {
+      "sectionNumber": "55M",
+      "sectionTitle": "Nature and terms of undertaking",
+      "page": 121
+    },
+    {
+      "sectionNumber": "55N",
+      "sectionTitle": "What may be included in undertaking",
+      "page": 121
+    },
+    {
+      "sectionNumber": "55O",
+      "sectionTitle": "Effect of undertaking",
+      "page": 122
+    },
+    {
+      "sectionNumber": "55P",
+      "sectionTitle": "Failure to comply with undertaking",
+      "page": 123
+    },
+    {
+      "sectionNumber": "55Q",
+      "sectionTitle": "Amendment of undertaking",
+      "page": 123
+    },
+    {
+      "sectionNumber": "55R",
+      "sectionTitle": "Undertaking may be published",
+      "page": 123
+    },
+    {
+      "sectionNumber": "56",
+      "sectionTitle": "Discrimination",
+      "page": 124
+    },
+    {
+      "sectionNumber": "57",
+      "sectionTitle": "Codes of practice",
+      "page": 125
+    },
+    {
+      "sectionNumber": "57A",
+      "sectionTitle": "Visitors to workplaces to comply with directions",
+      "page": 126
+    },
+    {
+      "sectionNumber": "60",
+      "sectionTitle": "Regulations",
+      "page": 129
+    },
+    {
+      "sectionNumber": "61",
+      "sectionTitle": "Review of Act",
+      "page": 131
+    },
+    {
+      "sectionNumber": "Schedule 1",
+      "sectionTitle": "Subject matter for"
+    }
+  ],
+  "keyRequirements": [],
+  "complianceNotes": [],
+  "crossReferences": [],
+  "lastUpdated": "Repealed (transitional)",
+  "issuingAuthority": "WA Government",
+  "pages": 156,
+  "tgsDiagramsReferenced": [],
+  "documentId": "osh-act-1984",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

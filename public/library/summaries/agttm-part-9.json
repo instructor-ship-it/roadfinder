@@ -1,0 +1,122 @@
+{
+  "title": "AGTTM Part 9 - Sample Layouts",
+  "abstract": "AGTTM Part 9 is a comprehensive visual reference containing sample Traffic Guidance Scheme layouts for a wide range of traffic management scenarios. It provides standardized diagram templates that can be adapted to specific site conditions.\n\nThe guide contains hundreds of sample layouts organized by work type and road environment. Categories include lane closures on multi-lane roads, single lane closures on two-way roads, shoulder closures, intersection treatments, pedestrian management, and road closures with detours. Each layout includes signage schedules, taper lengths, and spacing requirements.\n\nThese sample layouts form the basis for most pre-approved Traffic Management Plans including MRWA's regional TMPs. Traffic Management Designers use these layouts as templates, adapting them to site-specific conditions. The layouts illustrate the application of requirements from Parts 3, 4, and 5, showing how theoretical requirements translate into practical setups.",
+  "keywords": ["agttm", "sample-layouts", "diagrams"],
+  "targetAudience": [],
+  "completeSections": [
+    {
+      "sectionNumber": "Part 9",
+      "sectionTitle": "Sample Layouts"
+    },
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Introduction .............................................................................................................................................",
+      "page": 1
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "Sample Layouts ......................................................................................................................................",
+      "page": 5
+    },
+    {
+      "sectionNumber": "3",
+      "sectionTitle": "Summary of Scenarios ..........................................................................................................................",
+      "page": 7
+    },
+    {
+      "sectionNumber": "Appendix A",
+      "sectionTitle": "Sample Layouts (Around Worksites) .................................................................................... 13"
+    },
+    {
+      "sectionNumber": "Appendix B",
+      "sectionTitle": "Sample Layouts (Through Worksites) ................................................................................... 22"
+    },
+    {
+      "sectionNumber": "Appendix C",
+      "sectionTitle": "Sample Layouts (Past Worksites) .......................................................................................... 25"
+    },
+    {
+      "sectionNumber": "Appendix D",
+      "sectionTitle": "Sample Layouts (Worksites at Roundabouts) ...................................................................... 42"
+    },
+    {
+      "sectionNumber": "Appendix E",
+      "sectionTitle": "Sample Layouts (Mobile Works) ............................................................................................ 45"
+    },
+    {
+      "sectionNumber": "Appendix F",
+      "sectionTitle": "Sample Layouts (Work on Unsealed Roads) ........................................................................ 50"
+    },
+    {
+      "sectionNumber": "Appendix G",
+      "sectionTitle": "Sample Layouts (Short Term Low Impact - Works on Roads) ........................................... 52"
+    },
+    {
+      "sectionNumber": "Appendix H",
+      "sectionTitle": "Sample Layouts (Short Term Low Impact - Works off Roads) ........................................... 56"
+    },
+    {
+      "sectionNumber": "Appendix I",
+      "sectionTitle": "Sample Layouts (Worked Examples) .................................................................................... 60"
+    },
+    {
+      "sectionNumber": "1.1",
+      "sectionTitle": "Purpose"
+    },
+    {
+      "sectionNumber": "1.2",
+      "sectionTitle": "Structure of AGTTM"
+    },
+    {
+      "sectionNumber": "Part 1",
+      "sectionTitle": "Introduction to Temporary Traffic Management Practice. Within the AGTTM, the terminology that"
+    },
+    {
+      "sectionNumber": "Part 5",
+      "sectionTitle": "Short Term Low"
+    },
+    {
+      "sectionNumber": "Part 6",
+      "sectionTitle": "Field Staff - Implementation and"
+    },
+    {
+      "sectionNumber": "Part 8",
+      "sectionTitle": "Processes and Part 10: Supporting"
+    },
+    {
+      "sectionNumber": "1.3",
+      "sectionTitle": "Scope"
+    },
+    {
+      "sectionNumber": "1.5",
+      "sectionTitle": "Definitions"
+    },
+    {
+      "sectionNumber": "2.1",
+      "sectionTitle": "Objectives"
+    },
+    {
+      "sectionNumber": "2.2",
+      "sectionTitle": "Sample Layout Content and Structure"
+    },
+    {
+      "sectionNumber": "Appendix A",
+      "sectionTitle": "to Appendix H provide sample layouts representing a 'real world' birds eye view of a given"
+    },
+    {
+      "sectionNumber": "3.4",
+      "sectionTitle": "Worked Examples"
+    }
+  ],
+  "keyRequirements": [],
+  "complianceNotes": [],
+  "crossReferences": [],
+  "lastUpdated": "Edition 1.1, 2021",
+  "issuingAuthority": "Austroads",
+  "pages": 76,
+  "tgsDiagramsReferenced": [],
+  "documentId": "agttm-part-9",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

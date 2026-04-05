@@ -1,0 +1,154 @@
+{
+  "title": "AGTTM Part 6 - Field Staff Implementation",
+  "abstract": "AGTTM Part 6 is a practical implementation guide for field personnel involved in setting up, monitoring, and removing temporary traffic management. It translates the technical requirements of other AGTTM parts into practical on-site procedures.\n\nThe guide covers the day-to-day activities of traffic management crews including pre-start checks, equipment inspection, signage installation sequences, ongoing monitoring requirements, and pack-down procedures. It provides step-by-step guidance for common tasks and decision-making frameworks for unexpected situations.\n\nThis part is particularly valuable for Traffic Controllers and traffic management crew members. It addresses practical considerations like positioning of vehicles, communication methods, dealing with public inquiries, and responding to incidents. The guide complements formal training by providing a reference for field implementation of traffic management requirements.",
+  "keywords": ["agttm", "field-staff", "implementation"],
+  "targetAudience": [],
+  "completeSections": [
+    {
+      "sectionNumber": "Part 6",
+      "sectionTitle": "Field Staff - Implementation"
+    },
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Introduction .............................................................................................................................................",
+      "page": 1
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "TTM Principles and Road Categories ...................................................................................................",
+      "page": 6
+    },
+    {
+      "sectionNumber": "3",
+      "sectionTitle": "Roles and Responsibilities ....................................................................................................................",
+      "page": 8
+    },
+    {
+      "sectionNumber": "4",
+      "sectionTitle": "Pre-Shift Activities................................................................................................................................",
+      "page": 13
+    },
+    {
+      "sectionNumber": "5",
+      "sectionTitle": "Pre-start .................................................................................................................................................",
+      "page": 15
+    },
+    {
+      "sectionNumber": "6",
+      "sectionTitle": "TGS Installation ....................................................................................................................................",
+      "page": 20
+    },
+    {
+      "sectionNumber": "7",
+      "sectionTitle": "TGS Operations and Maintenance ......................................................................................................",
+      "page": 30
+    },
+    {
+      "sectionNumber": "8",
+      "sectionTitle": "TGS Removal ........................................................................................................................................",
+      "page": 35
+    },
+    {
+      "sectionNumber": "9",
+      "sectionTitle": "Low Light Works ...................................................................................................................................",
+      "page": 41
+    },
+    {
+      "sectionNumber": "10",
+      "sectionTitle": "Unattended Sites ..................................................................................................................................",
+      "page": 42
+    },
+    {
+      "sectionNumber": "Appendix A",
+      "sectionTitle": "Sample TTM Career Path Stages ........................................................................................... 43"
+    },
+    {
+      "sectionNumber": "Appendix B",
+      "sectionTitle": "Sample Risk Assessment Form ............................................................................................. 44"
+    },
+    {
+      "sectionNumber": "Appendix C",
+      "sectionTitle": "Sample TTM Toolbox Talk ...................................................................................................... 48"
+    },
+    {
+      "sectionNumber": "Appendix D",
+      "sectionTitle": "Sample Daily Traffic Management Diary ............................................................................... 50"
+    },
+    {
+      "sectionNumber": "1.1",
+      "sectionTitle": "Purpose"
+    },
+    {
+      "sectionNumber": "1.2",
+      "sectionTitle": "Structure of AGTTM"
+    },
+    {
+      "sectionNumber": "Part 1",
+      "sectionTitle": "Introduction. Within the AGTTM, the terminology that applies is detailed in Table 1.1."
+    },
+    {
+      "sectionNumber": "Part 5",
+      "sectionTitle": "Short Term Low"
+    },
+    {
+      "sectionNumber": "Part 6",
+      "sectionTitle": "Field Staff - Implementation and"
+    },
+    {
+      "sectionNumber": "Part 8",
+      "sectionTitle": "Processes and Part 10: Supporting"
+    },
+    {
+      "sectionNumber": "1.3",
+      "sectionTitle": "Scope of Part",
+      "page": 6
+    },
+    {
+      "sectionNumber": "1.4",
+      "sectionTitle": "Field Work for Office-based Staff"
+    },
+    {
+      "sectionNumber": "1.6",
+      "sectionTitle": "Acronyms"
+    },
+    {
+      "sectionNumber": "1.7",
+      "sectionTitle": "Definitions"
+    },
+    {
+      "sectionNumber": "2.1",
+      "sectionTitle": "TTM Principles"
+    },
+    {
+      "sectionNumber": "2.2",
+      "sectionTitle": "Traffic Management Implementer"
+    },
+    {
+      "sectionNumber": "2.3",
+      "sectionTitle": "Road Categorisation"
+    },
+    {
+      "sectionNumber": "3.1",
+      "sectionTitle": "TTM Roles"
+    },
+    {
+      "sectionNumber": "3.2",
+      "sectionTitle": "Example - Career Path Progression"
+    },
+    {
+      "sectionNumber": "3.3",
+      "sectionTitle": "TTM Relationships"
+    }
+  ],
+  "keyRequirements": [],
+  "complianceNotes": [],
+  "crossReferences": [],
+  "lastUpdated": "Edition 1.1, 2021",
+  "issuingAuthority": "Austroads",
+  "pages": 59,
+  "tgsDiagramsReferenced": [],
+  "documentId": "agttm-part-6",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

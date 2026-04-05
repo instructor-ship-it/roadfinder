@@ -1,0 +1,13 @@
+{
+  "title": "Risk Assessment Template",
+  "abstract": "The Risk Assessment Template is used to systematically identify, analyze, and evaluate hazards specific to a worksite, and to document the control measures to be implemented. Risk assessment is a fundamental requirement of the WHS Act and must be conducted before work commences.\n\nThe template follows the hierarchy of controls approach, requiring hazards to be identified, risks analyzed for likelihood and consequence, existing controls evaluated, and additional controls specified. The risk assessment should be conducted in consultation with workers who have knowledge of the work and site conditions.\n\nFor traffic management work, the risk assessment should address traffic hazards, environmental conditions, public interface risks, equipment hazards, and emergency response requirements. The assessment must be reviewed and updated when conditions change, when new information becomes available, or after an incident. This site-specific assessment complements the generic SWMS by addressing hazards unique to the particular location and conditions on the day of work.",
+  "keywords": ["form", "risk", "whs"],
+  "targetAudience": [],
+  "completeSections": [],
+  "source": "repo",
+  "note": "External document - no local file for section extraction",
+  "documentId": "form-risk-assessment",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

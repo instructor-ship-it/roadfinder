@@ -1,0 +1,98 @@
+{
+  "title": "AGTTM Part 8 - Processes and Procedures",
+  "abstract": "AGTTM Part 8 establishes the organizational framework for temporary traffic management including roles, responsibilities, and administrative processes. It defines the functional relationships between road authorities, contractors, and personnel involved in traffic management.\n\nThe guide details the responsibilities of key roles including the Traffic Management Designer, Traffic Management Supervisor, and Traffic Controller. It establishes the competency framework and certification requirements for each role. The processes for planning, approving, implementing, and auditing traffic management are comprehensively documented.\n\nAdministrative requirements including documentation, record keeping, incident reporting, and variations are covered. The guide also addresses the process for seeking approval to vary from standards and the risk assessment methodology required. This part is essential for understanding the governance framework and ensuring compliance with procedural requirements.",
+  "keywords": ["agttm", "processes", "roles"],
+  "targetAudience": [],
+  "completeSections": [
+    {
+      "sectionNumber": "Part 8",
+      "sectionTitle": "Temporary Traffic Management Categories"
+    },
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Introduction .............................................................................................................................................",
+      "page": 1
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "Powers, Roles and Responsibilities .....................................................................................................",
+      "page": 5
+    },
+    {
+      "sectionNumber": "3",
+      "sectionTitle": "Temporary Traffic Management Categories ......................................................................................",
+      "page": 13
+    },
+    {
+      "sectionNumber": "4",
+      "sectionTitle": "Process for Traffic Guidance Schemes Selection ............................................................................",
+      "page": 15
+    },
+    {
+      "sectionNumber": "5",
+      "sectionTitle": "National Training Framework for Temporary Traffic Management .................................................",
+      "page": 20
+    },
+    {
+      "sectionNumber": "6",
+      "sectionTitle": "Standard Forms ....................................................................................................................................",
+      "page": 40
+    },
+    {
+      "sectionNumber": "1.1",
+      "sectionTitle": "Scope of Part",
+      "page": 8
+    },
+    {
+      "sectionNumber": "1.2",
+      "sectionTitle": "Structure of AGTTM"
+    },
+    {
+      "sectionNumber": "Part 1",
+      "sectionTitle": "Introduction. Within the AGTTM, the terminology that applies is detailed in Table 1.1."
+    },
+    {
+      "sectionNumber": "Part 5",
+      "sectionTitle": "Short Term Low"
+    },
+    {
+      "sectionNumber": "Part 6",
+      "sectionTitle": "Field Staff - Implementation and"
+    },
+    {
+      "sectionNumber": "Part 8",
+      "sectionTitle": "Temporary Traffic"
+    },
+    {
+      "sectionNumber": "1.4",
+      "sectionTitle": "Acronyms"
+    },
+    {
+      "sectionNumber": "1.5",
+      "sectionTitle": "Definitions"
+    },
+    {
+      "sectionNumber": "2.1",
+      "sectionTitle": "Legislative context"
+    },
+    {
+      "sectionNumber": "2.2",
+      "sectionTitle": "Statutory health and safety responsibilities - duty of care"
+    },
+    {
+      "sectionNumber": "2.3",
+      "sectionTitle": "Roles and responsibilities"
+    }
+  ],
+  "keyRequirements": [],
+  "complianceNotes": [],
+  "crossReferences": [],
+  "lastUpdated": "Edition 2.0, 2025",
+  "issuingAuthority": "Austroads",
+  "pages": 116,
+  "tgsDiagramsReferenced": [],
+  "documentId": "agttm-part-8",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

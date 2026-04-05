@@ -1,0 +1,13 @@
+{
+  "title": "AS/NZS ISO 31000 - Risk Management Principles and Guidelines",
+  "abstract": "AS/NZS ISO 31000 is the joint Australian and New Zealand adoption of the international risk management standard. It provides principles, framework, and processes for managing risk that can be applied to any organization, activity, or decision.\n\nIn the context of traffic management, this standard is particularly relevant when preparing variations to standard traffic management requirements. When a situation requires departure from the prescribed standards, a risk-based approach is needed to justify the alternative arrangements and demonstrate that risks are being managed appropriately.\n\nThe standard establishes a systematic process for risk identification, analysis, evaluation, and treatment. Traffic Management Designers use this framework when developing variations, documenting the risks associated with non-standard arrangements and the controls implemented to achieve acceptable risk levels. Understanding this standard is essential for anyone involved in preparing or assessing variation applications.",
+  "keywords": ["standard", "risk-management"],
+  "targetAudience": [],
+  "completeSections": [],
+  "source": "repo",
+  "note": "External document - no local file for section extraction",
+  "documentId": "as-nzs-31000",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

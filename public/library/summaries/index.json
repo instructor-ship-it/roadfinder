@@ -1,0 +1,272 @@
+{
+  "version": "2.0",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "documentsCount": 33,
+  "documents": [
+    {
+      "id": "whs-act-2020",
+      "title": "Work Health and Safety Act 2020",
+      "hasAbstract": true,
+      "sectionsCount": 337,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "whs-general-regs-2022",
+      "title": "Work Health and Safety (General) Regulations 2022",
+      "hasAbstract": true,
+      "sectionsCount": 288,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "osh-act-1984",
+      "title": "Occupational Safety and Health Act 1984",
+      "hasAbstract": true,
+      "sectionsCount": 126,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "mrwa-cop-2025",
+      "title": "Traffic Management for Works on Roads Code of Practice",
+      "hasAbstract": true,
+      "sectionsCount": 50,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "agttm-part-1",
+      "title": "AGTTM Part 1 - Introduction",
+      "hasAbstract": true,
+      "sectionsCount": 17,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "agttm-part-2",
+      "title": "AGTTM Part 2 - Traffic Management Planning",
+      "hasAbstract": true,
+      "sectionsCount": 24,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "agttm-part-3",
+      "title": "AGTTM Part 3 - Static Worksites",
+      "hasAbstract": true,
+      "sectionsCount": 18,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "agttm-part-4",
+      "title": "AGTTM Part 4 - Mobile Works",
+      "hasAbstract": true,
+      "sectionsCount": 17,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "agttm-part-5",
+      "title": "AGTTM Part 5 - Short Term Low Impact Worksites",
+      "hasAbstract": true,
+      "sectionsCount": 18,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "agttm-part-6",
+      "title": "AGTTM Part 6 - Field Staff Implementation",
+      "hasAbstract": true,
+      "sectionsCount": 31,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "agttm-part-7",
+      "title": "AGTTM Part 7 - Traffic Controllers",
+      "hasAbstract": true,
+      "sectionsCount": 14,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "agttm-part-8",
+      "title": "AGTTM Part 8 - Processes and Procedures",
+      "hasAbstract": true,
+      "sectionsCount": 18,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "agttm-part-9",
+      "title": "AGTTM Part 9 - Sample Layouts",
+      "hasAbstract": true,
+      "sectionsCount": 25,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "agttm-part-10",
+      "title": "AGTTM Part 10 - Supporting Guidance",
+      "hasAbstract": true,
+      "sectionsCount": 18,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "mrwa-tmp-wheatbelt-0922-part1",
+      "title": "Non-Complex Traffic Management Arrangements - Wheatbelt Region (Part 1)",
+      "hasAbstract": true,
+      "sectionsCount": 123,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "mrwa-tmp-wheatbelt-0922-part2",
+      "title": "Non-Complex Traffic Management Arrangements - Wheatbelt Region (Part 2)",
+      "hasAbstract": true,
+      "sectionsCount": 1,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "whs-construction-cop",
+      "title": "Construction Work Code of Practice",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "whs-workplace-traffic",
+      "title": "General Guide to Workplace Traffic Management",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "whs-swms-guide",
+      "title": "Safe Work Method Statement for High Risk Construction Work",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "whs-records-guide",
+      "title": "Records Management Including Document Control",
+      "hasAbstract": true,
+      "sectionsCount": 16,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "mrwa-cop-2026-proposed",
+      "title": "COP Proposed Updates March 2026",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "mrwa-whs-controls",
+      "title": "Minimum WHS Control Standards",
+      "hasAbstract": true,
+      "sectionsCount": 111,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "mrwa-spec-202",
+      "title": "Specification 202 - Traffic Management",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "as-1742-3",
+      "title": "AS 1742.3 - Manual of Uniform Traffic Control Devices Part 3: Temporary Traffic Management",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "as-nzs-31000",
+      "title": "AS/NZS ISO 31000 - Risk Management Principles and Guidelines",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "form-notification-roadworks",
+      "title": "Notification of Road Works Form",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "form-variation-standards",
+      "title": "Variation to Standards Form",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "form-swms-template",
+      "title": "Safe Work Method Statement Template",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "form-incident-report",
+      "title": "Incident Report Form",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "form-daily-diary",
+      "title": "Daily Diary Template",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "form-risk-assessment",
+      "title": "Risk Assessment Template",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "form-induction-checklist",
+      "title": "Site Induction Checklist",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    },
+    {
+      "id": "agrs-part-3-safe-speed",
+      "title": "Guide to Road Safety Part 3 - Safe Speed",
+      "hasAbstract": true,
+      "sectionsCount": 0,
+      "hasExtractedData": false,
+      "hasDiagramAnalyses": false
+    }
+  ]
+}

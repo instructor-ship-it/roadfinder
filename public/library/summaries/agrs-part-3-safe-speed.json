@@ -1,0 +1,13 @@
+{
+  "title": "Guide to Road Safety Part 3 - Safe Speed",
+  "abstract": "The Guide to Road Safety Part 3 provides comprehensive guidance on establishing safe speed limits and implementing speed management strategies. While not specific to temporary traffic management, understanding safe speed principles is fundamental to traffic management work.\n\nThe guide covers the relationship between speed and road safety outcomes, including how speed affects crash frequency and severity. It provides methodologies for determining appropriate speed limits based on road function, road environment, roadside conditions, and crash history. The safe system approach to speed management is explained.\n\nFor Traffic Management personnel, this guide provides valuable context for understanding why temporary speed limits are required in work zones and how speed affects worker and road user safety. The guide explains the physics of speed and stopping distances, which informs the spacing and advance warning requirements in traffic management standards. Understanding safe speed principles helps Traffic Management Supervisors make informed decisions about speed zone requirements and communicate the rationale for speed reductions to workers and road users.",
+  "keywords": ["road-safety", "speed", "speed-limits"],
+  "targetAudience": ["Road Safety Engineers", "Traffic Managers"],
+  "completeSections": [],
+  "source": "repo",
+  "note": "Local file exists but TOC extraction needed",
+  "documentId": "agrs-part-3-safe-speed",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}

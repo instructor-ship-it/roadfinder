@@ -1,0 +1,78 @@
+{
+  "title": "AGTTM Part 7 - Traffic Controllers",
+  "abstract": "AGTTM Part 7 is the definitive guide for Traffic Controllers performing stop-slow baton duties. It establishes the competency requirements, operational procedures, and safety standards for this critical role in traffic management.\n\nThe guide covers the full scope of Traffic Controller duties including positioning, signaling techniques, communication protocols, and hazard awareness. It addresses the specific requirements for different work situations including single controller operations, multiple controller coordination, and night work. The guide also covers emergency procedures and incident response.\n\nCompetency requirements are detailed including the necessary training, assessment, and accreditation processes. The guide establishes the minimum standards that must be met before a person can work as a Traffic Controller. This part is essential reading for all Traffic Controllers and their supervisors, forming the basis for competency-based training and assessment.",
+  "keywords": ["agttm", "traffic-controller", "stop-slow"],
+  "targetAudience": [],
+  "completeSections": [
+    {
+      "sectionNumber": "Part 7",
+      "sectionTitle": "Traffic Controllers"
+    },
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Introduction .............................................................................................................................................",
+      "page": 1
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "Traffic Controller Requirements ...........................................................................................................",
+      "page": 5
+    },
+    {
+      "sectionNumber": "1.1",
+      "sectionTitle": "Purpose"
+    },
+    {
+      "sectionNumber": "1.2",
+      "sectionTitle": "Structure of AGTTM"
+    },
+    {
+      "sectionNumber": "Part 1",
+      "sectionTitle": "Introduction to Temporary Traffic Management Practice. Within the AGTTM, the terminology that"
+    },
+    {
+      "sectionNumber": "Part 5",
+      "sectionTitle": "Short Term Low"
+    },
+    {
+      "sectionNumber": "Part 6",
+      "sectionTitle": "Field Staff - Implementation and"
+    },
+    {
+      "sectionNumber": "Part 8",
+      "sectionTitle": "Processes and Part 10: Supporting"
+    },
+    {
+      "sectionNumber": "1.3",
+      "sectionTitle": "Scope of Part",
+      "page": 7
+    },
+    {
+      "sectionNumber": "1.5",
+      "sectionTitle": "Definitions"
+    },
+    {
+      "sectionNumber": "2.1",
+      "sectionTitle": "Introduction to Traffic Control"
+    },
+    {
+      "sectionNumber": "2.2",
+      "sectionTitle": "Authority and Accreditation"
+    },
+    {
+      "sectionNumber": "2.3",
+      "sectionTitle": "Fitness for Duty"
+    }
+  ],
+  "keyRequirements": [],
+  "complianceNotes": [],
+  "crossReferences": [],
+  "lastUpdated": "Edition 1.1, 2021",
+  "issuingAuthority": "Austroads",
+  "pages": 41,
+  "tgsDiagramsReferenced": [],
+  "documentId": "agttm-part-7",
+  "generatedAt": "2026-04-05T16:24:57.916580",
+  "generatedBy": "Phase 1 Summary Generator v2.0",
+  "version": "2.0"
+}
