@@ -1,0 +1,31 @@
+{
+  "code": 200,
+  "data": {
+    "description": "",
+    "html": "",
+    "metadata": {
+      "EncryptFilterName": null,
+      "IsAcroFormPresent": false,
+      "IsCollectionPresent": false,
+      "IsLinearized": false,
+      "IsSignaturesPresent": false,
+      "IsXFAPresent": false,
+      "Language": null,
+      "PDFFormatVersion": "1.7",
+      "Producer": "PyPDF2"
+    },
+    "publishedTime": "Sat, 21 Mar 2026 22:49:52 GMT",
+    "textRepresentation": "",
+    "title": "tmp-0922-01531-rev6-wheatbelt-part2.pdf",
+    "url": "https://roadfinder.vercel.app/library/mrwa/tmp/tmp-0922-01531-rev6-wheatbelt-part2.pdf",
+    "usage": {
+      "tokens": 0
+    }
+  },
+  "meta": {
+    "usage": {
+      "tokens": 0
+    }
+  },
+  "status": 20000
+}

@@ -1,0 +1,39 @@
+{
+  "code": 200,
+  "data": {
+    "description": "",
+    "html": "",
+    "metadata": {
+      "CreationDate": "D:20260310112705+08'00'",
+      "Creator": "Microsoft® Word for Microsoft 365",
+      "Custom": {
+        "MSIP_Label_624da173-6602-4885-a65b-c0bd2702bca0_Enabled": "True",
+        "MSIP_Label_624da173-6602-4885-a65b-c0bd2702bca0_Method": "Standard",
+        "MSIP_Label_624da173-6602-4885-a65b-c0bd2702bca0_SiteId": "ced71ed6-76dd-43d0-9acc-cf122b3bc423"
+      },
+      "EncryptFilterName": null,
+      "IsAcroFormPresent": false,
+      "IsCollectionPresent": false,
+      "IsLinearized": false,
+      "IsSignaturesPresent": false,
+      "IsXFAPresent": false,
+      "Language": "en",
+      "ModDate": "D:20260310114001+08'00'",
+      "PDFFormatVersion": "1.7",
+      "Producer": "Microsoft® Word for Microsoft 365"
+    },
+    "publishedTime": "Sat, 21 Mar 2026 22:49:46 GMT",
+    "textRepresentation": "",
+    "title": "traffic-management-cop-may-2025.pdf",
+    "url": "https://roadfinder.vercel.app/library/mrwa/cop/traffic-management-cop-may-2025.pdf",
+    "usage": {
+      "tokens": 0
+    }
+  },
+  "meta": {
+    "usage": {
+      "tokens": 0
+    }
+  },
+  "status": 20000
+}
