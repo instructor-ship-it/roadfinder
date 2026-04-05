@@ -526,25 +526,6 @@ function LibraryPageContent() {
               <h1 className="text-xl font-bold text-white">📚 {registry?.name}</h1>
             </div>
             <div className="flex items-center gap-4">
-              {/* Document Processing Button */}
-              <Button
-                onClick={() => setShowProcessModal(true)}
-                variant="outline"
-                size="sm"
-                className="bg-amber-600/50 border-amber-500 text-amber-200 hover:bg-amber-600"
-              >
-                🧠 Process Docs
-              </Button>
-              {/* AI Q&A Link */}
-              <Link href="/qa">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-purple-600/50 border-purple-500 text-purple-200 hover:bg-purple-600"
-                >
-                  🤖 AI Q&A
-                </Button>
-              </Link>
               {/* Online/Offline Status */}
               <div
                 className={`flex items-center gap-2 text-sm ${isOnline ? 'text-green-400' : 'text-red-400'}`}
@@ -937,41 +918,37 @@ function LibraryPageContent() {
                     ⬇️ Download
                   </Button>
                 )}
-                {infoDoc?.abstract && (
-                  <Button
-                    onClick={() => setShowAbstractModal(true)}
-                    className="bg-amber-600/80 hover:bg-amber-600 text-white"
-                  >
-                    📋 Abstract
-                  </Button>
-                )}
-                {/* View AI Summary button - for docs with existing AI-generated summary (no API key needed) */}
-                {infoDoc && summaries[infoDoc.id] && (
+                {/* Smart Summary/Abstract button - ONE button with priority logic */}
+                {infoDoc && summaries[infoDoc.id] ? (
+                  /* Priority 1: AI Summary exists (no API key needed) */
                   <Button
                     onClick={() => setShowAbstractModal(true)}
                     className="bg-purple-600/80 hover:bg-purple-600 text-white"
                   >
                     🧠 AI Summary
                   </Button>
-                )}
-                {/* Generate Summary button - for docs without abstract or AI summary, with local file */}
-                {infoDoc &&
-                  !infoDoc.abstract &&
-                  !summaries[infoDoc.id] &&
-                  infoDoc.file &&
-                  !infoDoc.file.startsWith('http') && (
-                    <Button
-                      onClick={() => {
-                        setInfoDoc(null);
-                        setShowProcessModal(true);
-                      }}
-                      className="bg-purple-600/80 hover:bg-purple-600 text-white"
-                      disabled={!aiApiKey}
-                      title={!aiApiKey ? 'Configure AI API key first' : 'Generate AI summary'}
-                    >
-                      🧠 Generate Summary
-                    </Button>
-                  )}
+                ) : infoDoc?.abstract ? (
+                  /* Priority 2: Registry abstract exists */
+                  <Button
+                    onClick={() => setShowAbstractModal(true)}
+                    className="bg-amber-600/80 hover:bg-amber-600 text-white"
+                  >
+                    📋 Abstract
+                  </Button>
+                ) : infoDoc && infoDoc.file && !infoDoc.file.startsWith('http') ? (
+                  /* Priority 3: Local file - can generate summary */
+                  <Button
+                    onClick={() => {
+                      setInfoDoc(null);
+                      setShowProcessModal(true);
+                    }}
+                    className="bg-purple-600/80 hover:bg-purple-600 text-white"
+                    disabled={!aiApiKey}
+                    title={!aiApiKey ? 'Configure AI API key in Settings' : 'Generate AI summary'}
+                  >
+                    🧠 Generate Summary
+                  </Button>
+                ) : null}
                 {/* Cache for offline button - show for local files only */}
                 {infoDoc &&
                   infoDoc.file &&
