@@ -115,6 +115,7 @@ function LibraryPageContent() {
   const [processResult, setProcessResult] = useState<string | null>(null);
   const [processError, setProcessError] = useState<string | null>(null);
   const [aiApiKey, setAiApiKey] = useState('');
+  const [extractType, setExtractType] = useState<'abstract' | 'structured'>('abstract');
 
   // Summaries storage
   const [summaries, setSummaries] = useState<SummariesCollection>({});
@@ -194,7 +195,7 @@ function LibraryPageContent() {
 
   // Handle document processing
   const handleProcessDocument = useCallback(
-    async (doc: RegistryDocument) => {
+    async (doc: RegistryDocument, type: 'abstract' | 'structured' = 'abstract') => {
       if (!aiApiKey) {
         setProcessError('Please configure your AI API key in Settings first.');
         return;
@@ -212,7 +213,7 @@ function LibraryPageContent() {
           body: JSON.stringify({
             documentId: doc.id,
             apiKey: aiApiKey,
-            extractType: 'abstract',
+            extractType: type,
           }),
         });
 
@@ -221,13 +222,21 @@ function LibraryPageContent() {
         if (data.success) {
           setProcessResult(data.extractedContent);
 
-          // Save summary to localStorage
+          // Save summary to localStorage - use structured data if available
           const summary: DocumentSummary = {
             generatedAt: new Date().toISOString(),
             generatedBy: 'AI Processing',
             title: doc.title,
-            abstract: data.extractedContent,
-            type: 'abstract',
+            abstract: data.summary?.abstract || data.extractedContent,
+            keywords: data.summary?.keywords || [],
+            targetAudience: data.summary?.targetAudience || [],
+            keyRequirements: data.summary?.keyRequirements || [],
+            crossReferences: data.summary?.crossReferences || [],
+            complianceNotes: data.summary?.complianceNotes || [],
+            extractedData: data.summary?.extractedData || undefined,
+            type: type,
+            extractionType: type === 'structured' ? 'structured' : 'basic',
+            extractionVersion: type === 'structured' ? '2.0' : undefined,
             source: 'user',
           };
           saveSummary(doc.id, summary);
@@ -1000,61 +1009,229 @@ function LibraryPageContent() {
                   User-generated
                 </span>
               )}
+              {infoDoc && summaries[infoDoc.id]?.extractionType === 'structured' && (
+                <span className="text-xs text-purple-400 bg-purple-900/50 px-2 py-1 rounded">
+                  Structured v{summaries[infoDoc.id]?.extractionVersion || '2.0'}
+                </span>
+              )}
             </DialogTitle>
             <DialogDescription className="text-gray-400 text-sm">
               {infoDoc?.title}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex-1 overflow-y-auto pr-2">
+          <div className="flex-1 overflow-y-auto pr-2 space-y-4">
             {/* Show AI-generated summary if available (priority), otherwise show registry abstract */}
             {infoDoc && summaries[infoDoc.id] ? (
-              <div className="space-y-4">
-                <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-line">
-                  {summaries[infoDoc.id].abstract}
-                </p>
-                {/* Show additional AI summary details */}
-                {summaries[infoDoc.id].keywords && summaries[infoDoc.id].keywords!.length > 0 && (
-                  <div>
-                    <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">Keywords</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {summaries[infoDoc.id].keywords!.map((kw, i) => (
-                        <Badge
-                          key={i}
-                          variant="outline"
-                          className="text-xs border-gray-600 text-gray-300"
-                        >
-                          {kw}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {summaries[infoDoc.id].keyRequirements &&
-                  summaries[infoDoc.id].keyRequirements!.length > 0 && (
+              (() => {
+                const summary = summaries[infoDoc.id];
+                const extracted = summary?.extractedData;
+
+                return (
+                  <>
+                    {/* Abstract */}
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">
-                        Key Requirements
-                      </h4>
-                      <ul className="text-gray-300 text-xs space-y-1 list-disc list-inside">
-                        {summaries[infoDoc.id].keyRequirements!.map((req, i) => (
-                          <li key={i}>{req}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                {summaries[infoDoc.id].targetAudience &&
-                  summaries[infoDoc.id].targetAudience!.length > 0 && (
-                    <div>
-                      <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">
-                        Target Audience
-                      </h4>
-                      <p className="text-gray-300 text-xs">
-                        {summaries[infoDoc.id].targetAudience!.join(', ')}
+                      <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-line">
+                        {summary.abstract}
                       </p>
                     </div>
-                  )}
-              </div>
+
+                    {/* Structured Extraction Data */}
+                    {extracted && (
+                      <div className="space-y-4 pt-3 border-t border-gray-700">
+                        {/* Speed Zones */}
+                        {extracted.speedZonesMentioned &&
+                          extracted.speedZonesMentioned.length > 0 && (
+                            <div>
+                              <h4 className="text-xs font-semibold text-amber-400 mb-2 uppercase flex items-center gap-2">
+                                <span>🚗</span> Speed Zones Mentioned
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {extracted.speedZonesMentioned.map((zone) => (
+                                  <Badge
+                                    key={zone}
+                                    className="bg-amber-900/50 text-amber-300 border border-amber-700"
+                                  >
+                                    {zone} km/h
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                        {/* TGS Diagrams */}
+                        {extracted.tgsDiagramsReferenced &&
+                          extracted.tgsDiagramsReferenced.length > 0 && (
+                            <div>
+                              <h4 className="text-xs font-semibold text-blue-400 mb-2 uppercase flex items-center gap-2">
+                                <span>📐</span> TGS Diagrams Referenced
+                              </h4>
+                              <div className="flex flex-wrap gap-1">
+                                {extracted.tgsDiagramsReferenced.map((tgs, i) => (
+                                  <Badge
+                                    key={i}
+                                    variant="outline"
+                                    className="text-xs border-blue-600 text-blue-300"
+                                  >
+                                    {tgs}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                        {/* Taper Lengths */}
+                        {extracted.taperLengths && extracted.taperLengths.length > 0 && (
+                          <div>
+                            <h4 className="text-xs font-semibold text-cyan-400 mb-2 uppercase flex items-center gap-2">
+                              <span>📏</span> Taper Lengths
+                            </h4>
+                            <div className="grid grid-cols-2 gap-2">
+                              {extracted.taperLengths.map((taper, i) => (
+                                <div key={i} className="bg-gray-700/50 p-2 rounded text-xs">
+                                  <span className="text-cyan-300 font-semibold">
+                                    {taper.speedZone} km/h:
+                                  </span>{' '}
+                                  <span className="text-gray-300">{taper.taperLength}</span>
+                                  {taper.notes && (
+                                    <span className="text-gray-500 block mt-1">{taper.notes}</span>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Notification Thresholds */}
+                        {extracted.notificationThresholds &&
+                          Object.keys(extracted.notificationThresholds).length > 0 && (
+                            <div>
+                              <h4 className="text-xs font-semibold text-orange-400 mb-2 uppercase flex items-center gap-2">
+                                <span>⏰</span> Notification Thresholds
+                              </h4>
+                              <div className="space-y-1">
+                                {Object.entries(extracted.notificationThresholds).map(
+                                  ([key, value]) =>
+                                    value && (
+                                      <div
+                                        key={key}
+                                        className="flex justify-between text-xs bg-gray-700/50 p-2 rounded"
+                                      >
+                                        <span className="text-gray-400 capitalize">
+                                          {key.replace(/([A-Z])/g, ' $1').trim()}
+                                        </span>
+                                        <span className="text-orange-300 font-semibold">
+                                          {value}
+                                        </span>
+                                      </div>
+                                    )
+                                )}
+                              </div>
+                            </div>
+                          )}
+
+                        {/* Requirements with Sections */}
+                        {extracted.requirements && extracted.requirements.length > 0 && (
+                          <div>
+                            <h4 className="text-xs font-semibold text-red-400 mb-2 uppercase flex items-center gap-2">
+                              <span>📋</span> Key Requirements
+                            </h4>
+                            <ul className="space-y-2">
+                              {extracted.requirements.slice(0, 10).map((req, i) => (
+                                <li key={i} className="text-xs bg-gray-700/50 p-2 rounded">
+                                  <div className="flex items-start gap-2">
+                                    <span
+                                      className={`px-1.5 py-0.5 rounded text-xs ${
+                                        req.type === 'mandatory'
+                                          ? 'bg-red-900/50 text-red-300'
+                                          : req.type === 'recommended'
+                                            ? 'bg-yellow-900/50 text-yellow-300'
+                                            : 'bg-gray-600 text-gray-300'
+                                      }`}
+                                    >
+                                      {req.type}
+                                    </span>
+                                    <span className="text-gray-300 flex-1">{req.requirement}</span>
+                                    {req.section && (
+                                      <span className="text-gray-500 text-xs">§{req.section}</span>
+                                    )}
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* Role Definitions */}
+                        {extracted.roleDefinitions && extracted.roleDefinitions.length > 0 && (
+                          <div>
+                            <h4 className="text-xs font-semibold text-green-400 mb-2 uppercase flex items-center gap-2">
+                              <span>👥</span> Roles Defined
+                            </h4>
+                            <div className="flex flex-wrap gap-1">
+                              {extracted.roleDefinitions.map((role, i) => (
+                                <Badge
+                                  key={i}
+                                  variant="outline"
+                                  className="text-xs border-green-600 text-green-300"
+                                >
+                                  {role}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Basic Keywords & Requirements (non-structured) */}
+                    {!extracted && (
+                      <>
+                        {summary.keywords && summary.keywords.length > 0 && (
+                          <div>
+                            <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">
+                              Keywords
+                            </h4>
+                            <div className="flex flex-wrap gap-1">
+                              {summary.keywords.map((kw, i) => (
+                                <Badge
+                                  key={i}
+                                  variant="outline"
+                                  className="text-xs border-gray-600 text-gray-300"
+                                >
+                                  {kw}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {summary.keyRequirements && summary.keyRequirements.length > 0 && (
+                          <div>
+                            <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">
+                              Key Requirements
+                            </h4>
+                            <ul className="text-gray-300 text-xs space-y-1 list-disc list-inside">
+                              {summary.keyRequirements.map((req, i) => (
+                                <li key={i}>{req}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {summary.targetAudience && summary.targetAudience.length > 0 && (
+                          <div>
+                            <h4 className="text-xs font-semibold text-gray-400 mb-1 uppercase">
+                              Target Audience
+                            </h4>
+                            <p className="text-gray-300 text-xs">
+                              {summary.targetAudience.join(', ')}
+                            </p>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </>
+                );
+              })()
             ) : (
               <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-line">
                 {infoDoc?.abstract}
@@ -1101,6 +1278,40 @@ function LibraryPageContent() {
             {/* Document Selection */}
             {!processingDoc && (
               <div>
+                {/* Extraction Type Selector */}
+                <div className="mb-4">
+                  <h4 className="font-semibold text-amber-400 mb-2">Extraction Type</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => setExtractType('abstract')}
+                      className={`p-3 rounded-lg text-left transition-colors ${
+                        extractType === 'abstract'
+                          ? 'bg-amber-900/50 border-2 border-amber-500'
+                          : 'bg-gray-700/50 border border-gray-600 hover:bg-gray-700'
+                      }`}
+                    >
+                      <div className="font-medium text-sm text-white">📝 Basic Summary</div>
+                      <div className="text-xs text-gray-400 mt-1">
+                        Quick abstract generation (~10s)
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setExtractType('structured')}
+                      className={`p-3 rounded-lg text-left transition-colors ${
+                        extractType === 'structured'
+                          ? 'bg-purple-900/50 border-2 border-purple-500'
+                          : 'bg-gray-700/50 border border-gray-600 hover:bg-gray-700'
+                      }`}
+                    >
+                      <div className="font-medium text-sm text-white">🔬 Structured Extraction</div>
+                      <div className="text-xs text-gray-400 mt-1">
+                        Speed zones, TGS, requirements (~30s)
+                      </div>
+                      <span className="text-xs text-purple-400 mt-1 block">Phase 2</span>
+                    </button>
+                  </div>
+                </div>
+
                 <h4 className="font-semibold text-amber-400 mb-2">Select Document to Process</h4>
                 <p className="text-gray-400 text-xs mb-3">
                   Only documents with local PDF files can be processed.
@@ -1110,10 +1321,11 @@ function LibraryPageContent() {
                     .filter((doc) => doc.file && !doc.file.startsWith('http'))
                     .map((doc) => {
                       const hasAiSummary = !!summaries[doc.id];
+                      const hasStructured = summaries[doc.id]?.extractionType === 'structured';
                       return (
                         <button
                           key={doc.id}
-                          onClick={() => handleProcessDocument(doc)}
+                          onClick={() => handleProcessDocument(doc, extractType)}
                           disabled={!aiApiKey}
                           className="w-full text-left p-3 bg-gray-700/50 hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
                         >
@@ -1127,7 +1339,12 @@ function LibraryPageContent() {
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
-                              {hasAiSummary && (
+                              {hasStructured && (
+                                <span className="text-purple-400 text-xs flex items-center gap-1">
+                                  🔬 Structured
+                                </span>
+                              )}
+                              {hasAiSummary && !hasStructured && (
                                 <span className="text-purple-400 text-xs flex items-center gap-1">
                                   🧠 AI Summary
                                 </span>

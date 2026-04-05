@@ -1,13 +1,54 @@
 /**
  * Summaries Storage Utility
- * 
+ *
  * Hybrid storage system for document summaries:
  * - Tier 1: Repo JSON (pre-generated, shipped with app)
  * - Tier 2: localStorage (user-generated, per-device)
- * 
+ *
  * Merges both sources at runtime, with localStorage taking precedence
  * for user-generated updates.
  */
+
+// Structured extraction data for traffic management documents
+export interface ExtractedData {
+  // Speed zones mentioned in the document
+  speedZonesMentioned?: number[];
+
+  // TGS diagram references (e.g., "IW-01", "LC-05")
+  tgsDiagramsReferenced?: string[];
+
+  // Role definitions (e.g., "Traffic Management Supervisor", "Traffic Controller")
+  roleDefinitions?: string[];
+
+  // Notification thresholds with timeframes
+  notificationThresholds?: {
+    roadClosure?: string;
+    speedReduction?: string;
+    laneClosure?: string;
+    [key: string]: string | undefined;
+  };
+
+  // Extracted requirements with section references
+  requirements?: Array<{
+    requirement: string;
+    section?: string;
+    type: 'mandatory' | 'recommended' | 'optional';
+  }>;
+
+  // Speed zone taper lengths
+  taperLengths?: Array<{
+    speedZone: number;
+    taperLength: string;
+    notes?: string;
+  }>;
+
+  // Sign schedules or requirements
+  signSchedules?: Array<{
+    setup: string;
+    signs: string[];
+    speedZone?: number;
+  }>;
+}
 
 // Summary structure
 export interface DocumentSummary {
@@ -23,6 +64,13 @@ export interface DocumentSummary {
   crossReferences?: string[];
   type?: string;
   source?: 'repo' | 'user';
+
+  // Phase 2: Structured extraction data
+  extractedData?: ExtractedData;
+
+  // Extraction metadata
+  extractionVersion?: string;
+  extractionType?: 'basic' | 'structured' | 'full';
 }
 
 export interface SummariesCollection {
@@ -36,7 +84,7 @@ const STORAGE_KEY = 'tc_document_summaries';
  */
 export function loadLocalSummaries(): SummariesCollection {
   if (typeof window === 'undefined') return {};
-  
+
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
@@ -53,7 +101,7 @@ export function loadLocalSummaries(): SummariesCollection {
  */
 export function saveLocalSummaries(summaries: SummariesCollection): void {
   if (typeof window === 'undefined') return;
-  
+
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(summaries));
   } catch (error) {
@@ -107,14 +155,14 @@ export function mergeSummaries(
   localSummaries: SummariesCollection
 ): SummariesCollection {
   const merged: SummariesCollection = { ...repoSummaries };
-  
+
   // Mark repo summaries
   for (const id of Object.keys(merged)) {
     if (!merged[id].source) {
       merged[id].source = 'repo';
     }
   }
-  
+
   // Override with local summaries (user-generated take precedence)
   for (const [id, summary] of Object.entries(localSummaries)) {
     merged[id] = {
@@ -122,7 +170,7 @@ export function mergeSummaries(
       source: 'user',
     };
   }
-  
+
   return merged;
 }
 
@@ -140,10 +188,10 @@ export async function getAllSummaries(): Promise<SummariesCollection> {
   } catch (error) {
     console.error('Error loading repo summaries:', error);
   }
-  
+
   // Load local summaries
   const localSummaries = loadLocalSummaries();
-  
+
   // Merge and return
   return mergeSummaries(repoSummaries, localSummaries);
 }
@@ -172,20 +220,20 @@ export function exportSummariesToJson(): string {
 /**
  * Import summaries from JSON string
  */
-export function importSummariesFromJson(jsonString: string): { 
-  success: boolean; 
-  imported: number; 
+export function importSummariesFromJson(jsonString: string): {
+  success: boolean;
+  imported: number;
   error?: string;
   warnings?: string[];
 } {
   const warnings: string[] = [];
-  
+
   try {
     const data = JSON.parse(jsonString);
-    
+
     // Handle different formats
     let summariesToImport: SummariesCollection;
-    
+
     if (data.summaries) {
       // New export format with metadata
       summariesToImport = data.summaries;
@@ -193,13 +241,17 @@ export function importSummariesFromJson(jsonString: string): {
       // Direct summaries object
       summariesToImport = data;
     } else {
-      return { success: false, imported: 0, error: 'Invalid format: expected JSON object with summaries' };
+      return {
+        success: false,
+        imported: 0,
+        error: 'Invalid format: expected JSON object with summaries',
+      };
     }
-    
+
     // Validate summaries
     const validSummaries: SummariesCollection = {};
     let skipped = 0;
-    
+
     for (const [id, summary] of Object.entries(summariesToImport)) {
       if (typeof summary === 'object' && summary !== null && 'abstract' in summary) {
         validSummaries[id] = summary as DocumentSummary;
@@ -207,26 +259,26 @@ export function importSummariesFromJson(jsonString: string): {
         skipped++;
       }
     }
-    
+
     if (skipped > 0) {
       warnings.push(`Skipped ${skipped} invalid summaries`);
     }
-    
+
     // Merge with existing
     const existing = loadLocalSummaries();
     const merged = { ...existing, ...validSummaries };
     saveLocalSummaries(merged);
-    
-    return { 
-      success: true, 
+
+    return {
+      success: true,
       imported: Object.keys(validSummaries).length,
-      warnings: warnings.length > 0 ? warnings : undefined
+      warnings: warnings.length > 0 ? warnings : undefined,
     };
   } catch (error) {
-    return { 
-      success: false, 
-      imported: 0, 
-      error: error instanceof Error ? error.message : 'Failed to parse JSON' 
+    return {
+      success: false,
+      imported: 0,
+      error: error instanceof Error ? error.message : 'Failed to parse JSON',
     };
   }
 }
@@ -238,7 +290,7 @@ export function downloadSummaries(): void {
   const json = exportSummariesToJson();
   const blob = new Blob([json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-  
+
   const a = document.createElement('a');
   a.href = url;
   a.download = `tc-summaries-${new Date().toISOString().split('T')[0]}.json`;
@@ -257,7 +309,7 @@ export function getStorageStats(): {
 } {
   const local = loadLocalSummaries();
   const localCount = Object.keys(local).length;
-  
+
   let localStorageSize = '0 KB';
   try {
     const stored = localStorage.getItem(STORAGE_KEY) || '';
@@ -272,6 +324,6 @@ export function getStorageStats(): {
   } catch {
     localStorageSize = 'Unknown';
   }
-  
+
   return { localCount, localStorageSize };
 }

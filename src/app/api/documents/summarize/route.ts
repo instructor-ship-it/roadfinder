@@ -72,7 +72,50 @@ Respond in JSON format:
   "targetAudience": ["TC", "TMS"],
   "complianceNotes": ["note1"],
   "crossReferences": ["AGTTM Part 3", "AS 1742.3"]
-}`
+}`,
+
+  // Phase 2: Structured extraction for traffic management documents
+  structured: `You are analyzing a traffic management document for Western Australia. Extract structured data that Traffic Controllers need.
+
+Document text:
+---
+{TEXT}
+---
+
+Extract and return ONLY valid JSON in this exact format:
+{
+  "abstract": "2-3 paragraph summary of the document's purpose and scope",
+  "keywords": ["traffic management", "speed zone", "TGS"],
+  "targetAudience": ["Traffic Controller", "TMS"],
+  "keyRequirements": ["list of key requirements mentioned"],
+  "extractedData": {
+    "speedZonesMentioned": [40, 50, 60, 70, 80, 100, 110],
+    "tgsDiagramsReferenced": ["IW-01", "LC-05"],
+    "roleDefinitions": ["Traffic Management Supervisor", "Traffic Controller"],
+    "notificationThresholds": {
+      "roadClosure": "7 days",
+      "speedReduction": "24 hours"
+    },
+    "requirements": [
+      {"requirement": "All workers must wear high-visibility clothing", "section": "4.2.1", "type": "mandatory"}
+    ],
+    "taperLengths": [
+      {"speedZone": 60, "taperLength": "57m", "notes": "Minimum taper for 60 km/h"}
+    ],
+    "signSchedules": [
+      {"setup": "Short term works", "signs": ["T1-1", "T1-2"], "speedZone": 60}
+    ]
+  },
+  "crossReferences": ["AGTTM Part 3", "AS 1742.3"],
+  "complianceNotes": ["Important compliance notes"]
+}
+
+IMPORTANT:
+- Extract only what is explicitly stated in the document
+- Use null for missing values, do not invent data
+- Speed zones should be numbers only (e.g., 60 not "60 km/h")
+- TGS codes should match the format used (e.g., "IW-01", "LC-05")
+- Requirement types must be: "mandatory", "recommended", or "optional"`,
 };
 
 // Simple PDF text extraction from buffer
@@ -94,9 +137,7 @@ function extractTextFromPdfBuffer(buffer: Buffer): string {
         // Extract text from Tj/TJ operators
         const textMatches = streamContent.match(/\(([^)]+)\)/g);
         if (textMatches) {
-          extractedText += textMatches
-            .map(t => t.replace(/[()]/g, ''))
-            .join(' ') + ' ';
+          extractedText += textMatches.map((t) => t.replace(/[()]/g, '')).join(' ') + ' ';
         }
       }
     }
@@ -190,14 +231,20 @@ export async function POST(request: Request) {
 
     if (!extractedText || extractedText.length < 50) {
       return NextResponse.json(
-        { success: false, error: 'Could not extract sufficient text from PDF. The PDF may be image-based or encrypted.' },
+        {
+          success: false,
+          error:
+            'Could not extract sufficient text from PDF. The PDF may be image-based or encrypted.',
+        },
         { status: 400 }
       );
     }
 
     // Build prompt
-    const prompt = EXTRACTION_PROMPTS[extractType as keyof typeof EXTRACTION_PROMPTS]
-      .replace('{TEXT}', extractedText.slice(0, 15000));
+    const prompt = EXTRACTION_PROMPTS[extractType as keyof typeof EXTRACTION_PROMPTS].replace(
+      '{TEXT}',
+      extractedText.slice(0, 15000)
+    );
 
     // Call z.ai API
     const apiUrl = 'https://api.z.ai/api/paas/v4/chat/completions';
@@ -213,12 +260,13 @@ export async function POST(request: Request) {
         messages: [
           {
             role: 'system',
-            content: 'You are an expert in traffic management and road safety documentation for Western Australia. Extract and summarize information accurately and professionally.'
+            content:
+              'You are an expert in traffic management and road safety documentation for Western Australia. Extract and summarize information accurately and professionally.',
           },
           {
             role: 'user',
-            content: prompt
-          }
+            content: prompt,
+          },
         ],
         temperature: 0.3, // Lower temperature for more consistent extraction
       }),
@@ -245,6 +293,49 @@ export async function POST(request: Request) {
     const data = await aiResponse.json();
     const extractedContent = data.choices?.[0]?.message?.content || '';
 
+    // For structured extraction, parse the JSON response
+    if (extractType === 'structured') {
+      try {
+        // Try to extract JSON from the response
+        let jsonStr = extractedContent;
+
+        // Handle markdown code blocks
+        const jsonMatch = extractedContent.match(/```(?:json)?\s*([\s\S]*?)```/);
+        if (jsonMatch) {
+          jsonStr = jsonMatch[1].trim();
+        }
+
+        const parsedData = JSON.parse(jsonStr);
+
+        // Return the structured data
+        return NextResponse.json({
+          success: true,
+          documentId,
+          extractType,
+          extractedContent: jsonStr,
+          textLength: extractedText.length,
+          usage: data.usage,
+          // Include full summary data for client-side saving
+          summary: {
+            generatedAt: new Date().toISOString(),
+            abstract: parsedData.abstract || '',
+            keywords: parsedData.keywords || [],
+            targetAudience: parsedData.targetAudience || [],
+            keyRequirements: parsedData.keyRequirements || [],
+            crossReferences: parsedData.crossReferences || [],
+            complianceNotes: parsedData.complianceNotes || [],
+            extractedData: parsedData.extractedData || {},
+            type: extractType,
+            extractionType: 'structured',
+            extractionVersion: '2.0',
+          },
+        });
+      } catch (parseError) {
+        console.error('Failed to parse structured extraction:', parseError);
+        // Fall through to return raw content
+      }
+    }
+
     // Return the generated summary (client will handle saving)
     // Note: On Vercel serverless, we can't write to public/ directory
     // The client should save to localStorage or a database
@@ -260,9 +351,8 @@ export async function POST(request: Request) {
         generatedAt: new Date().toISOString(),
         abstract: extractedContent,
         type: extractType,
-      }
+      },
     });
-
   } catch (error) {
     console.error('Document summarization error:', error);
     return NextResponse.json({
