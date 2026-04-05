@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-05T15:12:53.690869",
+  "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
   "version": "2.0",
   "documents": {
@@ -5566,11 +5566,95 @@
     "whs-records-guide": {
       "title": "Records Management Including Document Control",
       "abstract": "This guide provides comprehensive information on WHS records management requirements, including document control, retention periods, and accessibility. Proper records management is both a legal requirement and essential for demonstrating compliance with WHS obligations.\n\nThe guide specifies minimum retention periods for various WHS records: daily diaries must be kept for 7 years, incident reports for serious incidents for 30 years, health monitoring records for 30 years, and training records for the duration of employment plus 7 years. SWMS must be retained for the duration of works plus 2 years.\n\nFor Traffic Controllers and traffic management companies, this guide is essential for establishing compliant record-keeping systems. It covers both electronic and hard copy records, access requirements for regulators, and the consequences of inadequate record keeping. Document control requirements ensure that current versions of procedures, SWMS, and TMPs are always available on site.",
-      "keywords": ["records", "document-control", "retention"],
-      "targetAudience": [],
-      "completeSections": [],
-      "source": "repo",
-      "note": "External document - no local file for section extraction"
+      "keywords": ["records", "document-control", "retention", "WHS", "compliance", "safety-case"],
+      "targetAudience": [
+        "operators of petroleum and geothermal energy operations",
+        "safety managers",
+        "document controllers",
+        "compliance officers"
+      ],
+      "completeSections": [
+        {
+          "sectionNumber": "1",
+          "sectionTitle": "Introduction",
+          "page": 2
+        },
+        {
+          "sectionNumber": "2",
+          "sectionTitle": "What is a record?",
+          "page": 3
+        },
+        {
+          "sectionNumber": "3",
+          "sectionTitle": "Maintaining records for safety cases",
+          "page": 4
+        },
+        {
+          "sectionNumber": "4",
+          "sectionTitle": "Records management",
+          "page": 5
+        },
+        {
+          "sectionNumber": "4.1",
+          "sectionTitle": "Design, construction and commissioning",
+          "page": 6
+        },
+        {
+          "sectionNumber": "4.2",
+          "sectionTitle": "Operations and maintenance",
+          "page": 7
+        },
+        {
+          "sectionNumber": "4.3",
+          "sectionTitle": "Abandonment and decommissioning",
+          "page": 8
+        },
+        {
+          "sectionNumber": "4.4",
+          "sectionTitle": "Diving records",
+          "page": 8
+        },
+        {
+          "sectionNumber": "4.5",
+          "sectionTitle": "Retention of records",
+          "page": 8
+        },
+        {
+          "sectionNumber": "4.6",
+          "sectionTitle": "Archiving records",
+          "page": 9
+        },
+        {
+          "sectionNumber": "5",
+          "sectionTitle": "Document control",
+          "page": 10
+        },
+        {
+          "sectionNumber": "5.1",
+          "sectionTitle": "Development of new documentation",
+          "page": 10
+        },
+        {
+          "sectionNumber": "5.2",
+          "sectionTitle": "Periodic review and changes of controlled documents",
+          "page": 11
+        },
+        {
+          "sectionNumber": "5.3",
+          "sectionTitle": "Retention of superseded documentation",
+          "page": 11
+        },
+        {
+          "sectionNumber": "Appendix 1",
+          "sectionTitle": "Glossary",
+          "page": 12
+        },
+        {
+          "sectionNumber": "Appendix 2",
+          "sectionTitle": "Further information",
+          "page": 14
+        }
+      ]
     },
     "mrwa-cop-2026-proposed": {
       "title": "COP Proposed Updates March 2026",
@@ -5584,662 +5668,580 @@
     "mrwa-whs-controls": {
       "title": "Minimum WHS Control Standards",
       "abstract": "The Minimum WHS Control Standards document supplements MRWA Specification 203 and establishes the mandatory work health and safety requirements for all traffic management work conducted under MRWA contracts. This specification sets out the minimum controls that must be implemented on MRWA projects.\n\nThe document covers personal protective equipment (PPE) requirements, site establishment procedures, hazard identification and risk assessment processes, emergency response planning, and incident reporting requirements. It establishes the minimum competency requirements for personnel and specifies the documentation that must be maintained on site.\n\nFor Traffic Controllers and traffic management companies working on MRWA projects, this specification is mandatory reading. It forms part of the contract documents and compliance is required for contractual compliance in addition to WHS legal requirements. The standards are designed to integrate with the WHS Act 2020 and supporting regulations.",
-      "keywords": ["whs", "specification", "controls"],
-      "targetAudience": [],
+      "keywords": [
+        "whs",
+        "specification",
+        "controls",
+        "MRWA",
+        "safety",
+        "traffic-management",
+        "PPE",
+        "risk-assessment"
+      ],
+      "targetAudience": [
+        "traffic management companies",
+        "traffic controllers",
+        "site supervisors",
+        "safety managers",
+        "contractors working on MRWA projects"
+      ],
       "completeSections": [
         {
+          "sectionNumber": "Purpose",
+          "sectionTitle": "Purpose",
+          "page": 6
+        },
+        {
+          "sectionNumber": "Scope",
+          "sectionTitle": "Scope",
+          "page": 6
+        },
+        {
+          "sectionNumber": "Terms",
+          "sectionTitle": "Terms and Definitions",
+          "page": 6
+        },
+        {
+          "sectionNumber": "General",
+          "sectionTitle": "General Requirements",
+          "page": 8
+        },
+        {
           "sectionNumber": "1",
-          "sectionTitle": "WORK AT HEIGHT",
-          "page": 9
+          "sectionTitle": "Work at Height",
+          "page": 8
         },
         {
           "sectionNumber": "1.1",
           "sectionTitle": "Training, Competency and Awareness",
-          "page": 9
+          "page": 8
         },
         {
           "sectionNumber": "1.2",
           "sectionTitle": "Personal Fall Protection Equipment",
-          "page": 9
+          "page": 8
         },
         {
           "sectionNumber": "1.3",
           "sectionTitle": "Mobile Elevated Work Platforms (EWP)",
-          "page": 10
+          "page": 9
         },
         {
           "sectionNumber": "1.4",
           "sectionTitle": "Scaffold Structures (above 4 metres)",
-          "page": 12
+          "page": 11
         },
         {
           "sectionNumber": "1.5",
           "sectionTitle": "Minor and Mobile Scaffold Structures (below 4 meters)",
-          "page": 13
+          "page": 12
         },
         {
           "sectionNumber": "1.6",
           "sectionTitle": "Ladders and Work Platforms",
-          "page": 14
+          "page": 13
         },
         {
           "sectionNumber": "1.7",
           "sectionTitle": "Open Edge Protection",
-          "page": 14
+          "page": 13
         },
         {
           "sectionNumber": "2",
-          "sectionTitle": "DEMOLITION WORK",
-          "page": 15
+          "sectionTitle": "Demolition Work",
+          "page": 14
         },
         {
           "sectionNumber": "2.1",
           "sectionTitle": "Training, Competency and Licencing",
-          "page": 15
+          "page": 14
         },
         {
           "sectionNumber": "2.2",
           "sectionTitle": "Safe Design and Planning",
-          "page": 15
+          "page": 14
         },
         {
           "sectionNumber": "2.3",
           "sectionTitle": "Exclusion Zones and Access Control",
-          "page": 16
+          "page": 15
         },
         {
           "sectionNumber": "2.4",
           "sectionTitle": "Mobile Plant, Equipment and Materials",
-          "page": 16
+          "page": 15
         },
         {
           "sectionNumber": "2.5",
           "sectionTitle": "Positive Two Way Communication Systems",
-          "page": 17
+          "page": 16
         },
         {
           "sectionNumber": "2.6",
           "sectionTitle": "Safe Execution of the Demolition Plan",
-          "page": 17
+          "page": 16
         },
         {
           "sectionNumber": "3",
-          "sectionTitle": "ASBESTOS REMOVAL AND CONTROL",
-          "page": 18
+          "sectionTitle": "Asbestos Removal and Control",
+          "page": 17
         },
         {
           "sectionNumber": "3.1",
           "sectionTitle": "Training, Competency and Awareness",
-          "page": 18
+          "page": 17
         },
         {
           "sectionNumber": "3.2",
           "sectionTitle": "Barricading, Demarcation and Exclusion Zones",
-          "page": 19
+          "page": 18
         },
         {
           "sectionNumber": "3.3",
           "sectionTitle": "Personal Protective Equipment",
-          "page": 19
+          "page": 18
         },
         {
           "sectionNumber": "3.4",
           "sectionTitle": "Safe Removal of Asbestos",
-          "page": 20
+          "page": 19
         },
         {
           "sectionNumber": "3.5",
           "sectionTitle": "Air Monitoring",
-          "page": 20
+          "page": 19
         },
         {
           "sectionNumber": "3.6",
           "sectionTitle": "Decontamination and Disposal",
-          "page": 20
+          "page": 19
         },
         {
           "sectionNumber": "4",
-          "sectionTitle": "WORK IN CONFINED SPACES",
-          "page": 21
+          "sectionTitle": "Work in Confined Spaces",
+          "page": 20
         },
         {
           "sectionNumber": "4.1",
           "sectionTitle": "Training, Competency and Awareness",
-          "page": 21
+          "page": 20
         },
         {
           "sectionNumber": "4.2",
           "sectionTitle": "Confined Space Stand by Worker",
-          "page": 21
+          "page": 20
         },
         {
           "sectionNumber": "4.3",
           "sectionTitle": "Confined Space Entry Permit, Signage and Record Management",
-          "page": 22
+          "page": 21
         },
         {
           "sectionNumber": "4.4",
           "sectionTitle": "Atmosphere and Atmospheric Testing",
-          "page": 22
+          "page": 21
         },
         {
           "sectionNumber": "4.5",
           "sectionTitle": "Atmospheric Testing Equipment and Respiratory Protection",
-          "page": 23
+          "page": 22
         },
         {
           "sectionNumber": "4.6",
           "sectionTitle": "Safe Work in a Confined Space",
-          "page": 23
+          "page": 22
         },
         {
           "sectionNumber": "5",
-          "sectionTitle": "EXCAVATION AND TRENCHING",
-          "page": 24
+          "sectionTitle": "Excavation and Trenching",
+          "page": 23
         },
         {
           "sectionNumber": "5.1",
           "sectionTitle": "Safe Design and Planning",
-          "page": 24
+          "page": 23
         },
         {
           "sectionNumber": "5.2",
           "sectionTitle": "Ground Support Systems",
-          "page": 25
+          "page": 24
         },
         {
           "sectionNumber": "5.3",
           "sectionTitle": "Geotechnical Monitoring and Inspection",
-          "page": 26
+          "page": 25
         },
         {
           "sectionNumber": "5.4",
           "sectionTitle": "Exclusion Zones and Access Control",
-          "page": 26
+          "page": 25
         },
         {
           "sectionNumber": "6",
-          "sectionTitle": "EXPLOSIVE BLASTING",
-          "page": 27
+          "sectionTitle": "Explosive Blasting",
+          "page": 26
         },
         {
           "sectionNumber": "6.1",
           "sectionTitle": "Training, Competency and Awareness",
-          "page": 27
+          "page": 26
         },
         {
           "sectionNumber": "6.2",
           "sectionTitle": "Explosive Transport, Storage and Handling",
-          "page": 27
+          "page": 26
         },
         {
           "sectionNumber": "6.3",
           "sectionTitle": "Planning and Charging",
-          "page": 28
+          "page": 27
         },
         {
           "sectionNumber": "6.4",
           "sectionTitle": "Blast Exclusion Zones and Access Control",
-          "page": 28
+          "page": 27
         },
         {
           "sectionNumber": "6.5",
           "sectionTitle": "Misfire Management",
-          "page": 29
+          "page": 28
         },
         {
           "sectionNumber": "6.6",
           "sectionTitle": "Safe Blast Initiation",
-          "page": 29
+          "page": 28
         },
         {
           "sectionNumber": "7",
-          "sectionTitle": "ABOVE GROUND SERVICES",
-          "page": 30
+          "sectionTitle": "Above Ground Services",
+          "page": 29
         },
         {
           "sectionNumber": "7.1",
           "sectionTitle": "Training, Competency and Awareness",
-          "page": 30
+          "page": 29
         },
         {
           "sectionNumber": "7.2",
           "sectionTitle": "Safe Design and Planning",
-          "page": 30
+          "page": 29
         },
         {
           "sectionNumber": "7.3",
           "sectionTitle": "Isolation of Overhead Electrical Services",
-          "page": 31
+          "page": 30
         },
         {
           "sectionNumber": "7.4",
           "sectionTitle": "Safe Work Practices for Overhead Electric Lines",
-          "page": 31
+          "page": 30
         },
         {
           "sectionNumber": "8",
-          "sectionTitle": "BELOW GROUND SERVICES",
-          "page": 31
+          "sectionTitle": "Below Ground Services",
+          "page": 30
         },
         {
           "sectionNumber": "8.1",
           "sectionTitle": "Training, Competency and Awareness",
-          "page": 31
+          "page": 30
         },
         {
           "sectionNumber": "8.2",
           "sectionTitle": "Safe Design and Planning",
-          "page": 32
+          "page": 31
         },
         {
           "sectionNumber": "8.3",
           "sectionTitle": "Service Location and Exploratory Boring Practices (Potholing)",
-          "page": 32
+          "page": 31
         },
         {
           "sectionNumber": "8.4",
           "sectionTitle": "Safe Excavation near Electrical Underground Services",
-          "page": 34
+          "page": 33
         },
         {
           "sectionNumber": "8.5",
           "sectionTitle": "Safe Excavation near Gas Pipes and Installations",
-          "page": 34
+          "page": 33
         },
         {
           "sectionNumber": "8.6",
           "sectionTitle": "Safe Excavation near Water Pipes, Sewer Systems and Telecommunication Cables",
-          "page": 35
+          "page": 34
         },
         {
           "sectionNumber": "9",
-          "sectionTitle": "PRE-CAST TILT UP CONCRETE",
-          "page": 36
+          "sectionTitle": "Pre-Cast Tilt Up Concrete",
+          "page": 35
         },
         {
           "sectionNumber": "9.1",
           "sectionTitle": "Safe Design and Planning",
-          "page": 36
+          "page": 35
         },
         {
           "sectionNumber": "9.2",
           "sectionTitle": "Training, Competency and Awareness",
-          "page": 37
+          "page": 36
         },
         {
           "sectionNumber": "9.3",
           "sectionTitle": "Mechanical Integrity of Crane",
-          "page": 37
+          "page": 36
         },
         {
           "sectionNumber": "9.4",
           "sectionTitle": "Integrity of Lifting Equipment",
-          "page": 37
+          "page": 36
         },
         {
           "sectionNumber": "9.5",
           "sectionTitle": "Exclusion Zones and Access Control",
-          "page": 38
+          "page": 37
         },
         {
           "sectionNumber": "9.6",
           "sectionTitle": "Safe Execution of the Design Plan",
-          "page": 39
+          "page": 38
         },
         {
           "sectionNumber": "10",
-          "sectionTitle": "TRAFFIC MANAGEMENT (INTERACTION WITH LIVE TRAFFIC)",
-          "page": 40
+          "sectionTitle": "Traffic Management (Interaction with Live Traffic)",
+          "page": 39
         },
         {
           "sectionNumber": "11",
-          "sectionTitle": "MOBILE PLANT OPERATION",
-          "page": 40
+          "sectionTitle": "Mobile Plant Operation",
+          "page": 39
         },
         {
           "sectionNumber": "11.1",
           "sectionTitle": "Training, Competency and Awareness",
-          "page": 40
+          "page": 39
         },
         {
           "sectionNumber": "11.2",
           "sectionTitle": "Inspection and Pre-operational Requirements",
-          "page": 40
+          "page": 39
         },
         {
           "sectionNumber": "11.3",
           "sectionTitle": "Mechanical Integrity of Mobile Plant",
-          "page": 43
+          "page": 42
         },
         {
           "sectionNumber": "11.4",
           "sectionTitle": "Exclusion Zones and Access Control",
-          "page": 44
+          "page": 43
         },
         {
           "sectionNumber": "11.5",
           "sectionTitle": "Positive Two-way Communication Systems",
-          "page": 45
+          "page": 44
         },
         {
           "sectionNumber": "11.6",
           "sectionTitle": "Safe Operation of Mobile Plant",
-          "page": 47
+          "page": 46
         },
         {
           "sectionNumber": "12",
-          "sectionTitle": "WORK, ON OVER OR ADJACENT TO WATER",
-          "page": 47
+          "sectionTitle": "Work, On Over or Adjacent to Water",
+          "page": 46
         },
         {
           "sectionNumber": "12.1",
           "sectionTitle": "Planning and Safe Design",
-          "page": 47
+          "page": 46
         },
         {
           "sectionNumber": "12.2",
           "sectionTitle": "Training, Competency and Awareness",
-          "page": 49
+          "page": 48
         },
         {
           "sectionNumber": "12.3",
           "sectionTitle": "Specific Control Measures and Safe Work Practices",
-          "page": 49
+          "page": 48
         },
         {
           "sectionNumber": "13",
-          "sectionTitle": "VEHICLES AND DRIVING",
-          "page": 50
+          "sectionTitle": "Vehicles and Driving",
+          "page": 49
         },
         {
           "sectionNumber": "13.1",
           "sectionTitle": "Training, Licensing and Heavy Vehicle Chain of Responsibility (HVCoR)",
-          "page": 50
+          "page": 49
         },
         {
           "sectionNumber": "13.2",
           "sectionTitle": "Vehicle Maintenance and Inspection",
-          "page": 51
+          "page": 50
         },
         {
           "sectionNumber": "13.3",
           "sectionTitle": "Journey Management",
-          "page": 52
+          "page": 51
         },
         {
           "sectionNumber": "13.4",
           "sectionTitle": "Safe Use and Operation of Vehicles",
-          "page": 52
+          "page": 51
         },
         {
           "sectionNumber": "14",
-          "sectionTitle": "BUSHFIRE MANAGEMENT (IGNITION CAUSING BUSHFIRE)",
-          "page": 53
+          "sectionTitle": "Bushfire Management (Ignition Causing Bushfire)",
+          "page": 52
         },
         {
           "sectionNumber": "14.1",
           "sectionTitle": "Risk and Impact Assessment",
-          "page": 53
+          "page": 52
         },
         {
           "sectionNumber": "14.2",
           "sectionTitle": "Warnings and Regulatory Notification",
-          "page": 54
+          "page": 53
         },
         {
           "sectionNumber": "14.3",
           "sectionTitle": "Training, Competency and Awareness",
-          "page": 54
+          "page": 53
         },
         {
           "sectionNumber": "14.4",
           "sectionTitle": "Fire Prevention and Mitigation of Impact",
-          "page": 55
+          "page": 54
         },
         {
           "sectionNumber": "14.5",
           "sectionTitle": "Management and Control of Hot Works",
-          "page": 55
+          "page": 54
         },
         {
           "sectionNumber": "14.6",
           "sectionTitle": "Firefighting Apparatus",
-          "page": 56
+          "page": 55
         },
         {
           "sectionNumber": "14.7",
           "sectionTitle": "Specific Fire Personal Protective Equipment",
-          "page": 56
+          "page": 55
         },
         {
           "sectionNumber": "15",
-          "sectionTitle": "CRANES AND LIFTING OPERATIONS",
-          "page": 56
+          "sectionTitle": "Cranes and Lifting Operations",
+          "page": 55
         },
         {
           "sectionNumber": "15.1",
           "sectionTitle": "Training, Competency and Awareness",
-          "page": 56
+          "page": 55
         },
         {
           "sectionNumber": "15.2",
           "sectionTitle": "Inspection and Mechanical Integrity of Crane",
-          "page": 57
+          "page": 56
         },
         {
           "sectionNumber": "15.3",
           "sectionTitle": "Inspection and Integrity of Lifting Equipment",
-          "page": 58
+          "page": 57
         },
         {
           "sectionNumber": "15.4",
           "sectionTitle": "Pre-operational Requirements",
-          "page": 58
+          "page": 57
         },
         {
           "sectionNumber": "15.5",
           "sectionTitle": "Exclusion Zones and Access Control",
-          "page": 59
+          "page": 58
         },
         {
           "sectionNumber": "15.6",
           "sectionTitle": "Lift Planning",
-          "page": 60
+          "page": 59
         },
         {
           "sectionNumber": "15.7",
           "sectionTitle": "Safe Execution of the Lift Plan",
-          "page": 61
+          "page": 60
         },
         {
           "sectionNumber": "16",
-          "sectionTitle": "DROPPED OBJECTS FROM HEIGHT",
-          "page": 62
+          "sectionTitle": "Dropped Objects from Height",
+          "page": 61
         },
         {
           "sectionNumber": "16.1",
           "sectionTitle": "Planning and Safe Design",
-          "page": 62
+          "page": 61
         },
         {
           "sectionNumber": "16.2",
           "sectionTitle": "Exclusion Zones and Access Control",
-          "page": 63
+          "page": 62
         },
         {
           "sectionNumber": "16.3",
           "sectionTitle": "Securing Devices and Methods of Control",
-          "page": 63
+          "page": 62
         },
         {
           "sectionNumber": "16.4",
           "sectionTitle": "Mechanical Integrity of Plant or Equipment",
-          "page": 64
+          "page": 63
         },
         {
           "sectionNumber": "16.5",
           "sectionTitle": "Stability of Stored or Stacked Materials",
-          "page": 64
+          "page": 63
         },
         {
           "sectionNumber": "16.6",
           "sectionTitle": "Safe Loading and Unloading Practices",
-          "page": 65
+          "page": 64
         },
         {
           "sectionNumber": "17",
-          "sectionTitle": "EXPOSURE TO THERMAL STRESS",
-          "page": 66
+          "sectionTitle": "Exposure to Thermal Stress",
+          "page": 65
         },
         {
           "sectionNumber": "17.1",
           "sectionTitle": "Training, Competency and Awareness",
-          "page": 66
+          "page": 65
         },
         {
           "sectionNumber": "17.2",
           "sectionTitle": "Hydration Management",
-          "page": 67
+          "page": 66
         },
         {
           "sectionNumber": "17.3",
           "sectionTitle": "Worker Acclimatisation",
-          "page": 67
+          "page": 66
         },
         {
           "sectionNumber": "17.4",
           "sectionTitle": "Work Task Management",
-          "page": 67
+          "page": 66
         },
         {
           "sectionNumber": "17.5",
           "sectionTitle": "Safe Work Practices in Hot Environments",
-          "page": 67
+          "page": 66
         },
         {
           "sectionNumber": "18",
-          "sectionTitle": "HAZARDOUS SUBSTANCES AND DANGEROUS GOODS (EX. ASBESTOS)",
-          "page": 68
-        },
-        {
-          "sectionNumber": "18.1",
-          "sectionTitle": "Training, Competency and Awareness",
-          "page": 68
-        },
-        {
-          "sectionNumber": "18.2",
-          "sectionTitle": "Personal Protective Equipment",
-          "page": 69
-        },
-        {
-          "sectionNumber": "18.3",
-          "sectionTitle": "Storage, Handling and Use",
-          "page": 69
-        },
-        {
-          "sectionNumber": "19",
-          "sectionTitle": "ELECTRICAL WORK",
-          "page": 71
-        },
-        {
-          "sectionNumber": "19.1",
-          "sectionTitle": "Training, Competency and Awareness",
-          "page": 72
-        },
-        {
-          "sectionNumber": "19.2",
-          "sectionTitle": "Electrical Protection and Inspection",
-          "page": 72
-        },
-        {
-          "sectionNumber": "19.3",
-          "sectionTitle": "Isolation and Lockout of Electrical Sources",
-          "page": 73
-        },
-        {
-          "sectionNumber": "19.4",
-          "sectionTitle": "Verification of Zero Energy",
-          "page": 74
-        },
-        {
-          "sectionNumber": "19.5",
-          "sectionTitle": "Non-conductive Tools, Equipment and Test Instruments",
-          "page": 75
-        },
-        {
-          "sectionNumber": "19.6",
-          "sectionTitle": "Electrical Personal Protective Equipment and Signage",
-          "page": 76
-        },
-        {
-          "sectionNumber": "19.7",
-          "sectionTitle": "Live Electrical Work",
-          "page": 76
-        },
-        {
-          "sectionNumber": "20",
-          "sectionTitle": "PILING RIG OPERATION",
-          "page": 76
-        },
-        {
-          "sectionNumber": "20.1",
-          "sectionTitle": "Training, Competency and Awareness",
-          "page": 76
-        },
-        {
-          "sectionNumber": "20.2",
-          "sectionTitle": "Inspection and Mechanical Integrity of Piling Rig",
-          "page": 77
-        },
-        {
-          "sectionNumber": "20.3",
-          "sectionTitle": "Pre-operational Requirements",
-          "page": 78
-        },
-        {
-          "sectionNumber": "20.4",
-          "sectionTitle": "Exclusion Zones and Access Control",
-          "page": 78
-        },
-        {
-          "sectionNumber": "20.5",
-          "sectionTitle": "Safe Work Practices",
-          "page": 79
-        },
-        {
-          "sectionNumber": "21",
-          "sectionTitle": "RESPIRABLE CRYSTALLINE SILICA",
-          "page": 80
-        },
-        {
-          "sectionNumber": "21.1",
-          "sectionTitle": "Training, Competency and Awareness",
-          "page": 80
-        },
-        {
-          "sectionNumber": "21.2",
-          "sectionTitle": "Silica Risk Control Plan",
-          "page": 80
-        },
-        {
-          "sectionNumber": "21.3",
-          "sectionTitle": "Exclusion Zones and Access Control",
-          "page": 80
-        },
-        {
-          "sectionNumber": "21.4",
-          "sectionTitle": "Personal Protective Equipment",
-          "page": 81
-        },
-        {
-          "sectionNumber": "21.5",
-          "sectionTitle": "Air Monitoring",
-          "page": 81
+          "sectionTitle": "Hazardous Substances and Dangerous Goods (Ex. Asbestos)",
+          "page": 67
         }
-      ],
-      "source": "repo",
-      "note": "External document - no local file for section extraction"
+      ]
     },
     "mrwa-spec-202": {
       "title": "Specification 202 - Traffic Management",
