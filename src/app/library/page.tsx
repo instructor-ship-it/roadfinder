@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -83,6 +84,7 @@ interface Registry {
 }
 
 export default function LibraryPage() {
+  const searchParams = useSearchParams();
   const [registry, setRegistry] = useState<Registry | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedParent, setSelectedParent] = useState<string | null>(null);
@@ -96,6 +98,14 @@ export default function LibraryPage() {
   const [downloadedDocIds, setDownloadedDocIds] = useState<string[]>([]);
   const [deletedCacheIds, setDeletedCacheIds] = useState<string[]>([]);
   const [downloadingDoc, setDownloadingDoc] = useState<string | null>(null);
+
+  // Document Processing states
+  const [showProcessModal, setShowProcessModal] = useState(false);
+  const [processingDoc, setProcessingDoc] = useState<RegistryDocument | null>(null);
+  const [processing, setProcessing] = useState(false);
+  const [processResult, setProcessResult] = useState<string | null>(null);
+  const [processError, setProcessError] = useState<string | null>(null);
+  const [aiApiKey, setAiApiKey] = useState('');
 
   // Load registry and offline status
   useEffect(() => {
@@ -141,6 +151,54 @@ export default function LibraryPage() {
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
+
+  // Load AI API key and check for process parameter
+  useEffect(() => {
+    const savedKey = localStorage.getItem('ai_api_key') || '';
+    setAiApiKey(savedKey);
+
+    // Check if we should open process modal
+    if (searchParams.get('process') === 'true' && savedKey) {
+      setShowProcessModal(true);
+    }
+  }, [searchParams]);
+
+  // Handle document processing
+  const handleProcessDocument = useCallback(async (doc: RegistryDocument) => {
+    if (!aiApiKey) {
+      setProcessError('Please configure your AI API key in Settings first.');
+      return;
+    }
+
+    setProcessingDoc(doc);
+    setProcessing(true);
+    setProcessResult(null);
+    setProcessError(null);
+
+    try {
+      const response = await fetch('/api/documents/summarize', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          documentId: doc.id,
+          apiKey: aiApiKey,
+          extractType: 'abstract',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setProcessResult(data.extractedContent);
+      } else {
+        setProcessError(data.error || 'Failed to process document');
+      }
+    } catch (err) {
+      setProcessError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setProcessing(false);
+    }
+  }, [aiApiKey]);
 
   // Handle saving document for offline
   const handleSaveOffline = useCallback(async (doc: RegistryDocument) => {
@@ -395,6 +453,15 @@ export default function LibraryPage() {
               <h1 className="text-xl font-bold text-white">📚 {registry?.name}</h1>
             </div>
             <div className="flex items-center gap-4">
+              {/* Document Processing Button */}
+              <Button 
+                onClick={() => setShowProcessModal(true)}
+                variant="outline" 
+                size="sm" 
+                className="bg-amber-600/50 border-amber-500 text-amber-200 hover:bg-amber-600"
+              >
+                🧠 Process Docs
+              </Button>
               {/* AI Q&A Link */}
               <Link href="/qa">
                 <Button variant="outline" size="sm" className="bg-purple-600/50 border-purple-500 text-purple-200 hover:bg-purple-600">
@@ -759,6 +826,20 @@ export default function LibraryPage() {
                     📋 Abstract
                   </Button>
                 )}
+                {/* Generate Summary button - for docs without abstract but with local file */}
+                {infoDoc && !infoDoc.abstract && infoDoc.file && !infoDoc.file.startsWith('http') && (
+                  <Button 
+                    onClick={() => {
+                      setInfoDoc(null);
+                      setShowProcessModal(true);
+                    }}
+                    className="bg-purple-600/80 hover:bg-purple-600 text-white"
+                    disabled={!aiApiKey}
+                    title={!aiApiKey ? 'Configure AI API key first' : 'Generate AI summary'}
+                  >
+                    🧠 Generate Summary
+                  </Button>
+                )}
                 {/* Cache for offline button - show for local files only */}
                 {infoDoc && infoDoc.file && !infoDoc.file.startsWith('http') && (
                   isDocOffline(infoDoc.id) && !deletedCacheIds.includes(infoDoc.id) ? (
@@ -821,6 +902,129 @@ export default function LibraryPage() {
             <Button 
               onClick={() => setShowAbstractModal(false)}
               className="w-full bg-gray-600 hover:bg-gray-500 text-white"
+            >
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Document Processing Modal */}
+      <Dialog open={showProcessModal} onOpenChange={setShowProcessModal}>
+        <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle className="text-white text-lg flex items-center gap-2">
+              🧠 Document Processing
+              <span className="text-xs text-amber-400 bg-amber-900/50 px-2 py-1 rounded">
+                AI-Powered
+              </span>
+            </DialogTitle>
+            <DialogDescription className="text-gray-400 text-sm">
+              Auto-generate summaries and extract knowledge from PDF documents
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex-1 overflow-y-auto space-y-4">
+            {/* API Key Warning */}
+            {!aiApiKey && (
+              <div className="bg-red-900/30 border border-red-700 rounded-lg p-3">
+                <p className="text-red-300 text-sm">
+                  ⚠️ No AI API key configured. Go to Settings → AI Settings to add your key.
+                </p>
+              </div>
+            )}
+
+            {/* Document Selection */}
+            {!processingDoc && (
+              <div>
+                <h4 className="font-semibold text-amber-400 mb-2">Select Document to Process</h4>
+                <p className="text-gray-400 text-xs mb-3">
+                  Only documents with local PDF files can be processed.
+                </p>
+                <div className="max-h-60 overflow-y-auto space-y-2">
+                  {registry?.documents
+                    .filter(doc => doc.file && !doc.file.startsWith('http'))
+                    .map(doc => (
+                      <button
+                        key={doc.id}
+                        onClick={() => handleProcessDocument(doc)}
+                        disabled={!aiApiKey}
+                        className="w-full text-left p-3 bg-gray-700/50 hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <span className="text-white text-sm font-medium">{doc.shortTitle}</span>
+                            <span className="text-gray-400 text-xs ml-2">({doc.fileSize || 'Unknown size'})</span>
+                          </div>
+                          {doc.abstract && (
+                            <span className="text-green-400 text-xs">✓ Has abstract</span>
+                          )}
+                        </div>
+                        <p className="text-gray-400 text-xs mt-1 truncate">{doc.description}</p>
+                      </button>
+                    ))}
+                </div>
+              </div>
+            )}
+
+            {/* Processing Status */}
+            {processing && (
+              <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-4">
+                <div className="flex items-center gap-3">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-400"></div>
+                  <div>
+                    <p className="text-blue-300 font-medium">Processing document...</p>
+                    <p className="text-blue-400 text-xs">{processingDoc?.title}</p>
+                  </div>
+                </div>
+                <p className="text-gray-400 text-xs mt-2">
+                  Extracting text and generating summary with AI. This may take 10-30 seconds.
+                </p>
+              </div>
+            )}
+
+            {/* Process Result */}
+            {processResult && (
+              <div className="bg-green-900/30 border border-green-700 rounded-lg p-4">
+                <h4 className="text-green-400 font-semibold mb-2">✓ Generated Summary</h4>
+                <div className="bg-gray-900 rounded p-3 max-h-60 overflow-y-auto">
+                  <p className="text-gray-300 text-sm whitespace-pre-line">{processResult}</p>
+                </div>
+                <p className="text-gray-500 text-xs mt-2">
+                  Summary saved to generated-summaries.json
+                </p>
+              </div>
+            )}
+
+            {/* Error */}
+            {processError && (
+              <div className="bg-red-900/30 border border-red-700 rounded-lg p-3">
+                <p className="text-red-300 text-sm">❌ {processError}</p>
+              </div>
+            )}
+          </div>
+
+          <div className="pt-4 border-t border-gray-700 flex gap-2">
+            {processingDoc && !processing && (
+              <Button
+                onClick={() => {
+                  setProcessingDoc(null);
+                  setProcessResult(null);
+                  setProcessError(null);
+                }}
+                className="bg-gray-600 hover:bg-gray-500"
+              >
+                Process Another
+              </Button>
+            )}
+            <Button
+              onClick={() => {
+                setShowProcessModal(false);
+                setProcessingDoc(null);
+                setProcessResult(null);
+                setProcessError(null);
+              }}
+              className="flex-1 bg-gray-600 hover:bg-gray-500 text-white"
             >
               Close
             </Button>

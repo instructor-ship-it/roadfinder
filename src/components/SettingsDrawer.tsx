@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 
 // App version constant - single source of truth
-export const APP_VERSION = '1.21.0';
+export const APP_VERSION = '1.22.0';
 
 // Offline toggles type - shared with page.tsx
 export interface OfflineToggles {
@@ -376,6 +376,30 @@ export function SettingsDrawer({
                       </button>
                     </Link>
                   </div>
+                </div>
+
+                {/* Document Processing */}
+                <div className="mt-2 pt-2 border-t border-gray-700/50">
+                  <button
+                    onClick={async () => {
+                      if (!aiApiKey) {
+                        alert('Please configure your AI API key first (in AI Settings section)');
+                        return;
+                      }
+                      // Navigate to document processing or show modal
+                      window.location.href = '/library?process=true';
+                    }}
+                    className="w-full text-left text-sm text-amber-300 py-1.5 px-2 flex items-center gap-2 hover:bg-amber-700/30 rounded transition-colors"
+                  >
+                    <span>🧠</span>
+                    Document Processing
+                    <span className="text-xs text-amber-400 bg-amber-900/50 px-1.5 py-0.5 rounded">
+                      AI
+                    </span>
+                  </button>
+                  <p className="text-xs text-gray-500 px-2 mt-1">
+                    Auto-generate summaries & extract knowledge from PDFs
+                  </p>
                 </div>
               </div>
             )}

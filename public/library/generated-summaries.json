@@ -1,0 +1,120 @@
+{
+  "mrwa-cop-2025": {
+    "generatedAt": "2026-04-05T12:00:00.000Z",
+    "generatedBy": "AI Processing",
+    "title": "Traffic Management for Works on Roads Code of Practice",
+    "abstract": "The Traffic Management for Works on Roads Code of Practice (March 2026) is the primary regulatory document governing all temporary traffic management activities on Western Australian roads. Published by Main Roads Western Australia under the authority of the Commissioner of Main Roads, this Code establishes mandatory requirements for planning, designing, implementing, and operating traffic management at work sites. The document adopts the Austroads Guide to Temporary Traffic Management (AGTTM) Parts 1-10 and Australian Standard AS 1742.3-2019 as its foundation, while specifying Western Australian-specific departures and additional requirements that take precedence in case of conflict.\n\nThe Code applies to all work conducted within road reserves throughout Western Australia, including construction, maintenance, utility works, and any activities that cause interference to normal road use. It establishes a comprehensive framework covering approval processes, traffic management planning requirements, risk management obligations, consultation protocols, signage specifications, speed zone management, traffic control methods, and personnel accreditation requirements. Key updates in the March 2026 revision include adoption of AGTTM Part 8 Edition 2, mandatory PTCD (Portable Traffic Control Device) training for Traffic Controllers, new sections on Workers symbolic signs, Lane Status Signs, Portable Crash Attenuators, and enhanced guidance for vulnerable road users and sign spacing tolerances.\n\nThis document is essential reading for traffic controllers, traffic management supervisors, site supervisors, roadwork project managers, local government engineers, utility companies, and any personnel involved in planning or implementing traffic management on Western Australian roads. Compliance with this Code is mandatory, and variations require formal approval through documented processes. The Code emphasizes the Safe System approach, recognizing that people are fallible and that traffic management must protect both road workers and road users through proper design, implementation, and ongoing operation of traffic management plans.",
+    "keywords": [
+      "traffic management",
+      "temporary traffic management",
+      "TTM",
+      "work sites",
+      "road safety",
+      "traffic control devices",
+      "AGTTM",
+      "AS 1742.3",
+      "traffic management plans",
+      "TMP",
+      "traffic guidance schemes",
+      "TGS",
+      "speed zones",
+      "traffic controllers",
+      "portable traffic control devices",
+      "PTCD",
+      "truck mounted attenuators",
+      "TMA",
+      "Main Roads Western Australia",
+      "accreditation"
+    ],
+    "targetAudience": [
+      "Traffic Controllers (TC)",
+      "Basic Worksite Traffic Management (BWTM) practitioners",
+      "Worksite Traffic Management (WTM) practitioners",
+      "Advanced Worksite Traffic Management (AWTM) practitioners",
+      "Roadworks Traffic Managers",
+      "Site Supervisors",
+      "Project Managers",
+      "Local Government Engineers",
+      "Utility Companies",
+      "Civil Contractors"
+    ],
+    "keySections": [
+      {
+        "section": "Section 1 - Introduction and Scope",
+        "summary": "Establishes the Code's authority, scope of application to all WA road reserves, and adoption of AGTTM Parts 1-10 and AS 1742.3-2019 with WA-specific variations."
+      },
+      {
+        "section": "Section 2 - Approval to Work Within Road Reserves",
+        "summary": "Details approval requirements for Main Roads roads and local government roads, including the Traffic Management Company Registration Scheme requirements for State Roads."
+      },
+      {
+        "section": "Section 3 - Authority to Erect Traffic Control Devices",
+        "summary": "Defines legal authority for traffic control devices under the Road Traffic Code, including delegations to Main Roads officers and authorised bodies."
+      },
+      {
+        "section": "Section 4 - Planning the Works",
+        "summary": "Comprehensive requirements for TMP preparation, including site visits, generic TMPs, complex traffic arrangements, risk management, consultation requirements, and notification of roadworks."
+      },
+      {
+        "section": "Section 5 - Review, Inspection and Operation",
+        "summary": "Covers audits, suitability reviews, compliance inspections, and traffic management operation records requirements."
+      },
+      {
+        "section": "Section 6 - Departures from Design Requirements",
+        "summary": "WA-specific departures from AGTTM and AS 1742.3 covering signage, multi-message signs, speed zones, traffic control methods, PTCDs, TMAs, shuttle flow, and various operational requirements."
+      },
+      {
+        "section": "Section 7 - Best Practice",
+        "summary": "Guidance on innovative traffic control devices, electronic speed limit signs, traffic monitoring, and rumble strips."
+      },
+      {
+        "section": "Section 8 - Accreditation Requirements",
+        "summary": "Mandatory training and accreditation requirements for all traffic management personnel including TC, BWTM, WTM, AWTM, and TMA operator certifications."
+      }
+    ],
+    "keyRequirements": [
+      "All traffic management must comply with AGTTM and AS 1742.3-2019 unless varied by this Code",
+      "TMPs must be submitted and approved prior to commencing works on State Roads",
+      "Site visits using Main Roads GPS SLK app or similar are mandatory before finalising TMPs",
+      "Traffic Management Company Registration is required for work on State Roads (with exceptions)",
+      "Consultation with affected authorities must occur prior to TMP submission",
+      "Notification of Roadworks (NoR) form required for specific situations",
+      "PTCD training is now mandatory for TC accreditation renewal",
+      "TMA use is mandatory on specified high-volume roads",
+      "Speed feedback signs mandatory for certain road categories",
+      "Personnel must hold current accreditation relevant to their tasks",
+      "All signage must be manufactured to Main Roads specifications"
+    ],
+    "complianceNotes": [
+      "The Code takes precedence over AGTTM and AS 1742.3-2019 in case of conflict",
+      "Variations to Code requirements require formal approval through documented processes",
+      "Watermarks are not permitted on TMPs",
+      "Video drive-throughs may be required for major projects",
+      "TMPs for metropolitan area must be sent to enquiries@mainroads.wa.gov.au",
+      "Contact RNOC on 138 111 before implementing traffic management on Main Roads metropolitan roads",
+      "Allow 15 business days for Main Roads TMP review for complex projects",
+      "All printed copies are uncontrolled - always verify current version on Main Roads website"
+    ],
+    "crossReferences": [
+      "AGTTM Part 1 - Introduction and General",
+      "AGTTM Part 2 - Traffic Management Planning",
+      "AGTTM Part 3 - Static Work Sites",
+      "AGTTM Part 4 - Mobile Works",
+      "AGTTM Part 5 - Short Term Low Impact Works",
+      "AGTTM Part 6 - Field Implementation and Operation",
+      "AGTTM Part 7 - Traffic Controllers Instructions",
+      "AGTTM Part 8 - Processes and Procedures (Edition 2.0, 2025)",
+      "AGTTM Part 9 - Sample Layouts",
+      "AGTTM Part 10 - Supporting Guidance",
+      "AS 1742.3-2019 - Manual of uniform traffic control devices",
+      "Road Traffic Code 2000",
+      "WHS Act 2020",
+      "WHS General Regulations 2022",
+      "Traffic Management for Events Code of Practice"
+    ],
+    "lastUpdated": "March 2026",
+    "issuingAuthority": "Main Roads Western Australia",
+    "pages": 105,
+    "file": "/library/mrwa/cop/traffic-management-cop-may-2025.pdf"
+  }
+}
