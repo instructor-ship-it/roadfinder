@@ -77,17 +77,21 @@ export function PdfViewerModal({
 
     const updateWidth = () => {
       if (containerRef.current) {
-        // Use 95% of container width for some padding
-        setContainerWidth(containerRef.current.clientWidth * 0.95);
+        // Fit page to container width (use 92% for comfortable reading)
+        setContainerWidth(containerRef.current.clientWidth * 0.92);
       }
     };
 
-    updateWidth();
+    // Small delay to ensure container is rendered
+    const timer = setTimeout(updateWidth, 50);
 
     const resizeObserver = new ResizeObserver(updateWidth);
     resizeObserver.observe(containerRef.current);
 
-    return () => resizeObserver.disconnect();
+    return () => {
+      clearTimeout(timer);
+      resizeObserver.disconnect();
+    };
   }, [isOpen]);
 
   // Load summary when docId changes
@@ -466,21 +470,24 @@ export function PdfViewerModal({
                   </div>
                 }
               >
-                <Page
-                  pageNumber={currentPage}
-                  width={containerWidth || undefined}
-                  renderTextLayer={false}
-                  renderAnnotationLayer={false}
-                  className="shadow-2xl max-w-full max-h-full object-contain pointer-events-none"
-                  loading={
-                    <div className="flex items-center justify-center w-[600px] h-[800px] bg-gray-800">
-                      <div className="text-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
-                        <p className="text-gray-400 text-sm">Rendering page...</p>
+                {containerWidth > 0 && (
+                  <Page
+                    key={`page-${currentPage}-${containerWidth}`}
+                    pageNumber={currentPage}
+                    width={containerWidth}
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                    className="shadow-2xl max-w-full max-h-full object-contain pointer-events-none"
+                    loading={
+                      <div className="flex items-center justify-center w-[600px] h-[800px] bg-gray-800">
+                        <div className="text-center">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+                          <p className="text-gray-400 text-sm">Rendering page...</p>
+                        </div>
                       </div>
-                    </div>
-                  }
-                />
+                    }
+                  />
+                )}
               </Document>
             )}
           </div>
