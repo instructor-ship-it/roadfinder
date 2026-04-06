@@ -374,11 +374,11 @@ export function PdfViewerModal({
             top: 0,
             left: 0,
             right: 0,
-            bottom: isLandscape ? -70 : 0,
+            bottom: 0,
             width: '100vw',
-            height: isLandscape ? '100vh' : '100vh',
+            height: isLandscape ? '70vh' : '100vh',
             maxWidth: '100vw',
-            maxHeight: isLandscape ? '120vh' : '100vh',
+            maxHeight: isLandscape ? '70vh' : '100vh',
             '--tw-translate-x': '0px',
             '--tw-translate-y': '0px',
           } as React.CSSProperties
@@ -456,6 +456,43 @@ export function PdfViewerModal({
                 {docTitle}
               </DialogTitle>
             </div>
+
+            {/* Center - Navigation for landscape */}
+            {isLandscape && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage <= 1}
+                  onClick={goToPrevPage}
+                  className="bg-gray-700 border-gray-600 h-8 w-16 text-xs"
+                >
+                  ← Prev
+                </Button>
+
+                <form onSubmit={handlePageInputSubmit} className="flex items-center gap-1">
+                  <Input
+                    type="number"
+                    min={1}
+                    max={numPages || 999}
+                    value={pageInput}
+                    onChange={handlePageInputChange}
+                    className="w-12 text-center bg-gray-700 border-gray-600 h-8 text-sm"
+                  />
+                  <span className="text-gray-400 text-xs">/ {numPages || '?'}</span>
+                </form>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentPage >= numPages}
+                  onClick={goToNextPage}
+                  className="bg-gray-700 border-gray-600 h-8 w-16 text-xs"
+                >
+                  Next →
+                </Button>
+              </div>
+            )}
 
             <div className="flex items-center gap-1 mr-8">
               {/* Zoom controls */}
@@ -556,48 +593,50 @@ export function PdfViewerModal({
           )}
         </div>
 
-        {/* Navigation Footer */}
-        <div className="bg-gray-800 border-t border-gray-700 px-4 py-2 flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={currentPage <= 1}
-              onClick={goToPrevPage}
-              className="bg-gray-700 border-gray-600 h-9 w-20"
-            >
-              ← Prev
-            </Button>
+        {/* Navigation Footer - hidden in landscape */}
+        {!isLandscape && (
+          <div className="bg-gray-800 border-t border-gray-700 px-4 py-2 flex-shrink-0">
+            <div className="flex items-center justify-between">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage <= 1}
+                onClick={goToPrevPage}
+                className="bg-gray-700 border-gray-600 h-9 w-20"
+              >
+                ← Prev
+              </Button>
 
-            {/* Page input */}
-            <form onSubmit={handlePageInputSubmit} className="flex items-center gap-1">
-              <Input
-                type="number"
-                min={1}
-                max={numPages || 999}
-                value={pageInput}
-                onChange={handlePageInputChange}
-                className="w-14 text-center bg-gray-700 border-gray-600 h-9"
-              />
-              <span className="text-gray-400 text-sm">/ {numPages || '?'}</span>
-            </form>
+              {/* Page input */}
+              <form onSubmit={handlePageInputSubmit} className="flex items-center gap-1">
+                <Input
+                  type="number"
+                  min={1}
+                  max={numPages || 999}
+                  value={pageInput}
+                  onChange={handlePageInputChange}
+                  className="w-14 text-center bg-gray-700 border-gray-600 h-9"
+                />
+                <span className="text-gray-400 text-sm">/ {numPages || '?'}</span>
+              </form>
 
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={currentPage >= numPages}
-              onClick={goToNextPage}
-              className="bg-gray-700 border-gray-600 h-9 w-20"
-            >
-              Next →
-            </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage >= numPages}
+                onClick={goToNextPage}
+                className="bg-gray-700 border-gray-600 h-9 w-20"
+              >
+                Next →
+              </Button>
+            </div>
+
+            {/* Hints */}
+            <div className="text-center text-xs text-gray-500 mt-1">
+              Pinch to zoom • Double-tap to fit • Arrow keys to navigate • ESC to close
+            </div>
           </div>
-
-          {/* Hints */}
-          <div className="text-center text-xs text-gray-500 mt-1">
-            Pinch to zoom • Double-tap to fit • Arrow keys to navigate • ESC to close
-          </div>
-        </div>
+        )}
       </DialogContent>
     </Dialog>
   );
