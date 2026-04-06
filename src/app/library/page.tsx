@@ -1291,6 +1291,15 @@ function LibraryPageContent() {
                             </button>
                             {expandedSections.has(infoDoc?.id || '') && (
                               <div className="max-h-80 overflow-y-auto space-y-1 pr-2 bg-gray-700/30 rounded text-xs border border-gray-600">
+                                {/* Page offset warning */}
+                                {(summary as { pageOffset?: number }).pageOffset &&
+                                  (summary as { pageOffset?: number }).pageOffset > 0 && (
+                                    <div className="text-amber-400 text-[10px] px-2 py-1 border-b border-amber-600/50 bg-amber-900/20">
+                                      ⚠️ Document page numbers offset by +
+                                      {(summary as { pageOffset?: number }).pageOffset} (cover page
+                                      not numbered)
+                                    </div>
+                                  )}
                                 {/* Note about page navigation */}
                                 <div className="text-gray-500 text-[10px] px-2 py-1 border-b border-gray-600/50 italic">
                                   💡 Click section to open in document reader
@@ -1299,16 +1308,20 @@ function LibraryPageContent() {
                                   // Build viewer URL based on document type
                                   const pageNum =
                                     typeof section.page === 'number' ? section.page : null;
+                                  // Apply page offset for documents where physical pages differ from document page numbers
+                                  const pageOffset =
+                                    (summary as { pageOffset?: number }).pageOffset || 0;
+                                  const physicalPage = pageNum ? pageNum + pageOffset : null;
                                   // TMP documents (traffic-management-plan) use split-image viewer
                                   // Other documents use PDF viewer
                                   const isTmpDoc =
                                     infoDoc?.type === 'traffic-management-plan' ||
                                     infoDoc?.category === 'mrwa-tmp';
                                   const viewerUrl =
-                                    pageNum && infoDoc?.id
+                                    physicalPage && infoDoc?.id
                                       ? isTmpDoc
-                                        ? `/library/${infoDoc.id}/${pageNum}`
-                                        : `/library/viewer/${infoDoc.id}/${pageNum}`
+                                        ? `/library/${infoDoc.id}/${physicalPage}`
+                                        : `/library/viewer/${infoDoc.id}/${physicalPage}`
                                       : '#';
 
                                   return (

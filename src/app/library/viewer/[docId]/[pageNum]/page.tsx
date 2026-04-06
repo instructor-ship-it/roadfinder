@@ -43,6 +43,8 @@ interface SummarySection {
 interface DocumentSummary {
   completeSections?: SummarySection[];
   abstract?: string;
+  pageOffset?: number;
+  pageOffsetNote?: string;
 }
 
 export default function PdfViewer() {
@@ -393,24 +395,36 @@ export default function PdfViewer() {
                 <DrawerContent className="bg-gray-800 text-white max-h-[85vh]">
                   <DrawerHeader className="border-b border-gray-700 px-4 pb-2">
                     <DrawerTitle className="text-white">📑 Table of Contents</DrawerTitle>
+                    {summary.pageOffset && summary.pageOffset > 0 && (
+                      <p className="text-xs text-amber-400 mt-1">
+                        ⚠️ Document pages start at physical page {summary.pageOffset + 1}
+                      </p>
+                    )}
                   </DrawerHeader>
                   <div className="p-3 overflow-y-auto flex-1 max-h-[60vh]">
-                    {summary.completeSections.map((section, idx) => (
-                      <Link
-                        key={idx}
-                        href={`/library/viewer/${docId}/${section.page}`}
-                        onClick={() => setIsDrawerOpen(false)}
-                        className="flex items-center gap-2 py-2 px-2 rounded hover:bg-gray-700 cursor-pointer"
-                      >
-                        <span className="font-medium text-sm text-blue-400">
-                          {section.sectionNumber}
-                        </span>
-                        <span className="flex-1 text-gray-300 truncate text-sm">
-                          {section.sectionTitle}
-                        </span>
-                        <span className="text-gray-500 text-sm">p.{section.page}</span>
-                      </Link>
-                    ))}
+                    {summary.completeSections.map((section, idx) => {
+                      // Apply page offset to get physical PDF page
+                      const physicalPage =
+                        typeof section.page === 'number'
+                          ? section.page + (summary.pageOffset || 0)
+                          : section.page;
+                      return (
+                        <Link
+                          key={idx}
+                          href={`/library/viewer/${docId}/${physicalPage}`}
+                          onClick={() => setIsDrawerOpen(false)}
+                          className="flex items-center gap-2 py-2 px-2 rounded hover:bg-gray-700 cursor-pointer"
+                        >
+                          <span className="font-medium text-sm text-blue-400">
+                            {section.sectionNumber}
+                          </span>
+                          <span className="flex-1 text-gray-300 truncate text-sm">
+                            {section.sectionTitle}
+                          </span>
+                          <span className="text-gray-500 text-sm">p.{section.page}</span>
+                        </Link>
+                      );
+                    })}
                   </div>
                   <div className="border-t border-gray-700 p-3">
                     <DrawerClose asChild>

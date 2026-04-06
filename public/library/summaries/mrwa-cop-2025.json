@@ -1,4 +1,6 @@
 {
+  "pageOffset": 1,
+  "pageOffsetNote": "Physical PDF page = document page number + 1 (cover page is unnumbered)",
   "title": "Traffic Management for Works on Roads Code of Practice",
   "abstract": "The Traffic Management for Works on Roads Code of Practice is the primary regulatory document governing traffic management activities on Western Australian roads. It establishes comprehensive requirements for Traffic Management Plan (TMP) preparation, approval processes, and implementation procedures for all roadwork activities. The code specifies technical standards for signage, temporary speed zones, traffic control devices, and safety equipment including Truck Mounted Attenuators (TMAs) and Portable Traffic Control Devices (PTCDs). It defines competency and accreditation requirements for traffic controllers and supervisors, while addressing specialized scenarios including mobile works, short-term works, and emergency responses.",
   "keywords": [
