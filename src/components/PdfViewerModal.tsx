@@ -470,7 +470,7 @@ export function PdfViewerModal({
                   ← Prev
                 </Button>
 
-                <form onSubmit={handlePageInputSubmit} className="flex items-center gap-1">
+                <form onSubmit={handlePageInputSubmit} className="flex items-center gap-1 ml-2">
                   <Input
                     type="number"
                     min={1}
@@ -479,7 +479,7 @@ export function PdfViewerModal({
                     onChange={handlePageInputChange}
                     className="w-12 text-center bg-gray-700 border-gray-600 h-8 text-sm"
                   />
-                  <span className="text-gray-400 text-xs">/ {numPages || '?'}</span>
+                  <span className="text-gray-400 text-xs mr-2">/ {numPages || '?'}</span>
                 </form>
 
                 <Button
