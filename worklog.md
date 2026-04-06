@@ -5,6 +5,50 @@
 
 ---
 
+## Task ID: 2026-04-06-002
+
+**Agent:** Main Agent
+**Task:** PDF Viewer Improvements for Reliable Page Navigation
+
+### Work Log:
+
+- **Problem Identified**:
+  - PDF viewer was working but needed improvements for reliability
+  - PDF.js worker loaded from single CDN (unpkg) which could fail
+  - External PDF URLs might have CORS restrictions
+  - Missing "Open in new tab" option for fallback
+
+- **Improvements Made**:
+  - Added multiple CDN fallbacks for PDF.js worker (unpkg, jsdelivr, cdnjs)
+  - Added detection of external PDF URLs with CORS warning
+  - Added "Open PDF in new tab" button (📄) in header for fallback
+  - Improved loading states with "Loading page X..." feedback
+  - Better error messages that differentiate between local and external PDF issues
+  - Added Page-level loading indicator while rendering
+
+- **Technical Changes**:
+  - Updated `getPdfUrl()` to better handle local vs external URLs
+  - Added `isExternalPdf` check for CORS awareness
+  - Enhanced error handling with specific messages for external PDFs
+  - Added `next.config.mjs` with `allowedDevOrigins` for preview environment
+  - Fixed file permissions for lint-staged hooks
+
+### Files Changed:
+
+- `src/app/library/viewer/[docId]/[pageNum]/page.tsx` (worker fallbacks, CORS handling, open button)
+- `next.config.mjs` (allowedDevOrigins for preview)
+- `worklog.md` (this entry)
+
+### Stage Summary:
+
+- PDF viewer more robust with multiple worker CDN fallbacks
+- Users can open PDF in new tab if inline viewer has issues
+- Better error messages for CORS-related problems
+- Mobile-friendly touch gestures preserved
+- Pushed to GitHub: main branch
+
+---
+
 ## Task ID: 2026-04-06-001
 
 **Agent:** Main Agent
