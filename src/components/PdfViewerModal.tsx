@@ -50,6 +50,7 @@ export function PdfViewerModal({
   const [numPages, setNumPages] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [scale, setScale] = useState(1.0);
+  const [containerWidth, setContainerWidth] = useState<number>(0);
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -69,6 +70,25 @@ export function PdfViewerModal({
       mod.pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.mjs`;
     });
   }, []);
+
+  // Update container width on resize
+  useEffect(() => {
+    if (!isOpen || !containerRef.current) return;
+
+    const updateWidth = () => {
+      if (containerRef.current) {
+        // Use 95% of container width for some padding
+        setContainerWidth(containerRef.current.clientWidth * 0.95);
+      }
+    };
+
+    updateWidth();
+
+    const resizeObserver = new ResizeObserver(updateWidth);
+    resizeObserver.observe(containerRef.current);
+
+    return () => resizeObserver.disconnect();
+  }, [isOpen]);
 
   // Load summary when docId changes
   useEffect(() => {
@@ -448,6 +468,7 @@ export function PdfViewerModal({
               >
                 <Page
                   pageNumber={currentPage}
+                  width={containerWidth || undefined}
                   renderTextLayer={false}
                   renderAnnotationLayer={false}
                   className="shadow-2xl max-w-full max-h-full object-contain pointer-events-none"
