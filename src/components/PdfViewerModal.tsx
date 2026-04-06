@@ -371,10 +371,8 @@ export function PdfViewerModal({
         style={
           isLandscape
             ? {
-                width: '110vw',
-                height: '110vh',
-                maxWidth: '110vw',
-                maxHeight: '110vh',
+                bottom: '-3%',
+                right: '-3%',
               }
             : undefined
         }
