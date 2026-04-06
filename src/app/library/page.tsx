@@ -92,6 +92,63 @@ interface Registry {
   quickLinks: Array<{ label: string; documentId: string; icon: string }>;
 }
 
+/**
+ * Find the page number for a section reference in a document's completeSections.
+ * Handles various section reference formats:
+ * - "Section 8.2" -> finds sectionNumber "8.2"
+ * - "Section 8" -> finds first subsection like "8.1" or "8.0"
+ * - "8.2" -> direct match
+ * - "Appendix 1" -> matches sectionNumber "Appendix 1"
+ */
+function findPageForSection(
+  sectionRef: string,
+  completeSections: Array<{ sectionNumber: string; sectionTitle?: string; page?: number | string }>
+): number | null {
+  if (!sectionRef || !completeSections?.length) return null;
+
+  // Normalize the reference - extract section number
+  // "Section 8.2" -> "8.2", "Section 8" -> "8", "Appendix 1" -> "Appendix 1"
+  const normalizedRef = sectionRef
+    .replace(/^Section\s+/i, '')
+    .replace(/^Section$/i, '')
+    .trim();
+
+  if (!normalizedRef) return null;
+
+  // Try exact match first
+  const exactMatch = completeSections.find(
+    (s) => s.sectionNumber.toLowerCase() === normalizedRef.toLowerCase()
+  );
+  if (exactMatch && typeof exactMatch.page === 'number') {
+    return exactMatch.page;
+  }
+
+  // Try partial match (e.g., "8" should match "8.1" or "8.2")
+  const partialMatch = completeSections.find((s) => {
+    const sectionNum = s.sectionNumber.toLowerCase();
+    // Match if section starts with the reference followed by a dot or is exact
+    return (
+      sectionNum === normalizedRef.toLowerCase() ||
+      sectionNum.startsWith(normalizedRef.toLowerCase() + '.') ||
+      sectionNum.startsWith(normalizedRef.toLowerCase() + ' ')
+    );
+  });
+  if (partialMatch && typeof partialMatch.page === 'number') {
+    return partialMatch.page;
+  }
+
+  // Try matching by title (e.g., "Traffic Controller Accreditation")
+  const titleMatch = completeSections.find((s) => {
+    const title = s.sectionTitle?.toLowerCase() || '';
+    return title.includes(normalizedRef.toLowerCase());
+  });
+  if (titleMatch && typeof titleMatch.page === 'number') {
+    return titleMatch.page;
+  }
+
+  return null;
+}
+
 function LibraryPageContent() {
   const searchParams = useSearchParams();
   const [registry, setRegistry] = useState<Registry | null>(null);
@@ -1368,8 +1425,27 @@ function LibraryPageContent() {
                                   ? (req as { priority?: string }).priority
                                   : null;
 
-                                return (
-                                  <li key={i} className="bg-gray-700/30 p-2 rounded">
+                                // Find page number for section reference
+                                const pageNum = section
+                                  ? findPageForSection(section, summary.completeSections || [])
+                                  : null;
+                                const pageOffset =
+                                  (summary as { pageOffset?: number }).pageOffset || 0;
+                                const physicalPage = pageNum ? pageNum + pageOffset : null;
+
+                                // Determine viewer URL
+                                const isTmpDoc =
+                                  infoDoc?.type === 'traffic-management-plan' ||
+                                  infoDoc?.category === 'mrwa-tmp';
+                                const viewerUrl =
+                                  physicalPage && infoDoc?.id
+                                    ? isTmpDoc
+                                      ? `/library/${infoDoc.id}/${physicalPage}`
+                                      : `/library/viewer/${infoDoc.id}/${physicalPage}`
+                                    : null;
+
+                                const CardContent = (
+                                  <>
                                     <div className="flex items-start gap-2">
                                       {priority && (
                                         <span
@@ -1386,11 +1462,37 @@ function LibraryPageContent() {
                                       )}
                                       <span className="flex-1">{requirementText}</span>
                                       {section && (
-                                        <span className="text-gray-500 text-[10px] shrink-0">
+                                        <span
+                                          className={`text-[10px] shrink-0 flex items-center gap-1 ${
+                                            viewerUrl
+                                              ? 'text-indigo-400 group-hover:text-indigo-300'
+                                              : 'text-gray-500'
+                                          }`}
+                                        >
                                           {section}
+                                          {viewerUrl && <span className="text-indigo-400">📄</span>}
                                         </span>
                                       )}
                                     </div>
+                                    {viewerUrl && (
+                                      <div className="text-indigo-400 text-[10px] mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        🔗 Click to view p.{pageNum}
+                                      </div>
+                                    )}
+                                  </>
+                                );
+
+                                return viewerUrl ? (
+                                  <Link
+                                    key={i}
+                                    href={viewerUrl}
+                                    className="block bg-gray-700/30 p-2 rounded hover:bg-indigo-900/30 hover:border-indigo-500/50 border border-transparent transition-all cursor-pointer group"
+                                  >
+                                    {CardContent}
+                                  </Link>
+                                ) : (
+                                  <li key={i} className="bg-gray-700/30 p-2 rounded">
+                                    {CardContent}
                                   </li>
                                 );
                               })}
@@ -1414,22 +1516,69 @@ function LibraryPageContent() {
                                   ? (note as { consequence?: string }).consequence
                                   : null;
 
-                                return (
-                                  <li
-                                    key={i}
-                                    className="bg-amber-900/20 p-2 rounded border-l-2 border-amber-600"
-                                  >
+                                // Find page number for reference
+                                const pageNum = reference
+                                  ? findPageForSection(reference, summary.completeSections || [])
+                                  : null;
+                                const pageOffset =
+                                  (summary as { pageOffset?: number }).pageOffset || 0;
+                                const physicalPage = pageNum ? pageNum + pageOffset : null;
+
+                                // Determine viewer URL
+                                const isTmpDoc =
+                                  infoDoc?.type === 'traffic-management-plan' ||
+                                  infoDoc?.category === 'mrwa-tmp';
+                                const viewerUrl =
+                                  physicalPage && infoDoc?.id
+                                    ? isTmpDoc
+                                      ? `/library/${infoDoc.id}/${physicalPage}`
+                                      : `/library/viewer/${infoDoc.id}/${physicalPage}`
+                                    : null;
+
+                                const CardContent = (
+                                  <>
                                     <div className="text-gray-300">{noteText}</div>
-                                    {reference && (
-                                      <div className="text-amber-400 text-[10px] mt-1">
-                                        Ref: {reference}
-                                      </div>
-                                    )}
+                                    <div className="flex items-center justify-between mt-1">
+                                      {reference && (
+                                        <div
+                                          className={`text-[10px] flex items-center gap-1 ${
+                                            viewerUrl
+                                              ? 'text-indigo-400 group-hover:text-indigo-300'
+                                              : 'text-amber-400'
+                                          }`}
+                                        >
+                                          Ref: {reference}
+                                          {viewerUrl && <span className="text-indigo-400">📄</span>}
+                                        </div>
+                                      )}
+                                      {viewerUrl && (
+                                        <div className="text-indigo-400 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">
+                                          🔗 p.{pageNum}
+                                        </div>
+                                      )}
+                                    </div>
                                     {consequence && (
                                       <div className="text-red-400 text-[10px] mt-1">
                                         ⚠️ {consequence}
                                       </div>
                                     )}
+                                  </>
+                                );
+
+                                return viewerUrl ? (
+                                  <Link
+                                    key={i}
+                                    href={viewerUrl}
+                                    className="block bg-amber-900/20 p-2 rounded border-l-2 border-amber-600 hover:bg-amber-900/40 hover:border-indigo-500 transition-all cursor-pointer group"
+                                  >
+                                    {CardContent}
+                                  </Link>
+                                ) : (
+                                  <li
+                                    key={i}
+                                    className="bg-amber-900/20 p-2 rounded border-l-2 border-amber-600"
+                                  >
+                                    {CardContent}
                                   </li>
                                 );
                               })}
