@@ -1293,24 +1293,22 @@ function LibraryPageContent() {
                               <div className="max-h-80 overflow-y-auto space-y-1 pr-2 bg-gray-700/30 rounded text-xs border border-gray-600">
                                 {/* Note about page navigation */}
                                 <div className="text-gray-500 text-[10px] px-2 py-1 border-b border-gray-600/50 italic">
-                                  💡 Click section to open PDF. Use page number to navigate manually
-                                  (browser support varies).
+                                  💡 Click section to open in document reader
                                 </div>
                                 {summary.completeSections.map((section, i) => {
-                                  // Build PDF URL - open in new tab for better compatibility
-                                  const pdfUrl = infoDoc?.file || infoDoc?.url || '#';
-                                  // Try #page=N anchor (works in Chrome/Edge, may not work in all browsers)
+                                  // Build viewer URL - use custom reader if available
                                   const pageNum =
                                     typeof section.page === 'number' ? section.page : null;
-                                  const pageUrl = pageNum ? `${pdfUrl}#page=${pageNum}` : pdfUrl;
-                                  const isExternal = pdfUrl.startsWith('http');
+                                  // Link to custom viewer: /library/{docId}/{pageNum}
+                                  const viewerUrl =
+                                    pageNum && infoDoc?.id
+                                      ? `/library/${infoDoc.id}/${pageNum}`
+                                      : '#';
 
                                   return (
-                                    <a
+                                    <Link
                                       key={i}
-                                      href={pageUrl}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
+                                      href={viewerUrl}
                                       className="flex items-start gap-2 py-1 border-b border-gray-600/50 first:border-0 last:border-0 hover:bg-indigo-900/30 px-2 rounded cursor-pointer transition-colors group"
                                     >
                                       <span className="text-indigo-300 font-mono min-w-[40px] shrink-0 group-hover:text-indigo-200">
@@ -1324,7 +1322,7 @@ function LibraryPageContent() {
                                           📄 p.{section.page}
                                         </span>
                                       )}
-                                    </a>
+                                    </Link>
                                   );
                                 })}
                               </div>

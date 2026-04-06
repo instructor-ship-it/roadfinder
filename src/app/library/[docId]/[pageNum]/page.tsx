@@ -81,6 +81,7 @@ export default function PageViewer() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedImplementation, setSelectedImplementation] = useState<string>('all');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [viewerPath, setViewerPath] = useState<string | null>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
@@ -98,20 +99,44 @@ export default function PageViewer() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const response = await fetch('/library/mrwa/tmp/catalog.json');
-        if (!response.ok) throw new Error('Failed to load catalog');
-        const data = await response.json();
-        setCatalog(data);
+        // Try different viewer paths in order
+        const possiblePaths = [
+          `/library/viewer/${docId}`, // Universal viewer path
+          `/library/mrwa/tmp`, // Legacy TMP path (for backward compatibility)
+        ];
+
+        let foundPath: string | null = null;
+        let catalogData: CatalogData | null = null;
+
+        for (const basePath of possiblePaths) {
+          try {
+            const response = await fetch(`${basePath}/catalog.json`);
+            if (response.ok) {
+              catalogData = await response.json();
+              foundPath = basePath;
+              break;
+            }
+          } catch {
+            continue;
+          }
+        }
+
+        if (!catalogData || !foundPath) {
+          throw new Error('Document viewer not available for this document');
+        }
+
+        setViewerPath(foundPath);
+        setCatalog(catalogData);
 
         // Load TOC
-        const tocResponse = await fetch('/library/mrwa/tmp/toc.json');
+        const tocResponse = await fetch(`${foundPath}/toc.json`);
         if (tocResponse.ok) {
           const tocData = await tocResponse.json();
           setToc(tocData);
         }
 
         // Load TGS Index
-        const tgsResponse = await fetch('/library/mrwa/tmp/tgs-index.json');
+        const tgsResponse = await fetch(`${foundPath}/tgs-index.json`);
         if (tgsResponse.ok) {
           const tgsData = await tgsResponse.json();
           setTgsIndex(tgsData);
@@ -123,7 +148,7 @@ export default function PageViewer() {
       }
     };
     loadData();
-  }, []);
+  }, [docId]);
 
   // Reset zoom when page changes
   useEffect(() => {
@@ -239,10 +264,10 @@ export default function PageViewer() {
 
   // Print handler - opens PDF in new tab
   const handlePrint = useCallback(() => {
-    if (currentPage) {
-      window.open(`/library/mrwa/tmp/${currentPage.file}`, '_blank');
+    if (currentPage && viewerPath) {
+      window.open(`${viewerPath}/${currentPage.file}`, '_blank');
     }
-  }, [currentPage]);
+  }, [currentPage, viewerPath]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -755,7 +780,7 @@ export default function PageViewer() {
           }}
         >
           <img
-            src={`/library/mrwa/tmp/${currentPage.preview}`}
+            src={`${viewerPath}/${currentPage?.preview}`}
             alt={`Page ${pageNum}`}
             className="max-w-full max-h-full object-contain pointer-events-none"
             draggable={false}

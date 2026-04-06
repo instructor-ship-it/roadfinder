@@ -76,25 +76,50 @@ export default function DocumentViewerPage() {
   const [error, setError] = useState<string | null>(null);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
   const [isTocDrawerOpen, setIsTocDrawerOpen] = useState(false);
+  const [viewerPath, setViewerPath] = useState<string | null>(null);
 
-  // Load catalog, search index, and TOC
+  // Determine viewer path and load catalog
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Load catalog
-        const catalogResponse = await fetch('/library/mrwa/tmp/catalog.json');
-        if (!catalogResponse.ok) throw new Error('Failed to load catalog');
-        const catalogData = await catalogResponse.json();
+        // Try different viewer paths in order
+        const possiblePaths = [
+          `/library/viewer/${docId}`, // Universal viewer path
+          `/library/mrwa/tmp`, // Legacy TMP path (for backward compatibility)
+        ];
+
+        let foundPath: string | null = null;
+        let catalogData: CatalogData | null = null;
+
+        for (const basePath of possiblePaths) {
+          try {
+            const response = await fetch(`${basePath}/catalog.json`);
+            if (response.ok) {
+              catalogData = await response.json();
+              foundPath = basePath;
+              break;
+            }
+          } catch {
+            continue;
+          }
+        }
+
+        if (!catalogData || !foundPath) {
+          throw new Error('Document viewer not available for this document');
+        }
+
+        setViewerPath(foundPath);
         setCatalog(catalogData);
 
         // Load search index
-        const indexResponse = await fetch('/library/mrwa/tmp/index.json');
-        if (!indexResponse.ok) throw new Error('Failed to load search index');
-        const indexData = await indexResponse.json();
-        setSearchIndex(indexData);
+        const indexResponse = await fetch(`${foundPath}/index.json`);
+        if (indexResponse.ok) {
+          const indexData = await indexResponse.json();
+          setSearchIndex(indexData);
+        }
 
         // Load TOC
-        const tocResponse = await fetch('/library/mrwa/tmp/toc.json');
+        const tocResponse = await fetch(`${foundPath}/toc.json`);
         if (tocResponse.ok) {
           const tocData = await tocResponse.json();
           setToc(tocData);
@@ -106,7 +131,7 @@ export default function DocumentViewerPage() {
       }
     };
     loadData();
-  }, []);
+  }, [docId]);
 
   // Toggle section expansion
   const toggleSection = (section: string) => {
@@ -147,31 +172,31 @@ export default function DocumentViewerPage() {
   // Filter TOC by search
   const filteredToc = useMemo(() => {
     if (!tocSearch.trim()) return toc;
-    
+
     const query = tocSearch.toLowerCase();
-    
+
     const filterEntries = (entries: TocEntry[]): TocEntry[] => {
       return entries.reduce((acc: TocEntry[], entry) => {
         const titleMatch = entry.title.toLowerCase().includes(query);
         const sectionMatch = entry.section.toLowerCase().includes(query);
         const pageMatch = entry.page.toString().includes(query);
-        
+
         let filteredChildren: TocEntry[] = [];
         if (entry.children) {
           filteredChildren = filterEntries(entry.children);
         }
-        
+
         if (titleMatch || sectionMatch || pageMatch || filteredChildren.length > 0) {
           acc.push({
             ...entry,
             children: filteredChildren.length > 0 ? filteredChildren : entry.children,
           });
         }
-        
+
         return acc;
       }, []);
     };
-    
+
     return filterEntries(toc);
   }, [toc, tocSearch]);
 
@@ -184,7 +209,7 @@ export default function DocumentViewerPage() {
   const renderTocEntry = (entry: TocEntry, depth = 0) => {
     const hasChildren = entry.children && entry.children.length > 0;
     const isExpanded = expandedSections.has(entry.section);
-    
+
     return (
       <div key={entry.section}>
         <div
@@ -196,22 +221,26 @@ export default function DocumentViewerPage() {
               onClick={() => toggleSection(entry.section)}
               className="text-gray-500 hover:text-white w-6 h-6 flex items-center justify-center shrink-0"
             >
-              <span className={`transition-transform text-sm ${isExpanded ? 'rotate-90' : ''}`}>›</span>
+              <span className={`transition-transform text-sm ${isExpanded ? 'rotate-90' : ''}`}>
+                ›
+              </span>
             </button>
           )}
           {!hasChildren && <span className="w-6 shrink-0" />}
-          
+
           <Link
             href={`/library/${docId}/${entry.page}`}
             className="flex-1 flex items-center gap-2 min-w-0"
             onClick={() => setIsTocDrawerOpen(false)}
           >
-            <span className={`font-medium text-sm ${entry.isTgs ? 'text-green-400' : entry.isAppendix ? 'text-purple-400' : 'text-blue-400'}`}>
+            <span
+              className={`font-medium text-sm ${entry.isTgs ? 'text-green-400' : entry.isAppendix ? 'text-purple-400' : 'text-blue-400'}`}
+            >
               {entry.section}
             </span>
             <span className="text-gray-300 truncate text-sm">{entry.title}</span>
           </Link>
-          
+
           <Link
             href={`/library/${docId}/${entry.page}`}
             className="text-gray-500 text-xs hover:text-white group-hover:text-gray-300 shrink-0"
@@ -220,11 +249,9 @@ export default function DocumentViewerPage() {
             p.{entry.page}
           </Link>
         </div>
-        
+
         {hasChildren && isExpanded && (
-          <div>
-            {entry.children!.map((child) => renderTocEntry(child, depth + 1))}
-          </div>
+          <div>{entry.children!.map((child) => renderTocEntry(child, depth + 1))}</div>
         )}
       </div>
     );
@@ -266,7 +293,9 @@ export default function DocumentViewerPage() {
                 </Button>
               </Link>
               <div className="min-w-0">
-                <h1 className="text-base md:text-lg font-bold truncate">{catalog?.document.title}</h1>
+                <h1 className="text-base md:text-lg font-bold truncate">
+                  {catalog?.document.title}
+                </h1>
                 <div className="flex items-center gap-2 text-xs text-gray-400">
                   <span className="text-blue-400">{catalog?.document.category}</span>
                   <span>→</span>
@@ -274,7 +303,7 @@ export default function DocumentViewerPage() {
                 </div>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2 shrink-0">
               {/* TOC Drawer */}
               <Drawer open={isTocDrawerOpen} onOpenChange={setIsTocDrawerOpen}>
@@ -307,23 +336,41 @@ export default function DocumentViewerPage() {
                     {/* Quick Links */}
                     <div className="flex flex-wrap gap-2 mt-3">
                       <Link href={`/library/${docId}/1`} onClick={() => setIsTocDrawerOpen(false)}>
-                        <Button size="sm" variant="outline" className="text-xs h-8 border-gray-600 bg-gray-700">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-8 border-gray-600 bg-gray-700"
+                        >
                           Cover
                         </Button>
                       </Link>
                       <Link href={`/library/${docId}/8`} onClick={() => setIsTocDrawerOpen(false)}>
-                        <Button size="sm" variant="outline" className="text-xs h-8 border-gray-600 bg-gray-700">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-8 border-gray-600 bg-gray-700"
+                        >
                           Section 1
                         </Button>
                       </Link>
-                      <Link href={`/library/${docId}/139`} onClick={() => setIsTocDrawerOpen(false)}>
-                        <Button size="sm" variant="outline" className="text-xs h-8 border-green-700 bg-green-900/30 text-green-400">
+                      <Link
+                        href={`/library/${docId}/139`}
+                        onClick={() => setIsTocDrawerOpen(false)}
+                      >
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-xs h-8 border-green-700 bg-green-900/30 text-green-400"
+                        >
                           TGS Diagrams
                         </Button>
                       </Link>
                     </div>
                   </DrawerHeader>
-                  <div className="p-3 overflow-y-auto flex-1 overscroll-contain" style={{ maxHeight: 'calc(90vh - 200px)' }}>
+                  <div
+                    className="p-3 overflow-y-auto flex-1 overscroll-contain"
+                    style={{ maxHeight: 'calc(90vh - 200px)' }}
+                  >
                     {filteredToc.map((entry) => renderTocEntry(entry))}
                     {filteredToc.length === 0 && tocSearch && (
                       <p className="text-gray-400 text-center py-8">No matching sections</p>
@@ -365,11 +412,7 @@ export default function DocumentViewerPage() {
             {/* TGS Filter Toggle - Mobile friendly */}
             <div className="flex items-center justify-between bg-gray-700 rounded-lg px-4 py-3">
               <div className="flex items-center gap-3">
-                <Switch
-                  id="tgs-filter"
-                  checked={showTgsOnly}
-                  onCheckedChange={setShowTgsOnly}
-                />
+                <Switch id="tgs-filter" checked={showTgsOnly} onCheckedChange={setShowTgsOnly} />
                 <Label htmlFor="tgs-filter" className="cursor-pointer">
                   <span className="text-green-400 font-medium">TGS Only</span>
                 </Label>
@@ -417,16 +460,12 @@ export default function DocumentViewerPage() {
             const manifestPage = catalog?.manifest.find((m) => m.num === page.n);
 
             return (
-              <Link
-                key={page.n}
-                href={`/library/${docId}/${page.n}`}
-                className="group"
-              >
+              <Link key={page.n} href={`/library/${docId}/${page.n}`} className="group">
                 <Card className="bg-gray-800 border-gray-700 hover:border-gray-500 transition-colors overflow-hidden">
                   <div className="aspect-[3/4] bg-gray-700 relative">
                     {/* Thumbnail */}
                     <img
-                      src={`/library/mrwa/tmp/${manifestPage?.preview}`}
+                      src={`${viewerPath}/${manifestPage?.preview}`}
                       alt={`Page ${page.n}`}
                       className="w-full h-full object-cover"
                       loading="lazy"
