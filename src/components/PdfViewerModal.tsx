@@ -51,6 +51,9 @@ export function PdfViewerModal({
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [scale, setScale] = useState(1.0);
   const [containerWidth, setContainerWidth] = useState<number>(0);
+  const [containerHeight, setContainerHeight] = useState<number>(0);
+  const [pageWidth, setPageWidth] = useState<number>(0);
+  const [pageHeight, setPageHeight] = useState<number>(0);
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,31 +74,33 @@ export function PdfViewerModal({
     });
   }, []);
 
-  // Update container width on resize
+  // Update container dimensions on resize
   useEffect(() => {
     if (!isOpen) return;
 
-    const updateWidth = () => {
-      // Prefer container width, fallback to window
+    const updateDimensions = () => {
+      // Prefer container dimensions, fallback to window
       const width = containerRef.current?.clientWidth || window.innerWidth;
+      const height = containerRef.current?.clientHeight || window.innerHeight;
       setContainerWidth(width);
+      setContainerHeight(height);
     };
 
     // Initial measurement with delay to ensure modal is rendered
-    const timer = setTimeout(updateWidth, 100);
+    const timer = setTimeout(updateDimensions, 100);
 
     // Listen for resize (handles orientation change)
-    const resizeObserver = new ResizeObserver(updateWidth);
+    const resizeObserver = new ResizeObserver(updateDimensions);
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
     }
 
-    window.addEventListener('resize', updateWidth);
+    window.addEventListener('resize', updateDimensions);
 
     return () => {
       clearTimeout(timer);
       resizeObserver.disconnect();
-      window.removeEventListener('resize', updateWidth);
+      window.removeEventListener('resize', updateDimensions);
     };
   }, [isOpen]);
 
@@ -135,6 +140,30 @@ export function PdfViewerModal({
     setNumPages(numPages);
     setLoading(false);
   };
+
+  // Handle page load success - get natural dimensions
+  const onPageLoadSuccess = (page: { width: number; height: number }) => {
+    setPageWidth(page.width);
+    setPageHeight(page.height);
+  };
+
+  // Calculate optimal display width to fit in container
+  const getDisplayWidth = useCallback(() => {
+    if (!containerWidth || !containerHeight || !pageWidth || !pageHeight) {
+      return containerWidth || undefined;
+    }
+
+    // Calculate scale needed to fit width
+    const widthScale = containerWidth / pageWidth;
+    // Calculate scale needed to fit height
+    const heightScale = containerHeight / pageHeight;
+
+    // Use the smaller scale (fits within both constraints)
+    const fitScale = Math.min(widthScale, heightScale);
+
+    // Return the width at this scale
+    return pageWidth * fitScale;
+  }, [containerWidth, containerHeight, pageWidth, pageHeight]);
 
   // Navigation
   const goToPage = useCallback(
@@ -476,9 +505,10 @@ export function PdfViewerModal({
                 }
               >
                 <Page
-                  key={`page-${currentPage}-${containerWidth}`}
+                  key={`page-${currentPage}-${containerWidth}-${containerHeight}`}
                   pageNumber={currentPage}
-                  width={containerWidth > 0 ? containerWidth : undefined}
+                  width={getDisplayWidth()}
+                  onLoadSuccess={onPageLoadSuccess}
                   renderTextLayer={false}
                   renderAnnotationLayer={false}
                   className="shadow-2xl max-w-full max-h-full object-contain pointer-events-none"
