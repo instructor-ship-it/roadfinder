@@ -368,18 +368,21 @@ export function PdfViewerModal({
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent
         className="bg-gray-900 border-gray-700 text-white p-0 overflow-hidden flex flex-col rounded-none"
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          width: '100vw',
-          height: '100vh',
-          maxWidth: '100vw',
-          maxHeight: '100vh',
-          transform: 'translate(0, 0)',
-        }}
+        style={
+          {
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100vw',
+            height: '100vh',
+            maxWidth: '100vw',
+            maxHeight: '100vh',
+            '--tw-translate-x': '0px',
+            '--tw-translate-y': '0px',
+          } as React.CSSProperties
+        }
       >
         {/* Header */}
         <DialogHeader className="bg-gray-800 border-b border-gray-700 px-4 py-2 flex-shrink-0">
