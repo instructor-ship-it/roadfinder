@@ -142,9 +142,9 @@ export function PdfViewerModal({
   };
 
   // Handle page load success - get natural dimensions
-  const onPageLoadSuccess = (page: { width: number; height: number }) => {
-    setPageWidth(page.width);
-    setPageHeight(page.height);
+  const onPageLoadSuccess = (page: { originalWidth: number; originalHeight: number }) => {
+    setPageWidth(page.originalWidth);
+    setPageHeight(page.originalHeight);
   };
 
   // Calculate optimal display width to fit in container
