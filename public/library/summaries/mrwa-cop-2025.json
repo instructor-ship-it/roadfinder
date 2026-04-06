@@ -22,170 +22,115 @@
     "Work Health and Safety Officers"
   ],
   "completeSections": [
+    { "sectionNumber": "1", "sectionTitle": "INTRODUCTION AND SCOPE", "page": 16 },
+    { "sectionNumber": "1.1", "sectionTitle": "INTRODUCTION", "page": 16 },
+    { "sectionNumber": "1.2", "sectionTitle": "SCOPE", "page": 16 },
+    { "sectionNumber": "1.3", "sectionTitle": "AUSTROADS SAFETY AT ROAD WORKSITES", "page": 17 },
     {
-      "sectionNumber": "Appendix 5",
-      "sectionTitle": "Conditions amended for MMS-ADV-11, MMS-ADV-20,"
-    },
-    {
-      "sectionNumber": "Appendix 1",
-      "sectionTitle": "Traffic Lane definition added"
-    },
-    {
-      "sectionNumber": "Appendix 1",
-      "sectionTitle": "Definitions added for Long Term Works, High Speed"
-    },
-    {
-      "sectionNumber": "Appendix 4",
-      "sectionTitle": "Pilbara Region email updated"
-    },
-    {
-      "sectionNumber": "Appendix 5",
-      "sectionTitle": "MMS-REG-15 added"
-    },
-    {
-      "sectionNumber": "Appendix 5",
-      "sectionTitle": "MMS-ADV-31 may be used in either side of the frame"
-    },
-    {
-      "sectionNumber": "Appendix 4",
-      "sectionTitle": "Distribution List updated"
-    },
-    {
-      "sectionNumber": "Appendix 1",
-      "sectionTitle": "Addition of ‘State Road’ definition"
-    },
-    {
-      "sectionNumber": "Appendix 4",
-      "sectionTitle": "Distribution list updated"
-    },
-    {
-      "sectionNumber": "Appendix 5",
-      "sectionTitle": "Addition of blank yellow panels"
-    },
-    {
-      "sectionNumber": "Appendix 1",
-      "sectionTitle": "Addition of ‘Must’ definition"
-    },
-    {
-      "sectionNumber": "Appendix 5",
-      "sectionTitle": "MMS-ADV-22 not to be used in conjunction with a"
-    },
-    {
-      "sectionNumber": "Appendix 1",
-      "sectionTitle": "Removal of definitions within AGTTM Part 1"
-    },
-    {
-      "sectionNumber": "Appendix 4",
-      "sectionTitle": "Notification of Roadworks Form updated - additional"
-    },
-    {
-      "sectionNumber": "Appendix 5",
-      "sectionTitle": "New signs: MMS-ADV-85, MMS-ADV-85, MMS-ADV-"
-    },
-    {
-      "sectionNumber": "1",
-      "sectionTitle": "INTRODUCTION AND SCOPE",
-      "page": 16
-    },
-    {
-      "sectionNumber": "1.1",
-      "sectionTitle": "INTRODUCTION",
-      "page": 16
-    },
-    {
-      "sectionNumber": "1.2",
-      "sectionTitle": "SCOPE",
-      "page": 16
-    },
-    {
-      "sectionNumber": "1.3",
-      "sectionTitle": "AUSTROADS SAFETY AT ROAD WORKSITES",
+      "sectionNumber": "1.3.1",
+      "sectionTitle": "Austroads Guide to Temporary Traffic Management",
       "page": 17
     },
-    {
-      "sectionNumber": "2",
-      "sectionTitle": "APPROVAL TO WORK WITHIN ROAD RESERVES",
-      "page": 20
-    },
+    { "sectionNumber": "1.3.2", "sectionTitle": "Road Categories and Training", "page": 19 },
+    { "sectionNumber": "2", "sectionTitle": "APPROVAL TO WORK WITHIN ROAD RESERVES", "page": 20 },
     {
       "sectionNumber": "2.1",
       "sectionTitle": "ROADS FOR WHICH MAIN ROADS IS RESPONSIBLE",
       "page": 20
     },
     {
+      "sectionNumber": "2.1.1",
+      "sectionTitle": "Main Roads Policy for Works on High Volume Roads",
+      "page": 21
+    },
+    {
+      "sectionNumber": "2.1.2",
+      "sectionTitle": "Traffic Management Company Registration Scheme",
+      "page": 22
+    },
+    {
+      "sectionNumber": "2.1.3",
+      "sectionTitle": "Works on Main Roads Roads in the Metropolitan Area",
+      "page": 22
+    },
+    {
       "sectionNumber": "2.2",
-      "sectionTitle": "ROADS FOR WHICH LOCAL GOVERNMENT OR OTHERS ARE"
+      "sectionTitle": "ROADS FOR WHICH LOCAL GOVERNMENT OR OTHERS ARE RESPONSIBLE",
+      "page": 23
     },
     {
       "sectionNumber": "2.3",
       "sectionTitle": "WORKS AFFECTING TRAFFIC SIGNAL OPERATION",
       "page": 23
     },
-    {
-      "sectionNumber": "2.4",
-      "sectionTitle": "TRAFFIC MODELLING",
-      "page": 23
-    },
+    { "sectionNumber": "2.4", "sectionTitle": "TRAFFIC MODELLING", "page": 23 },
     {
       "sectionNumber": "3",
       "sectionTitle": "AUTHORITY TO ERECT TRAFFIC CONTROL DEVICES",
       "page": 24
     },
-    {
-      "sectionNumber": "3.1",
-      "sectionTitle": "MAIN ROADS",
-      "page": 24
-    },
-    {
-      "sectionNumber": "3.2",
-      "sectionTitle": "MAIN ROADS AGENTS",
-      "page": 24
-    },
-    {
-      "sectionNumber": "3.3",
-      "sectionTitle": "AUTHORISED BODIES AND THEIR AGENTS",
-      "page": 24
-    },
+    { "sectionNumber": "3.1", "sectionTitle": "MAIN ROADS", "page": 24 },
+    { "sectionNumber": "3.2", "sectionTitle": "MAIN ROADS AGENTS", "page": 24 },
+    { "sectionNumber": "3.3", "sectionTitle": "AUTHORISED BODIES AND THEIR AGENTS", "page": 24 },
     {
       "sectionNumber": "3.4",
       "sectionTitle": "OTHERS NOT PARTY TO AN INSTRUMENT OF AUTHORISATION",
       "page": 24
     },
+    { "sectionNumber": "3.5", "sectionTitle": "AUTHORISING TRAFFIC MANAGEMENT PLANS", "page": 25 },
+    { "sectionNumber": "4", "sectionTitle": "PLANNING THE WORKS", "page": 26 },
+    { "sectionNumber": "4.1", "sectionTitle": "DUTY OF CARE", "page": 26 },
+    { "sectionNumber": "4.2", "sectionTitle": "TRAFFIC MANAGEMENT PLANS", "page": 26 },
+    { "sectionNumber": "4.2.1", "sectionTitle": "General", "page": 26 },
+    { "sectionNumber": "4.2.2", "sectionTitle": "Generic TMPs", "page": 28 },
     {
-      "sectionNumber": "3.5",
-      "sectionTitle": "AUTHORISING TRAFFIC MANAGEMENT PLANS",
-      "page": 25
+      "sectionNumber": "4.2.3",
+      "sectionTitle": "Traffic Management Plans Involving Complex Traffic Arrangements",
+      "page": 29
     },
     {
-      "sectionNumber": "4",
-      "sectionTitle": "PLANNING THE WORKS",
-      "page": 26
+      "sectionNumber": "4.2.4",
+      "sectionTitle": "Temporary Road Safety Barrier Detail in TMPs",
+      "page": 31
     },
     {
-      "sectionNumber": "4.1",
-      "sectionTitle": "DUTY OF CARE",
-      "page": 26
+      "sectionNumber": "4.2.5",
+      "sectionTitle": "Traffic Management Implementation and Removal",
+      "page": 32
     },
+    { "sectionNumber": "4.2.6", "sectionTitle": "Adjustment and Modification of TMPs", "page": 32 },
+    { "sectionNumber": "4.3", "sectionTitle": "RISK MANAGEMENT", "page": 33 },
     {
-      "sectionNumber": "4.2",
-      "sectionTitle": "TRAFFIC MANAGEMENT PLANS",
-      "page": 26
+      "sectionNumber": "4.4",
+      "sectionTitle": "CONSULTATION, COMMUNICATION AND NOTIFICATION OF ROADWORKS",
+      "page": 34
     },
+    { "sectionNumber": "4.4.1", "sectionTitle": "Consultation", "page": 34 },
+    { "sectionNumber": "4.4.2", "sectionTitle": "Notification of Approved Roadworks", "page": 37 },
     {
-      "sectionNumber": "4.3",
-      "sectionTitle": "RISK MANAGEMENT",
-      "page": 33
+      "sectionNumber": "4.5",
+      "sectionTitle": "VARIATION TO THE CODE, AGTTM AND STANDARDS",
+      "page": 38
     },
-    {
-      "sectionNumber": "4.6",
-      "sectionTitle": "VULNERABLE ROAD USERS",
-      "page": 39
-    },
+    { "sectionNumber": "4.6", "sectionTitle": "VULNERABLE ROAD USERS", "page": 39 },
     {
       "sectionNumber": "5",
       "sectionTitle": "REVIEW, INSPECTION, ROAD SAFETY AUDIT AND OPERATION",
       "page": 41
     },
+    {
+      "sectionNumber": "5.1",
+      "sectionTitle": "REVIEW, INSPECTION AND ROAD SAFETY AUDIT",
+      "page": 41
+    },
+    { "sectionNumber": "5.1.1", "sectionTitle": "Audits", "page": 41 },
+    {
+      "sectionNumber": "5.1.2",
+      "sectionTitle": "Suitability Reviews and Compliance Safety Inspections",
+      "page": 41
+    },
+    { "sectionNumber": "5.1.3", "sectionTitle": "Suitability Check", "page": 42 },
+    { "sectionNumber": "5.1.4", "sectionTitle": "Review and Audit Checklists", "page": 42 },
     {
       "sectionNumber": "5.2",
       "sectionTitle": "TRAFFIC MANAGEMENT OPERATION AND RECORDS",
@@ -193,69 +138,180 @@
     },
     {
       "sectionNumber": "6",
-      "sectionTitle": "DEPARTURES FROM DESIGN REQUIRMENTS IN AS1742.3 AND AGTTM",
+      "sectionTitle": "DEPARTURES FROM DESIGN REQUIREMENTS IN AS1742.3 AND AGTTM",
       "page": 44
     },
+    { "sectionNumber": "6.1", "sectionTitle": "TEMPORARY SIGNAGE", "page": 44 },
+    { "sectionNumber": "6.1.1", "sectionTitle": "General", "page": 44 },
+    { "sectionNumber": "6.1.2", "sectionTitle": "REDUCE SPEED Signs", "page": 44 },
+    { "sectionNumber": "6.1.3", "sectionTitle": "NEW WORK NO LINES MARKED Signing", "page": 45 },
+    { "sectionNumber": "6.1.4", "sectionTitle": "ROAD INSPECTION Sign", "page": 45 },
+    { "sectionNumber": "6.1.5", "sectionTitle": "CYCLIST DISMOUNT Sign", "page": 45 },
     {
-      "sectionNumber": "6.1",
-      "sectionTitle": "TEMPORARY SIGNAGE",
-      "page": 44
+      "sectionNumber": "6.1.6",
+      "sectionTitle": "Pedestrian Warning Signs for Motorists",
+      "page": 46
     },
+    { "sectionNumber": "6.1.7", "sectionTitle": "Repeater Speed Restriction Signs", "page": 46 },
     {
-      "sectionNumber": "6.2",
-      "sectionTitle": "GUIDELINES FOR MULTI-MESSAGE SIGNS",
-      "page": 53
+      "sectionNumber": "6.1.8",
+      "sectionTitle": "ROAD CLOSED and FOOTPATH CLOSED Signs",
+      "page": 46
     },
+    { "sectionNumber": "6.1.9", "sectionTitle": "Sign Spacing", "page": 46 },
     {
-      "sectionNumber": "6.3",
-      "sectionTitle": "SECURING SIGNS AND DEVICES",
-      "page": 55
+      "sectionNumber": "6.1.10",
+      "sectionTitle": "Advance Warning on Freeways and High-Speed High-Volume Roads",
+      "page": 47
     },
+    { "sectionNumber": "6.1.11", "sectionTitle": "U-Turn DETOUR Ahead Sign", "page": 48 },
+    { "sectionNumber": "6.1.12", "sectionTitle": "Detour Signs", "page": 48 },
+    { "sectionNumber": "6.1.13", "sectionTitle": "Workers (symbolic) Signs", "page": 48 },
+    { "sectionNumber": "6.1.14", "sectionTitle": "Lane Status Signs", "page": 49 },
+    { "sectionNumber": "6.2", "sectionTitle": "GUIDELINES FOR MULTI-MESSAGE SIGNS", "page": 53 },
+    { "sectionNumber": "6.2.1", "sectionTitle": "Introduction", "page": 53 },
+    { "sectionNumber": "6.2.2", "sectionTitle": "Frames for Multi-Message Signs", "page": 53 },
+    { "sectionNumber": "6.2.3", "sectionTitle": "Substrates for Multi-Message Signs", "page": 53 },
+    {
+      "sectionNumber": "6.2.4",
+      "sectionTitle": "Selection and Use of Multi-Message Signs",
+      "page": 54
+    },
+    { "sectionNumber": "6.3", "sectionTitle": "SECURING SIGNS AND DEVICES", "page": 55 },
+    { "sectionNumber": "6.3.1", "sectionTitle": "Securing Signs", "page": 55 },
+    { "sectionNumber": "6.3.2", "sectionTitle": "Securing Cones and Bollards", "page": 56 },
     {
       "sectionNumber": "6.4",
       "sectionTitle": "COVERING EXISTING SIGNAGE AND ROAD MARKING",
       "page": 57
     },
+    { "sectionNumber": "6.4.1", "sectionTitle": "Existing Signs", "page": 57 },
+    { "sectionNumber": "6.4.2", "sectionTitle": "Covering Regulatory Road Marking", "page": 57 },
+    { "sectionNumber": "6.5", "sectionTitle": "SPEED LIMIT ZONES", "page": 58 },
+    { "sectionNumber": "6.5.1", "sectionTitle": "Setting out Temporary Speed Zones", "page": 58 },
     {
-      "sectionNumber": "6.5",
-      "sectionTitle": "SPEED LIMIT ZONES",
-      "page": 58
+      "sectionNumber": "6.5.2",
+      "sectionTitle": "Selecting Temporary Speed Limits on State Roads",
+      "page": 60
     },
+    { "sectionNumber": "6.5.3", "sectionTitle": "Length of Temporary Speed Zones", "page": 61 },
+    { "sectionNumber": "6.6", "sectionTitle": "TEMPORARY ROAD SAFETY BARRIER SYSTEMS", "page": 62 },
     {
-      "sectionNumber": "6.6",
-      "sectionTitle": "TEMPORARY ROAD SAFETY BARRIER SYSTEMS",
+      "sectionNumber": "6.6.1",
+      "sectionTitle": "Delineation of Temporary Road Safety Barriers",
       "page": 62
     },
+    { "sectionNumber": "6.6.2", "sectionTitle": "Barrier Edge Clearances", "page": 63 },
+    { "sectionNumber": "6.7", "sectionTitle": "MINIMUM LANE WIDTHS", "page": 64 },
+    { "sectionNumber": "6.8", "sectionTitle": "TRAFFIC CONTROL", "page": 64 },
+    { "sectionNumber": "6.8.1", "sectionTitle": "Advanced Warning Signs", "page": 65 },
+    { "sectionNumber": "6.8.2", "sectionTitle": "Avoiding End of Queue Collisions", "page": 66 },
+    { "sectionNumber": "6.8.3", "sectionTitle": "Portable Traffic Control Devices", "page": 69 },
+    { "sectionNumber": "6.8.4", "sectionTitle": "Traffic Controllers", "page": 71 },
+    { "sectionNumber": "6.8.5", "sectionTitle": "Stop-Slow Bats", "page": 71 },
+    { "sectionNumber": "6.8.6", "sectionTitle": "Portable Boom Barriers", "page": 72 },
+    { "sectionNumber": "6.8.7", "sectionTitle": "Shuttle flow", "page": 73 },
+    { "sectionNumber": "6.8.8", "sectionTitle": "Roadwork Pilot Vehicles", "page": 74 },
+    { "sectionNumber": "6.8.9", "sectionTitle": "Traffic Control Near Intersections", "page": 75 },
+    { "sectionNumber": "6.9", "sectionTitle": "TEMPORARY IMPACT PROTECTION DEVICES", "page": 76 },
     {
-      "sectionNumber": "6.7",
-      "sectionTitle": "MINIMUM LANE WIDTHS",
-      "page": 64
-    },
-    {
-      "sectionNumber": "6.8",
-      "sectionTitle": "TRAFFIC CONTROL",
-      "page": 64
-    },
-    {
-      "sectionNumber": "6.9",
-      "sectionTitle": "TEMPORARY IMPACT PROTECTION DEVICES",
+      "sectionNumber": "6.9.1",
+      "sectionTitle": "Mandatory use of Truck Mounted Attenuators (TMAs)",
       "page": 76
     },
+    { "sectionNumber": "6.9.2", "sectionTitle": "Other use of TMAs", "page": 80 },
     {
-      "sectionNumber": "6.10",
-      "sectionTitle": "ILLUMINATED FLASHING ARROW SIGN",
-      "page": 81
+      "sectionNumber": "6.9.3",
+      "sectionTitle": "Incident Response and Emergency Works",
+      "page": 80
+    },
+    { "sectionNumber": "6.9.4", "sectionTitle": "Portable Crash Attenuators", "page": 81 },
+    { "sectionNumber": "6.10", "sectionTitle": "ILLUMINATED FLASHING ARROW SIGN", "page": 81 },
+    { "sectionNumber": "6.11", "sectionTitle": "TRAFFIC VOLUME", "page": 82 },
+    { "sectionNumber": "6.12", "sectionTitle": "MOBILE WORKS", "page": 84 },
+    { "sectionNumber": "6.13", "sectionTitle": "SHADOW VEHICLE", "page": 85 },
+    {
+      "sectionNumber": "6.14",
+      "sectionTitle": "TTM IMPLEMENTATION, OPERATION AND REMOVAL",
+      "page": 88
+    },
+    { "sectionNumber": "6.15", "sectionTitle": "TRAFFIC CONES AND BOLLARDS", "page": 89 },
+    { "sectionNumber": "6.16", "sectionTitle": "SPEED FEEDBACK SIGNS", "page": 89 },
+    { "sectionNumber": "6.17", "sectionTitle": "APPROACH TAPERS", "page": 91 },
+    { "sectionNumber": "6.17.1", "sectionTitle": "Designing Tapers", "page": 91 },
+    { "sectionNumber": "6.17.2", "sectionTitle": "Tapers at Long Term Works", "page": 93 },
+    {
+      "sectionNumber": "6.18",
+      "sectionTitle": "EMERGENCY LANES AND VEHICLE BREAKDOWNS",
+      "page": 94
+    },
+    { "sectionNumber": "6.19", "sectionTitle": "SMART FREEWAYS", "page": 95 },
+    { "sectionNumber": "6.20", "sectionTitle": "WORKSITE ACCESS", "page": 95 },
+    { "sectionNumber": "7", "sectionTitle": "BEST PRACTICE", "page": 96 },
+    { "sectionNumber": "7.1", "sectionTitle": "INNOVATIVE TRAFFIC CONTROL DEVICES", "page": 96 },
+    { "sectionNumber": "7.2", "sectionTitle": "ELECTRONIC SPEED LIMIT SIGNS", "page": 96 },
+    { "sectionNumber": "7.3", "sectionTitle": "TRAFFIC MONITORING AND SURVEILLANCE", "page": 97 },
+    { "sectionNumber": "7.4", "sectionTitle": "RUMBLE STRIPS", "page": 97 },
+    { "sectionNumber": "8", "sectionTitle": "ACCREDITATION REQUIREMENTS", "page": 98 },
+    { "sectionNumber": "8.1", "sectionTitle": "GENERAL", "page": 98 },
+    { "sectionNumber": "8.2", "sectionTitle": "TRAFFIC CONTROLLER ACCREDITATION", "page": 100 },
+    {
+      "sectionNumber": "8.3",
+      "sectionTitle": "BASIC WORKSITE TRAFFIC MANAGEMENT ACCREDITATION",
+      "page": 101
     },
     {
-      "sectionNumber": "6.11",
-      "sectionTitle": "TRAFFIC VOLUME",
-      "page": 82
+      "sectionNumber": "8.3.1",
+      "sectionTitle": "Basic Worksite Traffic Management - Non - Practitioner",
+      "page": 101
     },
     {
-      "sectionNumber": "6.12",
-      "sectionTitle": "MOBILE WORKS",
-      "page": 84
-    }
+      "sectionNumber": "8.4",
+      "sectionTitle": "WORKSITE TRAFFIC MANAGEMENT ACCREDITATION",
+      "page": 102
+    },
+    {
+      "sectionNumber": "8.5",
+      "sectionTitle": "ADVANCED WORKSITE TRAFFIC MANAGEMENT ACCREDITATION",
+      "page": 102
+    },
+    {
+      "sectionNumber": "8.5.1",
+      "sectionTitle": "Advanced Worksite Traffic Management - Non - Practitioner",
+      "page": 103
+    },
+    {
+      "sectionNumber": "8.6",
+      "sectionTitle": "ROADWORKS TRAFFIC MANAGERS ACCREDITATION",
+      "page": 103
+    },
+    { "sectionNumber": "8.7", "sectionTitle": "OPERATE TRUCK MOUNTED ATTENUATOR", "page": 104 },
+    { "sectionNumber": "8.8", "sectionTitle": "PROOF OF CERTIFICATION", "page": 104 },
+    {
+      "sectionNumber": "8.9",
+      "sectionTitle": "ISSUE OF CERTIFICATION AND RE-ACCREDITATION",
+      "page": 104
+    },
+    { "sectionNumber": "9", "sectionTitle": "FURTHER INFORMATION", "page": 105 },
+    { "sectionNumber": "10", "sectionTitle": "REFERENCES", "page": 105 },
+    { "sectionNumber": "Appendix 1", "sectionTitle": "Definitions", "page": "i" },
+    { "sectionNumber": "Appendix 2", "sectionTitle": "Traffic Risk Classification", "page": "iv" },
+    {
+      "sectionNumber": "Appendix 3",
+      "sectionTitle": "Typical Instrument of Authorisation for Local Government",
+      "page": "vii"
+    },
+    {
+      "sectionNumber": "Appendix 4",
+      "sectionTitle": "Sample Notification of Roadworks Form",
+      "page": "x"
+    },
+    {
+      "sectionNumber": "Appendix 5",
+      "sectionTitle": "Multi-Message Sign Inventory and Application Schedule",
+      "page": "xiii"
+    },
+    { "sectionNumber": "Appendix 6", "sectionTitle": "TMA Deployment Example Diagrams", "page": "" }
   ],
   "keyRequirements": [
     {
@@ -265,61 +321,101 @@
     },
     {
       "requirement": "Traffic controllers must hold current Main Roads WA accreditation",
-      "section": "Section 8",
+      "section": "Section 8.2",
       "priority": "critical"
     },
     {
-      "requirement": "Temporary speed zones must be established in accordance with approved criteria",
+      "requirement": "Temporary speed zones must be established in accordance with approved criteria and signage requirements",
       "section": "Section 6.5",
       "priority": "high"
     },
     {
-      "requirement": "Truck Mounted Attenuators (TMAs) must be deployed for mobile and stationary works on high-speed roads",
+      "requirement": "Truck Mounted Attenuators (TMAs) must be deployed for mobile and stationary works on high-speed roads as specified",
       "section": "Section 6.9",
       "priority": "high"
+    },
+    {
+      "requirement": "Portable Traffic Control Devices (PTCDs) must be used on State Roads as the preferred method of traffic control",
+      "section": "Section 6.8.3",
+      "priority": "high"
+    },
+    {
+      "requirement": "Sign spacing must comply with specified tolerances based on speed zones",
+      "section": "Section 6.1.9",
+      "priority": "high"
+    },
+    {
+      "requirement": "All personnel working on roads must complete appropriate accreditation training",
+      "section": "Section 8",
+      "priority": "critical"
     }
   ],
   "complianceNotes": [
     {
       "note": "Failure to obtain TMP approval before commencing works constitutes a breach of the Code",
       "reference": "Section 4.2.1",
-      "consequence": "Work stoppage, potential prosecution"
+      "consequence": "Work stoppage, potential prosecution under Road Traffic Code 2000"
     },
     {
       "note": "Operation of traffic control activities without valid accreditation is a statutory offence",
       "reference": "Section 8.1",
-      "consequence": "Fines up to $50,000 for individuals"
+      "consequence": "Fines up to $50,000 for individuals under WHS legislation"
+    },
+    {
+      "note": "Non-compliance with TMA requirements on designated roads is a breach of Code requirements",
+      "reference": "Section 6.9.1",
+      "consequence": "Safety incident liability, potential prosecution"
+    },
+    {
+      "note": "All works affecting traffic signal operation require prior consultation with Main Roads",
+      "reference": "Section 2.3",
+      "consequence": "Works may be halted, coordination failures"
     }
   ],
   "crossReferences": [
     {
       "documentId": "whs-act-2020",
-      "reason": "Primary legislation establishing duty of care obligations",
+      "reason": "Primary legislation establishing duty of care obligations for workplace safety",
       "relevance": "essential"
     },
     {
       "documentId": "as-1742-3",
-      "reason": "Australian Standard for traffic control devices",
-      "relevance": "supplementary"
+      "reason": "Australian Standard for traffic control devices at worksites",
+      "relevance": "essential"
+    },
+    {
+      "documentId": "agttm-part-1",
+      "reason": "Introduction and general planning principles for temporary traffic management",
+      "relevance": "essential"
     },
     {
       "documentId": "agttm-part-3",
-      "reason": "National framework for static worksites",
-      "relevance": "supplementary"
+      "reason": "Static worksites design requirements",
+      "relevance": "essential"
     },
     {
       "documentId": "agttm-part-7",
-      "reason": "Traffic controller standards",
-      "relevance": "supplementary"
+      "reason": "Traffic controller instructions and procedures",
+      "relevance": "essential"
+    },
+    {
+      "documentId": "agttm-part-8",
+      "reason": "Processes and procedures including road categories and training framework",
+      "relevance": "essential"
+    },
+    {
+      "documentId": "mrwa-whs-controls",
+      "reason": "Minimum WHS control standards for MRWA projects",
+      "relevance": "related"
     }
   ],
-  "lastUpdated": "May 2025",
-  "issuingAuthority": "MRWA",
+  "lastUpdated": "March 2026",
+  "issuingAuthority": "Main Roads Western Australia",
   "pages": 158,
   "tgsDiagramsReferenced": [],
   "documentId": "mrwa-cop-2025",
-  "generatedAt": "2026-04-05T16:24:57.916580",
-  "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0",
-  "lastProcessed": "2026-04-05T18:15:20.186Z"
+  "generatedAt": "2026-04-06T00:00:00.000000",
+  "generatedBy": "Manual TOC Correction v1.0",
+  "version": "2.1",
+  "lastProcessed": "2026-04-06T00:00:00.000Z"
 }

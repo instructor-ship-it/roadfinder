@@ -419,34 +419,6 @@ function LibraryPageContent() {
       );
     }) || [];
 
-  // Phase 4: Calculate extraction statistics
-  const extractionStats = {
-    totalDocuments: registry?.documents.length || 0,
-    documentsWithSummaries: Object.keys(summaries).length,
-    structuredExtractions: Object.values(summaries).filter((s) => s.extractionType === 'structured')
-      .length,
-    diagramExtractions: Object.values(summaries).filter((s) => s.extractionType === 'diagrams')
-      .length,
-    totalDiagramsAnalyzed: Object.values(summaries).reduce(
-      (acc, s) => acc + (s.diagramAnalyses?.length || 0),
-      0
-    ),
-    uniqueSpeedZones: [
-      ...new Set(
-        Object.values(summaries)
-          .flatMap((s) => s.extractedData?.speedZonesMentioned || [])
-          .filter(Boolean)
-      ),
-    ].sort((a, b) => a - b),
-    uniqueTgsCodes: [
-      ...new Set(
-        Object.values(summaries)
-          .flatMap((s) => s.extractedData?.tgsDiagramsReferenced || [])
-          .filter(Boolean)
-      ),
-    ].sort(),
-  };
-
   // Group documents by parent category
   const documentsByParent =
     registry?.parentCategories.map((parent) => ({
@@ -803,135 +775,6 @@ function LibraryPageContent() {
           </Button>
         </div>
       </div>
-
-      {/* Phase 4: Extraction Dashboard */}
-      {(extractionStats.documentsWithSummaries > 0 || aiApiKey) && (
-        <div className="max-w-7xl mx-auto px-4 pb-4">
-          <div className="bg-gradient-to-r from-purple-900/30 to-cyan-900/30 border border-purple-700/50 rounded-lg p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-bold text-lg text-white flex items-center gap-2">
-                🧠 AI Extraction Dashboard
-                <Badge variant="secondary" className="text-xs">
-                  Phase 4
-                </Badge>
-              </h3>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowProcessModal(true)}
-                  disabled={!aiApiKey}
-                  className="text-xs"
-                >
-                  + Process More
-                </Button>
-                <Button variant="outline" size="sm" onClick={downloadSummaries} className="text-xs">
-                  📥 Export
-                </Button>
-              </div>
-            </div>
-
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
-              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-                <div className="text-2xl font-bold text-white">
-                  {extractionStats.documentsWithSummaries}
-                </div>
-                <div className="text-xs text-gray-400">Summaries</div>
-              </div>
-              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-                <div className="text-2xl font-bold text-purple-400">
-                  {extractionStats.structuredExtractions}
-                </div>
-                <div className="text-xs text-gray-400">Structured</div>
-              </div>
-              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-                <div className="text-2xl font-bold text-cyan-400">
-                  {extractionStats.diagramExtractions}
-                </div>
-                <div className="text-xs text-gray-400">Diagram Sets</div>
-              </div>
-              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-                <div className="text-2xl font-bold text-amber-400">
-                  {extractionStats.totalDiagramsAnalyzed}
-                </div>
-                <div className="text-xs text-gray-400">TGS Diagrams</div>
-              </div>
-              <div className="bg-gray-800/50 rounded-lg p-3 text-center">
-                <div className="text-2xl font-bold text-green-400">
-                  {storageStats.localStorageSize}
-                </div>
-                <div className="text-xs text-gray-400">Storage Used</div>
-              </div>
-            </div>
-
-            {/* Quick Filters from Extracted Data */}
-            {(extractionStats.uniqueSpeedZones.length > 0 ||
-              extractionStats.uniqueTgsCodes.length > 0) && (
-              <div className="space-y-2">
-                {/* Speed Zone Quick Filters */}
-                {extractionStats.uniqueSpeedZones.length > 0 && (
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xs text-gray-400">Speed Zones:</span>
-                    {extractionStats.uniqueSpeedZones.slice(0, 8).map((zone) => (
-                      <button
-                        key={zone}
-                        onClick={() => setSearchQuery(searchQuery === `${zone}` ? '' : `${zone}`)}
-                        className={`px-2 py-0.5 rounded text-xs transition-colors ${
-                          searchQuery === `${zone}`
-                            ? 'bg-amber-500 text-black'
-                            : 'bg-amber-900/50 text-amber-300 hover:bg-amber-800/50'
-                        }`}
-                      >
-                        {zone} km/h
-                      </button>
-                    ))}
-                    {extractionStats.uniqueSpeedZones.length > 8 && (
-                      <span className="text-xs text-gray-500">
-                        +{extractionStats.uniqueSpeedZones.length - 8} more
-                      </span>
-                    )}
-                  </div>
-                )}
-
-                {/* TGS Code Quick Filters */}
-                {extractionStats.uniqueTgsCodes.length > 0 && (
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xs text-gray-400">TGS Codes:</span>
-                    {extractionStats.uniqueTgsCodes.slice(0, 6).map((code) => (
-                      <button
-                        key={code}
-                        onClick={() => setSearchQuery(searchQuery === code ? '' : code)}
-                        className={`px-2 py-0.5 rounded text-xs transition-colors ${
-                          searchQuery === code
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-blue-900/50 text-blue-300 hover:bg-blue-800/50'
-                        }`}
-                      >
-                        {code}
-                      </button>
-                    ))}
-                    {extractionStats.uniqueTgsCodes.length > 6 && (
-                      <span className="text-xs text-gray-500">
-                        +{extractionStats.uniqueTgsCodes.length - 6} more
-                      </span>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Search Tips */}
-            <div className="mt-3 pt-3 border-t border-gray-700">
-              <p className="text-xs text-gray-400">
-                💡 <strong>Enhanced Search:</strong> Searches now include extracted speed zones, TGS
-                diagrams, requirements, sign codes, and diagram descriptions. Try searching for
-                &quot;60&quot;, &quot;T1-1&quot;, or &quot;lane closure&quot;.
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Document Categories */}
       <div className="max-w-7xl mx-auto px-4 pb-6">
@@ -1564,24 +1407,37 @@ function LibraryPageContent() {
                             </button>
                             {expandedSections.has(infoDoc?.id || '') && (
                               <div className="max-h-80 overflow-y-auto space-y-1 pr-2 bg-gray-700/30 rounded text-xs border border-gray-600">
-                                {summary.completeSections.map((section, i) => (
-                                  <div
-                                    key={i}
-                                    className="flex items-start gap-2 py-1 border-b border-gray-600/50 first:border-0 last:border-0 hover:bg-gray-600/50 px-2 rounded"
-                                  >
-                                    <span className="text-indigo-300 font-mono min-w-[40px] shrink-0">
-                                      {section.sectionNumber}
-                                    </span>
-                                    <span className="text-gray-300 flex-1">
-                                      {section.sectionTitle}
-                                    </span>
-                                    {section.page && (
-                                      <span className="text-gray-500 text-[10px]">
-                                        p.{section.page}
+                                {summary.completeSections.map((section, i) => {
+                                  // Build PDF URL with page anchor
+                                  const pdfUrl = infoDoc?.file || infoDoc?.url || '#';
+                                  const pageUrl =
+                                    section.page && typeof section.page === 'number'
+                                      ? `${pdfUrl}#page=${section.page}`
+                                      : pdfUrl;
+                                  const isExternal = pageUrl.startsWith('http');
+
+                                  return (
+                                    <a
+                                      key={i}
+                                      href={pageUrl}
+                                      target={isExternal ? '_blank' : undefined}
+                                      rel={isExternal ? 'noopener noreferrer' : undefined}
+                                      className="flex items-start gap-2 py-1 border-b border-gray-600/50 first:border-0 last:border-0 hover:bg-indigo-900/30 px-2 rounded cursor-pointer transition-colors group"
+                                    >
+                                      <span className="text-indigo-300 font-mono min-w-[40px] shrink-0 group-hover:text-indigo-200">
+                                        {section.sectionNumber}
                                       </span>
-                                    )}
-                                  </div>
-                                ))}
+                                      <span className="text-gray-300 flex-1 group-hover:text-white">
+                                        {section.sectionTitle}
+                                      </span>
+                                      {section.page && (
+                                        <span className="text-indigo-400 text-[10px] group-hover:text-indigo-300 flex items-center gap-1">
+                                          📄 p.{section.page}
+                                        </span>
+                                      )}
+                                    </a>
+                                  );
+                                })}
                               </div>
                             )}
                           </div>
