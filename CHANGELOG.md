@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.27.0] - 2026-04-06
+
+### Added
+
+- **PDF Viewer Modal with Landscape/Portrait Support**
+  - Full-screen modal for viewing PDFs from AI Summary cards (Key Requirements, Compliance Notes, Complete Sections)
+  - Automatic orientation detection with different layouts for portrait vs landscape
+  - Portrait: 100vh height with footer navigation (Prev, Page, Next)
+  - Landscape: 95vh height with navigation controls in header center (no footer)
+  - PDF.js-based rendering via react-pdf library (same engine as Firefox/Chrome PDF viewers)
+
+### Changed
+
+- **Modal Positioning Fix**
+  - Used inline styles to override Radix Dialog's default centering transform
+  - Override CSS custom properties (`--tw-translate-x`, `--tw-translate-y`) to neutralize Tailwind translate classes
+  - Modal now positioned at `top: 0, left: 0` for full-screen display
+
+- **Landscape Header Layout**
+  - Navigation controls (Prev, Page Input, Next) moved to center of header
+  - Added 2-space margin between Prev and page number, and between page count and Next
+  - Footer hidden in landscape mode to maximize viewing area
+
+---
+
 ## [1.26.0] - 2026-04-06
 
 ### Added
@@ -454,6 +479,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Key Changes                                                                                 |
 | ------- | ---------- | ------------------------------------------------------------------------------------------- |
+| 1.27.0  | 2026-04-06 | PDF viewer modal with landscape/portrait support, navigation in header for landscape        |
 | 1.26.0  | 2026-04-06 | PDF viewer with page offset, smart document routing, zoom fix, back button fix              |
 | 1.25.0  | 2026-04-06 | PDF viewer improvements, CDN fallbacks, open in new tab button                              |
 | 1.21.0  | 2026-04-04 | AI Q&A direct chat mode, API key configuration, dual-mode Q&A                               |

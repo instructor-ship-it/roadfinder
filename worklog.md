@@ -1,7 +1,68 @@
 # TC Work Zone Locator - Work Log
 
 > **Last Updated:** 2026-04-06
-> **Current Version:** 1.26.0
+> **Current Version:** 1.27.0
+
+---
+
+## Task ID: 2026-04-06-004
+
+**Agent:** Main Agent
+**Task:** PDF Viewer Modal with Landscape/Portrait Support (v1.27.0)
+
+### Work Log:
+
+- **Problem Identified**:
+  - PDF viewer modal needed full-screen display for AI Summary cards
+  - Landscape mode on mobile (Samsung S22 Ultra) had footer visibility issues
+  - Modal was using Dialog's default centering transform, causing positioning issues
+  - Tailwind translate classes (`translate-x-[-50%]`, `translate-y-[-50%]`) were overriding positioning
+
+- **Solutions Implemented**:
+  1. **Full-Screen Modal**
+     - Used inline styles to override Radix Dialog's default CSS
+     - Set `position: fixed`, `top: 0`, `left: 0`, `width: 100vw`
+     - Override CSS custom properties `--tw-translate-x: 0px` and `--tw-translate-y: 0px` to neutralize Tailwind translate classes
+
+  2. **Orientation Detection**
+     - Added `isLandscape` state variable
+     - `setIsLandscape(window.innerWidth > window.innerHeight)` on resize
+     - ResizeObserver updates on orientation change
+
+  3. **Portrait Mode** (unchanged from working state)
+     - Height: 100vh (full screen)
+     - Header: TOC button + Title | Zoom controls
+     - Footer: Prev, Page Input, Next + hints
+
+  4. **Landscape Mode**
+     - Height: 95vh (leaves space for system UI)
+     - Header: TOC + Title | Prev, Page, Next | Zoom controls
+     - Footer: Hidden (navigation moved to header)
+     - Added 2-space margins between navigation elements
+
+- **Technical Details**:
+  - PDF.js (via react-pdf) renders PDF pages on-demand
+  - Modal uses `flex flex-col` layout with `flex-shrink-0` header/footer and `flex-1` content area
+  - Orientation detection updates in real-time when rotating device
+
+### Files Changed:
+
+- `src/components/PdfViewerModal.tsx` (orientation detection, landscape layout, inline styles for positioning)
+
+### Key Learnings:
+
+- **CSS custom properties override Tailwind**: Setting `--tw-translate-x` and `--tw-translate-y` in inline styles neutralizes Tailwind's translate utilities
+- **Inline styles have higher specificity**: Use inline styles to override component library CSS when classes don't work
+- **vh units are dynamic**: 100vh recalculates when rotating device (portrait: ~2316px, landscape: ~1080px on S22 Ultra)
+- **Landscape has less vertical space**: Footer was getting cut off due to header taking fixed space + PDF content expanding
+
+### Stage Summary:
+
+- Version: 1.27.0
+- PDF viewer modal works correctly in both portrait and landscape
+- Portrait: Full screen with footer navigation
+- Landscape: 95vh height with navigation in header
+- Ready for push to GitHub
 
 ---
 
