@@ -374,7 +374,7 @@ export function PdfViewerModal({
             top: 0,
             left: 0,
             right: 0,
-            bottom: 0,
+            bottom: isLandscape ? undefined : 0,
             width: '100vw',
             height: isLandscape ? '60vh' : '100vh',
             maxWidth: '100vw',
