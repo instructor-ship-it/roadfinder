@@ -379,16 +379,26 @@ export function PdfViewerModal({
               </DialogTitle>
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 mr-8">
               {/* Zoom controls */}
-              <div className="flex items-center gap-0.5 bg-gray-700 rounded-lg px-1.5 py-0.5">
-                <Button variant="ghost" size="sm" onClick={zoomOut} className="h-7 w-7 p-0 text-lg">
+              <div className="flex items-center gap-0.5 bg-gray-700 rounded px-1 py-0.5">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={zoomOut}
+                  className="h-6 w-6 p-0 text-base"
+                >
                   −
                 </Button>
-                <span className="text-xs w-9 text-center tabular-nums">
+                <span className="text-xs w-8 text-center tabular-nums">
                   {Math.round(scale * 100)}%
                 </span>
-                <Button variant="ghost" size="sm" onClick={zoomIn} className="h-7 w-7 p-0 text-lg">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={zoomIn}
+                  className="h-6 w-6 p-0 text-base"
+                >
                   +
                 </Button>
               </div>
