@@ -78,8 +78,8 @@ export function PdfViewerModal({
     const updateWidth = () => {
       // Prefer container width, fallback to window width
       const width = containerRef.current?.clientWidth || window.innerWidth;
-      // Fit page to width (use 92% for comfortable reading)
-      setContainerWidth(width * 0.92);
+      // Fit page to width (use 100% for full width)
+      setContainerWidth(width);
     };
 
     // Initial measurement with delay to ensure modal is rendered
