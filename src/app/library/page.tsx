@@ -1296,13 +1296,13 @@ function LibraryPageContent() {
                                   💡 Click section to open in document reader
                                 </div>
                                 {summary.completeSections.map((section, i) => {
-                                  // Build viewer URL - use custom reader if available
+                                  // Build viewer URL - use universal PDF viewer
                                   const pageNum =
                                     typeof section.page === 'number' ? section.page : null;
-                                  // Link to custom viewer: /library/{docId}/{pageNum}
+                                  // Link to universal PDF viewer: /library/viewer/{docId}/{pageNum}
                                   const viewerUrl =
                                     pageNum && infoDoc?.id
-                                      ? `/library/${infoDoc.id}/${pageNum}`
+                                      ? `/library/viewer/${infoDoc.id}/${pageNum}`
                                       : '#';
 
                                   return (

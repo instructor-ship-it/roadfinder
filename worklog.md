@@ -1,7 +1,64 @@
 # TC Work Zone Locator - Work Log
 
-> **Last Updated:** 2026-04-04
-> **Current Version:** 1.21.0
+> **Last Updated:** 2026-04-06
+> **Current Version:** 1.25.0
+
+---
+
+## Task ID: 2026-04-06-001
+
+**Agent:** Main Agent
+**Task:** Universal PDF Viewer with Reliable Page Navigation
+
+### Work Log:
+
+- **Problem Identified**:
+  - TOC links in library used `#page=N` anchors which have inconsistent browser support
+  - Works in Chrome/Edge but fails in Safari and mobile browsers
+  - User asked for a custom PDF reader to solve this without splitting PDFs into images
+
+- **Solution Implemented: PDF.js-based Universal Viewer**
+  - Installed `react-pdf` (React wrapper for Mozilla's PDF.js library)
+  - Created new viewer route: `/library/viewer/[docId]/[pageNum]`
+  - PDF is rendered on-demand in the browser - no splitting required
+  - Single PDF file stays in storage, pages rendered as needed
+
+- **Key Features**:
+  - **Reliable page navigation**: URL params like `/library/viewer/mrwa-cop-2025/16`
+  - **Mobile-friendly**: Touch gestures (pinch to zoom, double-tap, swipe)
+  - **Keyboard navigation**: Arrow keys for page navigation, +/- for zoom
+  - **TOC drawer**: Shows document sections with clickable links
+  - **Zoom controls**: 50% - 300% with reset button
+  - **Document info**: Shows document metadata and summary
+
+- **Technical Implementation**:
+  - Used `dynamic()` imports with `ssr: false` for react-pdf components
+  - Configured PDF.js worker from unpkg CDN
+  - Client-side only rendering to avoid DOMMatrix SSR issues
+  - Loaded document info from registry.json and summaries from /library/summaries/
+
+### Files Changed:
+
+- `package.json` (added react-pdf dependency)
+- `src/app/globals.css` (added react-pdf CSS imports)
+- `src/app/library/viewer/[docId]/page.tsx` (NEW - document info page)
+- `src/app/library/viewer/[docId]/[pageNum]/page.tsx` (NEW - PDF page viewer)
+- `src/app/library/page.tsx` (updated TOC links to use new viewer)
+
+### Key Learnings:
+
+- **PDF.js requires client-side rendering**: DOMMatrix and other browser APIs not available during SSR
+- **Dynamic imports solve SSR issues**: Use `next/dynamic` with `ssr: false`
+- **Single PDF, on-demand rendering**: No storage duplication, pages loaded as needed
+- **URL-based navigation**: `/viewer/docId/pageNum` pattern works reliably across all browsers
+
+### Stage Summary:
+
+- Universal PDF viewer working for all documents in registry
+- Reliable page navigation from TOC links
+- Mobile-friendly with touch gestures
+- No storage overhead - single PDF file per document
+- Ready for push to GitHub
 
 ---
 
