@@ -161,8 +161,8 @@ export function PdfViewerModal({
     // Use the smaller scale (fits within both constraints)
     const fitScale = Math.min(widthScale, heightScale);
 
-    // Return the width at this scale
-    return pageWidth * fitScale;
+    // Return the width at this scale, increased by 50%
+    return pageWidth * fitScale * 1.5;
   }, [containerWidth, containerHeight, pageWidth, pageHeight]);
 
   // Navigation
@@ -363,7 +363,22 @@ export function PdfViewerModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-gray-900 border-gray-700 text-white inset-0 top-0 left-0 translate-x-0 translate-y-0 w-screen h-screen max-w-full max-h-full p-0 overflow-hidden flex flex-col rounded-none">
+      <DialogContent
+        className="bg-gray-900 border-gray-700 text-white p-0 overflow-hidden flex flex-col rounded-none"
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100vw',
+          height: '100vh',
+          maxWidth: '100vw',
+          maxHeight: '100vh',
+          transform: 'none',
+        }}
+        showCloseButton={false}
+      >
         {/* Header */}
         <DialogHeader className="bg-gray-800 border-b border-gray-700 px-4 py-2 flex-shrink-0">
           <div className="flex items-center justify-between">
