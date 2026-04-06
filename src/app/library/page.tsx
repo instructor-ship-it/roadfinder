@@ -1296,13 +1296,19 @@ function LibraryPageContent() {
                                   💡 Click section to open in document reader
                                 </div>
                                 {summary.completeSections.map((section, i) => {
-                                  // Build viewer URL - use universal PDF viewer
+                                  // Build viewer URL based on document type
                                   const pageNum =
                                     typeof section.page === 'number' ? section.page : null;
-                                  // Link to universal PDF viewer: /library/viewer/{docId}/{pageNum}
+                                  // TMP documents (traffic-management-plan) use split-image viewer
+                                  // Other documents use PDF viewer
+                                  const isTmpDoc =
+                                    infoDoc?.type === 'traffic-management-plan' ||
+                                    infoDoc?.category === 'mrwa-tmp';
                                   const viewerUrl =
                                     pageNum && infoDoc?.id
-                                      ? `/library/viewer/${infoDoc.id}/${pageNum}`
+                                      ? isTmpDoc
+                                        ? `/library/${infoDoc.id}/${pageNum}`
+                                        : `/library/viewer/${infoDoc.id}/${pageNum}`
                                       : '#';
 
                                   return (
