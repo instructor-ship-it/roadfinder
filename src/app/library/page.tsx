@@ -1291,21 +1291,26 @@ function LibraryPageContent() {
                             </button>
                             {expandedSections.has(infoDoc?.id || '') && (
                               <div className="max-h-80 overflow-y-auto space-y-1 pr-2 bg-gray-700/30 rounded text-xs border border-gray-600">
+                                {/* Note about page navigation */}
+                                <div className="text-gray-500 text-[10px] px-2 py-1 border-b border-gray-600/50 italic">
+                                  💡 Click section to open PDF. Use page number to navigate manually
+                                  (browser support varies).
+                                </div>
                                 {summary.completeSections.map((section, i) => {
-                                  // Build PDF URL with page anchor
+                                  // Build PDF URL - open in new tab for better compatibility
                                   const pdfUrl = infoDoc?.file || infoDoc?.url || '#';
-                                  const pageUrl =
-                                    section.page && typeof section.page === 'number'
-                                      ? `${pdfUrl}#page=${section.page}`
-                                      : pdfUrl;
-                                  const isExternal = pageUrl.startsWith('http');
+                                  // Try #page=N anchor (works in Chrome/Edge, may not work in all browsers)
+                                  const pageNum =
+                                    typeof section.page === 'number' ? section.page : null;
+                                  const pageUrl = pageNum ? `${pdfUrl}#page=${pageNum}` : pdfUrl;
+                                  const isExternal = pdfUrl.startsWith('http');
 
                                   return (
                                     <a
                                       key={i}
                                       href={pageUrl}
-                                      target={isExternal ? '_blank' : undefined}
-                                      rel={isExternal ? 'noopener noreferrer' : undefined}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
                                       className="flex items-start gap-2 py-1 border-b border-gray-600/50 first:border-0 last:border-0 hover:bg-indigo-900/30 px-2 rounded cursor-pointer transition-colors group"
                                     >
                                       <span className="text-indigo-300 font-mono min-w-[40px] shrink-0 group-hover:text-indigo-200">
@@ -1315,7 +1320,7 @@ function LibraryPageContent() {
                                         {section.sectionTitle}
                                       </span>
                                       {section.page && (
-                                        <span className="text-indigo-400 text-[10px] group-hover:text-indigo-300 flex items-center gap-1">
+                                        <span className="text-indigo-400 text-[10px] group-hover:text-indigo-300 flex items-center gap-1 shrink-0">
                                           📄 p.{section.page}
                                         </span>
                                       )}
