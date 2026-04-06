@@ -1,7 +1,72 @@
 # TC Work Zone Locator - Work Log
 
 > **Last Updated:** 2026-04-06
-> **Current Version:** 1.25.0
+> **Current Version:** 1.26.0
+
+---
+
+## Task ID: 2026-04-06-003
+
+**Agent:** Main Agent
+**Task:** PDF Viewer Routing, Zoom Fix, Back Button Fix, Page Offset System (v1.26.0)
+
+### Work Log:
+
+- **Problem Identified**:
+  - TOC links were defaulting all documents to TMP viewer
+  - Zoom in PDF viewer zoomed whole screen, not just PDF page
+  - Back button in PDF viewer returned to TMP viewer instead of library
+  - Document page numbers didn't match physical PDF pages (e.g., cover pages)
+
+- **Solutions Implemented**:
+  1. **Smart Document Routing**
+     - Added document type check in library page TOC rendering
+     - TMP documents → `/library/[docId]/[pageNum]` (TMP image viewer)
+     - PDF documents → `/library/viewer/[docId]/[pageNum]` (PDF viewer)
+     - Detection based on `type` field in registry
+
+  2. **Zoom Scope Fix**
+     - Restructured zoom container hierarchy
+     - Zoom transform now applies to inner PDF page wrapper only
+     - Navigation buttons and controls stay fixed at original size
+
+  3. **Back Button Fix**
+     - Changed back link from `/library/${docId}` to `/library`
+     - Returns to library page with all documents visible
+     - No longer incorrectly routes to TMP viewer
+
+  4. **Page Offset System**
+     - Added `pageOffset` field to summary files
+     - Physical PDF page = document page + pageOffset
+     - Example: MRWA COP 2025 has cover page (offset = 1)
+     - "Introduction p.16" navigates to physical page 17
+     - Both library page and PDF viewer apply offset
+
+### Files Changed:
+
+- `src/app/library/page.tsx` (smart routing, page offset support)
+- `src/app/library/viewer/[docId]/[pageNum]/page.tsx` (zoom fix, back button fix, page offset)
+- `public/library/summaries/mrwa-cop-2025.summary.json` (added pageOffset: 1)
+- `package.json` (version 1.26.0)
+- `README.md` (version badge, version history)
+- `CHANGELOG.md` (v1.26.0 entry, version summary table)
+- `worklog.md` (this entry)
+
+### Key Learnings:
+
+- **Document type detection**: Check registry for type field to determine viewer
+- **Page offset for real-world documents**: Many PDFs have cover pages, front matter
+- **Zoom container isolation**: Keep controls outside zoom transform scope
+- **URL patterns for routing**: Different patterns for different document types
+
+### Stage Summary:
+
+- Version: 1.26.0
+- All documents now route to correct viewer
+- Zoom applies only to PDF page
+- Back button returns to library
+- Page offset system handles cover pages
+- Ready for push to GitHub
 
 ---
 

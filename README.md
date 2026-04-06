@@ -1,7 +1,7 @@
 # TC Work Zone Locator
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.21.0-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
+[![Version](https://img.shields.io/badge/version-1.26.0-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
@@ -241,7 +241,23 @@ src/
 
 ## Version History
 
-### 1.21.0 (Current) - Turbo Mode for GPS Tracking
+### 1.26.0 (Current) - PDF Viewer & Page Offset System
+
+- **PDF Viewer with Direct Rendering** — no file splitting required, renders pages on-demand
+- **Page Offset System** — handles documents where physical page ≠ document page number
+- **Smart Document Routing** — TMP docs → TMP viewer, PDF docs → PDF viewer
+- **Fixed Zoom Scope** — zoom applies only to PDF page, not whole screen
+- **Fixed Back Button** — returns to library page instead of TMP viewer
+- **Multiple CDN Fallbacks** — PDF.js worker loads from unpkg, jsdelivr, cdnjs
+
+### 1.25.0 - PDF Viewer Improvements
+
+- **Multiple CDN Fallbacks** for PDF.js worker (unpkg, jsdelivr, cdnjs)
+- **Open in New Tab Button** for fallback when inline viewer has issues
+- **CORS Detection** with warning for external PDF URLs
+- **Better Loading States** with page-level loading indicator
+
+### 1.21.0 - Turbo Mode for GPS Tracking
 
 - **Turbo Mode Toggle** — fast 200ms GPS refresh for precise SLK positioning
 - **5-minute auto-revert** — prevents battery drain with countdown display

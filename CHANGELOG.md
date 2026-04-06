@@ -7,7 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [1.9.8] - 2026-03-29
+## [1.26.0] - 2026-04-06
+
+### Added
+
+- **PDF Viewer with Page Offset System**
+  - New `/library/viewer/[docId]/[pageNum]` route for direct PDF rendering
+  - `pageOffset` field in summary files for documents where physical page ≠ document page
+  - Example: MRWA COP 2025 has cover page, so "Introduction p.16" is on physical page 17
+  - Offset applied automatically when navigating from TOC links
+- **Smart Document Routing**
+  - TMP documents → TMP viewer (`/library/[docId]/[pageNum]`)
+  - PDF documents → PDF viewer (`/library/viewer/[docId]/[pageNum]`)
+  - Routing based on document type detection in registry
+- **PDF Viewer Enhancements**
+  - Multiple CDN fallbacks for PDF.js worker (unpkg, jsdelivr, cdnjs)
+  - "Open PDF in new tab" button (📄) for fallback when inline viewer has issues
+  - CORS detection with warning for external PDF URLs
+  - Page-level loading indicator while rendering
+
+### Fixed
+
+- **Zoom Scope Bug** — zoom now applies only to PDF page, not the whole screen
+  - Root cause: zoom transform was on outer container instead of page wrapper
+  - Fixed by restructuring zoom container hierarchy
+- **Back Button Navigation** — returns to library page instead of TMP viewer
+  - Root cause: back link was `/library/${docId}` which routed to TMP viewer
+  - Fixed by changing to `/library` which shows the full library page
+- **Document Type Routing** — all documents now route to correct viewer
+  - Root cause: TOC links defaulted to TMP viewer for all documents
+  - Fixed by checking document type and routing accordingly
+
+### Changed
+
+- **mrwa-cop-2025.summary.json** — added `pageOffset: 1` field
+- **Summary files** — can now include optional `pageOffset` field for page number correction
+
+---
+
+## [1.25.0] - 2026-04-06
 
 ### Added
 
@@ -416,6 +454,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Key Changes                                                                                 |
 | ------- | ---------- | ------------------------------------------------------------------------------------------- |
+| 1.26.0  | 2026-04-06 | PDF viewer with page offset, smart document routing, zoom fix, back button fix              |
+| 1.25.0  | 2026-04-06 | PDF viewer improvements, CDN fallbacks, open in new tab button                              |
+| 1.21.0  | 2026-04-04 | AI Q&A direct chat mode, API key configuration, dual-mode Q&A                               |
+| 1.20.0  | 2026-04-03 | Turbo mode for GPS tracking, 200ms refresh, 5-min auto-revert                               |
+| 1.19.0  | 2026-03-31 | Phase 4: TypeScript strict mode, ESLint zero-warning baseline, 3 hooks bugs fixed           |
 | 1.9.9   | 2026-03-30 | Traffic override, count detail modal, speed zone layout in report, toilet map, report fixes |
 | 1.9.8   | 2026-03-29 | FuelWatch WA + WA Health SLIP amenities, fuel prices, hospital ED/badges                    |
 | 1.9.7   | 2026-03-29 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements                   |
