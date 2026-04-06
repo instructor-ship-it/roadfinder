@@ -61,6 +61,7 @@ export function PdfViewerModal({
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [summary, setSummary] = useState<DocumentSummary | null>(null);
+  const [isLandscape, setIsLandscape] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const pageRef = useRef<HTMLDivElement>(null);
@@ -84,6 +85,8 @@ export function PdfViewerModal({
       const height = containerRef.current?.clientHeight || window.innerHeight;
       setContainerWidth(width);
       setContainerHeight(height);
+      // Detect landscape mode (width > height)
+      setIsLandscape(window.innerWidth > window.innerHeight);
     };
 
     // Initial measurement with delay to ensure modal is rendered
@@ -363,7 +366,33 @@ export function PdfViewerModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-gray-900 border-gray-700 text-white inset-0 top-0 left-0 translate-x-0 translate-y-0 w-screen h-screen max-w-full max-h-full p-0 overflow-hidden flex flex-col rounded-none">
+      <DialogContent
+        className="bg-gray-900 border-gray-700 text-white p-0 overflow-hidden flex flex-col rounded-none"
+        style={
+          isLandscape
+            ? {
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                width: '130vw',
+                height: '130vh',
+                maxWidth: '130vw',
+                maxHeight: '130vh',
+                transform: 'none',
+              }
+            : {
+                position: 'fixed',
+                inset: 0,
+                top: 0,
+                left: 0,
+                width: '100vw',
+                height: '100vh',
+                maxWidth: '100vw',
+                maxHeight: '100vh',
+                transform: 'none',
+              }
+        }
+      >
         {/* Header */}
         <DialogHeader className="bg-gray-800 border-b border-gray-700 px-4 py-2 flex-shrink-0">
           <div className="flex items-center justify-between">
