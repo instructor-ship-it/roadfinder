@@ -1292,14 +1292,15 @@ function LibraryPageContent() {
                             {expandedSections.has(infoDoc?.id || '') && (
                               <div className="max-h-80 overflow-y-auto space-y-1 pr-2 bg-gray-700/30 rounded text-xs border border-gray-600">
                                 {/* Page offset warning */}
-                                {(summary as { pageOffset?: number }).pageOffset &&
-                                  (summary as { pageOffset?: number }).pageOffset > 0 && (
+                                {(() => {
+                                  const offset = (summary as { pageOffset?: number }).pageOffset;
+                                  return offset && offset > 0 ? (
                                     <div className="text-amber-400 text-[10px] px-2 py-1 border-b border-amber-600/50 bg-amber-900/20">
-                                      ⚠️ Document page numbers offset by +
-                                      {(summary as { pageOffset?: number }).pageOffset} (cover page
-                                      not numbered)
+                                      ⚠️ Document page numbers offset by +{offset} (cover page not
+                                      numbered)
                                     </div>
-                                  )}
+                                  ) : null;
+                                })()}
                                 {/* Note about page navigation */}
                                 <div className="text-gray-500 text-[10px] px-2 py-1 border-b border-gray-600/50 italic">
                                   💡 Click section to open in document reader
