@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog';
+import { PdfViewerModal } from '@/components/PdfViewerModal';
 import {
   getOfflineDocuments,
   getOfflineDocumentInfo,
@@ -175,6 +176,28 @@ function LibraryPageContent() {
     imported: number;
     error?: string;
   } | null>(null);
+
+  // PDF Viewer Modal state
+  const [pdfModal, setPdfModal] = useState<{
+    isOpen: boolean;
+    docId: string;
+    docTitle: string;
+    page: number;
+    pdfUrl: string;
+  } | null>(null);
+
+  // Open PDF in modal
+  const openPdfModal = useCallback(
+    (docId: string, docTitle: string, page: number, pdfUrl: string) => {
+      setPdfModal({ isOpen: true, docId, docTitle, page, pdfUrl });
+    },
+    []
+  );
+
+  // Close PDF modal
+  const closePdfModal = useCallback(() => {
+    setPdfModal((prev) => (prev ? { ...prev, isOpen: false } : null));
+  }, []);
 
   // Load registry and offline status
   useEffect(() => {
@@ -1371,23 +1394,21 @@ function LibraryPageContent() {
                                     (summary as { pageOffset?: number }).pageOffset || 0;
                                   const physicalPage = pageNum ? pageNum + pageOffset : null;
                                   // TMP documents (traffic-management-plan) use split-image viewer
-                                  // Other documents use PDF viewer
+                                  // Other documents use PDF modal
                                   const isTmpDoc =
                                     infoDoc?.type === 'traffic-management-plan' ||
                                     infoDoc?.category === 'mrwa-tmp';
                                   const viewerUrl =
-                                    physicalPage && infoDoc?.id
-                                      ? isTmpDoc
-                                        ? `/library/${infoDoc.id}/${physicalPage}`
-                                        : `/library/viewer/${infoDoc.id}/${physicalPage}`
+                                    physicalPage && infoDoc?.id && isTmpDoc
+                                      ? `/library/${infoDoc.id}/${physicalPage}`
                                       : '#';
+                                  // Get PDF URL for modal (non-TMP docs)
+                                  const pdfUrl = infoDoc?.file || infoDoc?.url || null;
+                                  const canOpenModal =
+                                    physicalPage && infoDoc?.id && pdfUrl && !isTmpDoc;
 
-                                  return (
-                                    <Link
-                                      key={i}
-                                      href={viewerUrl}
-                                      className="flex items-start gap-2 py-1 border-b border-gray-600/50 first:border-0 last:border-0 hover:bg-indigo-900/30 px-2 rounded cursor-pointer transition-colors group"
-                                    >
+                                  const SectionContent = (
+                                    <>
                                       <span className="text-indigo-300 font-mono min-w-[40px] shrink-0 group-hover:text-indigo-200">
                                         {section.sectionNumber}
                                       </span>
@@ -1399,8 +1420,47 @@ function LibraryPageContent() {
                                           📄 p.{section.page}
                                         </span>
                                       )}
-                                    </Link>
+                                    </>
                                   );
+
+                                  // TMP docs use Link, PDF docs use modal
+                                  if (viewerUrl !== '#') {
+                                    return (
+                                      <Link
+                                        key={i}
+                                        href={viewerUrl}
+                                        className="flex items-start gap-2 py-1 border-b border-gray-600/50 first:border-0 last:border-0 hover:bg-indigo-900/30 px-2 rounded cursor-pointer transition-colors group"
+                                      >
+                                        {SectionContent}
+                                      </Link>
+                                    );
+                                  } else if (canOpenModal) {
+                                    return (
+                                      <button
+                                        key={i}
+                                        onClick={() =>
+                                          openPdfModal(
+                                            infoDoc!.id,
+                                            infoDoc!.title,
+                                            physicalPage!,
+                                            pdfUrl!
+                                          )
+                                        }
+                                        className="flex w-full items-start gap-2 py-1 border-b border-gray-600/50 first:border-0 last:border-0 hover:bg-indigo-900/30 px-2 rounded cursor-pointer transition-colors group text-left"
+                                      >
+                                        {SectionContent}
+                                      </button>
+                                    );
+                                  } else {
+                                    return (
+                                      <div
+                                        key={i}
+                                        className="flex items-start gap-2 py-1 border-b border-gray-600/50 first:border-0 last:border-0 px-2"
+                                      >
+                                        {SectionContent}
+                                      </div>
+                                    );
+                                  }
                                 })}
                               </div>
                             )}
@@ -1433,16 +1493,19 @@ function LibraryPageContent() {
                                   (summary as { pageOffset?: number }).pageOffset || 0;
                                 const physicalPage = pageNum ? pageNum + pageOffset : null;
 
-                                // Determine viewer URL
+                                // Determine if TMP document (uses different viewer)
                                 const isTmpDoc =
                                   infoDoc?.type === 'traffic-management-plan' ||
                                   infoDoc?.category === 'mrwa-tmp';
                                 const viewerUrl =
-                                  physicalPage && infoDoc?.id
-                                    ? isTmpDoc
-                                      ? `/library/${infoDoc.id}/${physicalPage}`
-                                      : `/library/viewer/${infoDoc.id}/${physicalPage}`
+                                  physicalPage && infoDoc?.id && isTmpDoc
+                                    ? `/library/${infoDoc.id}/${physicalPage}`
                                     : null;
+
+                                // Get PDF URL for modal (non-TMP docs)
+                                const pdfUrl = infoDoc?.file || infoDoc?.url || null;
+                                const canOpenModal =
+                                  physicalPage && infoDoc?.id && pdfUrl && !isTmpDoc;
 
                                 const CardContent = (
                                   <>
@@ -1464,17 +1527,19 @@ function LibraryPageContent() {
                                       {section && (
                                         <span
                                           className={`text-[10px] shrink-0 flex items-center gap-1 ${
-                                            viewerUrl
+                                            canOpenModal || viewerUrl
                                               ? 'text-indigo-400 group-hover:text-indigo-300'
                                               : 'text-gray-500'
                                           }`}
                                         >
                                           {section}
-                                          {viewerUrl && <span className="text-indigo-400">📄</span>}
+                                          {(canOpenModal || viewerUrl) && (
+                                            <span className="text-indigo-400">📄</span>
+                                          )}
                                         </span>
                                       )}
                                     </div>
-                                    {viewerUrl && (
+                                    {(canOpenModal || viewerUrl) && (
                                       <div className="text-indigo-400 text-[10px] mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
                                         🔗 Click to view p.{pageNum}
                                       </div>
@@ -1482,19 +1547,41 @@ function LibraryPageContent() {
                                   </>
                                 );
 
-                                return viewerUrl ? (
-                                  <Link
-                                    key={i}
-                                    href={viewerUrl}
-                                    className="block bg-gray-700/30 p-2 rounded hover:bg-indigo-900/30 hover:border-indigo-500/50 border border-transparent transition-all cursor-pointer group"
-                                  >
-                                    {CardContent}
-                                  </Link>
-                                ) : (
-                                  <li key={i} className="bg-gray-700/30 p-2 rounded">
-                                    {CardContent}
-                                  </li>
-                                );
+                                // TMP docs use Link, PDF docs use modal
+                                if (viewerUrl) {
+                                  return (
+                                    <Link
+                                      key={i}
+                                      href={viewerUrl}
+                                      className="block bg-gray-700/30 p-2 rounded hover:bg-indigo-900/30 hover:border-indigo-500/50 border border-transparent transition-all cursor-pointer group"
+                                    >
+                                      {CardContent}
+                                    </Link>
+                                  );
+                                } else if (canOpenModal) {
+                                  return (
+                                    <button
+                                      key={i}
+                                      onClick={() =>
+                                        openPdfModal(
+                                          infoDoc!.id,
+                                          infoDoc!.title,
+                                          physicalPage!,
+                                          pdfUrl!
+                                        )
+                                      }
+                                      className="block w-full text-left bg-gray-700/30 p-2 rounded hover:bg-indigo-900/30 hover:border-indigo-500/50 border border-transparent transition-all cursor-pointer group"
+                                    >
+                                      {CardContent}
+                                    </button>
+                                  );
+                                } else {
+                                  return (
+                                    <li key={i} className="bg-gray-700/30 p-2 rounded">
+                                      {CardContent}
+                                    </li>
+                                  );
+                                }
                               })}
                             </ul>
                           </div>
@@ -1524,16 +1611,19 @@ function LibraryPageContent() {
                                   (summary as { pageOffset?: number }).pageOffset || 0;
                                 const physicalPage = pageNum ? pageNum + pageOffset : null;
 
-                                // Determine viewer URL
+                                // Determine if TMP document (uses different viewer)
                                 const isTmpDoc =
                                   infoDoc?.type === 'traffic-management-plan' ||
                                   infoDoc?.category === 'mrwa-tmp';
                                 const viewerUrl =
-                                  physicalPage && infoDoc?.id
-                                    ? isTmpDoc
-                                      ? `/library/${infoDoc.id}/${physicalPage}`
-                                      : `/library/viewer/${infoDoc.id}/${physicalPage}`
+                                  physicalPage && infoDoc?.id && isTmpDoc
+                                    ? `/library/${infoDoc.id}/${physicalPage}`
                                     : null;
+
+                                // Get PDF URL for modal (non-TMP docs)
+                                const pdfUrl = infoDoc?.file || infoDoc?.url || null;
+                                const canOpenModal =
+                                  physicalPage && infoDoc?.id && pdfUrl && !isTmpDoc;
 
                                 const CardContent = (
                                   <>
@@ -1542,16 +1632,18 @@ function LibraryPageContent() {
                                       {reference && (
                                         <div
                                           className={`text-[10px] flex items-center gap-1 ${
-                                            viewerUrl
+                                            canOpenModal || viewerUrl
                                               ? 'text-indigo-400 group-hover:text-indigo-300'
                                               : 'text-amber-400'
                                           }`}
                                         >
                                           Ref: {reference}
-                                          {viewerUrl && <span className="text-indigo-400">📄</span>}
+                                          {(canOpenModal || viewerUrl) && (
+                                            <span className="text-indigo-400">📄</span>
+                                          )}
                                         </div>
                                       )}
-                                      {viewerUrl && (
+                                      {(canOpenModal || viewerUrl) && (
                                         <div className="text-indigo-400 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">
                                           🔗 p.{pageNum}
                                         </div>
@@ -1565,22 +1657,44 @@ function LibraryPageContent() {
                                   </>
                                 );
 
-                                return viewerUrl ? (
-                                  <Link
-                                    key={i}
-                                    href={viewerUrl}
-                                    className="block bg-amber-900/20 p-2 rounded border-l-2 border-amber-600 hover:bg-amber-900/40 hover:border-indigo-500 transition-all cursor-pointer group"
-                                  >
-                                    {CardContent}
-                                  </Link>
-                                ) : (
-                                  <li
-                                    key={i}
-                                    className="bg-amber-900/20 p-2 rounded border-l-2 border-amber-600"
-                                  >
-                                    {CardContent}
-                                  </li>
-                                );
+                                // TMP docs use Link, PDF docs use modal
+                                if (viewerUrl) {
+                                  return (
+                                    <Link
+                                      key={i}
+                                      href={viewerUrl}
+                                      className="block bg-amber-900/20 p-2 rounded border-l-2 border-amber-600 hover:bg-amber-900/40 hover:border-indigo-500 transition-all cursor-pointer group"
+                                    >
+                                      {CardContent}
+                                    </Link>
+                                  );
+                                } else if (canOpenModal) {
+                                  return (
+                                    <button
+                                      key={i}
+                                      onClick={() =>
+                                        openPdfModal(
+                                          infoDoc!.id,
+                                          infoDoc!.title,
+                                          physicalPage!,
+                                          pdfUrl!
+                                        )
+                                      }
+                                      className="block w-full text-left bg-amber-900/20 p-2 rounded border-l-2 border-amber-600 hover:bg-amber-900/40 hover:border-indigo-500 transition-all cursor-pointer group"
+                                    >
+                                      {CardContent}
+                                    </button>
+                                  );
+                                } else {
+                                  return (
+                                    <li
+                                      key={i}
+                                      className="bg-amber-900/20 p-2 rounded border-l-2 border-amber-600"
+                                    >
+                                      {CardContent}
+                                    </li>
+                                  );
+                                }
                               })}
                             </ul>
                           </div>
@@ -1849,6 +1963,18 @@ function LibraryPageContent() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* PDF Viewer Modal */}
+      {pdfModal && (
+        <PdfViewerModal
+          isOpen={pdfModal.isOpen}
+          onClose={closePdfModal}
+          docId={pdfModal.docId}
+          docTitle={pdfModal.docTitle}
+          initialPage={pdfModal.page}
+          pdfUrl={pdfModal.pdfUrl}
+        />
+      )}
     </div>
   );
 }
