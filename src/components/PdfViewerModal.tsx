@@ -363,7 +363,7 @@ export function PdfViewerModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-gray-900 border-gray-700 text-white w-screen h-screen max-w-full max-h-full p-0 overflow-hidden flex flex-col">
+      <DialogContent className="bg-gray-900 border-gray-700 text-white inset-0 top-0 left-0 translate-x-0 translate-y-0 w-screen h-screen max-w-full max-h-full p-0 overflow-hidden flex flex-col rounded-none">
         {/* Header */}
         <DialogHeader className="bg-gray-800 border-b border-gray-700 px-4 py-2 flex-shrink-0">
           <div className="flex items-center justify-between">
