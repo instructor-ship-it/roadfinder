@@ -51,6 +51,7 @@ export function PdfViewerModal({
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [scale, setScale] = useState(1.0);
   const [containerWidth, setContainerWidth] = useState<number>(0);
+  const [containerHeight, setContainerHeight] = useState<number>(0);
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -71,32 +72,34 @@ export function PdfViewerModal({
     });
   }, []);
 
-  // Update container width on resize
+  // Update container dimensions on resize
   useEffect(() => {
     if (!isOpen) return;
 
-    const updateWidth = () => {
-      // Prefer container width, fallback to window width
+    const updateDimensions = () => {
+      // Prefer container dimensions, fallback to window
       const width = containerRef.current?.clientWidth || window.innerWidth;
-      // Fit page to width (use 100% for full width)
-      setContainerWidth(width);
+      const height = containerRef.current?.clientHeight || window.innerHeight;
+      // Leave small padding for comfort
+      setContainerWidth(width - 10);
+      setContainerHeight(height - 10);
     };
 
     // Initial measurement with delay to ensure modal is rendered
-    const timer = setTimeout(updateWidth, 100);
+    const timer = setTimeout(updateDimensions, 100);
 
-    // Listen for resize
-    const resizeObserver = new ResizeObserver(updateWidth);
+    // Listen for resize (handles orientation change)
+    const resizeObserver = new ResizeObserver(updateDimensions);
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
     }
 
-    window.addEventListener('resize', updateWidth);
+    window.addEventListener('resize', updateDimensions);
 
     return () => {
       clearTimeout(timer);
       resizeObserver.disconnect();
-      window.removeEventListener('resize', updateWidth);
+      window.removeEventListener('resize', updateDimensions);
     };
   }, [isOpen]);
 
@@ -477,9 +480,10 @@ export function PdfViewerModal({
                 }
               >
                 <Page
-                  key={`page-${currentPage}-${containerWidth}`}
+                  key={`page-${currentPage}-${containerWidth}-${containerHeight}`}
                   pageNumber={currentPage}
                   width={containerWidth > 0 ? containerWidth : undefined}
+                  height={containerHeight > 0 ? containerHeight : undefined}
                   renderTextLayer={false}
                   renderAnnotationLayer={false}
                   className="shadow-2xl max-w-full max-h-full object-contain pointer-events-none"
