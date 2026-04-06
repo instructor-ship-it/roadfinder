@@ -16,15 +16,9 @@ import {
 } from '@/components/ui/drawer';
 
 // Dynamically import react-pdf components with SSR disabled
-const Document = dynamic(
-  () => import('react-pdf').then((mod) => mod.Document),
-  { ssr: false }
-);
+const Document = dynamic(() => import('react-pdf').then((mod) => mod.Document), { ssr: false });
 
-const Page = dynamic(
-  () => import('react-pdf').then((mod) => mod.Page),
-  { ssr: false }
-);
+const Page = dynamic(() => import('react-pdf').then((mod) => mod.Page), { ssr: false });
 
 // Types
 interface RegistryDocument {
@@ -81,7 +75,7 @@ export default function PdfViewer() {
         `https://cdn.jsdelivr.net/npm/pdfjs-dist@${version}/build/pdf.worker.min.mjs`,
         `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${version}/pdf.worker.min.js`,
       ];
-      
+
       // Try the first URL (unpkg)
       mod.pdfjs.GlobalWorkerOptions.workerSrc = workerUrls[0];
     });
@@ -129,21 +123,24 @@ export default function PdfViewer() {
   // Get PDF URL - handle both local files and external URLs
   const getPdfUrl = (): string | null => {
     if (!document) return null;
-    
+
     // Local files are served directly
     if (document.file) {
       return document.file;
     }
-    
+
     // External URLs - these may have CORS issues
     if (document.url) {
       // For external URLs, we need to check if CORS is supported
       // If not, we should open in a new tab instead
       return document.url;
     }
-    
+
     return null;
   };
+
+  // Get PDF URL
+  const pdfUrl = getPdfUrl();
 
   // Check if PDF is from external source (may have CORS issues)
   const isExternalPdf = pdfUrl?.startsWith('http');
@@ -276,8 +273,6 @@ export default function PdfViewer() {
     lastTap.current = now;
   }, [scale]);
 
-  const pdfUrl = getPdfUrl();
-
   if (!mounted || (loading && !document)) {
     return (
       <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
@@ -338,7 +333,9 @@ export default function PdfViewer() {
                         onClick={() => setIsDrawerOpen(false)}
                         className="flex items-center gap-2 py-2 px-2 rounded hover:bg-gray-700 cursor-pointer"
                       >
-                        <span className="font-medium text-sm text-blue-400">{section.sectionNumber}</span>
+                        <span className="font-medium text-sm text-blue-400">
+                          {section.sectionNumber}
+                        </span>
                         <span className="flex-1 text-gray-300 truncate text-sm">
                           {section.sectionTitle}
                         </span>
@@ -384,7 +381,9 @@ export default function PdfViewer() {
               <Button variant="ghost" size="sm" onClick={zoomOut} className="h-7 w-7 p-0 text-lg">
                 −
               </Button>
-              <span className="text-xs w-9 text-center tabular-nums">{Math.round(scale * 100)}%</span>
+              <span className="text-xs w-9 text-center tabular-nums">
+                {Math.round(scale * 100)}%
+              </span>
               <Button variant="ghost" size="sm" onClick={zoomIn} className="h-7 w-7 p-0 text-lg">
                 +
               </Button>
@@ -416,7 +415,9 @@ export default function PdfViewer() {
               console.error('PDF load error:', err);
               // Provide helpful error message
               if (isExternalPdf) {
-                setError('Cannot load external PDF due to CORS restrictions. Try opening the PDF directly in a new tab.');
+                setError(
+                  'Cannot load external PDF due to CORS restrictions. Try opening the PDF directly in a new tab.'
+                );
               } else {
                 setError(`Failed to load PDF: ${err.message}`);
               }
