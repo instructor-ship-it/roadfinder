@@ -73,24 +73,30 @@ export function PdfViewerModal({
 
   // Update container width on resize
   useEffect(() => {
-    if (!isOpen || !containerRef.current) return;
+    if (!isOpen) return;
 
     const updateWidth = () => {
-      if (containerRef.current) {
-        // Fit page to container width (use 92% for comfortable reading)
-        setContainerWidth(containerRef.current.clientWidth * 0.92);
-      }
+      // Prefer container width, fallback to window width
+      const width = containerRef.current?.clientWidth || window.innerWidth;
+      // Fit page to width (use 92% for comfortable reading)
+      setContainerWidth(width * 0.92);
     };
 
-    // Small delay to ensure container is rendered
-    const timer = setTimeout(updateWidth, 50);
+    // Initial measurement with delay to ensure modal is rendered
+    const timer = setTimeout(updateWidth, 100);
 
+    // Listen for resize
     const resizeObserver = new ResizeObserver(updateWidth);
-    resizeObserver.observe(containerRef.current);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    window.addEventListener('resize', updateWidth);
 
     return () => {
       clearTimeout(timer);
       resizeObserver.disconnect();
+      window.removeEventListener('resize', updateWidth);
     };
   }, [isOpen]);
 
@@ -470,24 +476,22 @@ export function PdfViewerModal({
                   </div>
                 }
               >
-                {containerWidth > 0 && (
-                  <Page
-                    key={`page-${currentPage}-${containerWidth}`}
-                    pageNumber={currentPage}
-                    width={containerWidth}
-                    renderTextLayer={false}
-                    renderAnnotationLayer={false}
-                    className="shadow-2xl max-w-full max-h-full object-contain pointer-events-none"
-                    loading={
-                      <div className="flex items-center justify-center w-[600px] h-[800px] bg-gray-800">
-                        <div className="text-center">
-                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
-                          <p className="text-gray-400 text-sm">Rendering page...</p>
-                        </div>
+                <Page
+                  key={`page-${currentPage}-${containerWidth}`}
+                  pageNumber={currentPage}
+                  width={containerWidth > 0 ? containerWidth : undefined}
+                  renderTextLayer={false}
+                  renderAnnotationLayer={false}
+                  className="shadow-2xl max-w-full max-h-full object-contain pointer-events-none"
+                  loading={
+                    <div className="flex items-center justify-center w-[600px] h-[800px] bg-gray-800">
+                      <div className="text-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-2"></div>
+                        <p className="text-gray-400 text-sm">Rendering page...</p>
                       </div>
-                    }
-                  />
-                )}
+                    </div>
+                  }
+                />
               </Document>
             )}
           </div>
