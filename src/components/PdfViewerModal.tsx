@@ -51,7 +51,6 @@ export function PdfViewerModal({
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [scale, setScale] = useState(1.0);
   const [containerWidth, setContainerWidth] = useState<number>(0);
-  const [containerHeight, setContainerHeight] = useState<number>(0);
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -72,34 +71,31 @@ export function PdfViewerModal({
     });
   }, []);
 
-  // Update container dimensions on resize
+  // Update container width on resize
   useEffect(() => {
     if (!isOpen) return;
 
-    const updateDimensions = () => {
-      // Prefer container dimensions, fallback to window
+    const updateWidth = () => {
+      // Prefer container width, fallback to window
       const width = containerRef.current?.clientWidth || window.innerWidth;
-      const height = containerRef.current?.clientHeight || window.innerHeight;
-      // Leave small padding for comfort
-      setContainerWidth(width - 10);
-      setContainerHeight(height - 10);
+      setContainerWidth(width);
     };
 
     // Initial measurement with delay to ensure modal is rendered
-    const timer = setTimeout(updateDimensions, 100);
+    const timer = setTimeout(updateWidth, 100);
 
     // Listen for resize (handles orientation change)
-    const resizeObserver = new ResizeObserver(updateDimensions);
+    const resizeObserver = new ResizeObserver(updateWidth);
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
     }
 
-    window.addEventListener('resize', updateDimensions);
+    window.addEventListener('resize', updateWidth);
 
     return () => {
       clearTimeout(timer);
       resizeObserver.disconnect();
-      window.removeEventListener('resize', updateDimensions);
+      window.removeEventListener('resize', updateWidth);
     };
   }, [isOpen]);
 
@@ -480,10 +476,9 @@ export function PdfViewerModal({
                 }
               >
                 <Page
-                  key={`page-${currentPage}-${containerWidth}-${containerHeight}`}
+                  key={`page-${currentPage}-${containerWidth}`}
                   pageNumber={currentPage}
                   width={containerWidth > 0 ? containerWidth : undefined}
-                  height={containerHeight > 0 ? containerHeight : undefined}
                   renderTextLayer={false}
                   renderAnnotationLayer={false}
                   className="shadow-2xl max-w-full max-h-full object-contain pointer-events-none"
