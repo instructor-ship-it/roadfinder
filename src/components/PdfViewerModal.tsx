@@ -375,6 +375,7 @@ export function PdfViewerModal({
           height: '100vh',
           maxWidth: '100vw',
           maxHeight: '100vh',
+          transform: 'none',
         }}
       >
         {/* Header */}
