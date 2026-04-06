@@ -377,10 +377,6 @@ export function PdfViewerModal({
               <DialogTitle className="text-white text-sm font-medium truncate max-w-[200px] md:max-w-[400px]">
                 {docTitle}
               </DialogTitle>
-              <div className="flex items-center gap-1">
-                <span className="font-bold text-sm">{currentPage}</span>
-                <span className="text-gray-400 text-sm">/ {numPages || '?'}</span>
-              </div>
             </div>
 
             <div className="flex items-center gap-1">
