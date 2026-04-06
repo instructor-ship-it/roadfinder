@@ -367,30 +367,16 @@ export function PdfViewerModal({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent
-        className="bg-gray-900 border-gray-700 text-white p-0 overflow-hidden flex flex-col rounded-none"
+        className="bg-gray-900 border-gray-700 text-white inset-0 top-0 left-0 translate-x-0 translate-y-0 w-screen h-screen max-w-full max-h-full p-0 overflow-hidden flex flex-col rounded-none"
         style={
           isLandscape
             ? {
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '130vw',
-                height: '130vh',
-                maxWidth: '130vw',
-                maxHeight: '130vh',
-                transform: 'none',
+                width: '110vw',
+                height: '110vh',
+                maxWidth: '110vw',
+                maxHeight: '110vh',
               }
-            : {
-                position: 'fixed',
-                inset: 0,
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                maxWidth: '100vw',
-                maxHeight: '100vh',
-                transform: 'none',
-              }
+            : undefined
         }
       >
         {/* Header */}
