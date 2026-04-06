@@ -61,8 +61,10 @@ export default function PdfViewer() {
   const [error, setError] = useState<string | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [pageInput, setPageInput] = useState(pageNum.toString());
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
+  const pageRef = useRef<HTMLDivElement>(null);
 
   // Configure PDF.js worker on mount
   useEffect(() => {
@@ -221,10 +223,31 @@ export default function PdfViewer() {
     }
   };
 
-  // Touch gestures for zoom
+  // Constrain position to keep image visible
+  const constrainPosition = useCallback((newScale: number, x: number, y: number) => {
+    if (!containerRef.current || !pageRef.current) return { x, y };
+
+    const container = containerRef.current.getBoundingClientRect();
+    const pageRect = pageRef.current.getBoundingClientRect();
+
+    const scaledWidth = pageRect.width * newScale;
+    const scaledHeight = pageRect.height * newScale;
+    const maxOffsetX = Math.max(0, (scaledWidth - container.width) / 2);
+    const maxOffsetY = Math.max(0, (scaledHeight - container.height) / 2);
+
+    return {
+      x: Math.max(-maxOffsetX, Math.min(maxOffsetX, x)),
+      y: Math.max(-maxOffsetY, Math.min(maxOffsetY, y)),
+    };
+  }, []);
+
+  // Touch gestures for zoom and pan
   const touchState = useRef({
     initialDistance: 0,
     initialScale: 1,
+    isPanning: false,
+    lastX: 0,
+    lastY: 0,
   });
 
   const getTouchDistance = (touches: React.TouchList): number => {
@@ -239,39 +262,85 @@ export default function PdfViewer() {
       if (e.touches.length === 2) {
         touchState.current.initialDistance = getTouchDistance(e.touches);
         touchState.current.initialScale = scale;
+        touchState.current.isPanning = false;
+      } else if (e.touches.length === 1 && scale > 1) {
+        touchState.current.isPanning = true;
+        touchState.current.lastX = e.touches[0].clientX;
+        touchState.current.lastY = e.touches[0].clientY;
       }
     },
     [scale]
   );
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (e.touches.length === 2) {
-      const currentDistance = getTouchDistance(e.touches);
-      const initialDistance = touchState.current.initialDistance;
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      e.preventDefault();
 
-      if (initialDistance > 0) {
-        const newScale = Math.max(
-          0.5,
-          Math.min(3, touchState.current.initialScale * (currentDistance / initialDistance))
-        );
-        setScale(newScale);
+      if (e.touches.length === 2) {
+        const currentDistance = getTouchDistance(e.touches);
+        const initialDistance = touchState.current.initialDistance;
+
+        if (initialDistance > 0) {
+          const newScale = Math.max(
+            0.5,
+            Math.min(3, touchState.current.initialScale * (currentDistance / initialDistance))
+          );
+          setScale(newScale);
+        }
+      } else if (e.touches.length === 1 && touchState.current.isPanning && scale > 1) {
+        const dx = e.touches[0].clientX - touchState.current.lastX;
+        const dy = e.touches[0].clientY - touchState.current.lastY;
+
+        setPosition((prev) => constrainPosition(scale, prev.x + dx, prev.y + dy));
+
+        touchState.current.lastX = e.touches[0].clientX;
+        touchState.current.lastY = e.touches[0].clientY;
       }
-    }
+    },
+    [scale, constrainPosition]
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    touchState.current.isPanning = false;
+    touchState.current.initialDistance = 0;
   }, []);
 
   // Double tap to zoom
   const lastTap = useRef<number>(0);
-  const handleDoubleTap = useCallback(() => {
-    const now = Date.now();
-    if (now - lastTap.current < 300) {
-      if (scale > 1) {
-        setScale(1);
-      } else {
-        setScale(2);
+  const handleDoubleTap = useCallback(
+    (e: React.TouchEvent) => {
+      const now = Date.now();
+      if (now - lastTap.current < 300) {
+        if (scale > 1) {
+          setScale(1);
+          setPosition({ x: 0, y: 0 });
+        } else {
+          setScale(2);
+          const container = containerRef.current?.getBoundingClientRect();
+          if (container) {
+            const tapX = e.touches[0].clientX - container.left - container.width / 2;
+            const tapY = e.touches[0].clientY - container.top - container.height / 2;
+            setPosition({ x: -tapX * 0.5, y: -tapY * 0.5 });
+          }
+        }
       }
-    }
-    lastTap.current = now;
-  }, [scale]);
+      lastTap.current = now;
+    },
+    [scale]
+  );
+
+  // Mouse wheel zoom
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+    setScale((s) => Math.max(0.5, Math.min(3, s + delta)));
+  }, []);
+
+  // Reset position when page changes
+  useEffect(() => {
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+  }, [pageNum]);
 
   if (!mounted || (loading && !document)) {
     return (
@@ -303,7 +372,7 @@ export default function PdfViewer() {
       <div className="bg-gray-800 border-b border-gray-700 px-4 py-2 flex-shrink-0 z-10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Link href={`/library/${docId}`}>
+            <Link href="/library">
               <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white h-9">
                 ←
               </Button>
@@ -398,58 +467,64 @@ export default function PdfViewer() {
       {/* PDF Viewer */}
       <div
         ref={containerRef}
-        className="flex-1 overflow-auto bg-gray-950 flex items-start justify-center p-4"
+        className="flex-1 overflow-hidden bg-gray-950 relative"
+        style={{ touchAction: 'none' }}
         onTouchStart={(e) => {
           handleTouchStart(e);
           if (e.touches.length === 1) {
-            handleDoubleTap();
+            handleDoubleTap(e);
           }
         }}
         onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
+        onWheel={handleWheel}
       >
-        {mounted && pdfUrl && (
-          <Document
-            file={pdfUrl}
-            onLoadSuccess={onDocumentLoadSuccess}
-            onLoadError={(err) => {
-              console.error('PDF load error:', err);
-              // Provide helpful error message
-              if (isExternalPdf) {
-                setError(
-                  'Cannot load external PDF due to CORS restrictions. Try opening the PDF directly in a new tab.'
-                );
-              } else {
-                setError(`Failed to load PDF: ${err.message}`);
-              }
-            }}
-            loading={
-              <div className="flex flex-col items-center justify-center py-12 gap-3">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                <p className="text-gray-400 text-sm">Loading page {pageNum}...</p>
-              </div>
-            }
-            error={
-              <div className="text-center py-12">
-                <p className="text-red-400 mb-4">Failed to load PDF</p>
-                {isExternalPdf && (
-                  <Link href={pdfUrl} target="_blank" className="text-blue-400 underline">
-                    Open PDF in new tab
-                  </Link>
-                )}
-              </div>
-            }
-          >
-            <div
-              style={{
-                transform: `scale(${scale})`,
-                transformOrigin: 'top center',
+        <div
+          ref={pageRef}
+          className="absolute inset-0 flex items-center justify-center"
+          style={{
+            transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
+            transformOrigin: 'center center',
+            transition: 'transform 0.1s ease-out',
+          }}
+        >
+          {mounted && pdfUrl && (
+            <Document
+              file={pdfUrl}
+              onLoadSuccess={onDocumentLoadSuccess}
+              onLoadError={(err) => {
+                console.error('PDF load error:', err);
+                if (isExternalPdf) {
+                  setError(
+                    'Cannot load external PDF due to CORS restrictions. Try opening the PDF directly in a new tab.'
+                  );
+                } else {
+                  setError(`Failed to load PDF: ${err.message}`);
+                }
               }}
+              loading={
+                <div className="flex flex-col items-center justify-center py-12 gap-3">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                  <p className="text-gray-400 text-sm">Loading page {pageNum}...</p>
+                </div>
+              }
+              error={
+                <div className="text-center py-12">
+                  <p className="text-red-400 mb-4">Failed to load PDF</p>
+                  {isExternalPdf && (
+                    <Link href={pdfUrl} target="_blank" className="text-blue-400 underline">
+                      Open PDF in new tab
+                    </Link>
+                  )}
+                </div>
+              }
             >
               <Page
                 pageNumber={pageNum}
                 renderTextLayer={false}
                 renderAnnotationLayer={false}
-                className="shadow-2xl"
+                className="shadow-2xl max-w-full max-h-full object-contain pointer-events-none"
                 loading={
                   <div className="flex items-center justify-center w-[600px] h-[800px] bg-gray-800">
                     <div className="text-center">
@@ -459,9 +534,9 @@ export default function PdfViewer() {
                   </div>
                 }
               />
-            </div>
-          </Document>
-        )}
+            </Document>
+          )}
+        </div>
       </div>
 
       {/* Navigation Footer */}
