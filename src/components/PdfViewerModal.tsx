@@ -376,9 +376,9 @@ export function PdfViewerModal({
             right: 0,
             bottom: 0,
             width: '100vw',
-            height: '95vh',
+            height: isLandscape ? '90vh' : '100vh',
             maxWidth: '100vw',
-            maxHeight: '95vh',
+            maxHeight: isLandscape ? '90vh' : '100vh',
             '--tw-translate-x': '0px',
             '--tw-translate-y': '0px',
           } as React.CSSProperties
