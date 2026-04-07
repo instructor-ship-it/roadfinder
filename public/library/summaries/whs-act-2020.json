@@ -3104,36 +3104,43 @@
     {
       "requirement": "Primary duty of care to ensure, so far as is reasonably practicable, the health and safety of workers engaged or caused to be engaged by the person, and workers whose activities are influenced or directed by the person",
       "section": "Section 19",
+      "physicalPage": 44,
       "priority": "critical"
     },
     {
       "requirement": "Officers must exercise due diligence to ensure that the PCBU complies with its duties and obligations",
       "section": "Section 27",
+      "physicalPage": 58,
       "priority": "critical"
     },
     {
       "requirement": "Workers must take reasonable care for their own health and safety and take reasonable care that their acts or omissions do not adversely affect the health and safety of other persons",
       "section": "Section 28",
+      "physicalPage": 59,
       "priority": "high"
     },
     {
       "requirement": "Duty to notify the regulator of notifiable incidents immediately after becoming aware of the incident",
       "section": "Section 38",
+      "physicalPage": 68,
       "priority": "critical"
     },
     {
       "requirement": "Duty to preserve incident sites for investigation purposes",
       "section": "Section 39",
+      "physicalPage": 69,
       "priority": "high"
     },
     {
       "requirement": "Consultation with workers on health and safety matters that directly affect them",
       "section": "Section 47",
+      "physicalPage": 78,
       "priority": "high"
     },
     {
       "requirement": "Management of risks to health and safety associated with the business or undertaking",
       "section": "Section 17",
+      "physicalPage": 43,
       "priority": "critical"
     }
   ],
@@ -3183,7 +3190,7 @@
     {
       "note": "Worker Duties (Section 28): Workers must take reasonable care for their own health and safety, take reasonable care that their acts or omissions do not adversely affect others, and comply with reasonable instructions and policies.",
       "reference": "Section 28",
-      "physicalPage": 61,
+      "physicalPage": 59,
       "consequence": "Workers can be prosecuted for breaches of their duties",
       "relevance": "high"
     },
