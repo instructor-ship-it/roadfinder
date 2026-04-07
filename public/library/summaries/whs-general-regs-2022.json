@@ -1276,7 +1276,7 @@
     },
     {
       "sectionNumber": "184G",
-      "sectionTitle": "Record of commercial vehicle drivers’ time",
+      "sectionTitle": "Record of commercial vehicle drivers\u2019 time",
       "page": 210
     },
     {
@@ -1716,5 +1716,6 @@
   "generatedAt": "2026-04-05T16:24:57.916580",
   "generatedBy": "Phase 1 Summary Generator v2.0",
   "version": "2.0",
-  "lastProcessed": "2026-04-05T18:14:41.919Z"
+  "lastProcessed": "2026-04-05T18:14:41.919Z",
+  "pageOffset": 38
 }
