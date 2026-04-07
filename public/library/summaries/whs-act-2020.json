@@ -3104,43 +3104,43 @@
     {
       "requirement": "Primary duty of care to ensure, so far as is reasonably practicable, the health and safety of workers engaged or caused to be engaged by the person, and workers whose activities are influenced or directed by the person",
       "section": "Section 19",
-      "physicalPage": 44,
+      "legislativePage": 18,
       "priority": "critical"
     },
     {
       "requirement": "Officers must exercise due diligence to ensure that the PCBU complies with its duties and obligations",
       "section": "Section 27",
-      "physicalPage": 58,
+      "legislativePage": 32,
       "priority": "critical"
     },
     {
       "requirement": "Workers must take reasonable care for their own health and safety and take reasonable care that their acts or omissions do not adversely affect the health and safety of other persons",
       "section": "Section 28",
-      "physicalPage": 59,
+      "legislativePage": 33,
       "priority": "high"
     },
     {
       "requirement": "Duty to notify the regulator of notifiable incidents immediately after becoming aware of the incident",
       "section": "Section 38",
-      "physicalPage": 68,
+      "legislativePage": 42,
       "priority": "critical"
     },
     {
       "requirement": "Duty to preserve incident sites for investigation purposes",
       "section": "Section 39",
-      "physicalPage": 69,
+      "legislativePage": 43,
       "priority": "high"
     },
     {
       "requirement": "Consultation with workers on health and safety matters that directly affect them",
       "section": "Section 47",
-      "physicalPage": 78,
+      "legislativePage": 52,
       "priority": "high"
     },
     {
       "requirement": "Management of risks to health and safety associated with the business or undertaking",
       "section": "Section 17",
-      "physicalPage": 43,
+      "legislativePage": 17,
       "priority": "critical"
     }
   ],
@@ -3148,70 +3148,70 @@
     {
       "note": "Industrial Manslaughter (Section 30A): A PCBU or officer commits a crime if their conduct causes death and they knew the conduct was likely to cause death or serious harm, acting in disregard of that likelihood. Maximum penalty: 20 years imprisonment and $5 million fine for individuals; $10 million for body corporates.",
       "reference": "Section 30A",
-      "physicalPage": 61,
+      "legislativePage": 35,
       "consequence": "Criminal prosecution with imprisonment and substantial fines",
       "relevance": "critical"
     },
     {
       "note": "Category 1 Offence (Section 31): Failure to comply with health and safety duty involving reckless conduct exposing an individual to risk of death or serious injury. Maximum penalty: $3.5 million for body corporate, $700,000 or 5 years imprisonment for individual PCBU, $350,000 or 5 years imprisonment for officer.",
       "reference": "Section 31",
-      "physicalPage": 62,
+      "legislativePage": 36,
       "consequence": "Criminal prosecution with imprisonment and substantial fines",
       "relevance": "critical"
     },
     {
       "note": "Primary Duty of Care (Section 19): PCBUs must ensure, so far as reasonably practicable, the health and safety of workers and others. This includes providing safe work environment, safe plant and structures, safe systems of work, and adequate facilities for workers.",
       "reference": "Section 19",
-      "physicalPage": 44,
+      "legislativePage": 18,
       "consequence": "Foundation for all WHS compliance obligations",
       "relevance": "critical"
     },
     {
       "note": "Officer Due Diligence (Section 27): Officers must exercise due diligence to ensure the PCBU complies with its duties. This includes acquiring and keeping up-to-date knowledge of WHS matters, gaining an understanding of hazards and risks, and ensuring appropriate resources and processes are available.",
       "reference": "Section 27",
-      "physicalPage": 58,
+      "legislativePage": 32,
       "consequence": "Personal liability for officers including directors and senior executives",
       "relevance": "critical"
     },
     {
       "note": "Incident Notification (Section 38): PCBUs must notify the regulator immediately after becoming aware of a notifiable incident (death, serious injury/illness, or dangerous incident). The incident site must be preserved until an inspector arrives or directs otherwise (Section 39).",
       "reference": "Sections 35-39",
-      "physicalPage": 66,
+      "legislativePage": 40,
       "consequence": "Failure to notify can result in significant penalties; site disturbance may constitute an offence",
       "relevance": "critical"
     },
     {
       "note": "Consultation Requirements (Section 47): PCBUs must consult with workers who carry out work for the business and who are (or are likely to be) directly affected by a health and safety matter. Consultation must be meaningful and allow workers to contribute to decision-making.",
       "reference": "Section 47-49",
-      "physicalPage": 78,
+      "legislativePage": 52,
       "consequence": "Failure to consult may result in penalties and undermines WHS culture",
       "relevance": "high"
     },
     {
       "note": "Worker Duties (Section 28): Workers must take reasonable care for their own health and safety, take reasonable care that their acts or omissions do not adversely affect others, and comply with reasonable instructions and policies.",
       "reference": "Section 28",
-      "physicalPage": 59,
+      "legislativePage": 33,
       "consequence": "Workers can be prosecuted for breaches of their duties",
       "relevance": "high"
     },
     {
       "note": "Right to Cease Unsafe Work (Section 84): Workers have the right to cease or refuse to carry out work if they have a reasonable concern that carrying out the work would expose them to a serious risk to their health and safety.",
       "reference": "Section 84-89",
-      "physicalPage": 107,
+      "legislativePage": 81,
       "consequence": "PCBUs must not disadvantage workers for exercising this right",
       "relevance": "high"
     },
     {
       "note": "Improvement and Prohibition Notices (Part 10): Inspectors can issue improvement notices requiring compliance or prohibition notices stopping dangerous work. Failure to comply with notices is an offence with substantial penalties.",
       "reference": "Sections 191-210",
-      "physicalPage": 162,
+      "legislativePage": 136,
       "consequence": "Non-compliance with notices results in additional offences and penalties",
       "relevance": "high"
     },
     {
       "note": "Health and Safety Representatives (Part 5 Division 3): Workers can request election of HSRs who have powers including inspecting workplaces, accompanying inspectors, investigating complaints, and issuing provisional improvement notices.",
       "reference": "Sections 50-102",
-      "physicalPage": 80,
+      "legislativePage": 54,
       "consequence": "PCBUs must facilitate HSR functions and cannot discriminate against HSRs",
       "relevance": "medium"
     }
