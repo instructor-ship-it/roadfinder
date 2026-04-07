@@ -1,0 +1,1415 @@
+{
+  "title": "Work Health and Safety Act 2020",
+  "jurisdiction": "Western Australia",
+  "version": "As at 31 Jan 2025",
+  "totalPages": 312,
+  "pageOffset": 26,
+  "pageOffsetNote": "TOC page numbers refer to the original document page numbers. Physical PDF page = TOC page + 26",
+  "parts": [
+    {
+      "partNumber": 1,
+      "title": "Preliminary",
+      "tocPage": "i",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "Introduction",
+          "sections": [
+            { "section": "1", "title": "Short title", "page": 2 },
+            { "section": "2", "title": "Commencement", "page": 2 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Object",
+          "sections": [
+            { "section": "3", "title": "Object", "page": 2 }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "Interpretation",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Definitions",
+              "sections": [
+                { "section": "4", "title": "Definitions", "page": 4 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Other important terms",
+              "sections": [
+                { "section": "4A", "title": "Meaning of officer", "page": 10 },
+                { "section": "5", "title": "Meaning of person conducting a business or undertaking", "page": 12 },
+                { "section": "6", "title": "Meaning of supply", "page": 13 },
+                { "section": "7", "title": "Meaning of worker", "page": 14 },
+                { "section": "8", "title": "Meaning of workplace", "page": 14 },
+                { "section": "9", "title": "Notes", "page": 15 }
+              ]
+            }
+          ]
+        },
+        {
+          "divisionNumber": 4,
+          "title": "Application of Act",
+          "sections": [
+            { "section": "10", "title": "Act binds Crown", "page": 15 },
+            { "section": "11", "title": "Not used", "page": 15 },
+            { "section": "12", "title": "Not used", "page": 15 }
+          ]
+        },
+        {
+          "divisionNumber": 5,
+          "title": "Establishment of various offices and bodies",
+          "sections": [
+            { "section": "12A", "title": "Effect of Schedule 1", "page": 15 }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "title": "Health and safety duties",
+      "tocPage": "ii",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "Introductory",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Principles that apply to duties",
+              "sections": [
+                { "section": "13", "title": "Principles that apply to duties", "page": 16 },
+                { "section": "14", "title": "Duties not transferable", "page": 16 },
+                { "section": "15", "title": "Person may have more than 1 duty", "page": 16 },
+                { "section": "16", "title": "More than 1 person can have a duty", "page": 16 },
+                { "section": "17", "title": "Management of risks", "page": 17 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "What is reasonably practicable",
+              "sections": [
+                { "section": "18", "title": "What is reasonably practicable in ensuring health and safety", "page": 17 }
+              ]
+            }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Primary duty of care",
+          "sections": [
+            { "section": "19", "title": "Primary duty of care", "page": 18 }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "Further duties of persons conducting businesses or undertakings",
+          "sections": [
+            { "section": "20", "title": "Duty of persons conducting businesses or undertakings involving management or control of workplaces", "page": 20 },
+            { "section": "21", "title": "Duty of persons conducting businesses or undertakings involving management or control of fixtures, fittings or plant at workplaces", "page": 20 },
+            { "section": "22", "title": "Duties of persons conducting businesses or undertakings that design plant, substances or structures", "page": 21 },
+            { "section": "23", "title": "Duties of persons conducting businesses or undertakings that manufacture plant, substances or structures", "page": 23 },
+            { "section": "24", "title": "Duties of persons conducting businesses or undertakings that import plant, substances or structures", "page": 25 },
+            { "section": "25", "title": "Duties of persons conducting businesses or undertakings that supply plant, substances or structures", "page": 27 },
+            { "section": "26", "title": "Duty of persons conducting businesses or undertakings that install, construct or commission plant or structures", "page": 29 },
+            { "section": "26A", "title": "Duty of persons conducting businesses or undertakings that provide services relating to work health and safety", "page": 30 }
+          ]
+        },
+        {
+          "divisionNumber": 4,
+          "title": "Duty of officers, workers and other persons",
+          "sections": [
+            { "section": "27", "title": "Duty of officers", "page": 32 },
+            { "section": "28", "title": "Duties of workers", "page": 33 },
+            { "section": "29", "title": "Duties of other persons at the workplace", "page": 34 }
+          ]
+        },
+        {
+          "divisionNumber": 5,
+          "title": "Offences and penalties",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Preliminary",
+              "sections": [
+                { "section": "30", "title": "Terms used", "page": 34 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Industrial manslaughter",
+              "sections": [
+                { "section": "30A", "title": "Industrial manslaughter — crime", "page": 35 }
+              ]
+            },
+            {
+              "subdivisionNumber": 3,
+              "title": "Other offences and penalties",
+              "sections": [
+                { "section": "31", "title": "Failure to comply with health and safety duty — Category 1", "page": 36 },
+                { "section": "32", "title": "Failure to comply with health and safety duty — Category 2", "page": 38 },
+                { "section": "33", "title": "Failure to comply with health and safety duty — Category 3", "page": 38 }
+              ]
+            },
+            {
+              "subdivisionNumber": 4,
+              "title": "Exceptions",
+              "sections": [
+                { "section": "34", "title": "Volunteers and unincorporated associations", "page": 39 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "title": "Incident notification",
+      "tocPage": "iii",
+      "sections": [
+        { "section": "35", "title": "What is a notifiable incident", "page": 40 },
+        { "section": "36", "title": "What is a serious injury or illness", "page": 40 },
+        { "section": "37", "title": "What is a dangerous incident", "page": 41 },
+        { "section": "38", "title": "Duty to notify of notifiable incidents", "page": 42 },
+        { "section": "39", "title": "Duty to preserve incident sites", "page": 43 }
+      ]
+    },
+    {
+      "partNumber": 4,
+      "title": "Authorisations",
+      "tocPage": "iii",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "Preliminary",
+          "sections": [
+            { "section": "40", "title": "Meaning of authorised", "page": 45 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Requirements for authorisations",
+          "sections": [
+            { "section": "41", "title": "Requirements for authorisation of workplaces", "page": 45 },
+            { "section": "42", "title": "Requirements for authorisation of plant or substance", "page": 45 },
+            { "section": "43", "title": "Requirements for authorisation of work", "page": 46 }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "Other requirements",
+          "sections": [
+            { "section": "44", "title": "Requirements for prescribed qualifications or experience", "page": 47 },
+            { "section": "45", "title": "Requirement to comply with conditions of authorisation", "page": 48 }
+          ]
+        },
+        {
+          "divisionNumber": 4,
+          "title": "Use of automated electronic systems for functions relating to authorisations",
+          "sections": [
+            { "section": "45A", "title": "Preliminary", "page": 48 },
+            { "section": "45B", "title": "Use of automated electronic systems under authorisation provisions", "page": 49 },
+            { "section": "45C", "title": "Replacing decision made by automated electronic system or re-exercising or re-performing authorisation function", "page": 50 }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 5,
+      "title": "Consultation, representation and participation",
+      "tocPage": "iv",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "Consultation, cooperation and coordination between duty holders",
+          "sections": [
+            { "section": "46", "title": "Duty to consult with other duty holders", "page": 52 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Consultation with workers",
+          "sections": [
+            { "section": "47", "title": "Duty to consult workers", "page": 52 },
+            { "section": "48", "title": "Nature of consultation", "page": 53 },
+            { "section": "49", "title": "When consultation is required", "page": 53 }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "Health and safety representatives",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Request for election of health and safety representatives",
+              "sections": [
+                { "section": "50", "title": "Request for election of health and safety representative", "page": 54 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Determination of work groups",
+              "sections": [
+                { "section": "51", "title": "Determination of work groups", "page": 54 },
+                { "section": "52", "title": "Negotiations for determination of work group", "page": 55 },
+                { "section": "53", "title": "Notice to workers", "page": 56 },
+                { "section": "54", "title": "Failure of negotiations", "page": 56 }
+              ]
+            },
+            {
+              "subdivisionNumber": 3,
+              "title": "Multiple business work groups",
+              "sections": [
+                { "section": "55", "title": "Determination of work groups of multiple businesses", "page": 57 },
+                { "section": "56", "title": "Negotiation of agreement for work groups of multiple businesses", "page": 58 },
+                { "section": "57", "title": "Notice to workers", "page": 59 },
+                { "section": "58", "title": "Withdrawal from negotiations or agreement involving multiple businesses", "page": 60 },
+                { "section": "59", "title": "Effect of Subdivision on other arrangements", "page": 60 }
+              ]
+            },
+            {
+              "subdivisionNumber": 4,
+              "title": "Election of health and safety representatives",
+              "sections": [
+                { "section": "60", "title": "Eligibility to be elected", "page": 60 },
+                { "section": "61", "title": "Procedure for election of health and safety representatives", "page": 61 },
+                { "section": "62", "title": "Eligibility to vote", "page": 61 },
+                { "section": "63", "title": "When election not required", "page": 61 },
+                { "section": "64", "title": "Term of office of health and safety representative", "page": 62 },
+                { "section": "65", "title": "Disqualification of health and safety representatives", "page": 62 },
+                { "section": "66", "title": "Immunity of health and safety representatives", "page": 63 },
+                { "section": "67", "title": "Deputy health and safety representatives", "page": 63 }
+              ]
+            },
+            {
+              "subdivisionNumber": 5,
+              "title": "Powers and functions of health and safety representatives",
+              "sections": [
+                { "section": "68", "title": "Powers and functions of health and safety representatives", "page": 64 },
+                { "section": "69", "title": "Powers and functions generally limited to the particular work group", "page": 67 }
+              ]
+            },
+            {
+              "subdivisionNumber": 6,
+              "title": "Obligations of person conducting business or undertaking to health and safety representatives",
+              "sections": [
+                { "section": "70", "title": "General obligations of person conducting business or undertaking", "page": 68 },
+                { "section": "71", "title": "Exceptions from obligations under section 70(1)", "page": 70 },
+                { "section": "72", "title": "Obligation to train health and safety representatives", "page": 71 },
+                { "section": "73", "title": "Obligation to share costs if multiple businesses or undertakings", "page": 73 },
+                { "section": "74", "title": "List of health and safety representatives", "page": 73 }
+              ]
+            }
+          ]
+        },
+        {
+          "divisionNumber": 4,
+          "title": "Health and safety committees",
+          "sections": [
+            { "section": "75", "title": "Health and safety committees", "page": 74 },
+            { "section": "76", "title": "Constitution of committee", "page": 75 },
+            { "section": "77", "title": "Functions of committee", "page": 76 },
+            { "section": "78", "title": "Meetings of committee", "page": 76 },
+            { "section": "79", "title": "Duties of person conducting business or undertaking", "page": 76 }
+          ]
+        },
+        {
+          "divisionNumber": 5,
+          "title": "Issue resolution",
+          "sections": [
+            { "section": "80", "title": "Parties to an issue", "page": 78 },
+            { "section": "81", "title": "Resolution of health and safety issues", "page": 79 },
+            { "section": "82", "title": "Referral of issue to regulator for resolution by inspector", "page": 79 },
+            { "section": "82A", "title": "Extension of deadline for making decision resolving issue", "page": 80 }
+          ]
+        },
+        {
+          "divisionNumber": 6,
+          "title": "Right to cease or direct cessation of unsafe work",
+          "sections": [
+            { "section": "83", "title": "Definition of cease work under this Division", "page": 80 },
+            { "section": "84", "title": "Right of worker to cease unsafe work", "page": 81 },
+            { "section": "85", "title": "Health and safety representative may direct that unsafe work cease", "page": 81 },
+            { "section": "86", "title": "Worker to notify if ceases work", "page": 82 },
+            { "section": "87", "title": "Alternative work", "page": 83 },
+            { "section": "88", "title": "Continuity of engagement of worker", "page": 83 },
+            { "section": "89", "title": "Request to regulator to appoint inspector to assist", "page": 83 },
+            { "section": "89A", "title": "Referral of issue about application of section 88 to Tribunal", "page": 83 }
+          ]
+        },
+        {
+          "divisionNumber": 7,
+          "title": "Provisional improvement notices",
+          "sections": [
+            { "section": "90", "title": "Provisional improvement notices", "page": 84 },
+            { "section": "91", "title": "Provisional improvement notice to be in writing", "page": 85 },
+            { "section": "92", "title": "Contents of provisional improvement notice", "page": 85 },
+            { "section": "93", "title": "Provisional improvement notice may include recommendations to remedy contravention", "page": 85 },
+            { "section": "94", "title": "Minor changes to provisional improvement notice", "page": 86 },
+            { "section": "95", "title": "Issue of provisional improvement notice", "page": 86 },
+            { "section": "96", "title": "Health and safety representative may cancel notice", "page": 86 },
+            { "section": "97", "title": "Display of provisional improvement notice", "page": 86 },
+            { "section": "98", "title": "Formal irregularities or defects in notice", "page": 87 },
+            { "section": "99", "title": "Offence to contravene a provisional improvement notice", "page": 87 },
+            { "section": "100", "title": "Request for review of provisional improvement notice", "page": 87 },
+            { "section": "101", "title": "Inspector to review notice", "page": 88 },
+            { "section": "102", "title": "Decision of inspector on review of provisional improvement notice", "page": 88 }
+          ]
+        },
+        {
+          "divisionNumber": 8,
+          "title": "Part not to apply to prisoners",
+          "sections": [
+            { "section": "103", "title": "Part does not apply to prisoners", "page": 89 }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 6,
+      "title": "Discriminatory, coercive and misleading conduct",
+      "tocPage": "vii",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "Prohibition on discriminatory, coercive or misleading conduct",
+          "sections": [
+            { "section": "104", "title": "Prohibition on discriminatory conduct", "page": 90 },
+            { "section": "105", "title": "What is discriminatory conduct", "page": 90 },
+            { "section": "106", "title": "What is a prohibited reason", "page": 91 },
+            { "section": "107", "title": "Prohibition of requesting, instructing, inducing, encouraging, authorising or assisting discriminatory conduct", "page": 93 },
+            { "section": "108", "title": "Prohibition of coercion or inducement", "page": 93 },
+            { "section": "109", "title": "Misrepresentation", "page": 94 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Criminal proceedings in relation to discriminatory conduct",
+          "sections": [
+            { "section": "110", "title": "Proof of discriminatory conduct", "page": 95 },
+            { "section": "111", "title": "Order for compensation or reinstatement", "page": 95 }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "Civil proceedings in relation to discriminatory or coercive conduct",
+          "sections": [
+            { "section": "112", "title": "Civil proceedings in relation to engaging in or inducing discriminatory or coercive conduct", "page": 96 },
+            { "section": "113", "title": "Procedure for civil actions for discriminatory conduct", "page": 97 }
+          ]
+        },
+        {
+          "divisionNumber": 4,
+          "title": "General",
+          "sections": [
+            { "section": "114", "title": "General provisions relating to orders", "page": 98 },
+            { "section": "115", "title": "Prohibition on multiple actions", "page": 99 }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 7,
+      "title": "Not used",
+      "tocPage": "vii",
+      "divisions": [
+        { "divisionNumber": 1, "title": "Not used", "sections": [
+          { "section": "116", "title": "Not used", "page": 100 }
+        ]},
+        { "divisionNumber": 2, "title": "Not used", "sections": [
+          { "section": "117", "title": "Not used", "page": 100 },
+          { "section": "118", "title": "Not used", "page": 100 },
+          { "section": "119", "title": "Not used", "page": 100 }
+        ]},
+        { "divisionNumber": 3, "title": "Not used", "sections": [
+          { "section": "120", "title": "Not used", "page": 100 },
+          { "section": "121", "title": "Not used", "page": 100 },
+          { "section": "122", "title": "Not used", "page": 100 }
+        ]},
+        { "divisionNumber": 4, "title": "Not used", "sections": [
+          { "section": "123", "title": "Not used", "page": 100 },
+          { "section": "124", "title": "Not used", "page": 100 },
+          { "section": "125", "title": "Not used", "page": 100 },
+          { "section": "126", "title": "Not used", "page": 100 },
+          { "section": "127", "title": "Not used", "page": 100 },
+          { "section": "128", "title": "Not used", "page": 100 },
+          { "section": "129", "title": "Not used", "page": 100 },
+          { "section": "130", "title": "Not used", "page": 100 }
+        ]},
+        { "divisionNumber": 5, "title": "Not used", "sections": [
+          { "section": "131", "title": "Not used", "page": 101 },
+          { "section": "132", "title": "Not used", "page": 101 },
+          { "section": "133", "title": "Not used", "page": 101 },
+          { "section": "134", "title": "Not used", "page": 101 },
+          { "section": "135", "title": "Not used", "page": 101 },
+          { "section": "136", "title": "Not used", "page": 101 },
+          { "section": "137", "title": "Not used", "page": 101 },
+          { "section": "138", "title": "Not used", "page": 101 },
+          { "section": "139", "title": "Not used", "page": 101 },
+          { "section": "140", "title": "Not used", "page": 101 }
+        ]},
+        { "divisionNumber": 6, "title": "Not used", "sections": [
+          { "section": "141", "title": "Not used", "page": 101 },
+          { "section": "142", "title": "Not used", "page": 101 },
+          { "section": "143", "title": "Not used", "page": 101 }
+        ]},
+        { "divisionNumber": 7, "title": "Not used", "sections": [
+          { "section": "144", "title": "Not used", "page": 101 },
+          { "section": "145", "title": "Not used", "page": 101 },
+          { "section": "146", "title": "Not used", "page": 101 },
+          { "section": "147", "title": "Not used", "page": 101 },
+          { "section": "148", "title": "Not used", "page": 102 }
+        ]},
+        { "divisionNumber": 8, "title": "Not used", "sections": [
+          { "section": "149", "title": "Not used", "page": 102 },
+          { "section": "150", "title": "Not used", "page": 102 },
+          { "section": "151", "title": "Not used", "page": 102 }
+        ]}
+      ]
+    },
+    {
+      "partNumber": 8,
+      "title": "The regulator",
+      "tocPage": "ix",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "Functions of regulator",
+          "sections": [
+            { "section": "152", "title": "Functions of regulator", "page": 103 },
+            { "section": "153", "title": "Powers of regulator", "page": 104 },
+            { "section": "154", "title": "Delegation by regulator", "page": 104 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Powers of regulator to obtain information and require independent reports",
+          "sections": [
+            { "section": "155", "title": "Powers of regulator to obtain information", "page": 104 },
+            { "section": "155A", "title": "Supplementary provisions relating to appearances", "page": 106 },
+            { "section": "155B", "title": "Power of regulator to require independent report", "page": 107 },
+            { "section": "155C", "title": "Powers to copy and retain documents", "page": 108 }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 9,
+      "title": "Securing compliance",
+      "tocPage": "ix",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "Appointment of inspectors",
+          "sections": [
+            { "section": "156", "title": "Appointment of inspectors", "page": 110 },
+            { "section": "157", "title": "Identification of inspectors", "page": 110 },
+            { "section": "158", "title": "Accountability of inspectors", "page": 110 },
+            { "section": "159", "title": "Suspension and ending of appointment of inspectors", "page": 111 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Functions and powers of inspectors",
+          "sections": [
+            { "section": "160", "title": "Functions and powers of inspectors", "page": 111 },
+            { "section": "161", "title": "Conditions on inspectors' compliance powers", "page": 112 },
+            { "section": "162", "title": "Inspectors subject to regulator's directions", "page": 112 }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "Powers relating to entry",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "General powers of entry",
+              "sections": [
+                { "section": "163", "title": "Powers of entry", "page": 112 },
+                { "section": "164", "title": "Notification of entry", "page": 112 },
+                { "section": "165", "title": "General powers on entry under section 163", "page": 113 },
+                { "section": "166", "title": "Persons assisting inspectors", "page": 114 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Entry warrants",
+              "sections": [
+                { "section": "166A", "title": "Terms used", "page": 115 },
+                { "section": "166B", "title": "Entry to places under entry warrant", "page": 115 },
+                { "section": "167", "title": "Applying for and issuing entry warrant", "page": 115 },
+                { "section": "167A", "title": "Use of remote communication", "page": 116 },
+                { "section": "167B", "title": "Effect and execution of entry warrant", "page": 118 },
+                { "section": "167C", "title": "General powers when executing entry warrant", "page": 119 },
+                { "section": "167D", "title": "Persons assisting inspectors", "page": 121 },
+                { "section": "168", "title": "Not used", "page": 121 },
+                { "section": "169", "title": "Not used", "page": 121 }
+              ]
+            },
+            {
+              "subdivisionNumber": 3,
+              "title": "Limitation on entry powers",
+              "sections": [
+                { "section": "170", "title": "Places used for residential purposes", "page": 121 }
+              ]
+            }
+          ]
+        },
+        {
+          "divisionNumber": 4,
+          "title": "Powers relating to documents and information",
+          "sections": [
+            { "section": "171", "title": "Power to require documents and answers to questions", "page": 122 },
+            { "section": "172", "title": "Abrogation of privilege against self-incrimination", "page": 124 },
+            { "section": "173", "title": "Warning to be given", "page": 125 },
+            { "section": "174", "title": "Powers to copy and retain documents", "page": 125 }
+          ]
+        },
+        {
+          "divisionNumber": 5,
+          "title": "Seizure",
+          "sections": [
+            { "section": "175", "title": "Power to seize things", "page": 126 },
+            { "section": "176", "title": "Inspector's power to seize dangerous workplaces and things", "page": 127 },
+            { "section": "177", "title": "Powers supporting seizure", "page": 128 },
+            { "section": "178", "title": "Receipt for seized things", "page": 129 },
+            { "section": "178A", "title": "Inspecting, examining, analysing and testing seized things", "page": 129 },
+            { "section": "179", "title": "Forfeiture of seized things", "page": 130 },
+            { "section": "180", "title": "Return of seized things", "page": 131 },
+            { "section": "181", "title": "Access to seized things", "page": 132 }
+          ]
+        },
+        {
+          "divisionNumber": 6,
+          "title": "Damage",
+          "sections": [
+            { "section": "182", "title": "Damage etc. to be minimised", "page": 132 },
+            { "section": "183", "title": "Inspector to give notice of damage", "page": 132 },
+            { "section": "184", "title": "Not used", "page": 133 }
+          ]
+        },
+        {
+          "divisionNumber": 7,
+          "title": "Other matters",
+          "sections": [
+            { "section": "185", "title": "Power to require name and address", "page": 133 },
+            { "section": "186", "title": "Inspector may take affidavits", "page": 134 },
+            { "section": "187", "title": "Not used", "page": 134 }
+          ]
+        },
+        {
+          "divisionNumber": 8,
+          "title": "Offences in relation to inspectors",
+          "sections": [
+            { "section": "188", "title": "Offence to hinder or obstruct inspector", "page": 134 },
+            { "section": "189", "title": "Offence to impersonate inspector", "page": 134 },
+            { "section": "190", "title": "Offence to assault, threaten or intimidate inspector", "page": 135 }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 10,
+      "title": "Enforcement measures",
+      "tocPage": "xi",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "Improvement notices",
+          "sections": [
+            { "section": "191", "title": "Issue of improvement notices", "page": 136 },
+            { "section": "192", "title": "Contents of improvement notice", "page": 136 },
+            { "section": "193", "title": "Compliance with improvement notice", "page": 137 },
+            { "section": "194", "title": "Extension of time for compliance with improvement notices", "page": 137 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Prohibition notices",
+          "sections": [
+            { "section": "195", "title": "Power to issue prohibition notice", "page": 138 },
+            { "section": "196", "title": "Contents of prohibition notice", "page": 139 },
+            { "section": "197", "title": "Compliance with prohibition notice", "page": 139 }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "Non-disturbance notices",
+          "sections": [
+            { "section": "198", "title": "Issue of non-disturbance notice", "page": 140 },
+            { "section": "199", "title": "Contents of non-disturbance notice", "page": 140 },
+            { "section": "200", "title": "Compliance with non-disturbance notice", "page": 141 },
+            { "section": "201", "title": "Issue of subsequent notices", "page": 141 }
+          ]
+        },
+        {
+          "divisionNumber": 4,
+          "title": "General requirements applying to notices",
+          "sections": [
+            { "section": "202", "title": "Application of Division", "page": 141 },
+            { "section": "203", "title": "Notice to be in writing", "page": 141 },
+            { "section": "204", "title": "Directions in notices", "page": 141 },
+            { "section": "205", "title": "Recommendations in notice", "page": 142 },
+            { "section": "206", "title": "Changes to notice by inspector", "page": 142 },
+            { "section": "207", "title": "Regulator may vary or cancel notice", "page": 142 },
+            { "section": "208", "title": "Formal irregularities or defects in notice", "page": 142 },
+            { "section": "209", "title": "Issue and giving of notice", "page": 143 },
+            { "section": "210", "title": "Display of notice", "page": 143 }
+          ]
+        },
+        {
+          "divisionNumber": 5,
+          "title": "Remedial action",
+          "sections": [
+            { "section": "211", "title": "When regulator may carry out action", "page": 144 },
+            { "section": "212", "title": "Power of regulator to take other remedial action", "page": 144 },
+            { "section": "213", "title": "Costs of remedial or other action", "page": 145 }
+          ]
+        },
+        {
+          "divisionNumber": 6,
+          "title": "Not used",
+          "sections": [
+            { "section": "214", "title": "Not used", "page": 145 },
+            { "section": "215", "title": "Not used", "page": 145 }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 11,
+      "title": "Enforceable undertakings",
+      "tocPage": "xi",
+      "sections": [
+        { "section": "216", "title": "Regulator may accept WHS undertakings", "page": 146 },
+        { "section": "217", "title": "Notice of decision and reasons for decision", "page": 146 },
+        { "section": "218", "title": "When a WHS undertaking is enforceable", "page": 146 },
+        { "section": "219", "title": "Compliance with WHS undertaking", "page": 147 },
+        { "section": "220", "title": "Contravention of WHS undertaking", "page": 147 },
+        { "section": "221", "title": "Withdrawal or variation of WHS undertaking", "page": 148 },
+        { "section": "222", "title": "Proceeding for alleged contravention", "page": 148 }
+      ]
+    },
+    {
+      "partNumber": 12,
+      "title": "Review of decisions",
+      "tocPage": "xii",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "Reviewable decisions",
+          "sections": [
+            { "section": "223", "title": "Which decisions are reviewable", "page": 149 },
+            { "section": "223A", "title": "Review applications by unions", "page": 157 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Internal review",
+          "sections": [
+            { "section": "224", "title": "Application for internal review", "page": 158 },
+            { "section": "225", "title": "Internal reviewer", "page": 158 },
+            { "section": "226", "title": "Decision of internal reviewer", "page": 158 },
+            { "section": "227", "title": "Decision on internal review", "page": 159 },
+            { "section": "228", "title": "Stays of reviewable decisions on internal reviews", "page": 159 }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "External review",
+          "sections": [
+            { "section": "229", "title": "Application for external review", "page": 160 },
+            { "section": "229A", "title": "Conduct and outcome of external review", "page": 161 },
+            { "section": "229B", "title": "Stays of decisions subject to external review", "page": 162 }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 13,
+      "title": "Legal proceedings",
+      "tocPage": "xii",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "General matters",
+          "sections": [
+            { "section": "229C", "title": "Terms used", "page": 163 },
+            { "section": "230", "title": "Prosecutions", "page": 163 },
+            { "section": "231", "title": "Procedure if prosecution is not brought", "page": 164 },
+            { "section": "232", "title": "Limitation period for prosecutions", "page": 164 },
+            { "section": "232A", "title": "Admission of evidence obtained unlawfully", "page": 166 },
+            { "section": "233", "title": "Not used", "page": 167 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Sentencing of offenders",
+          "sections": [
+            { "section": "234", "title": "Application of this Division", "page": 167 },
+            { "section": "235", "title": "Orders generally", "page": 167 },
+            { "section": "236", "title": "Adverse publicity orders", "page": 167 },
+            { "section": "237", "title": "Orders for restoration", "page": 168 },
+            { "section": "238", "title": "Work health and safety project orders", "page": 169 },
+            { "section": "239", "title": "Release on the giving of a court-ordered WHS undertaking", "page": 169 },
+            { "section": "240", "title": "Not used", "page": 170 },
+            { "section": "241", "title": "Training orders", "page": 170 },
+            { "section": "242", "title": "Offence to fail to comply with order", "page": 170 }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "Not used",
+          "sections": [
+            { "section": "243", "title": "Not used", "page": 170 }
+          ]
+        },
+        {
+          "divisionNumber": 4,
+          "title": "Offences by bodies corporate",
+          "sections": [
+            { "section": "244", "title": "Imputing conduct to bodies corporate", "page": 171 }
+          ]
+        },
+        {
+          "divisionNumber": 5,
+          "title": "The Crown",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Prosecutions",
+              "sections": [
+                { "section": "244A", "title": "Crown may be prosecuted", "page": 171 },
+                { "section": "244B", "title": "Prosecution against agent of Crown that is body corporate", "page": 171 },
+                { "section": "244C", "title": "Prosecution of Crown in other cases", "page": 172 },
+                { "section": "244D", "title": "Provisions applicable to responsible agency", "page": 172 },
+                { "section": "244E", "title": "Proceedings where Crown agency has ceased to exist", "page": 173 },
+                { "section": "244F", "title": "Penalties in proceedings against Crown", "page": 174 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Other matters",
+              "sections": [
+                { "section": "244G", "title": "Issue of notices to Crown", "page": 174 },
+                { "section": "244H", "title": "Imputing conduct to Crown agency", "page": 175 }
+              ]
+            }
+          ]
+        },
+        {
+          "divisionNumber": 6,
+          "title": "Not used",
+          "sections": [
+            { "section": "249", "title": "Not used", "page": 176 },
+            { "section": "250", "title": "Not used", "page": 176 },
+            { "section": "251", "title": "Not used", "page": 176 },
+            { "section": "252", "title": "Not used", "page": 176 },
+            { "section": "253", "title": "Not used", "page": 176 }
+          ]
+        },
+        {
+          "divisionNumber": 7,
+          "title": "Not used",
+          "sections": [
+            { "section": "254", "title": "Not used", "page": 176 },
+            { "section": "255", "title": "Not used", "page": 176 },
+            { "section": "256", "title": "Not used", "page": 176 },
+            { "section": "257", "title": "Not used", "page": 176 },
+            { "section": "258", "title": "Not used", "page": 176 },
+            { "section": "259", "title": "Not used", "page": 177 },
+            { "section": "260", "title": "Not used", "page": 177 },
+            { "section": "261", "title": "Not used", "page": 177 },
+            { "section": "262", "title": "Not used", "page": 177 },
+            { "section": "263", "title": "Not used", "page": 177 },
+            { "section": "264", "title": "Not used", "page": 177 },
+            { "section": "265", "title": "Not used", "page": 177 },
+            { "section": "266", "title": "Not used", "page": 177 }
+          ]
+        },
+        {
+          "divisionNumber": 8,
+          "title": "Civil liability not affected by this Act",
+          "sections": [
+            { "section": "267", "title": "Civil liability not affected by this Act", "page": 177 }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 14,
+      "title": "General",
+      "tocPage": "xiv",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "General provisions",
+          "sections": [
+            { "section": "268", "title": "Offence to give false or misleading information", "page": 178 },
+            { "section": "269", "title": "Act does not affect legal professional privilege", "page": 179 },
+            { "section": "270", "title": "Immunity from liability", "page": 179 },
+            { "section": "271", "title": "Confidentiality of information", "page": 179 },
+            { "section": "272", "title": "No contracting out", "page": 181 },
+            { "section": "272A", "title": "No insurance or other indemnities against fines", "page": 181 },
+            { "section": "273", "title": "Person not to levy workers", "page": 182 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Codes of practice",
+          "sections": [
+            { "section": "274", "title": "Approved codes of practice", "page": 182 },
+            { "section": "275", "title": "Use of codes of practice in proceedings", "page": 184 }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "Regulation-making powers",
+          "sections": [
+            { "section": "276", "title": "Regulation-making powers", "page": 184 }
+          ]
+        },
+        {
+          "divisionNumber": 4,
+          "title": "Review of Act",
+          "sections": [
+            { "section": "277", "title": "Operation of Act to be reviewed every 5 years", "page": 186 }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 15,
+      "title": "Repeals and consequential amendments",
+      "tocPage": "xiv",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "Occupational safety and health legislation",
+          "sections": [
+            { "section": "278", "title": "Occupational Safety and Health Act 1984 repealed", "page": 187 },
+            { "section": "279", "title": "Occupational Safety and Health Regulations 1996 repealed", "page": 187 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Mines safety and inspection legislation",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Mines Safety and Inspection Act 1994 amended",
+              "sections": [
+                { "section": "280", "title": "Act amended", "page": 187 },
+                { "section": "281", "title": "Section 3 deleted", "page": 187 },
+                { "section": "282", "title": "Section 4 amended", "page": 187 },
+                { "section": "283", "title": "Section 4A deleted", "page": 190 },
+                { "section": "284", "title": "Section 6A deleted", "page": 191 },
+                { "section": "285", "title": "Section 7 amended", "page": 191 },
+                { "section": "286", "title": "Parts 2 to 8 deleted", "page": 191 },
+                { "section": "287", "title": "Sections 94 and 95 deleted", "page": 191 },
+                { "section": "288", "title": "Section 96A deleted", "page": 191 },
+                { "section": "289", "title": "Sections 98 to 99A deleted", "page": 191 },
+                { "section": "290", "title": "Section 100 amended", "page": 191 },
+                { "section": "291", "title": "Sections 100A and 101 deleted", "page": 191 },
+                { "section": "292", "title": "Part 9 Divisions 2 and 3 deleted", "page": 192 },
+                { "section": "293", "title": "Sections 102A and 103 deleted", "page": 192 },
+                { "section": "294", "title": "Section 104 amended", "page": 192 },
+                { "section": "295", "title": "Section 105A amended", "page": 193 },
+                { "section": "296", "title": "Section 105AB amended", "page": 193 },
+                { "section": "297", "title": "Sections 105 to 110 deleted", "page": 193 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Mines Safety and Inspection Regulations 1995 repealed",
+              "sections": [
+                { "section": "298", "title": "Mines Safety and Inspection Regulations 1995 repealed", "page": 194 }
+              ]
+            }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "Petroleum and geothermal energy legislation",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Petroleum and Geothermal Energy Resources Act 1967 amended",
+              "sections": [
+                { "section": "299", "title": "Act amended", "page": 194 },
+                { "section": "300", "title": "Section 5 amended", "page": 194 },
+                { "section": "301", "title": "Section 7AA deleted", "page": 194 },
+                { "section": "302", "title": "Section 112A amended", "page": 194 },
+                { "section": "303", "title": "Section 119 amended", "page": 195 },
+                { "section": "304", "title": "Section 126A amended", "page": 195 },
+                { "section": "305", "title": "Part IIIA deleted", "page": 195 },
+                { "section": "306", "title": "Section 153 amended", "page": 195 },
+                { "section": "307", "title": "Schedule 1 deleted", "page": 195 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Petroleum and Geothermal Energy Safety Levies Act 2011 amended",
+              "sections": [
+                { "section": "308", "title": "Act amended", "page": 195 },
+                { "section": "309", "title": "Long title amended", "page": 196 },
+                { "section": "310", "title": "Section 3 amended", "page": 196 },
+                { "section": "311", "title": "Sections 3A to 3E inserted", "page": 200 },
+                { "section": "312", "title": "Part 2 replaced", "page": 206 }
+              ]
+            },
+            {
+              "subdivisionNumber": 3,
+              "title": "Petroleum Pipelines Act 1969 amended",
+              "sections": [
+                { "section": "324", "title": "Act amended", "page": 211 },
+                { "section": "325", "title": "Section 4 amended", "page": 211 },
+                { "section": "326", "title": "Section 5AA deleted", "page": 211 },
+                { "section": "327", "title": "Section 32 replaced", "page": 211 },
+                { "section": "328", "title": "Section 36 amended", "page": 212 },
+                { "section": "329", "title": "Part IVA deleted", "page": 212 },
+                { "section": "330", "title": "Section 63 amended", "page": 212 },
+                { "section": "331", "title": "Section 66BB amended", "page": 212 },
+                { "section": "332", "title": "Section 67 amended", "page": 212 },
+                { "section": "333", "title": "Schedule 1 deleted", "page": 212 }
+              ]
+            },
+            {
+              "subdivisionNumber": 4,
+              "title": "Petroleum (Submerged Lands) Act 1982 amended",
+              "sections": [
+                { "section": "334", "title": "Act amended", "page": 213 },
+                { "section": "335", "title": "Section 4 amended", "page": 213 },
+                { "section": "336", "title": "Section 4A inserted", "page": 213 },
+                { "section": "337", "title": "Part IIA deleted", "page": 216 },
+                { "section": "338", "title": "Section 97 amended", "page": 216 },
+                { "section": "339", "title": "Section 119 amended", "page": 216 },
+                { "section": "340", "title": "Section 137A amended", "page": 217 },
+                { "section": "341", "title": "Part IIIA deleted", "page": 217 },
+                { "section": "342", "title": "Section 152 amended", "page": 217 },
+                { "section": "343", "title": "Schedule 3 amended", "page": 217 },
+                { "section": "344", "title": "Schedule 5 deleted", "page": 217 }
+              ]
+            },
+            {
+              "subdivisionNumber": 5,
+              "title": "Various regulations repealed",
+              "sections": [
+                { "section": "345", "title": "Regulations under Petroleum and Geothermal Energy Resources Act 1967 repealed", "page": 217 },
+                { "section": "346", "title": "Regulations under Petroleum and Geothermal Energy Safety Levies Act 2011 repealed", "page": 218 },
+                { "section": "347", "title": "Regulations under Petroleum Pipelines Act 1969 repealed", "page": 218 },
+                { "section": "348", "title": "Regulations under Petroleum (Submerged Lands) Act 1982 repealed", "page": 218 }
+              ]
+            }
+          ]
+        },
+        {
+          "divisionNumber": 4,
+          "title": "Other consequential amendments",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Building and Construction Industry Training Fund and Levy Collection Act 1990 amended",
+              "sections": [
+                { "section": "349", "title": "Act amended", "page": 218 },
+                { "section": "350", "title": "Section 8 amended", "page": 219 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Constitution Acts Amendment Act 1899 amended",
+              "sections": [
+                { "section": "351", "title": "Act amended", "page": 219 },
+                { "section": "352", "title": "Schedule V amended", "page": 219 }
+              ]
+            },
+            {
+              "subdivisionNumber": 3,
+              "title": "Fair Trading Act 2010 amended",
+              "sections": [
+                { "section": "353", "title": "Act amended", "page": 219 },
+                { "section": "354", "title": "Schedule 1 amended", "page": 219 }
+              ]
+            },
+            {
+              "subdivisionNumber": 4,
+              "title": "Health (Miscellaneous Provisions) Act 1911 amended",
+              "sections": [
+                { "section": "355", "title": "Act amended", "page": 220 },
+                { "section": "356", "title": "Section 246B amended", "page": 220 }
+              ]
+            },
+            {
+              "subdivisionNumber": 5,
+              "title": "Industrial Relations Act 1979 amended",
+              "sections": [
+                { "section": "357", "title": "Act amended", "page": 220 },
+                { "section": "358", "title": "Section 7 amended", "page": 220 },
+                { "section": "359", "title": "Section 8 amended", "page": 221 },
+                { "section": "360", "title": "Section 16 amended", "page": 221 },
+                { "section": "361", "title": "Section 49I amended", "page": 222 },
+                { "section": "362", "title": "Section 113 amended", "page": 222 }
+              ]
+            },
+            {
+              "subdivisionNumber": 6,
+              "title": "Local Government Act 1995 amended",
+              "sections": [
+                { "section": "363", "title": "Act amended", "page": 222 },
+                { "section": "364", "title": "Section 5.40 amended", "page": 222 }
+              ]
+            },
+            {
+              "subdivisionNumber": 7,
+              "title": "Public Sector Management Act 1994 amended",
+              "sections": [
+                { "section": "365", "title": "Act amended", "page": 223 },
+                { "section": "366", "title": "Section 8 amended", "page": 223 },
+                { "section": "367", "title": "Section 29 amended", "page": 223 }
+              ]
+            },
+            {
+              "subdivisionNumber": 8,
+              "title": "Workers' Compensation and Injury Management Act 1981 amended",
+              "sections": [
+                { "section": "368", "title": "Act amended", "page": 223 },
+                { "section": "369", "title": "Section 47 deleted", "page": 223 },
+                { "section": "370", "title": "Section 48 amended", "page": 224 },
+                { "section": "371", "title": "Section 95 amended", "page": 224 },
+                { "section": "372", "title": "Section 100B amended", "page": 224 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "partNumber": 16,
+      "title": "Transitional provisions",
+      "tocPage": "xviii",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "Preliminary",
+          "sections": [
+            { "section": "373", "title": "Terms used", "page": 225 },
+            { "section": "374", "title": "Application of Interpretation Act 1984 not affected", "page": 225 },
+            { "section": "375", "title": "Continued application of enactments", "page": 225 },
+            { "section": "376", "title": "Transitional regulations", "page": 226 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "General saving in relation to certain matters",
+          "sections": [
+            { "section": "377", "title": "Enactments to continue to apply in relation to certain matters occurring before commencement day", "page": 228 }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "Office holders and bodies",
+          "sections": [
+            { "section": "378", "title": "WorkSafe Commissioner", "page": 229 },
+            { "section": "379", "title": "Chief Inspector of Mines", "page": 229 },
+            { "section": "380", "title": "Members of Work Health and Safety Commission", "page": 230 },
+            { "section": "381", "title": "First annual report of Work Health and Safety Commission", "page": 231 },
+            { "section": "382", "title": "Continuation of Mining Industry Advisory Committee", "page": 231 },
+            { "section": "383", "title": "Continuation of other advisory committees", "page": 232 }
+          ]
+        },
+        {
+          "divisionNumber": 4,
+          "title": "Health and safety duties",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Designers",
+              "sections": [
+                { "section": "384", "title": "Section 22 applies only if designing starts on or after commencement day", "page": 232 },
+                { "section": "385", "title": "Continued application of repealed enactments relating to designers", "page": 232 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Manufacturers",
+              "sections": [
+                { "section": "386", "title": "Plant, substance or structure manufactured in batch", "page": 233 },
+                { "section": "387", "title": "Section 23 applies only if manufacturing starts on or after commencement day", "page": 233 },
+                { "section": "388", "title": "Continued application of repealed enactments relating to manufacturers", "page": 234 }
+              ]
+            },
+            {
+              "subdivisionNumber": 3,
+              "title": "Importers",
+              "sections": [
+                { "section": "389", "title": "Section 24 not to apply if importation process starts before commencement day", "page": 235 },
+                { "section": "390", "title": "Continued application of repealed enactments relating to importers", "page": 235 }
+              ]
+            },
+            {
+              "subdivisionNumber": 4,
+              "title": "Suppliers",
+              "sections": [
+                { "section": "391", "title": "Start of supply", "page": 237 },
+                { "section": "392", "title": "Section 25 not to apply if supply started before commencement day", "page": 237 },
+                { "section": "393", "title": "Continued application of repealed enactments relating to suppliers", "page": 237 }
+              ]
+            },
+            {
+              "subdivisionNumber": 5,
+              "title": "Persons who install, construct or commission plant or structures",
+              "sections": [
+                { "section": "394", "title": "Section 26 not to apply if installing, constructing or commissioning occurs before commencement day", "page": 238 },
+                { "section": "395", "title": "Continued application of repealed enactments relating to persons who install or construct plant or structures", "page": 239 }
+              ]
+            }
+          ]
+        },
+        {
+          "divisionNumber": 5,
+          "title": "Health and safety representatives",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Preliminary",
+              "sections": [
+                { "section": "396", "title": "Terms used", "page": 240 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Main provisions",
+              "sections": [
+                { "section": "397", "title": "Safety and health representatives elected before commencement day", "page": 240 },
+                { "section": "398", "title": "Elections in process before commencement day", "page": 242 },
+                { "section": "399", "title": "Disqualifications", "page": 243 },
+                { "section": "400", "title": "Functions and powers under repealed enactments", "page": 243 }
+              ]
+            }
+          ]
+        },
+        {
+          "divisionNumber": 6,
+          "title": "Health and safety committees",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Preliminary",
+              "sections": [
+                { "section": "401", "title": "Term used", "page": 244 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Main provisions",
+              "sections": [
+                { "section": "402", "title": "Safety and health committees in place before commencement day", "page": 244 },
+                { "section": "403", "title": "Process to establish safety and health committee started before commencement day", "page": 245 }
+              ]
+            }
+          ]
+        },
+        {
+          "divisionNumber": 7,
+          "title": "Issue resolution",
+          "sections": [
+            { "section": "404", "title": "Part 5 Division 5 to apply to unresolved issues arising before commencement day", "page": 245 },
+            { "section": "405", "title": "Continued application of enactments relating to issue resolution", "page": 246 }
+          ]
+        },
+        {
+          "divisionNumber": 8,
+          "title": "The regulator",
+          "sections": [
+            { "section": "406", "title": "Continuing powers and functions under OSHA", "page": 246 },
+            { "section": "407", "title": "Continuing powers and functions under MSIA", "page": 246 },
+            { "section": "408", "title": "Continuing powers and functions under petroleum and geothermal energy legislation", "page": 247 },
+            { "section": "409", "title": "Delegation", "page": 247 }
+          ]
+        },
+        {
+          "divisionNumber": 9,
+          "title": "Inspectors",
+          "sections": [
+            { "section": "410", "title": "Inspectors under OSHA", "page": 248 },
+            { "section": "411", "title": "Inspectors under MSIA", "page": 249 },
+            { "section": "412", "title": "Inspectors under PGERA", "page": 249 },
+            { "section": "413", "title": "Inspectors under PPA", "page": 251 },
+            { "section": "414", "title": "Inspectors under P(SL)A", "page": 252 },
+            { "section": "415", "title": "Application of sections 161 and 162", "page": 253 }
+          ]
+        },
+        {
+          "divisionNumber": 10,
+          "title": "Legal proceedings",
+          "sections": [
+            { "section": "416", "title": "Jurisdiction of Occupational Safety and Health Tribunal to be exercised by Tribunal", "page": 253 },
+            { "section": "417", "title": "Jurisdiction of safety and health magistrates to be exercised by health and safety magistrates", "page": 254 }
+          ]
+        },
+        {
+          "divisionNumber": 11,
+          "title": "Other matters",
+          "sections": [
+            { "section": "418", "title": "Notifiable incidents", "page": 255 },
+            { "section": "419", "title": "Independent studies at mines", "page": 255 },
+            { "section": "420", "title": "Codes of practice", "page": 255 },
+            { "section": "421", "title": "Protections from personal liability", "page": 255 }
+          ]
+        },
+        {
+          "divisionNumber": 12,
+          "title": "Levies",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Mines safety and inspection levy",
+              "sections": [
+                { "section": "422", "title": "Administration costs", "page": 256 },
+                { "section": "423", "title": "Mines Safety and Inspection Levy Regulations 2010", "page": 256 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Petroleum and geothermal energy safety levies",
+              "sections": [
+                { "section": "424", "title": "Administration costs", "page": 257 },
+                { "section": "425", "title": "Petroleum and Geothermal Energy Safety Levies Act 2011 to continue to apply to past levy periods", "page": 257 }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "schedules": [
+    {
+      "scheduleNumber": 1,
+      "title": "Various offices and bodies",
+      "tocPage": "xxi",
+      "divisions": [
+        {
+          "divisionNumber": 1,
+          "title": "WorkSafe Commissioner",
+          "sections": [
+            { "section": "1", "title": "Appointment of WorkSafe Commissioner", "page": 258 },
+            { "section": "2", "title": "Functions of WorkSafe Commissioner and relationship with Minister and WHS department", "page": 258 },
+            { "section": "3", "title": "Vacation of office of WorkSafe Commissioner", "page": 259 },
+            { "section": "4", "title": "Acting WorkSafe Commissioner", "page": 260 }
+          ]
+        },
+        {
+          "divisionNumber": 2,
+          "title": "Chief Inspector of Mines and Chief Inspector Petroleum Safety",
+          "sections": [
+            { "section": "5", "title": "Appointment of Chief Inspector of Mines and Chief Inspector Petroleum Safety", "page": 260 },
+            { "section": "6", "title": "Functions of Chief Inspector of Mines and Chief Inspector Petroleum Safety", "page": 261 },
+            { "section": "7", "title": "Vacation of office of Chief Inspector of Mines or Chief Inspector Petroleum Safety", "page": 261 },
+            { "section": "8", "title": "Acting Chief Inspector of Mines or Acting Chief Inspector Petroleum Safety", "page": 262 }
+          ]
+        },
+        {
+          "divisionNumber": 3,
+          "title": "Work Health and Safety Commission",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Preliminary",
+              "sections": [
+                { "section": "9", "title": "Terms used", "page": 262 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Main provisions",
+              "sections": [
+                { "section": "10", "title": "Establishment of Work Health and Safety Commission", "page": 263 },
+                { "section": "11", "title": "Deputy chairperson", "page": 264 },
+                { "section": "12", "title": "Vacation of office of appointed members", "page": 265 },
+                { "section": "13", "title": "Acting members", "page": 265 },
+                { "section": "14", "title": "Terms and conditions of appointed members", "page": 266 },
+                { "section": "15", "title": "Leave of absence", "page": 266 },
+                { "section": "16", "title": "Casual vacancies", "page": 267 },
+                { "section": "17", "title": "Meetings of Commission", "page": 267 },
+                { "section": "18", "title": "Functions of Commission", "page": 268 },
+                { "section": "19", "title": "Advisory committees", "page": 270 },
+                { "section": "20", "title": "Annual report", "page": 270 },
+                { "section": "21", "title": "Staff to assist Commission", "page": 271 }
+              ]
+            }
+          ]
+        },
+        {
+          "divisionNumber": 4,
+          "title": "Mining and Petroleum Advisory Committee",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Preliminary",
+              "sections": [
+                { "section": "22", "title": "Terms used", "page": 271 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Main provisions",
+              "sections": [
+                { "section": "23", "title": "Establishment of Mining and Petroleum Advisory Committee", "page": 271 },
+                { "section": "24", "title": "Functions of Committee", "page": 272 },
+                { "section": "25", "title": "Annual report and staff", "page": 272 }
+              ]
+            }
+          ]
+        },
+        {
+          "divisionNumber": 5,
+          "title": "Work Health and Safety Tribunal",
+          "subdivisions": [
+            {
+              "subdivisionNumber": 1,
+              "title": "Preliminary",
+              "sections": [
+                { "section": "26", "title": "Terms used", "page": 273 }
+              ]
+            },
+            {
+              "subdivisionNumber": 2,
+              "title": "Main provisions",
+              "sections": [
+                { "section": "27", "title": "Establishment of Work Health and Safety Tribunal", "page": 273 },
+                { "section": "28", "title": "Jurisdiction to be exercised by commissioner with requisite qualifications", "page": 273 },
+                { "section": "29", "title": "Practice, procedure and appeals", "page": 274 },
+                { "section": "30", "title": "Conciliation", "page": 275 },
+                { "section": "31", "title": "Certain matters to be heard together", "page": 276 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scheduleNumber": 2,
+      "title": "Regulation-making powers",
+      "tocPage": "xxiii",
+      "sections": [
+        { "section": "1", "title": "Duties", "page": 278 },
+        { "section": "2", "title": "Incidents", "page": 278 },
+        { "section": "3", "title": "Plant, substances or structures", "page": 278 },
+        { "section": "4", "title": "Protection and welfare of workers", "page": 279 },
+        { "section": "5", "title": "Hazards and risks", "page": 279 },
+        { "section": "6", "title": "Records and notices", "page": 279 },
+        { "section": "7", "title": "Authorisations", "page": 280 },
+        { "section": "8", "title": "Work groups", "page": 280 },
+        { "section": "9", "title": "Health and safety committees and health and safety representatives", "page": 280 },
+        { "section": "10", "title": "Issue resolution", "page": 281 },
+        { "section": "11", "title": "Identification of inspectors", "page": 281 },
+        { "section": "12", "title": "Forfeiture", "page": 281 },
+        { "section": "13", "title": "Review of decisions", "page": 281 }
+      ]
+    }
+  ]
+}
