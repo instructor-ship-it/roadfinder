@@ -11,7 +11,34 @@
     "construction safety",
     "exposure standards",
     "plant safety",
-    "demolition requirements"
+    "demolition requirements",
+    "worker duties",
+    "PPE",
+    "personal protective equipment",
+    "training",
+    "information and instruction",
+    "first aid",
+    "emergency plans",
+    "psychosocial risks",
+    "audiometric testing",
+    "noise exposure",
+    "remote work",
+    "isolated work",
+    "fatigue management",
+    "commercial vehicle drivers",
+    "electrical safety",
+    "roof spaces",
+    "asbestos",
+    "lead risk work",
+    "health monitoring",
+    "safety data sheets",
+    "SDS",
+    "health and safety representative",
+    "HSR training",
+    "issue resolution",
+    "high risk construction work",
+    "safe work method statement",
+    "SWMS"
   ],
   "targetAudience": [
     "PCBUs",
@@ -1407,34 +1434,236 @@
     {
       "requirement": "Implement risk management processes identifying hazards, assessing risks, and applying the hierarchy of control measures",
       "section": "Part 3.1",
+      "regulation": "32",
+      "documentPage": 52,
+      "physicalPage": 90,
       "priority": "critical"
     },
     {
       "requirement": "Obtain and maintain high risk work licenses for specified classes of work",
       "section": "Part 4.5",
+      "regulation": "81",
+      "documentPage": 107,
+      "physicalPage": 145,
       "priority": "critical"
     },
     {
       "requirement": "Establish confined space entry permit systems with atmospheric monitoring and emergency procedures",
       "section": "Part 4.3",
+      "regulation": "62",
+      "documentPage": 88,
+      "physicalPage": 126,
       "priority": "critical"
     },
     {
       "requirement": "Implement fall protection measures for work at heights exceeding 2 meters",
       "section": "Part 4.4",
+      "regulation": "78",
+      "documentPage": 101,
+      "physicalPage": 139,
       "priority": "critical"
+    },
+    {
+      "requirement": "Workers must use and wear PPE as instructed and report any damage or defects",
+      "section": "Part 3.2 Division 5",
+      "regulation": "46",
+      "documentPage": 64,
+      "physicalPage": 102,
+      "priority": "high",
+      "employeeDuty": true
+    },
+    {
+      "requirement": "Workers must receive suitable and adequate training, instruction and information about work risks",
+      "section": "Part 3.2 Division 1",
+      "regulation": "39",
+      "documentPage": 55,
+      "physicalPage": 93,
+      "priority": "high",
+      "employeeRight": true
+    },
+    {
+      "requirement": "Employers must provide first aid equipment, facilities and trained first aiders",
+      "section": "Part 3.2 Division 3",
+      "regulation": "42",
+      "documentPage": 59,
+      "physicalPage": 97,
+      "priority": "high"
+    },
+    {
+      "requirement": "Emergency plans must be prepared, maintained and implemented at all workplaces",
+      "section": "Part 3.2 Division 4",
+      "regulation": "43",
+      "documentPage": 60,
+      "physicalPage": 98,
+      "priority": "high"
+    },
+    {
+      "requirement": "Manage psychosocial risks including work design, environment and workplace behaviours",
+      "section": "Part 3.2 Division 11",
+      "regulation": "55C",
+      "documentPage": 75,
+      "physicalPage": 113,
+      "priority": "high"
+    },
+    {
+      "requirement": "Audiometric testing required for workers exposed to noise above exposure standards",
+      "section": "Part 4.1",
+      "regulation": "58",
+      "documentPage": 82,
+      "physicalPage": 120,
+      "priority": "medium",
+      "employeeRight": true
+    },
+    {
+      "requirement": "Remote or isolated work requires effective communication systems",
+      "section": "Part 3.2 Division 6",
+      "regulation": "48",
+      "documentPage": 65,
+      "physicalPage": 103,
+      "priority": "medium"
+    },
+    {
+      "requirement": "Commercial vehicle drivers must comply with fatigue management requirements and rest periods",
+      "section": "Part 4.10",
+      "regulation": "184E",
+      "documentPage": 208,
+      "physicalPage": 246,
+      "priority": "medium",
+      "employeeDuty": true
+    },
+    {
+      "requirement": "Electrical installations must be de-energised before working in roof spaces",
+      "section": "Part 4.7 Division 4",
+      "regulation": "153",
+      "documentPage": 183,
+      "physicalPage": 221,
+      "priority": "critical"
+    },
+    {
+      "requirement": "Workers must receive training on asbestos identification and safe handling",
+      "section": "Part 8.5 Division 2",
+      "regulation": "445",
+      "documentPage": 401,
+      "physicalPage": 439,
+      "priority": "high",
+      "employeeRight": true
     }
   ],
   "complianceNotes": [
     {
       "note": "All high risk work must be performed by licensed operators",
-      "reference": "Regulation 4.5.10",
+      "reference": "Regulation 81",
+      "title": "Licence required to carry out high risk work",
+      "documentPage": 107,
+      "physicalPage": 145,
       "consequence": "Penalties up to $30,000 for individuals and $150,000 for body corporates"
     },
     {
       "note": "Confined space entry requires written authority specifying hazard controls",
-      "reference": "Regulation 4.3.15",
+      "reference": "Regulation 67",
+      "title": "Confined space entry permit",
+      "documentPage": 91,
+      "physicalPage": 129,
       "consequence": "Prohibition notices and prosecution for unauthorized entry"
+    },
+    {
+      "note": "Workers must use PPE in accordance with training and instructions provided",
+      "reference": "Regulation 46",
+      "title": "Duties of worker",
+      "documentPage": 64,
+      "physicalPage": 102,
+      "consequence": "Fine up to $4,200 for individuals who fail to use or intentionally misuse PPE",
+      "employeeDuty": true
+    },
+    {
+      "note": "Workers must not intentionally misuse or damage PPE and must report damage or defects",
+      "reference": "Regulation 46",
+      "title": "Duties of worker",
+      "documentPage": 64,
+      "physicalPage": 102,
+      "consequence": "Fine up to $4,200 for individuals",
+      "employeeDuty": true
+    },
+    {
+      "note": "Workers have the right to information, training and instruction about workplace hazards and control measures",
+      "reference": "Regulation 39",
+      "title": "Provision of information, training and instruction",
+      "documentPage": 55,
+      "physicalPage": 93,
+      "consequence": "Employer fines up to $7,000 for individuals or $35,000 for body corporates",
+      "employeeRight": true
+    },
+    {
+      "note": "Health and safety representatives are entitled to 5 days initial training plus annual refresher training",
+      "reference": "Regulation 21",
+      "title": "Training for health and safety representatives",
+      "documentPage": 48,
+      "physicalPage": 86,
+      "consequence": "Employer must approve and facilitate training",
+      "employeeRight": true
+    },
+    {
+      "note": "Audiometric testing must be provided within 3 months of starting noisy work and every 2 years thereafter",
+      "reference": "Regulation 58",
+      "title": "Audiometric testing",
+      "documentPage": 82,
+      "physicalPage": 120,
+      "consequence": "Employer fines up to $7,000 for individuals or $35,000 for body corporates",
+      "employeeRight": true
+    },
+    {
+      "note": "Workers can request issue resolution and must be provided with a written agreement if requested",
+      "reference": "Regulation 23",
+      "title": "Default procedure",
+      "documentPage": 49,
+      "physicalPage": 87,
+      "consequence": "Employer must facilitate resolution process",
+      "employeeRight": true
+    },
+    {
+      "note": "Commercial vehicle drivers must not exceed 168 hours work time in any 14-day period",
+      "reference": "Regulation 184E",
+      "title": "Commercial vehicle driver: hours of work",
+      "documentPage": 208,
+      "physicalPage": 246,
+      "consequence": "Fine up to $7,000 for individuals",
+      "employeeDuty": true
+    },
+    {
+      "note": "Workers must not work in roof spaces unless electrical installation is de-energised",
+      "reference": "Regulation 153",
+      "title": "Work in roof spaces",
+      "documentPage": 183,
+      "physicalPage": 221,
+      "consequence": "Fine up to $7,000 for individuals; serious injury or death risk",
+      "employeeDuty": true
+    },
+    {
+      "note": "Lead risk workers are entitled to health monitoring before starting work and at regular intervals",
+      "reference": "Regulation 405",
+      "title": "Duty to provide health monitoring before first commencing lead risk work",
+      "documentPage": 372,
+      "physicalPage": 410,
+      "consequence": "Employer fines up to $7,000 for individuals or $35,000 for body corporates",
+      "employeeRight": true
+    },
+    {
+      "note": "Workers handling asbestos must be trained in identification, safe handling and control measures",
+      "reference": "Regulation 445",
+      "title": "Duty to train workers about asbestos",
+      "documentPage": 401,
+      "physicalPage": 439,
+      "consequence": "Employer fines up to $7,000 for individuals or $35,000 for body corporates",
+      "employeeRight": true
+    },
+    {
+      "note": "Workers have the right to access safety data sheets for hazardous chemicals they work with",
+      "reference": "Regulation 344",
+      "title": "Person conducting business or undertaking to obtain and give access to safety data sheets",
+      "documentPage": 334,
+      "physicalPage": 372,
+      "consequence": "SDS must be readily accessible to workers",
+      "employeeRight": true
     }
   ],
   "crossReferences": [
@@ -1447,6 +1676,36 @@
       "documentId": "mrwa-cop-2025",
       "reason": "Code of Practice for traffic management",
       "relevance": "high"
+    },
+    {
+      "documentId": "whs-mines-regs-2022",
+      "reason": "Mines safety regulations for mining operations",
+      "relevance": "related"
+    },
+    {
+      "documentId": "electricity-licensing-regs-1991",
+      "reason": "Electrical licensing requirements",
+      "relevance": "related"
+    },
+    {
+      "documentId": "ghs-7",
+      "reason": "Globally Harmonized System for chemical classification and labelling",
+      "relevance": "reference"
+    },
+    {
+      "documentId": "as-nzs-3012-2010",
+      "reason": "Electrical installations on construction and demolition sites",
+      "relevance": "reference"
+    },
+    {
+      "documentId": "as-nzs-1716-2012",
+      "reason": "Respiratory protective devices standard",
+      "relevance": "reference"
+    },
+    {
+      "documentId": "assessing-fitness-to-drive-2016",
+      "reason": "Medical fitness standards for commercial vehicle drivers",
+      "relevance": "reference"
     }
   ],
   "lastUpdated": "Mar 2024",
