@@ -430,5 +430,69 @@
     "category": "WHS & Safety",
     "createdAt": "2026-03-25T14:00:00.000Z",
     "isFavorite": false
+  },
+  {
+    "id": "qa-2026-04-07-001",
+    "question": "What is the minimum distance between worksites?",
+    "answer": "Based on **MRWA Code of Practice** and **AGTTM** guidance:\n\n## Short Answer\n\n**There is NO specific minimum distance prescribed** between worksites in the MRWA Code of Practice or AGTTM. Instead, the requirement is for **coordination of adjacent worksites** to minimise impacts on road users.\n\n---\n\n## Key Requirement \u2013 Coordination of Adjacent Worksites\n\n**Source:** MRWA Code of Practice (May 2025), Section 2, Page 20\n\n> \"**Coordination of adjacent worksites to minimise impacts on road users must be considered prior to approval.**\"\n\n---\n\n## What This Means\n\n| Requirement | Details |\n|-------------|--------|\n| **No fixed distance** | The Code does not specify a minimum distance between worksites |\n| **Coordination required** | Adjacent worksites must coordinate their traffic management |\n| **Pre-approval consideration** | Coordination must happen during TMP planning, not after |\n| **Minimise impacts** | Goal is to reduce cumulative impacts on road users |\n\n---\n\n## Practical Implications\n\n### When Worksites Are Close Together\n\n| Situation | Requirement |\n|-----------|-------------|\n| **Worksites overlap or approach each other** | Coordinate TMPs between both worksites |\n| **Signage conflicts** | Agree on which signs take precedence |\n| **Speed zones conflict** | Coordinate consistent speed limits |\n| **Traffic flow impacts** | Stagger works or combine traffic management |\n\n### Factors to Consider\n\n| Factor | Consideration |\n|--------|--------------|\n| **Sight distance** | Can drivers see and respond to both sets of signage? |\n| **Signage clutter** | Too many signs can confuse drivers |\n| **Speed zone consistency** | Avoid frequent speed changes |\n| **Queue lengths** | Will queues from one site affect the other? |\n| **Traffic volume** | Can the road handle both worksites operating? |\n\n---\n\n## Mobile Works \u2013 Vehicle Spacing\n\nFor **mobile work convoys**, specific spacing requirements apply:\n\n| Vehicle Position | Spacing Requirement |\n|-----------------|---------------------|\n| **Shadow vehicle to work vehicle** | 20-40m in advance of workers |\n| **Advance warning vehicle** | Based on risk assessment, max spacing in TMP |\n| **Lead vehicle to work vehicle** | Based on risk assessment |\n\n> **Source:** MRWA COP Section 6.12-6.13 (Pages 84-85)\n\n---\n\n## Coordination Process\n\n### Step 1: Identify Adjacent Worksites\n- Check roadworks notifications\n- Contact Main Roads or LGA for planned works\n- Site inspection for active worksites\n\n### Step 2: Contact Other Worksites\n- Contact the other worksite's supervisor/Traffic Manager\n- Discuss timing, signage placement, potential conflicts\n\n### Step 3: Coordinate TMPs\n- Agree on signage placement and speed zones\n- Document arrangements in both TMPs\n- Notify road authority if significant coordination needed\n\n### Step 4: Implement and Communicate\n- Ensure both crews understand the arrangements\n- Maintain communication during works\n- Adjust if conditions change\n\n---\n\n## Document References\n\n| Document | Section | Key Content |\n|----------|---------|-------------|\n| **MRWA COP May 2025** | Section 2 (Page 20) | Coordination of adjacent worksites |\n| **MRWA COP May 2025** | Section 6.12 (Pages 84-85) | Mobile works requirements |\n| **MRWA COP May 2025** | Section 4.4 (Pages 34-37) | Consultation requirements |\n| **AGTTM Part 3** | Various | Static worksite spacing standards |\n| **AGTTM Part 4** | Section 3.5 | Mobile works vehicle spacing |\n\n---\n\n## Summary\n\n| Question | Answer |\n|----------|--------|\n| **Is there a minimum distance between worksites?** | No \u2013 no specific distance prescribed |\n| **What is required instead?** | Coordination of adjacent worksites before approval |\n| **When should coordination happen?** | During TMP planning phase |\n| **What if coordination fails?** | Escalate to road authority (Main Roads or LGA) |\n\n> **Key Rule:** There is no minimum distance between worksites prescribed in the MRWA Code of Practice. Instead, adjacent worksites must coordinate their traffic management to minimise impacts on road users. This coordination must be considered during TMP planning and before approval is granted. If you have a nearby worksite, contact their supervisor to coordinate signage, speed zones, and traffic flow arrangements.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Worksite Planning",
+    "createdAt": "2026-04-07T10:00:00.000Z",
+    "isFavorite": false
+  },
+  {
+    "id": "qa-2026-04-07-002",
+    "question": "Am I allowed to cover a nearby worksite's signage and put up my own for my worksite?",
+    "answer": "Based on **MRWA Code of Practice**, **AS 1742.3**, and **AGTTM** guidance:\n\n## Short Answer\n\n**Generally NO** \u2013 You cannot unilaterally cover another worksite's signage without coordination and permission. However, there are specific circumstances where covering signage is required.\n\n---\n\n## Key Rules from MRWA Code of Practice\n\n### 1. Covering Existing Signage \u2013 Section 6.4.1 (Page 57)\n\n**Source:** MRWA Code of Practice (May 2025), Section 6.4.1\n\n> \"In accordance with Clause 4.2.5 of AS 1742.3 - 2019 'Any signs and traffic control devices, including regulatory, warning guide signs and pavement marking, which are **inappropriate to, or conflict with, the temporary worksite situation must be covered, obliterated or removed**'.\"\n\n**This applies to:**\n- Signs that conflict with YOUR traffic management setup\n- Regulatory signs that would mislead road users if left visible\n- Permanent signs that contradict your temporary arrangements\n\n---\n\n### 2. Coordination of Adjacent Worksites \u2013 Section 2 (Page 20)\n\n**Source:** MRWA Code of Practice (May 2025), Section 2\n\n> \"**Coordination of adjacent worksites to minimise impacts on road users must be considered prior to approval.**\"\n\n**This means:**\n- You must coordinate with nearby worksites before implementing your TMP\n- Approval may require evidence of coordination\n- You cannot simply override another contractor's traffic management\n\n---\n\n### 3. Authority to Erect Traffic Control Devices \u2013 Section 3 (Page 24)\n\nOnly authorised parties can erect, alter, or remove traffic control devices:\n\n| Party | Authority Required |\n|-------|-------------------|\n| **Main Roads** | Has authority under Road Traffic Code |\n| **Main Roads agents/contractors** | Must have Main Roads Contract Manager approval |\n| **Authorised Bodies (LGAs)** | Subject to Instrument of Authorisation |\n| **Others** | Must obtain authority from road authority |\n\n---\n\n## When You CAN Cover Another Worksite's Signs\n\n| Scenario | Permitted? | Requirements |\n|----------|-----------|--------------|\n| **Your worksite overlaps/approaches another worksite** | \u26a0\ufe0f **ONLY with coordination** | Consult with the other worksite's supervisor, coordinate TMPs |\n| **Their signage conflicts with your approved TMP** | \u26a0\ufe0f **ONLY with coordination** | Agreement between both parties, documented in both TMPs |\n| **Their worksite has finished but signs remain** | \u2705 **YES** | Treat as abandoned/inappropriate signage |\n| **Emergency situation** | \u2705 **YES** | Document reason, notify relevant parties |\n\n---\n\n## When You CANNOT Cover Another Worksite's Signs\n\n| Scenario | Reason |\n|----------|--------|\n| **Their worksite is still active** | You'd be interfering with their approved TMP |\n| **No coordination attempted** | Violation of coordination requirements |\n| **Your TMP not approved** | No authority to implement any changes |\n| **Simply for convenience** | Not a valid reason under the Code |\n\n---\n\n## Proper Process for Adjacent Worksites\n\n### Step 1: Identify Nearby Worksites\n- Check roadworks notifications\n- Contact Main Roads or LGA for planned works\n- Site inspection for active worksites\n\n### Step 2: Coordinate Before TMP Submission\n- Contact the other worksite's supervisor/Traffic Manager\n- Discuss signage placement and potential conflicts\n- Agree on which signs need adjustment\n\n### Step 3: Document Coordination\n- Note consultation in your TMP\n- Include correspondence or meeting records\n- State agreed arrangements for signage\n\n### Step 4: Implement Agreed Changes\n- Only cover/remove signs as agreed\n- Ensure both worksites' safety is maintained\n- Revert changes when no longer needed\n\n---\n\n## Key Document References\n\n| Document | Section | Key Point |\n|----------|---------|-----------|\n| **MRWA CoP May 2025** | Section 6.4.1 (Page 57) | When existing signage must be covered |\n| **MRWA CoP May 2025** | Section 2 (Page 20) | Coordination of adjacent worksites required |\n| **MRWA CoP May 2025** | Section 3 (Page 24) | Authority to erect/remove traffic control devices |\n| **AS 1742.3-2019** | Clause 4.2.5 | Signs conflicting with worksite must be covered |\n| **MRWA CoP May 2025** | Section 4.4 (Pages 34-37) | Consultation requirements |\n\n---\n\n## Summary\n\n| Question | Answer |\n|----------|--------|\n| **Can I cover a nearby worksite's signage?** | Only with **coordination and agreement** \u2013 not unilaterally |\n| **What if their signs conflict with mine?** | **Coordinate first** \u2013 agree on which signs need adjustment |\n| **Do I need their permission?** | **YES** \u2013 covering another party's traffic control devices without agreement could breach the Code |\n| **What if they've finished but signs remain?** | You may cover/remove as \"inappropriate to the situation\" |\n| **What if my worksite was approved first?** | Still requires coordination \u2013 approval order doesn't override coordination requirements |\n\n> **Key Rule:** Under the MRWA Code of Practice, coordination of adjacent worksites is mandatory before approval. You cannot unilaterally cover another worksite's signage \u2013 you must first coordinate with the other party and document the agreement in both TMPs. If coordination fails, escalate to the road authority (Main Roads or LGA) for resolution.",
+    "documents": [
+      "whs-act-2020",
+      "whs-general-regs-2022",
+      "osh-act-1984",
+      "whs-construction-cop",
+      "whs-workplace-traffic",
+      "whs-swms-guide",
+      "whs-records-guide",
+      "mrwa-cop-2025",
+      "mrwa-cop-2026-proposed",
+      "mrwa-whs-controls"
+    ],
+    "documentNames": [
+      "WHS Act 2020",
+      "WHS General Regulations",
+      "OSH Act 1984",
+      "Construction Work COP",
+      "Workplace Traffic Guide",
+      "SWMS Information Sheet",
+      "Records Management Guide",
+      "MRWA COP May 2025",
+      "COP March 2026 Proposed",
+      "WHS Control Standards"
+    ],
+    "category": "Signage",
+    "createdAt": "2026-04-07T11:00:00.000Z",
+    "isFavorite": false
   }
 ]
