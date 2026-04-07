@@ -106,6 +106,29 @@ export interface CompleteSection {
   page?: number;
 }
 
+// Key requirement structure (supports both string and object format)
+export interface KeyRequirement {
+  requirement: string;
+  section?: string;
+  regulation?: string;
+  documentPage?: number;
+  physicalPage?: number;
+  priority?: 'critical' | 'high' | 'medium' | 'low';
+  employeeDuty?: boolean;
+  employeeRight?: boolean;
+}
+
+// Compliance note structure (supports both string and object format)
+export interface ComplianceNote {
+  note: string;
+  reference?: string;
+  title?: string;
+  documentPage?: number;
+  physicalPage?: number;
+  consequence?: string;
+  employeeDuty?: boolean;
+}
+
 // Summary structure
 export interface DocumentSummary {
   generatedAt: string;
@@ -114,12 +137,13 @@ export interface DocumentSummary {
   abstract: string;
   keywords?: string[];
   targetAudience?: string[];
-  keyRequirements?: string[];
+  keyRequirements?: (string | KeyRequirement)[];
   keySections?: { section: string; summary: string }[];
-  complianceNotes?: string[];
+  complianceNotes?: (string | ComplianceNote)[];
   crossReferences?: string[];
   type?: string;
   source?: 'repo' | 'user';
+  pageOffset?: number;
 
   // Phase 1: Complete document sections from TOC extraction
   completeSections?: CompleteSection[];

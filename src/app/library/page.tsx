@@ -1484,14 +1484,39 @@ function LibraryPageContent() {
                                 const priority = isObject
                                   ? (req as { priority?: string }).priority
                                   : null;
-
-                                // Find page number for section reference
-                                const pageNum = section
-                                  ? findPageForSection(section, summary.completeSections || [])
+                                const regulation = isObject
+                                  ? (req as { regulation?: string }).regulation
                                   : null;
+                                const employeeDuty = isObject
+                                  ? (req as { employeeDuty?: boolean }).employeeDuty
+                                  : false;
+                                const employeeRight = isObject
+                                  ? (req as { employeeRight?: boolean }).employeeRight
+                                  : false;
+
+                                // Use physicalPage directly if available in data, otherwise derive from section
+                                const directPhysicalPage = isObject
+                                  ? (req as { physicalPage?: number }).physicalPage
+                                  : null;
+                                const documentPage = isObject
+                                  ? (req as { documentPage?: number }).documentPage
+                                  : null;
+
+                                // Find page number for section reference (fallback)
                                 const pageOffset =
                                   (summary as { pageOffset?: number }).pageOffset || 0;
-                                const physicalPage = pageNum ? pageNum + pageOffset : null;
+                                let pageNum: number | null = null;
+                                let physicalPage: number | null = null;
+
+                                if (directPhysicalPage) {
+                                  // Use physicalPage directly from data
+                                  physicalPage = directPhysicalPage;
+                                  pageNum = documentPage || null;
+                                } else if (section) {
+                                  // Fallback: derive from section reference
+                                  pageNum = findPageForSection(section, summary.completeSections || []);
+                                  physicalPage = pageNum ? pageNum + pageOffset : null;
+                                }
 
                                 // Determine if TMP document (uses different viewer)
                                 const isTmpDoc =
@@ -1523,8 +1548,18 @@ function LibraryPageContent() {
                                           {priority}
                                         </span>
                                       )}
+                                      {employeeDuty && (
+                                        <span className="px-1.5 py-0.5 rounded text-[10px] bg-blue-900/50 text-blue-300 shrink-0" title="Employee Duty">
+                                          👷
+                                        </span>
+                                      )}
+                                      {employeeRight && (
+                                        <span className="px-1.5 py-0.5 rounded text-[10px] bg-green-900/50 text-green-300 shrink-0" title="Employee Right">
+                                          ✅
+                                        </span>
+                                      )}
                                       <span className="flex-1">{requirementText}</span>
-                                      {section && (
+                                      {(regulation || section) && (
                                         <span
                                           className={`text-[10px] shrink-0 flex items-center gap-1 ${
                                             canOpenModal || viewerUrl
@@ -1532,7 +1567,7 @@ function LibraryPageContent() {
                                               : 'text-gray-500'
                                           }`}
                                         >
-                                          {section}
+                                          {regulation ? `Reg ${regulation}` : section}
                                           {(canOpenModal || viewerUrl) && (
                                             <span className="text-indigo-400">📄</span>
                                           )}
@@ -1541,7 +1576,7 @@ function LibraryPageContent() {
                                     </div>
                                     {(canOpenModal || viewerUrl) && (
                                       <div className="text-indigo-400 text-[10px] mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        🔗 Click to view p.{pageNum}
+                                        🔗 Click to view p.{pageNum || physicalPage}
                                       </div>
                                     )}
                                   </>
@@ -1599,17 +1634,39 @@ function LibraryPageContent() {
                                 const reference = isObject
                                   ? (note as { reference?: string }).reference
                                   : null;
+                                const title = isObject
+                                  ? (note as { title?: string }).title
+                                  : null;
                                 const consequence = isObject
                                   ? (note as { consequence?: string }).consequence
                                   : null;
+                                const employeeDuty = isObject
+                                  ? (note as { employeeDuty?: boolean }).employeeDuty
+                                  : false;
 
-                                // Find page number for reference
-                                const pageNum = reference
-                                  ? findPageForSection(reference, summary.completeSections || [])
+                                // Use physicalPage directly if available in data, otherwise derive from reference
+                                const directPhysicalPage = isObject
+                                  ? (note as { physicalPage?: number }).physicalPage
                                   : null;
+                                const documentPage = isObject
+                                  ? (note as { documentPage?: number }).documentPage
+                                  : null;
+
+                                // Find page number for reference (fallback)
                                 const pageOffset =
                                   (summary as { pageOffset?: number }).pageOffset || 0;
-                                const physicalPage = pageNum ? pageNum + pageOffset : null;
+                                let pageNum: number | null = null;
+                                let physicalPage: number | null = null;
+
+                                if (directPhysicalPage) {
+                                  // Use physicalPage directly from data
+                                  physicalPage = directPhysicalPage;
+                                  pageNum = documentPage || null;
+                                } else if (reference) {
+                                  // Fallback: derive from reference
+                                  pageNum = findPageForSection(reference, summary.completeSections || []);
+                                  physicalPage = pageNum ? pageNum + pageOffset : null;
+                                }
 
                                 // Determine if TMP document (uses different viewer)
                                 const isTmpDoc =
@@ -1627,7 +1684,15 @@ function LibraryPageContent() {
 
                                 const CardContent = (
                                   <>
-                                    <div className="text-gray-300">{noteText}</div>
+                                    {title && (
+                                      <div className="text-amber-300 text-xs font-medium mb-1">{title}</div>
+                                    )}
+                                    <div className="text-gray-300 flex items-start gap-2">
+                                      {employeeDuty && (
+                                        <span className="text-blue-400 shrink-0" title="Employee Duty">👷</span>
+                                      )}
+                                      <span>{noteText}</span>
+                                    </div>
                                     <div className="flex items-center justify-between mt-1">
                                       {reference && (
                                         <div
@@ -1637,7 +1702,7 @@ function LibraryPageContent() {
                                               : 'text-amber-400'
                                           }`}
                                         >
-                                          Ref: {reference}
+                                          {reference}
                                           {(canOpenModal || viewerUrl) && (
                                             <span className="text-indigo-400">📄</span>
                                           )}
@@ -1645,7 +1710,7 @@ function LibraryPageContent() {
                                       )}
                                       {(canOpenModal || viewerUrl) && (
                                         <div className="text-indigo-400 text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">
-                                          🔗 p.{pageNum}
+                                          🔗 p.{pageNum || physicalPage}
                                         </div>
                                       )}
                                     </div>
