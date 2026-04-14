@@ -7,6 +7,7 @@ import {
   DrawerTitle,
   DrawerFooter,
 } from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
 import type { AdvancedFlashers } from '@/lib/traffic-event-logger';
 
 interface FlasherSheetProps {
@@ -37,31 +38,23 @@ export function FlasherSheet({ open, onOpenChange, flashers, onToggleFlasher }: 
           <DrawerTitle>Advanced Flashers</DrawerTitle>
         </DrawerHeader>
         <div className="p-4">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-3">
             {DIRECTIONS.map((dir) => (
-              <button
+              <Button
                 key={dir.key}
+                variant={flashers[dir.key] ? 'default' : 'outline'}
                 onClick={() => handleToggle(dir.key)}
-                className={`py-3 px-4 rounded-lg border font-medium text-sm transition-colors ${
-                  dir.key === 'both' ? 'col-span-2' : ''
-                } ${
-                  flashers[dir.key]
-                    ? 'bg-green-500 border-green-500 text-green-950'
-                    : 'border-slate-600 bg-slate-700 text-slate-200'
-                }`}
+                className={`h-14 ${dir.key === 'both' ? 'col-span-2' : ''} ${flashers[dir.key] ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
               >
                 {flashers[dir.key] ? `${dir.label.toUpperCase()} OFF` : dir.label}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
         <DrawerFooter>
-          <button
-            onClick={() => onOpenChange(false)}
-            className="w-full py-2 px-4 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 text-sm"
-          >
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full">
             Close
-          </button>
+          </Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

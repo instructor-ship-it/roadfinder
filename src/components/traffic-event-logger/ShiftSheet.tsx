@@ -7,6 +7,7 @@ import {
   DrawerTitle,
   DrawerFooter,
 } from '@/components/ui/drawer';
+import { Button } from '@/components/ui/button';
 
 interface ShiftSheetProps {
   open: boolean;
@@ -44,22 +45,20 @@ export function ShiftSheet({ open, onOpenChange, onLogEvent }: ShiftSheetProps) 
         </DrawerHeader>
         <div className="p-4 space-y-2 overflow-y-auto">
           {SHIFT_ACTIONS.map((action) => (
-            <button
+            <Button
               key={action.label}
+              variant="outline"
               onClick={() => handleAction(action.type, action.label)}
-              className="w-full py-3 px-4 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 font-medium text-sm hover:scale-[1.01] active:scale-[0.99] transition-transform"
+              className="w-full justify-start"
             >
               {action.label}
-            </button>
+            </Button>
           ))}
         </div>
         <DrawerFooter>
-          <button
-            onClick={() => onOpenChange(false)}
-            className="w-full py-2 px-4 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 text-sm"
-          >
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full">
             Close
-          </button>
+          </Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

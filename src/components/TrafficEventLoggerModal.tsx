@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { TimerBadge } from './traffic-event-logger/TimerBadge';
 import { Counters } from './traffic-event-logger/Counters';
 import { EventList } from './traffic-event-logger/EventList';
@@ -27,7 +29,9 @@ import {
   initializeTimers,
   flushQueue,
   type TrafficEventState,
+  type AdvancedFlashers,
 } from '@/lib/traffic-event-logger';
+import { XIcon } from 'lucide-react';
 
 interface TrafficEventLoggerModalProps {
   open: boolean;
@@ -159,7 +163,7 @@ export function TrafficEventLoggerModal({ open, onOpenChange }: TrafficEventLogg
     toggleShuttle();
   }, []);
 
-  const handleToggleFlasher = useCallback((direction: keyof typeof state.advancedFlashers) => {
+  const handleToggleFlasher = useCallback((direction: keyof AdvancedFlashers) => {
     toggleAdvancedFlasher(direction);
   }, []);
 
@@ -178,126 +182,147 @@ export function TrafficEventLoggerModal({ open, onOpenChange }: TrafficEventLogg
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-          <div className="space-y-3">
-            {/* Header row */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="text-lg font-bold">Traffic Event Logger</h2>
-              <span className="text-slate-500 text-sm font-medium">v1.0</span>
-              <TimerBadge type="hold" state={state} />
-              <TimerBadge type="break" state={state} />
-              <div className="flex-1" />
+        <DialogContent
+          className="w-screen h-screen max-w-none m-0 rounded-none border-0 p-0 overflow-hidden"
+          showCloseButton={false}
+        >
+          <div className="h-full overflow-y-auto bg-background">
+            {/* Header */}
+            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b px-4 py-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <h2 className="text-lg font-semibold text-foreground">Traffic Event Logger</h2>
+                <span className="text-muted-foreground text-sm font-medium">v1.0</span>
+                <TimerBadge type="hold" state={state} />
+                <TimerBadge type="break" state={state} />
+                <div className="flex-1" />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onOpenChange(false)}
+                  className="h-8 w-8"
+                >
+                  <XIcon className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
-            {/* Site input */}
-            <input
-              type="text"
-              placeholder="Site name"
-              maxLength={100}
-              value={state.site}
-              onChange={(e) => handleSiteChange(e.target.value)}
-              className="w-full py-2 px-3 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-
-            {/* Note input + presets */}
-            <div className="flex gap-2 flex-wrap">
-              <input
+            {/* Content */}
+            <div className="p-4 space-y-4">
+              {/* Site input */}
+              <Input
                 type="text"
-                placeholder="Note (optional)"
-                maxLength={200}
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                className="flex-1 min-w-[150px] py-2 px-3 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Site name"
+                maxLength={100}
+                value={state.site}
+                onChange={(e) => handleSiteChange(e.target.value)}
+                className="w-full"
               />
-              <div className="flex gap-1.5">
-                {['TC1', 'TC2', 'TC3'].map((preset) => (
-                  <button
-                    key={preset}
-                    onClick={() => handlePreset(preset)}
-                    className="py-2 px-3 rounded-lg border border-slate-600 bg-slate-800 text-slate-300 text-sm hover:scale-[1.02] active:scale-[0.98] transition-transform"
+
+              {/* Note input + presets */}
+              <div className="flex gap-2 flex-wrap">
+                <Input
+                  type="text"
+                  placeholder="Note (optional)"
+                  maxLength={200}
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  className="flex-1 min-w-[150px]"
+                />
+                <div className="flex gap-1.5">
+                  {['TC1', 'TC2', 'TC3'].map((preset) => (
+                    <Button
+                      key={preset}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePreset(preset)}
+                    >
+                      {preset}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Status bar */}
+              <div className="flex items-center gap-2 flex-wrap text-sm">
+                <span className="text-muted-foreground">{status}</span>
+                <span className="px-2 py-0.5 rounded-full text-xs border bg-muted">
+                  Queue: {state.queue.length}
+                </span>
+                <span
+                  className={`px-2 py-0.5 rounded-full text-xs ${
+                    isOnline
+                      ? 'bg-green-500/20 text-green-600 dark:text-green-400'
+                      : 'bg-red-500/20 text-red-600 dark:text-red-400'
+                  }`}
+                >
+                  Online: {isOnline ? 'ON' : 'OFF'}
+                </span>
+                <span
+                  className={`px-2 py-0.5 rounded-full text-xs ${
+                    state.sheetsEnabled
+                      ? 'bg-green-500/20 text-green-600 dark:text-green-400'
+                      : 'bg-red-500/20 text-red-600 dark:text-red-400'
+                  }`}
+                >
+                  Sheets: {state.sheetsEnabled ? 'ON' : 'OFF'}
+                </span>
+              </div>
+
+              {/* Event buttons */}
+              <EventButtons onLogEvent={logEvent} shuttle={state.shuttle} />
+
+              {/* TC Mini buttons */}
+              <TCMiniButtons
+                onLogEvent={logEvent}
+                onOpenShift={() => setShiftSheetOpen(true)}
+                onOpenMore={() => setMoreSheetOpen(true)}
+              />
+
+              {/* Total count */}
+              <div className="text-sm text-muted-foreground">
+                Total: <span className="text-foreground font-medium">{state.events.length}</span>
+              </div>
+
+              {/* Counters */}
+              <Counters counters={state.counters} />
+
+              {/* Event list */}
+              <div className="rounded-lg border bg-card">
+                <EventList events={state.events} />
+              </div>
+
+              {/* Footer buttons */}
+              <div className="flex justify-between gap-2 pt-2 pb-8">
+                <div className="flex gap-1.5">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleUndo}
+                    disabled={state.events.length === 0}
                   >
-                    {preset}
-                  </button>
-                ))}
+                    Undo
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleExport}
+                    disabled={state.events.length === 0}
+                  >
+                    CSV
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleClear}
+                    disabled={state.events.length === 0}
+                  >
+                    Clear
+                  </Button>
+                </div>
+                <Button variant="outline" size="sm" onClick={handleTestSheets}>
+                  Test
+                </Button>
               </div>
-            </div>
-
-            {/* Status bar */}
-            <div className="flex items-center gap-2 flex-wrap text-sm">
-              <span className="text-slate-500">{status}</span>
-              <span className="px-2 py-0.5 rounded-full text-xs border border-slate-600 bg-slate-800">
-                Queue: {state.queue.length}
-              </span>
-              <span
-                className={`px-2 py-0.5 rounded-full text-xs ${
-                  isOnline ? 'bg-green-500 text-green-950' : 'bg-red-500 text-white'
-                }`}
-              >
-                Online: {isOnline ? 'ON' : 'OFF'}
-              </span>
-              <span
-                className={`px-2 py-0.5 rounded-full text-xs ${
-                  state.sheetsEnabled ? 'bg-green-500 text-green-950' : 'bg-red-500 text-white'
-                }`}
-              >
-                Sheets: {state.sheetsEnabled ? 'ON' : 'OFF'}
-              </span>
-            </div>
-
-            {/* Event buttons */}
-            <EventButtons onLogEvent={logEvent} shuttle={state.shuttle} />
-
-            {/* TC Mini buttons */}
-            <TCMiniButtons
-              onLogEvent={logEvent}
-              onOpenShift={() => setShiftSheetOpen(true)}
-              onOpenMore={() => setMoreSheetOpen(true)}
-            />
-
-            {/* Total count */}
-            <div className="text-sm text-slate-500">
-              Total: <span className="text-slate-300">{state.events.length}</span>
-            </div>
-
-            {/* Counters */}
-            <Counters counters={state.counters} />
-
-            {/* Event list */}
-            <div className="rounded-lg border border-slate-700 bg-slate-800/50 p-3">
-              <EventList events={state.events} />
-            </div>
-
-            {/* Footer buttons */}
-            <div className="flex justify-between gap-2 pt-2">
-              <div className="flex gap-1.5">
-                <button
-                  onClick={handleUndo}
-                  disabled={state.events.length === 0}
-                  className="py-2 px-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 text-xs disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] transition-transform"
-                >
-                  Undo
-                </button>
-                <button
-                  onClick={handleExport}
-                  disabled={state.events.length === 0}
-                  className="py-2 px-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 text-xs disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] transition-transform"
-                >
-                  CSV
-                </button>
-                <button
-                  onClick={handleClear}
-                  disabled={state.events.length === 0}
-                  className="py-2 px-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 text-xs disabled:opacity-50 hover:scale-[1.02] active:scale-[0.98] transition-transform"
-                >
-                  Clear
-                </button>
-              </div>
-              <button
-                onClick={handleTestSheets}
-                className="py-2 px-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 text-xs hover:scale-[1.02] active:scale-[0.98] transition-transform"
-              >
-                Test
-              </button>
             </div>
           </div>
         </DialogContent>
