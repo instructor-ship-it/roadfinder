@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
-> **Last Updated:** 2026-04-03
-> **Current Version:** 1.21.0
+> **Last Updated:** 2026-04-06
+> **Current Version:** 1.27.0
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -423,9 +423,53 @@ See `scripts/README.md` for full documentation of available scripts.
 
 ---
 
-## Recent Changes (v5.x)
+## Recent Changes (v1.x)
 
-### 1.21.0 (Current) - Direct AI Chat for Q&A Assistant
+### 1.27.0 (Current) - PDF Viewer Modal with Landscape/Portrait Support
+
+- **Full-Screen PDF Viewer Modal**
+  - Used inline styles to override Radix Dialog's default centering transform
+  - Set `position: fixed`, `top: 0`, `left: 0`, `width: 100vw`
+  - Override CSS custom properties `--tw-translate-x` and `--tw-translate-y` to neutralize Tailwind translate classes
+- **Orientation Detection**
+  - Added `isLandscape` state variable detecting `window.innerWidth > window.innerHeight`
+  - ResizeObserver updates on orientation change in real-time
+- **Portrait Mode Layout**
+  - Height: 100vh (full screen)
+  - Header: TOC button + Title | Zoom controls
+  - Footer: Prev, Page Input, Next + hints
+- **Landscape Mode Layout**
+  - Height: 95vh (leaves space for system UI)
+  - Header: TOC + Title | Prev, Page, Next | Zoom controls
+  - Footer: Hidden (navigation moved to header)
+- **Key Learning**: CSS custom properties (`--tw-translate-x`, `--tw-translate-y`) can override Tailwind's translate utilities
+- **Files Changed**
+  - `src/components/PdfViewerModal.tsx` (orientation detection, landscape layout, inline styles)
+
+### 1.26.0 - PDF Viewer Routing, Zoom Fix, Back Button Fix, Page Offset System
+
+- **Smart Document Routing**
+  - TMP documents → `/library/[docId]/[pageNum]` (TMP image viewer)
+  - PDF documents → `/library/viewer/[docId]/[pageNum]` (PDF viewer)
+  - Detection based on `type` field in registry
+- **Zoom Scope Fix**
+  - Restructured zoom container hierarchy
+  - Zoom transform now applies to inner PDF page wrapper only
+  - Navigation buttons and controls stay fixed at original size
+- **Back Button Fix**
+  - Changed back link from `/library/${docId}` to `/library`
+  - Returns to library page with all documents visible
+- **Page Offset System**
+  - Added `pageOffset` field to summary files
+  - Physical PDF page = document page + pageOffset
+  - Example: MRWA COP 2025 has cover page (offset = 1)
+  - "Introduction p.16" navigates to physical page 17
+- **Files Changed**
+  - `src/app/library/page.tsx` (smart routing, page offset support)
+  - `src/app/library/viewer/[docId]/[pageNum]/page.tsx` (zoom fix, back button fix, page offset)
+  - `public/library/summaries/mrwa-cop-2025.summary.json` (added pageOffset: 1)
+
+### 1.21.0 - Direct AI Chat for Q&A Assistant
 
 - **AI Q&A Direct Chat Mode**
   - Configure z.ai API key in Settings for direct AI-powered answers
