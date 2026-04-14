@@ -334,11 +334,6 @@ export function TrafficEventLoggerModal({
               onOpenMore={() => setMoreSheetOpen(true)}
             />
 
-            {/* Total count */}
-            <div className="text-sm text-gray-400">
-              Total: <span className="text-white font-medium">{state.events.length}</span>
-            </div>
-
             {/* Counters */}
             <Counters counters={state.counters} />
 
