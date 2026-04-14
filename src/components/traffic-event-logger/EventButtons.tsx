@@ -2,10 +2,11 @@
 
 interface EventButtonsProps {
   onLogEvent: (type: string, label: string) => void;
+  onLogRlr: () => void;
   shuttle: boolean;
 }
 
-export function EventButtons({ onLogEvent, shuttle }: EventButtonsProps) {
+export function EventButtons({ onLogEvent, onLogRlr, shuttle }: EventButtonsProps) {
   return (
     <div className="space-y-2">
       {/* Main event buttons - 2 columns */}
@@ -42,7 +43,7 @@ export function EventButtons({ onLogEvent, shuttle }: EventButtonsProps) {
         </div>
         <div className="flex flex-col gap-2">
           <button
-            onClick={() => onLogEvent('rlr', 'RLR')}
+            onClick={onLogRlr}
             className="w-full py-3 px-3 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium text-sm active:scale-[0.98] transition-all"
           >
             RLR

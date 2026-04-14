@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { TimerBadge } from './traffic-event-logger/TimerBadge';
 import { Counters } from './traffic-event-logger/Counters';
 import { EventList } from './traffic-event-logger/EventList';
@@ -57,6 +58,7 @@ export function TrafficEventLoggerModal({
   const [shiftSheetOpen, setShiftSheetOpen] = useState(false);
   const [moreSheetOpen, setMoreSheetOpen] = useState(false);
   const [flasherSheetOpen, setFlasherSheetOpen] = useState(false);
+  const [rlrSheetOpen, setRlrSheetOpen] = useState(false);
 
   // Subscribe to state changes
   useEffect(() => {
@@ -176,6 +178,20 @@ export function TrafficEventLoggerModal({
       setNote(''); // Clear note after logging
     },
     [note, state.sheetsEnabled, isOnline, showStatus]
+  );
+
+  // Handle RLR button - show direction selector
+  const handleRlrPress = useCallback(() => {
+    setRlrSheetOpen(true);
+  }, []);
+
+  // Handle RLR direction selection
+  const handleRlrDirection = useCallback(
+    async (direction: 'TL' | 'TR') => {
+      setRlrSheetOpen(false);
+      await logEvent('rlr', `RLR - ${direction}`);
+    },
+    [logEvent]
   );
 
   // Handle undo
@@ -325,7 +341,7 @@ export function TrafficEventLoggerModal({
             </div>
 
             {/* Event buttons */}
-            <EventButtons onLogEvent={logEvent} shuttle={state.shuttle} />
+            <EventButtons onLogEvent={logEvent} onLogRlr={handleRlrPress} shuttle={state.shuttle} />
 
             {/* TC Mini buttons */}
             <TCMiniButtons
@@ -382,6 +398,37 @@ export function TrafficEventLoggerModal({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* RLR Direction Sheet */}
+      <Drawer open={rlrSheetOpen} onOpenChange={setRlrSheetOpen}>
+        <DrawerContent className="bg-gray-900 border-t border-gray-700">
+          <DrawerHeader>
+            <DrawerTitle className="text-white">RLR Direction</DrawerTitle>
+          </DrawerHeader>
+          <div className="p-4 grid grid-cols-2 gap-3">
+            <button
+              onClick={() => handleRlrDirection('TL')}
+              className="py-4 px-4 rounded-lg border border-blue-600 bg-blue-600 text-white font-medium text-lg hover:bg-blue-700 active:scale-[0.98] transition-all"
+            >
+              True Left
+            </button>
+            <button
+              onClick={() => handleRlrDirection('TR')}
+              className="py-4 px-4 rounded-lg border border-blue-600 bg-blue-600 text-white font-medium text-lg hover:bg-blue-700 active:scale-[0.98] transition-all"
+            >
+              True Right
+            </button>
+          </div>
+          <div className="p-4 pt-0">
+            <button
+              onClick={() => setRlrSheetOpen(false)}
+              className="w-full py-2.5 px-4 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-sm hover:bg-gray-600 transition-all"
+            >
+              Cancel
+            </button>
+          </div>
+        </DrawerContent>
+      </Drawer>
 
       {/* Sheets - rendered outside Dialog to avoid z-index issues */}
       <ShiftSheet open={shiftSheetOpen} onOpenChange={setShiftSheetOpen} onLogEvent={logEvent} />
