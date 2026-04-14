@@ -356,6 +356,9 @@ export function clearAllEvents(): void {
   state.counters = { trueLeft: 0, trueRight: 0, rlr: 0, trip: 0 };
   state.shuttle = false;
   state.advancedFlashers = { north: false, south: false, east: false, west: false, both: false };
+  state.roadId = '';
+  state.roadName = '';
+  state.slk = '';
   saveState(state);
   notifyListeners();
 }
