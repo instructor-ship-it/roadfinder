@@ -15,6 +15,7 @@ import {
   subscribe,
   setRoadInfo,
   addEventWithNote,
+  addEventWithNoteAndRoad,
   undoEvent,
   clearAllEvents,
   toggleHold,

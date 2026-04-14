@@ -257,6 +257,52 @@ export function addEventWithNote(
   return event;
 }
 
+// Add event with custom road info (for spot calls at different locations)
+export function addEventWithNoteAndRoad(
+  type: string,
+  label: string,
+  note: string,
+  roadInfo: { roadId: string; roadName: string; slk: string },
+  gps?: { latitude: string; longitude: string } | null
+): TrafficEvent {
+  const state = getState();
+
+  const event: TrafficEvent = {
+    id: generateId(),
+    time: formatTime(new Date()),
+    type,
+    label,
+    note: cleanString(note),
+    roadId: roadInfo.roadId,
+    roadName: roadInfo.roadName,
+    slk: roadInfo.slk,
+    op: 'LOG',
+    targetId: generateId(),
+    latitude: gps?.latitude || 'N/A',
+    longitude: gps?.longitude || 'N/A',
+  };
+
+  state.events.unshift(event);
+
+  // Update counters
+  if (type === 'trueLeft') state.counters.trueLeft++;
+  if (type === 'trueRight') state.counters.trueRight++;
+  if (type === 'rlr') state.counters.rlr++;
+  if (type === 'trip') state.counters.trip++;
+
+  // Sync to sheets or queue
+  if (state.sheetsEnabled && navigator.onLine) {
+    sendToSheets(event);
+  } else {
+    state.queue.push(event);
+  }
+
+  saveState(state);
+  notifyListeners();
+
+  return event;
+}
+
 export function undoEvent(): TrafficEvent | null {
   const state = getState();
 
