@@ -23,22 +23,25 @@ export function EventList({ events }: EventListProps) {
   return (
     <div className="divide-y divide-gray-700/50">
       {events.slice(0, 50).map((event) => (
-        <div
-          key={event.id}
-          className="grid grid-cols-[auto_1fr] gap-3 py-2.5 px-3 hover:bg-gray-700/30"
-        >
-          <div className="min-w-[100px] text-gray-400 font-mono text-xs tabular-nums">
-            {event.time}
+        <div key={event.id} className="py-2.5 px-3 hover:bg-gray-700/30">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1 min-w-0">
+              <div className="font-medium text-white text-sm truncate">{event.label}</div>
+              {event.note && (
+                <div className="text-gray-500 text-xs mt-0.5 truncate">
+                  Note: {escapeHtml(event.note)}
+                </div>
+              )}
+            </div>
+            <div className="text-right shrink-0">
+              <div className="text-gray-400 font-mono text-xs tabular-nums">{event.time}</div>
+            </div>
           </div>
-          <div>
-            <div className="font-medium text-white text-sm">{event.label}</div>
-            {event.note && (
-              <div className="text-gray-500 text-xs mt-0.5">Note: {escapeHtml(event.note)}</div>
-            )}
-            {event.site && (
-              <div className="text-gray-500 text-xs mt-0.5">Site: {escapeHtml(event.site)}</div>
-            )}
-          </div>
+          {(event.roadId || event.slk) && (
+            <div className="text-xs text-cyan-400 mt-1 font-medium">
+              {event.roadName || event.roadId} @ SLK {event.slk}
+            </div>
+          )}
         </div>
       ))}
     </div>

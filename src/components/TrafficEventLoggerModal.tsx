@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 import { TimerBadge } from './traffic-event-logger/TimerBadge';
 import { Counters } from './traffic-event-logger/Counters';
 import { EventList } from './traffic-event-logger/EventList';
@@ -13,7 +12,7 @@ import { FlasherSheet } from './traffic-event-logger/FlasherSheet';
 import {
   getState,
   subscribe,
-  setSite,
+  setRoadInfo,
   addEventWithNote,
   undoEvent,
   clearAllEvents,
@@ -34,9 +33,18 @@ import { XIcon } from 'lucide-react';
 interface TrafficEventLoggerModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  roadId?: string;
+  roadName?: string;
+  slk?: string;
 }
 
-export function TrafficEventLoggerModal({ open, onOpenChange }: TrafficEventLoggerModalProps) {
+export function TrafficEventLoggerModal({
+  open,
+  onOpenChange,
+  roadId = '',
+  roadName = '',
+  slk = '',
+}: TrafficEventLoggerModalProps) {
   const [state, setState] = useState<TrafficEventState>(getState);
   const [note, setNote] = useState('');
   const [status, setStatus] = useState('Ready');
@@ -60,6 +68,13 @@ export function TrafficEventLoggerModal({ open, onOpenChange }: TrafficEventLogg
     initializeTimers();
   }, []);
 
+  // Update road info when props change
+  useEffect(() => {
+    if (open && roadId) {
+      setRoadInfo(roadId, roadName, slk);
+    }
+  }, [open, roadId, roadName, slk]);
+
   // Online/offline detection
   useEffect(() => {
     const handleOnline = () => {
@@ -81,11 +96,6 @@ export function TrafficEventLoggerModal({ open, onOpenChange }: TrafficEventLogg
   const showStatus = useCallback((msg: string) => {
     setStatus(msg);
     setTimeout(() => setStatus('Ready'), 1500);
-  }, []);
-
-  // Handle site change
-  const handleSiteChange = useCallback((site: string) => {
-    setSite(site);
   }, []);
 
   // Log event with GPS capture
@@ -192,29 +202,23 @@ export function TrafficEventLoggerModal({ open, onOpenChange }: TrafficEventLogg
               <TimerBadge type="hold" state={state} />
               <TimerBadge type="break" state={state} />
               <div className="flex-1" />
-              <Button
-                variant="ghost"
-                size="icon"
+              <button
                 onClick={() => onOpenChange(false)}
-                className="h-8 w-8 text-gray-400 hover:text-white hover:bg-gray-700"
+                className="h-8 w-8 flex items-center justify-center rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
               >
                 <XIcon className="h-4 w-4" />
-              </Button>
+              </button>
             </div>
+            {/* Road info display */}
+            {state.roadId && (
+              <div className="mt-2 text-sm text-gray-400">
+                {state.roadName || state.roadId} @ SLK {state.slk}
+              </div>
+            )}
           </div>
 
           {/* Content */}
-          <div className="p-4 space-y-4 overflow-y-auto" style={{ height: 'calc(100vh - 60px)' }}>
-            {/* Site input */}
-            <input
-              type="text"
-              placeholder="Site name"
-              maxLength={100}
-              value={state.site}
-              onChange={(e) => handleSiteChange(e.target.value)}
-              className="w-full py-2.5 px-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-
+          <div className="p-4 space-y-4 overflow-y-auto" style={{ height: 'calc(100vh - 80px)' }}>
             {/* Note input + presets */}
             <div className="flex gap-2 flex-wrap">
               <input
@@ -280,12 +284,12 @@ export function TrafficEventLoggerModal({ open, onOpenChange }: TrafficEventLogg
             {/* Counters */}
             <Counters counters={state.counters} />
 
-            {/* Event list - scrolling box */}
+            {/* Event list - scrolling box sized for 4 entries */}
             <div className="rounded-lg border border-gray-700 bg-gray-800 overflow-hidden">
               <div className="px-3 py-2 border-b border-gray-700 bg-gray-800/50">
                 <h3 className="text-sm font-medium text-gray-300">Events</h3>
               </div>
-              <div className="max-h-[200px] overflow-y-auto">
+              <div className="overflow-y-auto" style={{ maxHeight: '180px' }}>
                 <EventList events={state.events} />
               </div>
             </div>

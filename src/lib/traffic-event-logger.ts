@@ -15,7 +15,9 @@ export interface TrafficEvent {
   type: string;
   label: string;
   note: string;
-  site: string;
+  roadId: string;
+  roadName: string;
+  slk: string;
   op: 'LOG' | 'DELETE';
   targetId: string;
   latitude: string;
@@ -41,7 +43,9 @@ export interface TrafficEventState {
   events: TrafficEvent[];
   queue: TrafficEvent[];
   counters: EventCounters;
-  site: string;
+  roadId: string;
+  roadName: string;
+  slk: string;
   hold: {
     active: boolean;
     startTime: string | null;
@@ -69,7 +73,9 @@ const DEFAULT_STATE: TrafficEventState = {
   events: [],
   queue: [],
   counters: { trueLeft: 0, trueRight: 0, rlr: 0, trip: 0 },
-  site: '',
+  roadId: '',
+  roadName: '',
+  slk: '',
   hold: { active: false, startTime: null },
   break: { active: false, startTime: null },
   suspended: false,
@@ -177,7 +183,9 @@ export function addEvent(
     type,
     label,
     note: '',
-    site: state.site,
+    roadId: state.roadId,
+    roadName: state.roadName,
+    slk: state.slk,
     op: 'LOG',
     targetId: generateId(),
     latitude: gps?.latitude || 'N/A',
@@ -219,7 +227,9 @@ export function addEventWithNote(
     type,
     label,
     note: cleanString(note),
-    site: state.site,
+    roadId: state.roadId,
+    roadName: state.roadName,
+    slk: state.slk,
     op: 'LOG',
     targetId: generateId(),
     latitude: gps?.latitude || 'N/A',
@@ -272,7 +282,9 @@ export function undoEvent(): TrafficEvent | null {
     type: 'deleted',
     label: 'DELETED',
     note: `Original: ${undone.label}`,
-    site: undone.site,
+    roadId: undone.roadId,
+    roadName: undone.roadName,
+    slk: undone.slk,
     op: 'DELETE',
     targetId: undone.targetId,
     latitude: 'N/A',
@@ -323,12 +335,14 @@ export function clearShift(): void {
 }
 
 // ============================================================================
-// Site Functions
+// Road Info Functions
 // ============================================================================
 
-export function setSite(site: string): void {
+export function setRoadInfo(roadId: string, roadName: string, slk: string): void {
   const state = getState();
-  state.site = cleanString(site);
+  state.roadId = roadId;
+  state.roadName = roadName;
+  state.slk = slk;
   saveState(state);
   notifyListeners();
 }
@@ -479,7 +493,9 @@ function buildSheetsURL(event: TrafficEvent): string {
     type: event.type,
     label: event.label,
     note: event.note,
-    site: event.site,
+    roadId: event.roadId,
+    roadName: event.roadName,
+    slk: event.slk,
     op: event.op,
     targetId: event.targetId,
     time: event.time,
@@ -520,7 +536,9 @@ export function testSheetsConnection(): void {
     type: 'TEST',
     label: 'TEST EVENT',
     note: 'TC1',
-    site: 'Test Site',
+    roadId: 'H001',
+    roadName: 'Test Road',
+    slk: '10.00',
     op: 'LOG',
     targetId: 'TEST123',
     latitude: '-31.89',
@@ -544,7 +562,9 @@ export function exportCSV(): string {
     'Type',
     'Label',
     'Note',
-    'Site',
+    'Road ID',
+    'Road Name',
+    'SLK',
     'Op',
     'targetId',
     'Latitude',
@@ -553,7 +573,19 @@ export function exportCSV(): string {
   const rows = [headers];
 
   state.events.forEach((e) => {
-    rows.push([e.time, e.type, e.label, e.note, e.site, e.op, e.targetId, e.latitude, e.longitude]);
+    rows.push([
+      e.time,
+      e.type,
+      e.label,
+      e.note,
+      e.roadId,
+      e.roadName,
+      e.slk,
+      e.op,
+      e.targetId,
+      e.latitude,
+      e.longitude,
+    ]);
   });
 
   return rows

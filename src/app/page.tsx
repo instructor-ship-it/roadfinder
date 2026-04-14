@@ -7348,6 +7348,9 @@ export default function Home() {
       <TrafficEventLoggerModal
         open={trafficEventLoggerOpen}
         onOpenChange={setTrafficEventLoggerOpen}
+        roadId={selectedRoad}
+        roadName={roadInfo?.road_name}
+        slk={startSlk}
       />
     </div>
   );
