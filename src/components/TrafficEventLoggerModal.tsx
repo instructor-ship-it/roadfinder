@@ -181,6 +181,60 @@ export function TrafficEventLoggerModal({
     [note, state.sheetsEnabled, isOnline, showStatus]
   );
 
+  // Log spot call with GPS lookup for road ID and SLK
+  const logSpotCall = useCallback(async () => {
+    showStatus('📍 Getting location for spot call...');
+
+    try {
+      // Get GPS position
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0,
+        });
+      });
+
+      const lat = position.coords.latitude.toFixed(6);
+      const lon = position.coords.longitude.toFixed(6);
+
+      showStatus('📍 Looking up road...');
+
+      // Call GPS API to get road ID and SLK
+      const response = await fetch(`/api/gps?lat=${lat}&lon=${lon}`);
+
+      if (!response.ok) {
+        throw new Error('GPS lookup failed');
+      }
+
+      const data = await response.json();
+
+      if (data.road_id) {
+        const roadInfo = {
+          roadId: data.road_id,
+          roadName: data.road_name || '',
+          slk: data.slk?.toString() || '',
+        };
+        const gps = { latitude: lat, longitude: lon };
+
+        addEventWithNoteAndRoad('spot', 'Spot Call', note, roadInfo, gps);
+        showStatus(
+          `✅ Spot Call @ ${roadInfo.roadId} SLK ${roadInfo.slk} ${state.sheetsEnabled && isOnline ? '📊' : '📦'}`
+        );
+        setNote('');
+      } else {
+        // No road found, log with current state road info
+        const gps = { latitude: lat, longitude: lon };
+        addEventWithNote('spot', 'Spot Call', note, gps);
+        showStatus(`✅ Spot Call (no road found) ${state.sheetsEnabled && isOnline ? '📊' : '📦'}`);
+        setNote('');
+      }
+    } catch (error) {
+      console.error('Spot call GPS error:', error);
+      showStatus('⚠️ GPS failed for spot call');
+    }
+  }, [note, state.sheetsEnabled, isOnline, showStatus]);
+
   // Handle RLR button - show direction selector
   const handleRlrPress = useCallback(() => {
     setRlrSheetOpen(true);
@@ -342,7 +396,12 @@ export function TrafficEventLoggerModal({
             </div>
 
             {/* Event buttons */}
-            <EventButtons onLogEvent={logEvent} onLogRlr={handleRlrPress} shuttle={state.shuttle} />
+            <EventButtons
+              onLogEvent={logEvent}
+              onLogSpotCall={logSpotCall}
+              onLogRlr={handleRlrPress}
+              shuttle={state.shuttle}
+            />
 
             {/* TC Mini buttons */}
             <TCMiniButtons
