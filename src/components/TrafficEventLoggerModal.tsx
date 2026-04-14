@@ -28,7 +28,7 @@ import {
   type TrafficEventState,
   type AdvancedFlashers,
 } from '@/lib/traffic-event-logger';
-import { XIcon } from 'lucide-react';
+import { XIcon, MapPinIcon } from 'lucide-react';
 
 interface TrafficEventLoggerModalProps {
   open: boolean;
@@ -51,6 +51,7 @@ export function TrafficEventLoggerModal({
   const [isOnline, setIsOnline] = useState(
     typeof navigator !== 'undefined' ? navigator.onLine : true
   );
+  const [gpsLoading, setGpsLoading] = useState(false);
 
   // Sheet states
   const [shiftSheetOpen, setShiftSheetOpen] = useState(false);
@@ -97,6 +98,54 @@ export function TrafficEventLoggerModal({
     setStatus(msg);
     setTimeout(() => setStatus('Ready'), 1500);
   }, []);
+
+  // Update location from GPS
+  const handleUpdateLocation = useCallback(async () => {
+    if (!('geolocation' in navigator)) {
+      showStatus('⚠️ GPS not available');
+      return;
+    }
+
+    setGpsLoading(true);
+    showStatus('📍 Getting location...');
+
+    try {
+      // Get GPS position
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0,
+        });
+      });
+
+      const lat = position.coords.latitude.toFixed(6);
+      const lon = position.coords.longitude.toFixed(6);
+
+      showStatus('📍 Looking up road...');
+
+      // Call GPS API to get road ID and SLK
+      const response = await fetch(`/api/gps?lat=${lat}&lon=${lon}`);
+
+      if (!response.ok) {
+        throw new Error('GPS lookup failed');
+      }
+
+      const data = await response.json();
+
+      if (data.road_id) {
+        setRoadInfo(data.road_id, data.road_name || '', data.slk?.toString() || '');
+        showStatus(`✅ ${data.road_id} @ SLK ${data.slk}`);
+      } else {
+        showStatus('⚠️ No road found');
+      }
+    } catch (error) {
+      console.error('GPS location error:', error);
+      showStatus('⚠️ GPS failed');
+    } finally {
+      setGpsLoading(false);
+    }
+  }, [showStatus]);
 
   // Log event with GPS capture
   const logEvent = useCallback(
@@ -209,14 +258,25 @@ export function TrafficEventLoggerModal({
                 <XIcon className="h-4 w-4" />
               </button>
             </div>
-            {/* Road info display */}
-            <div className="mt-2 text-sm text-cyan-400 font-medium">
-              {state.roadId ? `${state.roadId} @ SLK ${state.slk || '---'}` : 'No road selected'}
+            {/* Road info display with GPS button */}
+            <div className="mt-2 flex items-center gap-2">
+              <div className="text-sm text-cyan-400 font-medium">
+                {state.roadId ? `${state.roadId} @ SLK ${state.slk || '---'}` : 'No road selected'}
+              </div>
+              <button
+                onClick={handleUpdateLocation}
+                disabled={gpsLoading}
+                className="flex items-center gap-1 py-1 px-2 rounded border border-gray-600 bg-gray-700 text-gray-300 text-xs hover:bg-gray-600 disabled:opacity-50 disabled:cursor-wait transition-all"
+                title="Update location from GPS"
+              >
+                <MapPinIcon className="h-3 w-3" />
+                {gpsLoading ? '...' : 'GPS'}
+              </button>
             </div>
           </div>
 
           {/* Content */}
-          <div className="p-4 space-y-4 overflow-y-auto" style={{ height: 'calc(100vh - 80px)' }}>
+          <div className="p-4 space-y-4 overflow-y-auto" style={{ height: 'calc(100vh - 100px)' }}>
             {/* Note input + presets */}
             <div className="flex gap-2 flex-wrap">
               <input
