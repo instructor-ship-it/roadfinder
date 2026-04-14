@@ -67,22 +67,40 @@ interface TCMiniButtonsProps {
   onLogEvent: (type: string, label: string) => void;
   onOpenShift: () => void;
   onOpenMore: () => void;
+  onOpenTcSelector: (direction: 'left' | 'right') => void;
+  tcLeftAssignment: string | null;
+  tcRightAssignment: string | null;
 }
 
-export function TCMiniButtons({ onLogEvent, onOpenShift, onOpenMore }: TCMiniButtonsProps) {
+export function TCMiniButtons({
+  onLogEvent,
+  onOpenShift,
+  onOpenMore,
+  onOpenTcSelector,
+  tcLeftAssignment,
+  tcRightAssignment,
+}: TCMiniButtonsProps) {
   return (
     <div className="flex justify-between gap-1.5 w-full">
       <button
-        onClick={() => onLogEvent('tcLeft', 'Start TC TL')}
-        className="flex-1 py-2 px-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-xs font-medium hover:bg-gray-600 active:scale-[0.98] transition-all"
+        onClick={() => onOpenTcSelector('left')}
+        className={`flex-1 py-2 px-2 rounded-lg border text-xs font-medium active:scale-[0.98] transition-all ${
+          tcLeftAssignment
+            ? 'border-blue-500 bg-blue-600 text-white'
+            : 'border-gray-600 bg-gray-700 text-gray-200 hover:bg-gray-600'
+        }`}
       >
-        Start TC TL
+        {tcLeftAssignment ? `TL (${tcLeftAssignment})` : 'Start TC TL'}
       </button>
       <button
-        onClick={() => onLogEvent('tcRight', 'Start TC TR')}
-        className="flex-1 py-2 px-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-xs font-medium hover:bg-gray-600 active:scale-[0.98] transition-all"
+        onClick={() => onOpenTcSelector('right')}
+        className={`flex-1 py-2 px-2 rounded-lg border text-xs font-medium active:scale-[0.98] transition-all ${
+          tcRightAssignment
+            ? 'border-blue-500 bg-blue-600 text-white'
+            : 'border-gray-600 bg-gray-700 text-gray-200 hover:bg-gray-600'
+        }`}
       >
-        Start TC TR
+        {tcRightAssignment ? `TR (${tcRightAssignment})` : 'Start TC TR'}
       </button>
       <button
         onClick={() => onLogEvent('tcEndBoth', 'End TC Both')}

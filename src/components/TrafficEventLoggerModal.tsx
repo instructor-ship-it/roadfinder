@@ -27,6 +27,7 @@ import {
   testSheetsConnection,
   initializeTimers,
   flushQueue,
+  setTcAssignment,
   type TrafficEventState,
   type AdvancedFlashers,
 } from '@/lib/traffic-event-logger';
@@ -60,6 +61,8 @@ export function TrafficEventLoggerModal({
   const [moreSheetOpen, setMoreSheetOpen] = useState(false);
   const [flasherSheetOpen, setFlasherSheetOpen] = useState(false);
   const [rlrSheetOpen, setRlrSheetOpen] = useState(false);
+  const [tcSelectorOpen, setTcSelectorOpen] = useState(false);
+  const [tcSelectorDirection, setTcSelectorDirection] = useState<'left' | 'right'>('left');
 
   // Subscribe to state changes
   useEffect(() => {
@@ -307,6 +310,23 @@ export function TrafficEventLoggerModal({
     showStatus('✅ Test sent');
   }, [showStatus]);
 
+  // Handle TC selector open
+  const handleOpenTcSelector = useCallback((direction: 'left' | 'right') => {
+    setTcSelectorDirection(direction);
+    setTcSelectorOpen(true);
+  }, []);
+
+  // Handle TC selection
+  const handleTcSelect = useCallback(
+    (tc: string) => {
+      setTcSelectorOpen(false);
+      setTcAssignment(tcSelectorDirection, tc);
+      const directionLabel = tcSelectorDirection === 'left' ? 'TL' : 'TR';
+      showStatus(`✅ ${directionLabel} assigned to ${tc}`);
+    },
+    [tcSelectorDirection, showStatus]
+  );
+
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -408,6 +428,9 @@ export function TrafficEventLoggerModal({
               onLogEvent={logEvent}
               onOpenShift={() => setShiftSheetOpen(true)}
               onOpenMore={() => setMoreSheetOpen(true)}
+              onOpenTcSelector={handleOpenTcSelector}
+              tcLeftAssignment={state.tcLeftAssignment}
+              tcRightAssignment={state.tcRightAssignment}
             />
 
             {/* Counters */}
@@ -487,6 +510,53 @@ export function TrafficEventLoggerModal({
           <div className="p-4 pt-0">
             <button
               onClick={() => setRlrSheetOpen(false)}
+              className="w-full py-2.5 px-4 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-sm hover:bg-gray-600 transition-all"
+            >
+              Cancel
+            </button>
+          </div>
+        </DrawerContent>
+      </Drawer>
+
+      {/* TC Selector Sheet */}
+      <Drawer open={tcSelectorOpen} onOpenChange={setTcSelectorOpen}>
+        <DrawerContent className="bg-gray-900 border-t border-gray-700">
+          <DrawerHeader>
+            <DrawerTitle className="text-white">
+              Select TC for {tcSelectorDirection === 'left' ? 'TL' : 'TR'}
+            </DrawerTitle>
+          </DrawerHeader>
+          <div className="p-4 grid grid-cols-3 gap-3">
+            {['TC1', 'TC2', 'TC3'].map((tc) => {
+              const isAssignedToOther =
+                (tcSelectorDirection === 'left' && state.tcRightAssignment === tc) ||
+                (tcSelectorDirection === 'right' && state.tcLeftAssignment === tc);
+              const isCurrentAssigned =
+                (tcSelectorDirection === 'left' && state.tcLeftAssignment === tc) ||
+                (tcSelectorDirection === 'right' && state.tcRightAssignment === tc);
+
+              return (
+                <button
+                  key={tc}
+                  onClick={() => !isAssignedToOther && handleTcSelect(tc)}
+                  disabled={isAssignedToOther}
+                  className={`py-4 px-4 rounded-lg font-medium text-lg transition-all ${
+                    isCurrentAssigned
+                      ? 'border-2 border-green-500 bg-green-600 text-white'
+                      : isAssignedToOther
+                        ? 'border border-gray-700 bg-gray-800 text-gray-500 cursor-not-allowed'
+                        : 'border border-blue-600 bg-blue-600 text-white hover:bg-blue-700 active:scale-[0.98]'
+                  }`}
+                >
+                  {tc}
+                  {isAssignedToOther && <span className="block text-xs mt-1">(assigned)</span>}
+                </button>
+              );
+            })}
+          </div>
+          <div className="p-4 pt-0">
+            <button
+              onClick={() => setTcSelectorOpen(false)}
               className="w-full py-2.5 px-4 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-sm hover:bg-gray-600 transition-all"
             >
               Cancel

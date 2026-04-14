@@ -61,6 +61,8 @@ export interface TrafficEventState {
   shiftStartTime: string | null;
   lastSentInterval: number | null;
   lastShuttleInterval: number | null;
+  tcLeftAssignment: string | null;
+  tcRightAssignment: string | null;
 }
 
 // ============================================================================
@@ -87,6 +89,8 @@ const DEFAULT_STATE: TrafficEventState = {
   shiftStartTime: null,
   lastSentInterval: null,
   lastShuttleInterval: null,
+  tcLeftAssignment: null,
+  tcRightAssignment: null,
 };
 
 // ============================================================================
@@ -399,6 +403,8 @@ export function clearAllEvents(): void {
   state.slk = '';
   state.lastSentInterval = null;
   state.lastShuttleInterval = null;
+  state.tcLeftAssignment = null;
+  state.tcRightAssignment = null;
   lastSentTime = null;
   lastShuttleTime = null;
   saveState(state);
@@ -418,6 +424,8 @@ export function clearShift(): void {
   state.shiftStartTime = formatTime(new Date());
   state.lastSentInterval = null;
   state.lastShuttleInterval = null;
+  state.tcLeftAssignment = null;
+  state.tcRightAssignment = null;
   lastSentTime = null;
   lastShuttleTime = null;
   saveState(state);
@@ -438,6 +446,41 @@ export function setRoadInfo(roadId: string, roadName: string, slk: string): void
   state.roadId = roadId;
   state.roadName = roadName;
   state.slk = slk;
+  saveState(state);
+  notifyListeners();
+}
+
+// TC Assignment Functions
+export function setTcAssignment(direction: 'left' | 'right', tc: string): void {
+  const state = getState();
+
+  if (direction === 'left') {
+    // If the same TC is assigned to right, clear it
+    if (state.tcRightAssignment === tc) {
+      state.tcRightAssignment = null;
+    }
+    state.tcLeftAssignment = tc;
+  } else {
+    // If the same TC is assigned to left, clear it
+    if (state.tcLeftAssignment === tc) {
+      state.tcLeftAssignment = null;
+    }
+    state.tcRightAssignment = tc;
+  }
+
+  saveState(state);
+  notifyListeners();
+}
+
+export function clearTcAssignment(direction: 'left' | 'right'): void {
+  const state = getState();
+
+  if (direction === 'left') {
+    state.tcLeftAssignment = null;
+  } else {
+    state.tcRightAssignment = null;
+  }
+
   saveState(state);
   notifyListeners();
 }
