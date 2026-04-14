@@ -59,6 +59,8 @@ export interface TrafficEventState {
   advancedFlashers: AdvancedFlashers;
   sheetsEnabled: boolean;
   shiftStartTime: string | null;
+  lastSentTime: string | null;
+  lastShuttleTime: string | null;
 }
 
 // ============================================================================
@@ -83,6 +85,8 @@ const DEFAULT_STATE: TrafficEventState = {
   advancedFlashers: { north: false, south: false, east: false, west: false, both: false },
   sheetsEnabled: true,
   shiftStartTime: null,
+  lastSentTime: null,
+  lastShuttleTime: null,
 };
 
 // ============================================================================
@@ -220,10 +224,11 @@ export function addEventWithNote(
   gps?: { latitude: string; longitude: string } | null
 ): TrafficEvent {
   const state = getState();
+  const now = new Date();
 
   const event: TrafficEvent = {
     id: generateId(),
-    time: formatTime(new Date()),
+    time: formatTime(now),
     type,
     label,
     note: cleanString(note),
@@ -238,11 +243,20 @@ export function addEventWithNote(
 
   state.events.unshift(event);
 
-  // Update counters
-  if (type === 'trueLeft') state.counters.trueLeft++;
-  if (type === 'trueRight') state.counters.trueRight++;
+  // Update counters and last sent times
+  if (type === 'trueLeft') {
+    state.counters.trueLeft++;
+    state.lastSentTime = now.toISOString();
+  }
+  if (type === 'trueRight') {
+    state.counters.trueRight++;
+    state.lastSentTime = now.toISOString();
+  }
   if (type === 'rlr') state.counters.rlr++;
   if (type === 'trip') state.counters.trip++;
+  if (type === 'shuttleSend') {
+    state.lastShuttleTime = now.toISOString();
+  }
 
   // Sync to sheets or queue
   if (state.sheetsEnabled && navigator.onLine) {
@@ -266,10 +280,11 @@ export function addEventWithNoteAndRoad(
   gps?: { latitude: string; longitude: string } | null
 ): TrafficEvent {
   const state = getState();
+  const now = new Date();
 
   const event: TrafficEvent = {
     id: generateId(),
-    time: formatTime(new Date()),
+    time: formatTime(now),
     type,
     label,
     note: cleanString(note),
@@ -284,11 +299,20 @@ export function addEventWithNoteAndRoad(
 
   state.events.unshift(event);
 
-  // Update counters
-  if (type === 'trueLeft') state.counters.trueLeft++;
-  if (type === 'trueRight') state.counters.trueRight++;
+  // Update counters and last sent times
+  if (type === 'trueLeft') {
+    state.counters.trueLeft++;
+    state.lastSentTime = now.toISOString();
+  }
+  if (type === 'trueRight') {
+    state.counters.trueRight++;
+    state.lastSentTime = now.toISOString();
+  }
   if (type === 'rlr') state.counters.rlr++;
   if (type === 'trip') state.counters.trip++;
+  if (type === 'shuttleSend') {
+    state.lastShuttleTime = now.toISOString();
+  }
 
   // Sync to sheets or queue
   if (state.sheetsEnabled && navigator.onLine) {
@@ -359,6 +383,8 @@ export function clearAllEvents(): void {
   state.roadId = '';
   state.roadName = '';
   state.slk = '';
+  state.lastSentTime = null;
+  state.lastShuttleTime = null;
   saveState(state);
   notifyListeners();
 }
@@ -374,6 +400,8 @@ export function clearShift(): void {
   state.break = { active: false, startTime: null };
   state.suspended = false;
   state.shiftStartTime = formatTime(new Date());
+  state.lastSentTime = null;
+  state.lastShuttleTime = null;
   saveState(state);
 
   // Stop timers

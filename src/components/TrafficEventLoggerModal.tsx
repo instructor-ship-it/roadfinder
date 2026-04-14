@@ -411,7 +411,12 @@ export function TrafficEventLoggerModal({
             />
 
             {/* Counters */}
-            <Counters counters={state.counters} />
+            <Counters
+              counters={state.counters}
+              lastSentTime={state.lastSentTime}
+              lastShuttleTime={state.lastShuttleTime}
+              shuttle={state.shuttle}
+            />
 
             {/* Event list - scrolling box sized for 3 entries */}
             <div className="rounded-lg border border-gray-700 bg-gray-800 overflow-hidden">

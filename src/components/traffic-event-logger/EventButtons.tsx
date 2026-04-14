@@ -73,16 +73,16 @@ export function TCMiniButtons({ onLogEvent, onOpenShift, onOpenMore }: TCMiniBut
   return (
     <div className="flex justify-between gap-1.5 w-full">
       <button
-        onClick={() => onLogEvent('tcLeft', 'Start TC Left')}
+        onClick={() => onLogEvent('tcLeft', 'Start TC TL')}
         className="flex-1 py-2 px-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-xs font-medium hover:bg-gray-600 active:scale-[0.98] transition-all"
       >
-        Start TC L
+        Start TC TL
       </button>
       <button
-        onClick={() => onLogEvent('tcRight', 'Start TC Right')}
+        onClick={() => onLogEvent('tcRight', 'Start TC TR')}
         className="flex-1 py-2 px-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-xs font-medium hover:bg-gray-600 active:scale-[0.98] transition-all"
       >
-        Start TC R
+        Start TC TR
       </button>
       <button
         onClick={() => onLogEvent('tcEndBoth', 'End TC Both')}
