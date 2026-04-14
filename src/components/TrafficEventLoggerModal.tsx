@@ -210,11 +210,9 @@ export function TrafficEventLoggerModal({
               </button>
             </div>
             {/* Road info display */}
-            {state.roadId && (
-              <div className="mt-2 text-sm text-gray-400">
-                {state.roadName || state.roadId} @ SLK {state.slk}
-              </div>
-            )}
+            <div className="mt-2 text-sm text-cyan-400 font-medium">
+              {state.roadId ? `${state.roadId} @ SLK ${state.slk || '---'}` : 'No road selected'}
+            </div>
           </div>
 
           {/* Content */}
@@ -284,12 +282,12 @@ export function TrafficEventLoggerModal({
             {/* Counters */}
             <Counters counters={state.counters} />
 
-            {/* Event list - scrolling box sized for 4 entries */}
+            {/* Event list - scrolling box sized for 3 entries */}
             <div className="rounded-lg border border-gray-700 bg-gray-800 overflow-hidden">
               <div className="px-3 py-2 border-b border-gray-700 bg-gray-800/50">
                 <h3 className="text-sm font-medium text-gray-300">Events</h3>
               </div>
-              <div className="overflow-y-auto" style={{ maxHeight: '180px' }}>
+              <div className="overflow-y-auto" style={{ maxHeight: '135px' }}>
                 <EventList events={state.events} />
               </div>
             </div>
