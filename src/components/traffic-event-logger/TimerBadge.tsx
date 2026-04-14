@@ -26,7 +26,7 @@ export function TimerBadge({ type, state }: TimerBadgeProps) {
     if (!state.hold.active) return null;
     const elapsed = getHoldElapsedTime();
     return (
-      <div className="px-2.5 py-1 rounded-md font-mono text-sm font-semibold min-w-[70px] text-center bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30">
+      <div className="px-2.5 py-1 rounded-md font-mono text-sm font-semibold min-w-[70px] text-center bg-red-500/20 text-red-400 border border-red-500/30">
         {formatTimer(elapsed)}
       </div>
     );
@@ -36,7 +36,7 @@ export function TimerBadge({ type, state }: TimerBadgeProps) {
     if (!state.break.active) return null;
     const elapsed = getBreakElapsedTime();
     return (
-      <div className="px-2.5 py-1 rounded-md font-mono text-sm font-semibold min-w-[70px] text-center bg-green-500/20 text-green-600 dark:text-green-400 border border-green-500/30">
+      <div className="px-2.5 py-1 rounded-md font-mono text-sm font-semibold min-w-[70px] text-center bg-green-500/20 text-green-400 border border-green-500/30">
         {formatTimer(elapsed)}
       </div>
     );

@@ -1,7 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-
 interface EventButtonsProps {
   onLogEvent: (type: string, label: string) => void;
   shuttle: boolean;
@@ -9,53 +7,53 @@ interface EventButtonsProps {
 
 export function EventButtons({ onLogEvent, shuttle }: EventButtonsProps) {
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {/* Main event buttons - 2 columns */}
-      <div className="grid grid-cols-2 gap-3">
-        <Button
+      <div className="grid grid-cols-2 gap-2">
+        <button
           onClick={() => onLogEvent('trueLeft', 'Sent True Left')}
-          className="w-full h-12 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white"
+          className="w-full py-3 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm active:scale-[0.98] transition-all"
         >
           Sent True Left
-        </Button>
-        <Button
+        </button>
+        <button
           onClick={() => onLogEvent('trueRight', 'Sent True Right')}
-          className="w-full h-12 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white"
+          className="w-full py-3 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm active:scale-[0.98] transition-all"
         >
           Sent True Right
-        </Button>
+        </button>
       </div>
 
       {/* Secondary buttons - 2 columns with stacked items */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex flex-col gap-3">
-          <Button
+      <div className="grid grid-cols-2 gap-2">
+        <div className="flex flex-col gap-2">
+          <button
             onClick={() => onLogEvent('trip', 'Trip Out')}
-            className="w-full h-12 text-sm font-medium bg-amber-500 hover:bg-amber-600 text-white"
+            className="w-full py-3 px-3 rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-medium text-sm active:scale-[0.98] transition-all"
           >
             Trip Out
-          </Button>
-          <Button
+          </button>
+          <button
             onClick={() => onLogEvent('spot', 'Spot Call')}
-            className="w-full h-12 text-sm font-medium bg-green-500 hover:bg-green-600 text-white"
+            className="w-full py-3 px-3 rounded-lg bg-green-500 hover:bg-green-600 text-white font-medium text-sm active:scale-[0.98] transition-all"
           >
             Spot Call
-          </Button>
+          </button>
         </div>
-        <div className="flex flex-col gap-3">
-          <Button
+        <div className="flex flex-col gap-2">
+          <button
             onClick={() => onLogEvent('rlr', 'RLR')}
-            className="w-full h-12 text-sm font-medium bg-red-500 hover:bg-red-600 text-white"
+            className="w-full py-3 px-3 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium text-sm active:scale-[0.98] transition-all"
           >
             RLR
-          </Button>
+          </button>
           {shuttle && (
-            <Button
+            <button
               onClick={() => onLogEvent('shuttleSend', 'Shuttle Send')}
-              className="w-full h-12 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white"
+              className="w-full py-3 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm active:scale-[0.98] transition-all"
             >
               Shuttle Send
-            </Button>
+            </button>
           )}
         </div>
       </div>
@@ -71,37 +69,37 @@ interface TCMiniButtonsProps {
 
 export function TCMiniButtons({ onLogEvent, onOpenShift, onOpenMore }: TCMiniButtonsProps) {
   return (
-    <div className="flex justify-between gap-2 w-full">
-      <Button
-        variant="outline"
-        size="sm"
+    <div className="flex justify-between gap-1.5 w-full">
+      <button
         onClick={() => onLogEvent('tcLeft', 'Start TC Left')}
-        className="flex-1"
+        className="flex-1 py-2 px-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-xs font-medium hover:bg-gray-600 active:scale-[0.98] transition-all"
       >
         Start TC L
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
+      </button>
+      <button
         onClick={() => onLogEvent('tcRight', 'Start TC Right')}
-        className="flex-1"
+        className="flex-1 py-2 px-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-xs font-medium hover:bg-gray-600 active:scale-[0.98] transition-all"
       >
         Start TC R
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
+      </button>
+      <button
         onClick={() => onLogEvent('tcEndBoth', 'End TC Both')}
-        className="flex-1"
+        className="flex-1 py-2 px-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-xs font-medium hover:bg-gray-600 active:scale-[0.98] transition-all"
       >
         End TC Both
-      </Button>
-      <Button variant="outline" size="sm" onClick={onOpenShift} className="flex-1">
+      </button>
+      <button
+        onClick={onOpenShift}
+        className="flex-1 py-2 px-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-xs font-medium hover:bg-gray-600 active:scale-[0.98] transition-all"
+      >
         Shift…
-      </Button>
-      <Button variant="outline" size="sm" onClick={onOpenMore} className="flex-1">
+      </button>
+      <button
+        onClick={onOpenMore}
+        className="flex-1 py-2 px-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-xs font-medium hover:bg-gray-600 active:scale-[0.98] transition-all"
+      >
         More…
-      </Button>
+      </button>
     </div>
   );
 }

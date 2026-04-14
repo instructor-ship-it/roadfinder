@@ -7,7 +7,6 @@ import {
   DrawerTitle,
   DrawerFooter,
 } from '@/components/ui/drawer';
-import { Button } from '@/components/ui/button';
 import type { TrafficEventState } from '@/lib/traffic-event-logger';
 
 interface MoreSheetProps {
@@ -35,87 +34,100 @@ export function MoreSheet({
 }: MoreSheetProps) {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent>
+      <DrawerContent className="bg-gray-900 border-t border-gray-700">
         <DrawerHeader>
-          <DrawerTitle>More Actions</DrawerTitle>
+          <DrawerTitle className="text-white">More Actions</DrawerTitle>
         </DrawerHeader>
-        <div className="p-4 space-y-2 overflow-y-auto">
+        <div className="p-4 space-y-2 overflow-y-auto max-h-[60vh]">
           {/* On Hold - Red toggle */}
-          <Button
-            variant={state.hold.active ? 'destructive' : 'outline'}
+          <button
             onClick={() => {
               onToggleHold();
               onOpenChange(false);
             }}
-            className="w-full justify-start"
+            className={`w-full py-3 px-4 rounded-lg border font-medium text-sm transition-all ${
+              state.hold.active
+                ? 'bg-red-500 border-red-500 text-white'
+                : 'border-gray-600 bg-gray-800 text-gray-200 hover:bg-gray-700'
+            }`}
           >
             {state.hold.active ? 'Hold OFF' : 'On Hold'}
-          </Button>
+          </button>
 
           {/* Data Entry Suspended - Red toggle */}
-          <Button
-            variant={state.suspended ? 'destructive' : 'outline'}
+          <button
             onClick={() => {
               onToggleSuspend();
               onOpenChange(false);
             }}
-            className="w-full justify-start"
+            className={`w-full py-3 px-4 rounded-lg border font-medium text-sm transition-all ${
+              state.suspended
+                ? 'bg-red-500 border-red-500 text-white'
+                : 'border-gray-600 bg-gray-800 text-gray-200 hover:bg-gray-700'
+            }`}
           >
             {state.suspended ? 'Suspended OFF' : 'Data Entry Suspended'}
-          </Button>
+          </button>
 
           {/* Take Break - Green toggle */}
-          <Button
-            variant={state.break.active ? 'default' : 'outline'}
+          <button
             onClick={() => {
               onToggleBreak();
               onOpenChange(false);
             }}
-            className={`w-full justify-start ${state.break.active ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
+            className={`w-full py-3 px-4 rounded-lg border font-medium text-sm transition-all ${
+              state.break.active
+                ? 'bg-green-500 border-green-500 text-white'
+                : 'border-gray-600 bg-gray-800 text-gray-200 hover:bg-gray-700'
+            }`}
           >
             {state.break.active ? 'Break OFF' : 'Take Break'}
-          </Button>
+          </button>
 
           {/* Shuttle - Green toggle */}
-          <Button
-            variant={state.shuttle ? 'default' : 'outline'}
+          <button
             onClick={() => {
               onToggleShuttle();
               onOpenChange(false);
             }}
-            className={`w-full justify-start ${state.shuttle ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
+            className={`w-full py-3 px-4 rounded-lg border font-medium text-sm transition-all ${
+              state.shuttle
+                ? 'bg-green-500 border-green-500 text-white'
+                : 'border-gray-600 bg-gray-800 text-gray-200 hover:bg-gray-700'
+            }`}
           >
             {state.shuttle ? 'Shuttle OFF' : 'Shuttle'}
-          </Button>
+          </button>
 
           {/* Site check */}
-          <Button
-            variant="outline"
+          <button
             onClick={() => {
               onLogEvent('siteCheck', 'Site check');
               onOpenChange(false);
             }}
-            className="w-full justify-start"
+            className="w-full py-3 px-4 rounded-lg border border-gray-600 bg-gray-800 text-gray-200 font-medium text-sm hover:bg-gray-700 active:scale-[0.99] transition-all"
           >
             Site check
-          </Button>
+          </button>
 
           {/* Advanced flashers */}
-          <Button
-            variant="outline"
+          <button
             onClick={() => {
               onOpenFlashers();
               onOpenChange(false);
             }}
-            className="w-full justify-start"
+            className="w-full py-3 px-4 rounded-lg border border-gray-600 bg-gray-800 text-gray-200 font-medium text-sm hover:bg-gray-700 active:scale-[0.99] transition-all"
           >
             Advanced flashers…
-          </Button>
+          </button>
         </div>
         <DrawerFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full">
+          <button
+            onClick={() => onOpenChange(false)}
+            className="w-full py-2.5 px-4 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-sm hover:bg-gray-600 transition-all"
+          >
             Close
-          </Button>
+          </button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

@@ -7,7 +7,6 @@ import {
   DrawerTitle,
   DrawerFooter,
 } from '@/components/ui/drawer';
-import { Button } from '@/components/ui/button';
 import type { AdvancedFlashers } from '@/lib/traffic-event-logger';
 
 interface FlasherSheetProps {
@@ -33,28 +32,36 @@ export function FlasherSheet({ open, onOpenChange, flashers, onToggleFlasher }: 
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent>
+      <DrawerContent className="bg-gray-900 border-t border-gray-700">
         <DrawerHeader>
-          <DrawerTitle>Advanced Flashers</DrawerTitle>
+          <DrawerTitle className="text-white">Advanced Flashers</DrawerTitle>
         </DrawerHeader>
         <div className="p-4">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             {DIRECTIONS.map((dir) => (
-              <Button
+              <button
                 key={dir.key}
-                variant={flashers[dir.key] ? 'default' : 'outline'}
                 onClick={() => handleToggle(dir.key)}
-                className={`h-14 ${dir.key === 'both' ? 'col-span-2' : ''} ${flashers[dir.key] ? 'bg-green-500 hover:bg-green-600 text-white' : ''}`}
+                className={`py-3 px-4 rounded-lg border font-medium text-sm transition-all ${
+                  dir.key === 'both' ? 'col-span-2' : ''
+                } ${
+                  flashers[dir.key]
+                    ? 'bg-green-500 border-green-500 text-white'
+                    : 'border-gray-600 bg-gray-800 text-gray-200 hover:bg-gray-700'
+                }`}
               >
                 {flashers[dir.key] ? `${dir.label.toUpperCase()} OFF` : dir.label}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
         <DrawerFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full">
+          <button
+            onClick={() => onOpenChange(false)}
+            className="w-full py-2.5 px-4 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-sm hover:bg-gray-600 transition-all"
+          >
             Close
-          </Button>
+          </button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

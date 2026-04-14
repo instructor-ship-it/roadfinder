@@ -7,7 +7,6 @@ import {
   DrawerTitle,
   DrawerFooter,
 } from '@/components/ui/drawer';
-import { Button } from '@/components/ui/button';
 
 interface ShiftSheetProps {
   open: boolean;
@@ -39,26 +38,28 @@ export function ShiftSheet({ open, onOpenChange, onLogEvent }: ShiftSheetProps) 
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent>
+      <DrawerContent className="bg-gray-900 border-t border-gray-700">
         <DrawerHeader>
-          <DrawerTitle>Shift Actions</DrawerTitle>
+          <DrawerTitle className="text-white">Shift Actions</DrawerTitle>
         </DrawerHeader>
-        <div className="p-4 space-y-2 overflow-y-auto">
+        <div className="p-4 space-y-2 overflow-y-auto max-h-[60vh]">
           {SHIFT_ACTIONS.map((action) => (
-            <Button
+            <button
               key={action.label}
-              variant="outline"
               onClick={() => handleAction(action.type, action.label)}
-              className="w-full justify-start"
+              className="w-full py-3 px-4 rounded-lg border border-gray-600 bg-gray-800 text-gray-200 font-medium text-sm hover:bg-gray-700 active:scale-[0.99] transition-all"
             >
               {action.label}
-            </Button>
+            </button>
           ))}
         </div>
         <DrawerFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} className="w-full">
+          <button
+            onClick={() => onOpenChange(false)}
+            className="w-full py-2.5 px-4 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-sm hover:bg-gray-600 transition-all"
+          >
             Close
-          </Button>
+          </button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

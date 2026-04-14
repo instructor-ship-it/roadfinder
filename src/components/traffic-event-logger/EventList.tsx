@@ -17,30 +17,26 @@ function escapeHtml(s: string): string {
 
 export function EventList({ events }: EventListProps) {
   if (events.length === 0) {
-    return <div className="text-center py-8 text-muted-foreground">No events</div>;
+    return <div className="text-center py-6 text-gray-500 text-sm">No events</div>;
   }
 
   return (
-    <div className="p-3 space-y-0">
-      {events.slice(0, 20).map((event) => (
+    <div className="divide-y divide-gray-700/50">
+      {events.slice(0, 50).map((event) => (
         <div
           key={event.id}
-          className="grid grid-cols-[auto_1fr] gap-3 py-3 border-b border-dashed border-border/50"
+          className="grid grid-cols-[auto_1fr] gap-3 py-2.5 px-3 hover:bg-gray-700/30"
         >
-          <div className="min-w-[128px] text-muted-foreground font-mono text-sm tabular-nums">
+          <div className="min-w-[100px] text-gray-400 font-mono text-xs tabular-nums">
             {event.time}
           </div>
           <div>
-            <div className="font-semibold text-foreground text-sm">{event.label}</div>
+            <div className="font-medium text-white text-sm">{event.label}</div>
             {event.note && (
-              <div className="text-muted-foreground text-xs mt-0.5">
-                Note: {escapeHtml(event.note)}
-              </div>
+              <div className="text-gray-500 text-xs mt-0.5">Note: {escapeHtml(event.note)}</div>
             )}
             {event.site && (
-              <div className="text-muted-foreground text-xs mt-0.5">
-                Site: {escapeHtml(event.site)}
-              </div>
+              <div className="text-gray-500 text-xs mt-0.5">Site: {escapeHtml(event.site)}</div>
             )}
           </div>
         </div>

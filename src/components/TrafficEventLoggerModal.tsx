@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { TimerBadge } from './traffic-event-logger/TimerBadge';
 import { Counters } from './traffic-event-logger/Counters';
 import { EventList } from './traffic-event-logger/EventList';
@@ -23,7 +22,6 @@ import {
   toggleSuspend,
   toggleShuttle,
   toggleAdvancedFlasher,
-  toggleSheets,
   downloadCSV,
   testSheetsConnection,
   initializeTimers,
@@ -183,146 +181,146 @@ export function TrafficEventLoggerModal({ open, onOpenChange }: TrafficEventLogg
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent
-          className="w-screen h-screen max-w-none m-0 rounded-none border-0 p-0 overflow-hidden"
+          className="w-screen h-screen max-w-none m-0 rounded-none border-0 p-0 overflow-hidden bg-gray-900 text-white"
           showCloseButton={false}
         >
-          <div className="h-full overflow-y-auto bg-background">
-            {/* Header */}
-            <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b px-4 py-3">
-              <div className="flex items-center gap-3 flex-wrap">
-                <h2 className="text-lg font-semibold text-foreground">Traffic Event Logger</h2>
-                <span className="text-muted-foreground text-sm font-medium">v1.0</span>
-                <TimerBadge type="hold" state={state} />
-                <TimerBadge type="break" state={state} />
-                <div className="flex-1" />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onOpenChange(false)}
-                  className="h-8 w-8"
-                >
-                  <XIcon className="h-4 w-4" />
-                </Button>
+          {/* Header */}
+          <div className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 px-4 py-3">
+            <div className="flex items-center gap-3 flex-wrap">
+              <h2 className="text-lg font-semibold">Traffic Event Logger</h2>
+              <span className="text-gray-400 text-sm font-medium">v1.0</span>
+              <TimerBadge type="hold" state={state} />
+              <TimerBadge type="break" state={state} />
+              <div className="flex-1" />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onOpenChange(false)}
+                className="h-8 w-8 text-gray-400 hover:text-white hover:bg-gray-700"
+              >
+                <XIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-4 space-y-4 overflow-y-auto" style={{ height: 'calc(100vh - 60px)' }}>
+            {/* Site input */}
+            <input
+              type="text"
+              placeholder="Site name"
+              maxLength={100}
+              value={state.site}
+              onChange={(e) => handleSiteChange(e.target.value)}
+              className="w-full py-2.5 px-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            {/* Note input + presets */}
+            <div className="flex gap-2 flex-wrap">
+              <input
+                type="text"
+                placeholder="Note (optional)"
+                maxLength={200}
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                className="flex-1 min-w-[150px] py-2.5 px-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <div className="flex gap-1.5">
+                {['TC1', 'TC2', 'TC3'].map((preset) => (
+                  <button
+                    key={preset}
+                    onClick={() => handlePreset(preset)}
+                    className="py-2 px-3 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-sm hover:bg-gray-600 active:scale-[0.98] transition-all"
+                  >
+                    {preset}
+                  </button>
+                ))}
               </div>
             </div>
 
-            {/* Content */}
-            <div className="p-4 space-y-4">
-              {/* Site input */}
-              <Input
-                type="text"
-                placeholder="Site name"
-                maxLength={100}
-                value={state.site}
-                onChange={(e) => handleSiteChange(e.target.value)}
-                className="w-full"
-              />
+            {/* Status bar */}
+            <div className="flex items-center gap-2 flex-wrap text-sm">
+              <span className="text-gray-400">{status}</span>
+              <span className="px-2 py-0.5 rounded-full text-xs border border-gray-600 bg-gray-800">
+                Queue: {state.queue.length}
+              </span>
+              <span
+                className={`px-2 py-0.5 rounded-full text-xs ${
+                  isOnline ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                }`}
+              >
+                Online: {isOnline ? 'ON' : 'OFF'}
+              </span>
+              <span
+                className={`px-2 py-0.5 rounded-full text-xs ${
+                  state.sheetsEnabled
+                    ? 'bg-green-500/20 text-green-400'
+                    : 'bg-red-500/20 text-red-400'
+                }`}
+              >
+                Sheets: {state.sheetsEnabled ? 'ON' : 'OFF'}
+              </span>
+            </div>
 
-              {/* Note input + presets */}
-              <div className="flex gap-2 flex-wrap">
-                <Input
-                  type="text"
-                  placeholder="Note (optional)"
-                  maxLength={200}
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  className="flex-1 min-w-[150px]"
-                />
-                <div className="flex gap-1.5">
-                  {['TC1', 'TC2', 'TC3'].map((preset) => (
-                    <Button
-                      key={preset}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePreset(preset)}
-                    >
-                      {preset}
-                    </Button>
-                  ))}
-                </div>
+            {/* Event buttons */}
+            <EventButtons onLogEvent={logEvent} shuttle={state.shuttle} />
+
+            {/* TC Mini buttons */}
+            <TCMiniButtons
+              onLogEvent={logEvent}
+              onOpenShift={() => setShiftSheetOpen(true)}
+              onOpenMore={() => setMoreSheetOpen(true)}
+            />
+
+            {/* Total count */}
+            <div className="text-sm text-gray-400">
+              Total: <span className="text-white font-medium">{state.events.length}</span>
+            </div>
+
+            {/* Counters */}
+            <Counters counters={state.counters} />
+
+            {/* Event list - scrolling box */}
+            <div className="rounded-lg border border-gray-700 bg-gray-800 overflow-hidden">
+              <div className="px-3 py-2 border-b border-gray-700 bg-gray-800/50">
+                <h3 className="text-sm font-medium text-gray-300">Events</h3>
               </div>
-
-              {/* Status bar */}
-              <div className="flex items-center gap-2 flex-wrap text-sm">
-                <span className="text-muted-foreground">{status}</span>
-                <span className="px-2 py-0.5 rounded-full text-xs border bg-muted">
-                  Queue: {state.queue.length}
-                </span>
-                <span
-                  className={`px-2 py-0.5 rounded-full text-xs ${
-                    isOnline
-                      ? 'bg-green-500/20 text-green-600 dark:text-green-400'
-                      : 'bg-red-500/20 text-red-600 dark:text-red-400'
-                  }`}
-                >
-                  Online: {isOnline ? 'ON' : 'OFF'}
-                </span>
-                <span
-                  className={`px-2 py-0.5 rounded-full text-xs ${
-                    state.sheetsEnabled
-                      ? 'bg-green-500/20 text-green-600 dark:text-green-400'
-                      : 'bg-red-500/20 text-red-600 dark:text-red-400'
-                  }`}
-                >
-                  Sheets: {state.sheetsEnabled ? 'ON' : 'OFF'}
-                </span>
-              </div>
-
-              {/* Event buttons */}
-              <EventButtons onLogEvent={logEvent} shuttle={state.shuttle} />
-
-              {/* TC Mini buttons */}
-              <TCMiniButtons
-                onLogEvent={logEvent}
-                onOpenShift={() => setShiftSheetOpen(true)}
-                onOpenMore={() => setMoreSheetOpen(true)}
-              />
-
-              {/* Total count */}
-              <div className="text-sm text-muted-foreground">
-                Total: <span className="text-foreground font-medium">{state.events.length}</span>
-              </div>
-
-              {/* Counters */}
-              <Counters counters={state.counters} />
-
-              {/* Event list */}
-              <div className="rounded-lg border bg-card">
+              <div className="max-h-[200px] overflow-y-auto">
                 <EventList events={state.events} />
               </div>
+            </div>
 
-              {/* Footer buttons */}
-              <div className="flex justify-between gap-2 pt-2 pb-8">
-                <div className="flex gap-1.5">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleUndo}
-                    disabled={state.events.length === 0}
-                  >
-                    Undo
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleExport}
-                    disabled={state.events.length === 0}
-                  >
-                    CSV
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleClear}
-                    disabled={state.events.length === 0}
-                  >
-                    Clear
-                  </Button>
-                </div>
-                <Button variant="outline" size="sm" onClick={handleTestSheets}>
-                  Test
-                </Button>
+            {/* Footer buttons */}
+            <div className="flex justify-between gap-2 pt-2 pb-8">
+              <div className="flex gap-1.5">
+                <button
+                  onClick={handleUndo}
+                  disabled={state.events.length === 0}
+                  className="py-2 px-4 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-sm disabled:opacity-50 hover:bg-gray-600 active:scale-[0.98] transition-all"
+                >
+                  Undo
+                </button>
+                <button
+                  onClick={handleExport}
+                  disabled={state.events.length === 0}
+                  className="py-2 px-4 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-sm disabled:opacity-50 hover:bg-gray-600 active:scale-[0.98] transition-all"
+                >
+                  CSV
+                </button>
+                <button
+                  onClick={handleClear}
+                  disabled={state.events.length === 0}
+                  className="py-2 px-4 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-sm disabled:opacity-50 hover:bg-gray-600 active:scale-[0.98] transition-all"
+                >
+                  Clear
+                </button>
               </div>
+              <button
+                onClick={handleTestSheets}
+                className="py-2 px-4 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-sm hover:bg-gray-600 active:scale-[0.98] transition-all"
+              >
+                Test
+              </button>
             </div>
           </div>
         </DialogContent>
