@@ -1,49 +1,30 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import type { EventCounters } from '@/lib/traffic-event-logger';
 
 interface CountersProps {
   counters: EventCounters;
-  lastSentTime: string | null;
-  lastShuttleTime: string | null;
+  lastSentInterval: number | null;
+  lastShuttleInterval: number | null;
   shuttle: boolean;
 }
 
-function formatTimeDiff(ms: number): string {
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+function formatInterval(seconds: number): string {
+  const minutes = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  if (minutes > 0) {
+    return `${minutes}m ${secs}s`;
+  }
+  return `${secs}s`;
 }
 
-export function Counters({ counters, lastSentTime, lastShuttleTime, shuttle }: CountersProps) {
+export function Counters({
+  counters,
+  lastSentInterval,
+  lastShuttleInterval,
+  shuttle,
+}: CountersProps) {
   const total = counters.trueLeft + counters.trueRight;
-  const [sentElapsed, setSentElapsed] = useState<string | null>(null);
-  const [shuttleElapsed, setShuttleElapsed] = useState<string | null>(null);
-
-  // Update elapsed time every second
-  useEffect(() => {
-    const updateElapsed = () => {
-      if (lastSentTime) {
-        const elapsed = Date.now() - new Date(lastSentTime).getTime();
-        setSentElapsed(formatTimeDiff(elapsed));
-      } else {
-        setSentElapsed(null);
-      }
-
-      if (lastShuttleTime) {
-        const elapsed = Date.now() - new Date(lastShuttleTime).getTime();
-        setShuttleElapsed(formatTimeDiff(elapsed));
-      } else {
-        setShuttleElapsed(null);
-      }
-    };
-
-    updateElapsed();
-    const interval = setInterval(updateElapsed, 1000);
-    return () => clearInterval(interval);
-  }, [lastSentTime, lastShuttleTime]);
 
   return (
     <div className="grid grid-cols-2 gap-2 text-sm">
@@ -71,16 +52,20 @@ export function Counters({ counters, lastSentTime, lastShuttleTime, shuttle }: C
           <span className="text-cyan-400 font-semibold">{counters.trip}</span>
         </div>
         <div className="border-t border-gray-700 mt-1.5 pt-1.5 space-y-1">
-          {sentElapsed && (
+          {lastSentInterval !== null && (
             <div className="flex justify-between items-center">
               <span className="text-gray-400 text-xs">Sent:</span>
-              <span className="text-yellow-400 font-semibold text-xs">{sentElapsed}</span>
+              <span className="text-yellow-400 font-semibold text-xs">
+                {formatInterval(lastSentInterval)}
+              </span>
             </div>
           )}
-          {shuttle && shuttleElapsed && (
+          {shuttle && lastShuttleInterval !== null && (
             <div className="flex justify-between items-center">
               <span className="text-gray-400 text-xs">Shuttle:</span>
-              <span className="text-orange-400 font-semibold text-xs">{shuttleElapsed}</span>
+              <span className="text-orange-400 font-semibold text-xs">
+                {formatInterval(lastShuttleInterval)}
+              </span>
             </div>
           )}
         </div>

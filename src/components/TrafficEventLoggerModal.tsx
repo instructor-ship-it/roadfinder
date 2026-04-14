@@ -413,8 +413,8 @@ export function TrafficEventLoggerModal({
             {/* Counters */}
             <Counters
               counters={state.counters}
-              lastSentTime={state.lastSentTime}
-              lastShuttleTime={state.lastShuttleTime}
+              lastSentInterval={state.lastSentInterval}
+              lastShuttleInterval={state.lastShuttleInterval}
               shuttle={state.shuttle}
             />
 

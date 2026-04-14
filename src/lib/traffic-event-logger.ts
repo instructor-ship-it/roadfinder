@@ -59,8 +59,8 @@ export interface TrafficEventState {
   advancedFlashers: AdvancedFlashers;
   sheetsEnabled: boolean;
   shiftStartTime: string | null;
-  lastSentTime: string | null;
-  lastShuttleTime: string | null;
+  lastSentInterval: number | null;
+  lastShuttleInterval: number | null;
 }
 
 // ============================================================================
@@ -85,8 +85,8 @@ const DEFAULT_STATE: TrafficEventState = {
   advancedFlashers: { north: false, south: false, east: false, west: false, both: false },
   sheetsEnabled: true,
   shiftStartTime: null,
-  lastSentTime: null,
-  lastShuttleTime: null,
+  lastSentInterval: null,
+  lastShuttleInterval: null,
 };
 
 // ============================================================================
@@ -98,6 +98,8 @@ type StateChangeListener = (state: TrafficEventState) => void;
 const listeners: Set<StateChangeListener> = new Set();
 let holdTimerInterval: ReturnType<typeof setInterval> | null = null;
 let breakTimerInterval: ReturnType<typeof setInterval> | null = null;
+let lastSentTime: Date | null = null;
+let lastShuttleTime: Date | null = null;
 
 function notifyListeners() {
   const state = getState();
@@ -243,19 +245,25 @@ export function addEventWithNote(
 
   state.events.unshift(event);
 
-  // Update counters and last sent times
-  if (type === 'trueLeft') {
-    state.counters.trueLeft++;
-    state.lastSentTime = now.toISOString();
-  }
-  if (type === 'trueRight') {
-    state.counters.trueRight++;
-    state.lastSentTime = now.toISOString();
+  // Update counters and calculate intervals
+  if (type === 'trueLeft' || type === 'trueRight') {
+    if (type === 'trueLeft') state.counters.trueLeft++;
+    if (type === 'trueRight') state.counters.trueRight++;
+
+    // Calculate interval since last sent
+    if (lastSentTime) {
+      state.lastSentInterval = Math.floor((now.getTime() - lastSentTime.getTime()) / 1000);
+    }
+    lastSentTime = now;
   }
   if (type === 'rlr') state.counters.rlr++;
   if (type === 'trip') state.counters.trip++;
   if (type === 'shuttleSend') {
-    state.lastShuttleTime = now.toISOString();
+    // Calculate interval since last shuttle
+    if (lastShuttleTime) {
+      state.lastShuttleInterval = Math.floor((now.getTime() - lastShuttleTime.getTime()) / 1000);
+    }
+    lastShuttleTime = now;
   }
 
   // Sync to sheets or queue
@@ -299,19 +307,25 @@ export function addEventWithNoteAndRoad(
 
   state.events.unshift(event);
 
-  // Update counters and last sent times
-  if (type === 'trueLeft') {
-    state.counters.trueLeft++;
-    state.lastSentTime = now.toISOString();
-  }
-  if (type === 'trueRight') {
-    state.counters.trueRight++;
-    state.lastSentTime = now.toISOString();
+  // Update counters and calculate intervals
+  if (type === 'trueLeft' || type === 'trueRight') {
+    if (type === 'trueLeft') state.counters.trueLeft++;
+    if (type === 'trueRight') state.counters.trueRight++;
+
+    // Calculate interval since last sent
+    if (lastSentTime) {
+      state.lastSentInterval = Math.floor((now.getTime() - lastSentTime.getTime()) / 1000);
+    }
+    lastSentTime = now;
   }
   if (type === 'rlr') state.counters.rlr++;
   if (type === 'trip') state.counters.trip++;
   if (type === 'shuttleSend') {
-    state.lastShuttleTime = now.toISOString();
+    // Calculate interval since last shuttle
+    if (lastShuttleTime) {
+      state.lastShuttleInterval = Math.floor((now.getTime() - lastShuttleTime.getTime()) / 1000);
+    }
+    lastShuttleTime = now;
   }
 
   // Sync to sheets or queue
@@ -383,8 +397,10 @@ export function clearAllEvents(): void {
   state.roadId = '';
   state.roadName = '';
   state.slk = '';
-  state.lastSentTime = null;
-  state.lastShuttleTime = null;
+  state.lastSentInterval = null;
+  state.lastShuttleInterval = null;
+  lastSentTime = null;
+  lastShuttleTime = null;
   saveState(state);
   notifyListeners();
 }
@@ -400,8 +416,10 @@ export function clearShift(): void {
   state.break = { active: false, startTime: null };
   state.suspended = false;
   state.shiftStartTime = formatTime(new Date());
-  state.lastSentTime = null;
-  state.lastShuttleTime = null;
+  state.lastSentInterval = null;
+  state.lastShuttleInterval = null;
+  lastSentTime = null;
+  lastShuttleTime = null;
   saveState(state);
 
   // Stop timers
