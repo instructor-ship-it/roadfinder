@@ -485,6 +485,22 @@ export function clearTcAssignment(direction: 'left' | 'right'): void {
   notifyListeners();
 }
 
+export function clearBothTcAssignments(): { leftTc: string | null; rightTc: string | null } {
+  const state = getState();
+  const result = {
+    leftTc: state.tcLeftAssignment,
+    rightTc: state.tcRightAssignment,
+  };
+
+  state.tcLeftAssignment = null;
+  state.tcRightAssignment = null;
+
+  saveState(state);
+  notifyListeners();
+
+  return result;
+}
+
 // ============================================================================
 // Toggle Functions
 // ============================================================================

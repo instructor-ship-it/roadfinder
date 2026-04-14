@@ -28,6 +28,7 @@ import {
   initializeTimers,
   flushQueue,
   setTcAssignment,
+  clearBothTcAssignments,
   type TrafficEventState,
   type AdvancedFlashers,
 } from '@/lib/traffic-event-logger';
@@ -316,16 +317,33 @@ export function TrafficEventLoggerModal({
     setTcSelectorOpen(true);
   }, []);
 
-  // Handle TC selection
+  // Handle TC selection - logs the start event
   const handleTcSelect = useCallback(
-    (tc: string) => {
+    async (tc: string) => {
       setTcSelectorOpen(false);
       setTcAssignment(tcSelectorDirection, tc);
       const directionLabel = tcSelectorDirection === 'left' ? 'TL' : 'TR';
+      // Log the Start TC event
+      await logEvent('startTc', `Start TC ${directionLabel} (${tc})`);
       showStatus(`✅ ${directionLabel} assigned to ${tc}`);
     },
-    [tcSelectorDirection, showStatus]
+    [tcSelectorDirection, showStatus, logEvent]
   );
+
+  // Handle End TC Both - clears both assignments and logs
+  const handleEndTcBoth = useCallback(async () => {
+    const cleared = clearBothTcAssignments();
+    const parts: string[] = [];
+    if (cleared.leftTc) parts.push(`TL (${cleared.leftTc})`);
+    if (cleared.rightTc) parts.push(`TR (${cleared.rightTc})`);
+
+    if (parts.length > 0) {
+      await logEvent('endTcBoth', `End TC Both - ${parts.join(', ')}`);
+      showStatus(`✅ Ended TC: ${parts.join(', ')}`);
+    } else {
+      showStatus('No TCs were assigned');
+    }
+  }, [logEvent, showStatus]);
 
   return (
     <>
@@ -429,6 +447,7 @@ export function TrafficEventLoggerModal({
               onOpenShift={() => setShiftSheetOpen(true)}
               onOpenMore={() => setMoreSheetOpen(true)}
               onOpenTcSelector={handleOpenTcSelector}
+              onEndTcBoth={handleEndTcBoth}
               tcLeftAssignment={state.tcLeftAssignment}
               tcRightAssignment={state.tcRightAssignment}
             />

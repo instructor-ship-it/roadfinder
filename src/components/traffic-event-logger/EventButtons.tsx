@@ -68,6 +68,7 @@ interface TCMiniButtonsProps {
   onOpenShift: () => void;
   onOpenMore: () => void;
   onOpenTcSelector: (direction: 'left' | 'right') => void;
+  onEndTcBoth: () => void;
   tcLeftAssignment: string | null;
   tcRightAssignment: string | null;
 }
@@ -77,6 +78,7 @@ export function TCMiniButtons({
   onOpenShift,
   onOpenMore,
   onOpenTcSelector,
+  onEndTcBoth,
   tcLeftAssignment,
   tcRightAssignment,
 }: TCMiniButtonsProps) {
@@ -103,7 +105,7 @@ export function TCMiniButtons({
         {tcRightAssignment ? `TR (${tcRightAssignment})` : 'Start TC TR'}
       </button>
       <button
-        onClick={() => onLogEvent('tcEndBoth', 'End TC Both')}
+        onClick={onEndTcBoth}
         className="flex-1 py-2 px-2 rounded-lg border border-gray-600 bg-gray-700 text-gray-200 text-xs font-medium hover:bg-gray-600 active:scale-[0.98] transition-all"
       >
         End TC Both
