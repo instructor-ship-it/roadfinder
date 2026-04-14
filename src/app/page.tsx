@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import SettingsDrawer, { APP_VERSION } from '@/components/SettingsDrawer';
+import { TrafficEventLoggerModal } from '@/components/TrafficEventLoggerModal';
 import { SavedLocations } from '@/components/home/SavedLocations';
 import { WeatherSection } from '@/components/home/WeatherSection';
 import { TrafficSection } from '@/components/home/TrafficSection';
@@ -528,6 +529,7 @@ export default function Home() {
   }
 
   const [setDistanceActive, setSetDistanceActive] = useState<boolean>(false);
+  const [trafficEventLoggerOpen, setTrafficEventLoggerOpen] = useState<boolean>(false);
   const [setDistanceWatchId, setSetDistanceWatchId] = useState<number | null>(null);
   const [setDistanceRefPoint, setSetDistanceRefPoint] = useState<{
     lat: number;
@@ -4210,6 +4212,7 @@ export default function Home() {
               result={result}
               setDistanceActive={setDistanceActive}
               onStartSetDistance={startSetDistance}
+              onOpenTrafficEventLogger={() => setTrafficEventLoggerOpen(true)}
               onExportReport={exportReport}
               exporting={exporting}
               mrwaStatus={mrwaStatus}
@@ -7340,6 +7343,12 @@ export default function Home() {
           </div>
         </div>
       )}
+
+      {/* Traffic Event Logger Modal */}
+      <TrafficEventLoggerModal
+        open={trafficEventLoggerOpen}
+        onOpenChange={setTrafficEventLoggerOpen}
+      />
     </div>
   );
 }

@@ -81,6 +81,7 @@ interface SettingsDrawerProps {
   onStartSetDistance?: () => void;
   onExportReport?: () => void;
   exporting?: boolean;
+  onOpenTrafficEventLogger?: () => void;
 
   // Admin sync props (home page)
   mrwaStatus?: {
@@ -149,6 +150,7 @@ export function SettingsDrawer({
   onStartSetDistance,
   onExportReport,
   exporting = false,
+  onOpenTrafficEventLogger,
   mrwaStatus,
   datasetStats,
   syncProgress = {},
@@ -707,6 +709,21 @@ export function SettingsDrawer({
                     </Link>
                   </DrawerClose>
                 </div>
+
+                {/* Traffic Event Logger */}
+                {onOpenTrafficEventLogger && (
+                  <div className="pt-1">
+                    <DrawerClose asChild>
+                      <button
+                        onClick={onOpenTrafficEventLogger}
+                        className="text-cyan-400 hover:text-cyan-300 text-sm pl-2"
+                        type="button"
+                      >
+                        📝 Event Logger
+                      </button>
+                    </DrawerClose>
+                  </div>
+                )}
               </div>
             )}
           </div>
