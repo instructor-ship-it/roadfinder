@@ -3,6 +3,7 @@
  *
  * Manages event logging, counters, timers, and Google Sheets sync
  * for the Traffic Event Logger modal.
+ * @version 1.28.1
  */
 
 // ============================================================================
