@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
-> **Last Updated:** 2026-04-06
-> **Current Version:** 1.27.0
+> **Last Updated:** 2026-04-16
+> **Current Version:** 1.28.0
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -425,7 +425,56 @@ See `scripts/README.md` for full documentation of available scripts.
 
 ## Recent Changes (v1.x)
 
-### 1.27.0 (Current) - PDF Viewer Modal with Landscape/Portrait Support
+### 1.28.0 (Current) - Traffic Event Logger
+
+- **Full-Screen Traffic Event Logger Modal**
+  - Dark-themed modal for logging traffic control events in real-time
+  - Accessible from Settings drawer → TC Tools → Traffic Event Logger
+  - GPS button to update road ID and SLK from current location
+- **Event Types**
+  - **Sent True Left** - Log vehicle sent on True Left (increasing SLK)
+  - **Sent True Right** - Log vehicle sent on True Right (decreasing SLK)
+  - **RLR** - Red Light Runner, prompts for TL/TR direction
+  - **Trip Out** - Log trip out event
+  - **Spot Call** - GPS lookup for road/SLK at different location
+  - **Shuttle Send** - Only visible when shuttle mode enabled
+- **TC Assignment System**
+  - Start TC TL / Start TC TR buttons to assign TC1, TC2, or TC3
+  - Mutually exclusive assignments (same TC can't be assigned to both directions)
+  - Selected TC shown on button: "TL (TC1)" or "TR (TC2)"
+  - End TC Both clears all assignments and logs the end event
+- **Counters Display**
+  - TL, TR, and Total counts in single box
+  - RLR and Trip Out counts
+  - Time interval since last sent entry (seconds)
+  - Time interval since last shuttle send (when shuttle mode active)
+- **Additional Features**
+  - Hold and Break timers with visual badges
+  - Data Entry Suspend toggle
+  - Shuttle mode toggle
+  - Advanced Flashers toggles (N/S/E/W/Both)
+  - Note input with TC1/TC2/TC3 presets
+  - Event list with undo functionality
+  - CSV export
+  - Google Sheets sync with offline queue
+- **Technical Implementation**
+  - `src/components/TrafficEventLoggerModal.tsx` - Main modal component
+  - `src/components/traffic-event-logger/` - Sub-components (EventButtons, Counters, EventList, etc.)
+  - `src/lib/traffic-event-logger.ts` - State management, localStorage persistence, Sheets sync
+  - GPS location captured per event with road/SLK identification
+- **Files Changed**
+  - `src/components/TrafficEventLoggerModal.tsx` (NEW)
+  - `src/components/traffic-event-logger/EventButtons.tsx` (NEW)
+  - `src/components/traffic-event-logger/Counters.tsx` (NEW)
+  - `src/components/traffic-event-logger/EventList.tsx` (NEW)
+  - `src/components/traffic-event-logger/TimerBadge.tsx` (NEW)
+  - `src/components/traffic-event-logger/ShiftSheet.tsx` (NEW)
+  - `src/components/traffic-event-logger/MoreSheet.tsx` (NEW)
+  - `src/components/traffic-event-logger/FlasherSheet.tsx` (NEW)
+  - `src/lib/traffic-event-logger.ts` (NEW)
+  - `src/components/SettingsDrawer.tsx` (added Traffic Event Logger button)
+
+### 1.27.0 - PDF Viewer Modal with Landscape/Portrait Support
 
 - **Full-Screen PDF Viewer Modal**
   - Used inline styles to override Radix Dialog's default centering transform

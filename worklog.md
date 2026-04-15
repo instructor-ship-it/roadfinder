@@ -1,7 +1,94 @@
 # TC Work Zone Locator - Work Log
 
-> **Last Updated:** 2026-04-06
-> **Current Version:** 1.27.0
+> **Last Updated:** 2026-04-16
+> **Current Version:** 1.28.0
+
+---
+
+## Task ID: 2026-04-16-001
+
+**Agent:** Main Agent
+**Task:** Traffic Event Logger (v1.28.0)
+
+### Work Log:
+
+- **Feature: Full-Screen Traffic Event Logger Modal**
+  - Dark-themed modal for logging traffic control events in real-time
+  - Accessible from Settings drawer → TC Tools → Traffic Event Logger
+  - Full-screen layout with GPS button to update road ID and SLK
+
+- **Event Types Implemented**:
+  - **Sent True Left** - Log vehicle sent on True Left (increasing SLK)
+  - **Sent True Right** - Log vehicle sent on True Right (decreasing SLK)
+  - **RLR** - Red Light Runner, prompts for TL/TR direction selection
+  - **Trip Out** - Log trip out event
+  - **Spot Call** - GPS lookup for road/SLK at different location (uses `/api/gps`)
+  - **Shuttle Send** - Only visible when shuttle mode enabled
+
+- **TC Assignment System**:
+  - Start TC TL / Start TC TR buttons open TC selector drawer (TC1, TC2, TC3)
+  - Mutually exclusive assignments (same TC can't be assigned to both directions)
+  - Selected TC shown on button: "TL (TC1)" or "TR (TC2)"
+  - End TC Both button clears all assignments and logs the end event
+  - Logging: "Start TC TL (TC1)" when selected, "End TC Both - TL (TC1), TR (TC2)" when ended
+
+- **Counters Display**:
+  - TL, TR, and Total counts in single box
+  - RLR and Trip Out counts
+  - Time interval since last sent entry (seconds)
+  - Time interval since last shuttle send (when shuttle mode active)
+
+- **Additional Features**:
+  - Hold and Break timers with visual badges
+  - Data Entry Suspend toggle
+  - Shuttle mode toggle
+  - Advanced Flashers toggles (N/S/E/W/Both)
+  - Note input with TC1/TC2/TC3 preset buttons
+  - Event list with undo functionality
+  - CSV export
+  - Google Sheets sync with offline queue (syncs when back online)
+
+- **Technical Implementation**:
+  - `src/components/TrafficEventLoggerModal.tsx` - Main modal component
+  - `src/components/traffic-event-logger/EventButtons.tsx` - Event buttons + TC mini buttons
+  - `src/components/traffic-event-logger/Counters.tsx` - Counter display with time intervals
+  - `src/components/traffic-event-logger/EventList.tsx` - Event list display
+  - `src/components/traffic-event-logger/TimerBadge.tsx` - Hold/Break timer badges
+  - `src/components/traffic-event-logger/ShiftSheet.tsx` - Shift actions drawer
+  - `src/components/traffic-event-logger/MoreSheet.tsx` - More options drawer
+  - `src/components/traffic-event-logger/FlasherSheet.tsx` - Advanced flashers drawer
+  - `src/lib/traffic-event-logger.ts` - State management, localStorage persistence, Google Sheets sync
+  - GPS location captured per event with road/SLK identification via `/api/gps`
+
+### Files Changed:
+
+- `src/components/TrafficEventLoggerModal.tsx` (NEW)
+- `src/components/traffic-event-logger/EventButtons.tsx` (NEW)
+- `src/components/traffic-event-logger/Counters.tsx` (NEW)
+- `src/components/traffic-event-logger/EventList.tsx` (NEW)
+- `src/components/traffic-event-logger/TimerBadge.tsx` (NEW)
+- `src/components/traffic-event-logger/ShiftSheet.tsx` (NEW)
+- `src/components/traffic-event-logger/MoreSheet.tsx` (NEW)
+- `src/components/traffic-event-logger/FlasherSheet.tsx` (NEW)
+- `src/lib/traffic-event-logger.ts` (NEW)
+- `src/components/SettingsDrawer.tsx` (added Traffic Event Logger button)
+
+### Key Learnings:
+
+- **GPS per event**: Each event captures GPS coordinates at the moment of logging
+- **Spot Call different location**: Uses `/api/gps` to get road/SLK for the spot call location, not default road
+- **Mutually exclusive TCs**: Same TC can't be assigned to both TL and TR simultaneously
+- **Offline queue**: Events queue locally when offline, sync to Sheets when back online
+- **Time intervals**: Track seconds between sent entries and shuttle sends for operational awareness
+
+### Stage Summary:
+
+- Version: 1.28.0
+- Traffic Event Logger fully functional
+- Real-time event logging with GPS capture
+- TC assignment system with mutual exclusion
+- Google Sheets sync with offline support
+- Ready for push to GitHub
 
 ---
 
