@@ -25,6 +25,7 @@ const SHIFT_ACTIONS = [
   { type: 'shift', label: 'Spot for crew' },
   { type: 'shift', label: 'Crew departed' },
   { type: 'shift', label: 'Pack up site' },
+  { type: 'shift', label: 'Work site debrief' },
   { type: 'shift', label: 'Travel to depot' },
   { type: 'shift', label: 'Arrived at depot' },
   { type: 'shift', label: 'Shift end' },

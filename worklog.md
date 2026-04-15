@@ -1,7 +1,59 @@
 # TC Work Zone Locator - Work Log
 
 > **Last Updated:** 2026-04-16
-> **Current Version:** 1.28.0
+> **Current Version:** 1.28.1
+
+---
+
+## Task ID: 2026-04-16-002
+
+**Agent:** Main Agent
+**Task:** Traffic Event Logger Enhancements (v1.28.1)
+
+### Work Log:
+
+- **Shift Actions Enhancement**:
+  - Added 'Work site debrief' action below 'Pack up site' in ShiftSheet
+  - Allows TCs to log post-worksite briefing activities
+  - Maintains chronological flow of shift events
+
+- **On Hold Logging Enhancement**:
+  - Modified `toggleHold()` function in traffic-event-logger.ts
+  - Hold ON logs the start time as before
+  - Hold OFF now calculates and includes duration in log entry
+  - Example: "Hold OFF (5m 30s)" instead of just "Hold OFF"
+  - Duration calculated from stored startTime before clearing
+
+- **Advanced Flashers Improvements**:
+  - Removed North/South direction buttons from FlasherSheet
+  - Renamed East → True Left, West → True Right
+  - Updated logging to use user-friendly labels
+  - Example: "AdvFlash True Left: ON" instead of "AdvFlash EAST: ON"
+  - Consistent with Australian road terminology (True Left = increasing SLK)
+
+### Files Changed:
+
+- `src/components/traffic-event-logger/ShiftSheet.tsx` (added Work site debrief)
+- `src/lib/traffic-event-logger.ts` (hold duration logging, improved flasher labels)
+- `src/components/traffic-event-logger/FlasherSheet.tsx` (removed N/S, renamed E/W)
+- `package.json` (version 1.28.1)
+- `src/components/SettingsDrawer.tsx` (version 1.28.1)
+- `PROJECT_CONTEXT.md` (version 1.28.1, changelog entry)
+- `worklog.md` (this entry)
+
+### Key Learnings:
+
+- **Duration calculation**: Calculate duration BEFORE clearing the startTime reference
+- **User-friendly labels**: Use consistent terminology (True Left/True Right) across all UI elements
+- **Simplified UI**: Remove unused options (North/South) to reduce cognitive load
+
+### Stage Summary:
+
+- Version: 1.28.1
+- Traffic Event Logger enhanced with better logging and cleaner UI
+- Hold duration tracking provides better operational reporting
+- Advanced Flashers simplified with True Left/True Right terminology
+- Ready for push to GitHub
 
 ---
 

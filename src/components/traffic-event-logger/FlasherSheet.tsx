@@ -17,10 +17,8 @@ interface FlasherSheetProps {
 }
 
 const DIRECTIONS: { key: keyof AdvancedFlashers; label: string }[] = [
-  { key: 'north', label: 'North' },
-  { key: 'south', label: 'South' },
-  { key: 'east', label: 'East' },
-  { key: 'west', label: 'West' },
+  { key: 'east', label: 'True Left' },
+  { key: 'west', label: 'True Right' },
   { key: 'both', label: 'Both ends' },
 ];
 

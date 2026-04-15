@@ -514,7 +514,15 @@ export function toggleHold(): boolean {
     startHoldTimer();
     addEvent('hold', 'Hold ON');
   } else {
-    addEvent('hold', 'Hold OFF');
+    // Calculate duration before clearing startTime
+    let durationStr = '';
+    if (state.hold.startTime) {
+      const durationMs = Date.now() - new Date(state.hold.startTime).getTime();
+      const minutes = Math.floor(durationMs / 60000);
+      const seconds = Math.floor((durationMs % 60000) / 1000);
+      durationStr = ` (${minutes}m ${seconds}s)`;
+    }
+    addEvent('hold', `Hold OFF${durationStr}`);
     state.hold.startTime = null;
     stopHoldTimer();
   }
@@ -568,9 +576,19 @@ export function toggleShuttle(): boolean {
 export function toggleAdvancedFlasher(direction: keyof AdvancedFlashers): boolean {
   const state = getState();
   state.advancedFlashers[direction] = !state.advancedFlashers[direction];
+
+  // Map direction keys to user-friendly labels
+  const directionLabels: Record<keyof AdvancedFlashers, string> = {
+    north: 'North',
+    south: 'South',
+    east: 'True Left',
+    west: 'True Right',
+    both: 'Both ends',
+  };
+
   addEvent(
     'advFlash',
-    `AdvFlash ${direction.toUpperCase()}: ${state.advancedFlashers[direction] ? 'ON' : 'OFF'}`
+    `AdvFlash ${directionLabels[direction]}: ${state.advancedFlashers[direction] ? 'ON' : 'OFF'}`
   );
   saveState(state);
   notifyListeners();

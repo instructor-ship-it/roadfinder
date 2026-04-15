@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
 > **Last Updated:** 2026-04-16
-> **Current Version:** 1.28.0
+> **Current Version:** 1.28.1
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -425,7 +425,25 @@ See `scripts/README.md` for full documentation of available scripts.
 
 ## Recent Changes (v1.x)
 
-### 1.28.0 (Current) - Traffic Event Logger
+### 1.28.1 (Current) - Traffic Event Logger Enhancements
+
+- **Shift Actions Enhancement**
+  - Added 'Work site debrief' action below 'Pack up site'
+  - Allows logging of post-worksite debriefing activities
+- **On Hold Logging Enhancement**
+  - Hold ON logs the start time
+  - Hold OFF logs with duration included (e.g., "Hold OFF (5m 30s)")
+  - Provides better tracking of hold periods for reporting
+- **Advanced Flashers Improvements**
+  - Removed North/South direction buttons (not typically used)
+  - Renamed East → True Left, West → True Right (consistent with Australian road terminology)
+  - Logging now uses user-friendly labels: "AdvFlash True Left: ON" instead of "AdvFlash EAST: ON"
+- **Files Changed**
+  - `src/components/traffic-event-logger/ShiftSheet.tsx` (added Work site debrief)
+  - `src/lib/traffic-event-logger.ts` (hold duration logging, improved flasher labels)
+  - `src/components/traffic-event-logger/FlasherSheet.tsx` (removed N/S, renamed E/W)
+
+### 1.28.0 - Traffic Event Logger
 
 - **Full-Screen Traffic Event Logger Modal**
   - Dark-themed modal for logging traffic control events in real-time
