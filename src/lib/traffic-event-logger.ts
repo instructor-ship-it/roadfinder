@@ -3,7 +3,7 @@
  *
  * Manages event logging, counters, timers, and Google Sheets sync
  * for the Traffic Event Logger modal.
- * @version 1.28.1
+ * @version 1.28.2
  */
 
 // ============================================================================
@@ -510,22 +510,45 @@ export function toggleHold(): boolean {
   const state = getState();
   state.hold.active = !state.hold.active;
 
+  // Create hold event directly in this state to avoid race condition with addEvent()
+  const event: TrafficEvent = {
+    id: generateId(),
+    time: formatTime(new Date()),
+    type: 'hold',
+    label: 'Hold ON',
+    note: '',
+    roadId: state.roadId,
+    roadName: state.roadName,
+    slk: state.slk,
+    op: 'LOG',
+    targetId: generateId(),
+    latitude: 'N/A',
+    longitude: 'N/A',
+  };
+
   if (state.hold.active) {
     state.hold.startTime = new Date().toISOString();
     startHoldTimer();
-    addEvent('hold', 'Hold ON');
   } else {
     // Calculate duration before clearing startTime
-    let durationStr = '';
     if (state.hold.startTime) {
       const durationMs = Date.now() - new Date(state.hold.startTime).getTime();
       const minutes = Math.floor(durationMs / 60000);
       const seconds = Math.floor((durationMs % 60000) / 1000);
-      durationStr = ` (${minutes}m ${seconds}s)`;
+      event.label = `Hold OFF (${minutes}m ${seconds}s)`;
+    } else {
+      event.label = 'Hold OFF';
     }
-    addEvent('hold', `Hold OFF${durationStr}`);
     state.hold.startTime = null;
     stopHoldTimer();
+  }
+
+  // Add event to state.events and sync
+  state.events.unshift(event);
+  if (state.sheetsEnabled && navigator.onLine) {
+    sendToSheets(event);
+  } else {
+    state.queue.push(event);
   }
 
   saveState(state);
@@ -538,14 +561,36 @@ export function toggleBreak(): boolean {
   const state = getState();
   state.break.active = !state.break.active;
 
+  // Create break event directly in this state to avoid race condition
+  const event: TrafficEvent = {
+    id: generateId(),
+    time: formatTime(new Date()),
+    type: 'break',
+    label: state.break.active ? 'Break ON' : 'Break OFF',
+    note: '',
+    roadId: state.roadId,
+    roadName: state.roadName,
+    slk: state.slk,
+    op: 'LOG',
+    targetId: generateId(),
+    latitude: 'N/A',
+    longitude: 'N/A',
+  };
+
   if (state.break.active) {
     state.break.startTime = new Date().toISOString();
     startBreakTimer();
-    addEvent('break', 'Break ON');
   } else {
-    addEvent('break', 'Break OFF');
     state.break.startTime = null;
     stopBreakTimer();
+  }
+
+  // Add event to state.events and sync
+  state.events.unshift(event);
+  if (state.sheetsEnabled && navigator.onLine) {
+    sendToSheets(event);
+  } else {
+    state.queue.push(event);
   }
 
   saveState(state);
@@ -557,7 +602,31 @@ export function toggleBreak(): boolean {
 export function toggleSuspend(): boolean {
   const state = getState();
   state.suspended = !state.suspended;
-  addEvent('suspend', state.suspended ? 'Data Entry Suspended ON' : 'Data Entry Suspended OFF');
+
+  // Create suspend event directly in this state to avoid race condition
+  const event: TrafficEvent = {
+    id: generateId(),
+    time: formatTime(new Date()),
+    type: 'suspend',
+    label: state.suspended ? 'Data Entry Suspended ON' : 'Data Entry Suspended OFF',
+    note: '',
+    roadId: state.roadId,
+    roadName: state.roadName,
+    slk: state.slk,
+    op: 'LOG',
+    targetId: generateId(),
+    latitude: 'N/A',
+    longitude: 'N/A',
+  };
+
+  // Add event to state.events and sync
+  state.events.unshift(event);
+  if (state.sheetsEnabled && navigator.onLine) {
+    sendToSheets(event);
+  } else {
+    state.queue.push(event);
+  }
+
   saveState(state);
   notifyListeners();
 
@@ -567,7 +636,31 @@ export function toggleSuspend(): boolean {
 export function toggleShuttle(): boolean {
   const state = getState();
   state.shuttle = !state.shuttle;
-  addEvent('shuttle', state.shuttle ? 'Shuttle ON' : 'Shuttle OFF');
+
+  // Create shuttle event directly in this state to avoid race condition
+  const event: TrafficEvent = {
+    id: generateId(),
+    time: formatTime(new Date()),
+    type: 'shuttle',
+    label: state.shuttle ? 'Shuttle ON' : 'Shuttle OFF',
+    note: '',
+    roadId: state.roadId,
+    roadName: state.roadName,
+    slk: state.slk,
+    op: 'LOG',
+    targetId: generateId(),
+    latitude: 'N/A',
+    longitude: 'N/A',
+  };
+
+  // Add event to state.events and sync
+  state.events.unshift(event);
+  if (state.sheetsEnabled && navigator.onLine) {
+    sendToSheets(event);
+  } else {
+    state.queue.push(event);
+  }
+
   saveState(state);
   notifyListeners();
 
@@ -587,10 +680,30 @@ export function toggleAdvancedFlasher(direction: keyof AdvancedFlashers): boolea
     both: 'Both ends',
   };
 
-  addEvent(
-    'advFlash',
-    `AdvFlash ${directionLabels[direction]}: ${state.advancedFlashers[direction] ? 'ON' : 'OFF'}`
-  );
+  // Create flasher event directly in this state to avoid race condition
+  const event: TrafficEvent = {
+    id: generateId(),
+    time: formatTime(new Date()),
+    type: 'advFlash',
+    label: `AdvFlash ${directionLabels[direction]}: ${state.advancedFlashers[direction] ? 'ON' : 'OFF'}`,
+    note: '',
+    roadId: state.roadId,
+    roadName: state.roadName,
+    slk: state.slk,
+    op: 'LOG',
+    targetId: generateId(),
+    latitude: 'N/A',
+    longitude: 'N/A',
+  };
+
+  // Add event to state.events and sync
+  state.events.unshift(event);
+  if (state.sheetsEnabled && navigator.onLine) {
+    sendToSheets(event);
+  } else {
+    state.queue.push(event);
+  }
+
   saveState(state);
   notifyListeners();
 
