@@ -3,7 +3,7 @@
  *
  * Manages event logging, counters, timers, and Google Sheets sync
  * for the Traffic Event Logger modal.
- * @version 1.28.2
+ * @version 1.28.3
  */
 
 // ============================================================================
@@ -399,6 +399,9 @@ export function clearAllEvents(): void {
   state.counters = { trueLeft: 0, trueRight: 0, rlr: 0, trip: 0 };
   state.shuttle = false;
   state.advancedFlashers = { north: false, south: false, east: false, west: false, both: false };
+  state.hold = { active: false, startTime: null };
+  state.break = { active: false, startTime: null };
+  state.suspended = false;
   state.roadId = '';
   state.roadName = '';
   state.slk = '';
@@ -408,6 +411,11 @@ export function clearAllEvents(): void {
   state.tcRightAssignment = null;
   lastSentTime = null;
   lastShuttleTime = null;
+
+  // Stop timers
+  stopHoldTimer();
+  stopBreakTimer();
+
   saveState(state);
   notifyListeners();
 }
