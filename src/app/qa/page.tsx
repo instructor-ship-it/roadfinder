@@ -379,16 +379,16 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
 
       <div className="max-w-4xl mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-gray-800 border border-gray-700 mb-6">
+          <TabsList className="grid w-full grid-cols-2 bg-gray-700 border border-gray-600 mb-6 h-12">
             <TabsTrigger
               value="answers"
-              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+              className="text-gray-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=inactive]:hover:bg-gray-600 transition-colors"
             >
               📚 Answers ({savedQAs.length})
             </TabsTrigger>
             <TabsTrigger
               value="ask"
-              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+              className="text-gray-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=inactive]:hover:bg-gray-600 transition-colors"
             >
               💬 Ask a Question
             </TabsTrigger>
