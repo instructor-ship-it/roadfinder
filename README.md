@@ -1,7 +1,7 @@
 # TC Work Zone Locator
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.26.0-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
+[![Version](https://img.shields.io/badge/version-1.28.5-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
@@ -66,6 +66,17 @@ A mobile-friendly web application for Traffic Controller (TC) work zone planning
 - Fuel stations
 - Public toilets
 - Distance and navigation links
+
+### 🤖 AI Q&A Assistant (v1.27+)
+
+- Ask questions about traffic management, WHS, and road work documents
+- **Two modes**:
+  - **Prompt Generation** — create prompts for external AI (ChatGPT, Claude, etc.)
+  - **Direct AI Chat** — in-app AI responses with API key configuration
+- Document-based context — AI searches relevant documents for answers
+- Source citations — see which documents informed each answer
+- **Q&A History** — save, favorite, search, and organize Q&A entries
+- Export/Import Q&A history as JSON backup
 
 ## Getting Started
 
@@ -199,8 +210,17 @@ Plus **69,455 speed zones** for accurate speed limit display.
 src/
 ├── app/
 │   ├── page.tsx          # Main work zone lookup page
-│   ├── drive/page.tsx    # SLK tracking page
-│   ├── overrides/page.tsx # Speed zone override management
+│   ├── drive/            # SLK tracking pages
+│   │   ├── page.tsx      # Main tracking page
+│   │   └── nearby-signs/ # Nearby signs for AfterCare
+│   ├── qa/page.tsx       # AI Q&A Assistant
+│   ├── library/          # Document library
+│   ├── aftercare/        # Signage tracking & retrieval
+│   ├── traffic-counter/  # Traffic count calculator
+│   ├── overrides/        # Speed zone override management
+│   ├── manual/           # User manual page
+│   ├── calibrate/        # SLK calibration
+│   ├── cycle-timer/      # Cycle timer tool
 │   └── api/              # API routes
 │       ├── roads/        # Road data queries
 │       ├── gps/          # GPS to SLK conversion
@@ -209,26 +229,33 @@ src/
 │       ├── traffic/      # Traffic volume
 │       ├── places/       # Nearby amenities
 │       ├── intersections/# Cross road detection
-│       └── admin-sync/   # MRWA direct sync
+│       ├── admin-sync/   # MRWA direct sync
+│       ├── ai/           # AI chat endpoints
+│       └── qa/           # Q&A document search
 ├── lib/
 │   ├── offline-db.ts     # IndexedDB client-side storage
-│   └── offline-data.ts   # Server-side data loading
+│   ├── offline-data.ts   # Server-side data loading
+│   └── qa-storage.ts     # Q&A history management
 └── components/ui/        # UI components
 ```
 
 ## API Endpoints
 
-| Endpoint             | Method   | Description            |
-| -------------------- | -------- | ---------------------- |
-| `/api/roads`         | GET      | List regions and roads |
-| `/api/roads`         | POST     | Get SLK coordinates    |
-| `/api/gps`           | GET      | Convert GPS to SLK     |
-| `/api/sync-data`     | POST     | Download offline data  |
-| `/api/weather`       | GET      | Weather at coordinates |
-| `/api/traffic`       | GET      | Traffic volume data    |
-| `/api/places`        | GET      | Nearby amenities       |
-| `/api/intersections` | GET      | Cross roads in zone    |
-| `/api/admin-sync`    | GET/POST | Sync data from MRWA    |
+| Endpoint             | Method   | Description               |
+| -------------------- | -------- | ------------------------- |
+| `/api/roads`         | GET      | List regions and roads    |
+| `/api/roads`         | POST     | Get SLK coordinates       |
+| `/api/gps`           | GET      | Convert GPS to SLK        |
+| `/api/sync-data`     | POST     | Download offline data     |
+| `/api/weather`       | GET      | Weather at coordinates    |
+| `/api/traffic`       | GET      | Traffic volume data       |
+| `/api/places`        | GET      | Nearby amenities          |
+| `/api/intersections` | GET      | Cross roads in zone       |
+| `/api/admin-sync`    | GET/POST | Sync data from MRWA       |
+| `/api/qa`            | GET      | List searchable documents |
+| `/api/qa-saved`      | GET/POST | Manage saved Q&A entries  |
+| `/api/ai/chat`       | POST     | AI chat completions       |
+| `/api/ai/verify`     | POST     | Verify API key            |
 
 ## Browser Support
 
@@ -241,7 +268,31 @@ src/
 
 ## Version History
 
-### 1.26.0 (Current) - PDF Viewer & Page Offset System
+### 1.28.5 (Current) - Q&A Page Restructure
+
+- **Tab-based Q&A layout** — Answers tab first, Ask tab second for better UX
+- **Generate Prompt button** — create prompts for external AI assistants (ChatGPT, Claude, etc.)
+- **Direct AI Chat mode** — configure API key for in-app AI responses
+- **Improved tab styling** — better contrast and visibility for active/inactive states
+- **Clear prompt button** — quickly clear generated prompts
+- **API key configuration** — save and test z.ai API key for direct AI chat
+
+### 1.28.0 - Q&A Enhancements
+
+- **Q&A history management** — save, favorite, search, and filter Q&A entries
+- **Export/Import Q&A** — backup and restore Q&A history as JSON
+- **Document selection** — choose specific documents to search or search all
+- **Category badges** — organize Q&A entries by category
+- **Expandable answers** — toggle full answer view with show more/less
+
+### 1.27.0 - AI Q&A Integration
+
+- **AI Q&A Assistant page** (`/qa`) for traffic management questions
+- **Document-based context** — AI searches document abstracts for relevant answers
+- **Source citations** — shows which documents were used for each answer
+- **Library integration** — AI Q&A button in Library page header
+
+### 1.26.0 - PDF Viewer & Page Offset System
 
 - **PDF Viewer with Direct Rendering** — no file splitting required, renders pages on-demand
 - **Page Offset System** — handles documents where physical page ≠ document page number
