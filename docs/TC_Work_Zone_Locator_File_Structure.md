@@ -2,7 +2,7 @@
 
 ## File Structure Documentation
 
-**Version RC 1.9.9**
+**Version 1.28.5**
 
 ---
 
@@ -322,7 +322,12 @@ Route optimization for multi-stop signage retrieval:
 
 | Version   | Date       | Key Changes                                                                         |
 | --------- | ---------- | ----------------------------------------------------------------------------------- |
-| RC 1.9.9  | June 2026  | Fuel stations (FuelWatch WA + Overpass), hospital type badges, amenity data sources |
+| 1.28.5    | April 2026 | Traffic Event Logger, Cycle Timer, AI direct chat, PDF viewer improvements          |
+| 1.28.0    | April 2026 | Traffic Event Logger with TC assignments, Google Sheets sync                        |
+| 1.27.0    | April 2026 | PDF Viewer Modal with landscape/portrait support                                    |
+| 1.21.0    | April 2026 | Direct AI Chat for Q&A Assistant                                                    |
+| 1.20.0    | April 2026 | TypeScript strict mode, ESLint zero-warning baseline                                |
+| RC 1.9.9  | June 2025  | Fuel stations (FuelWatch WA + Overpass), hospital type badges, amenity data sources |
 | RC 1.9.7  | March 2026 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements           |
 | RC 1.9.1  | March 2026 | Speeding alerts with WA fine info, minutes per km, 10km time                        |
 | RC 1.9.0  | March 2026 | Traffic Counter feature, Documents Library                                          |

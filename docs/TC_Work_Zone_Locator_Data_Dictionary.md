@@ -2,7 +2,7 @@
 
 **Data Dictionary**
 
-Version RC 1.9.9
+Version 1.28.5
 
 Comprehensive Data Structure Reference
 
@@ -800,17 +800,20 @@ For both-ways mode, the worst case (higher queue) direction is used.
 
 ### 13.1 localStorage Keys
 
-| **Key**              | **Type**              | **Description**           |
-| -------------------- | --------------------- | ------------------------- |
-| speedSignOverrides   | SpeedSignOverride[]   | Speed sign overrides      |
-| speedZoneCorrections | SpeedZoneCorrection[] | Speed zone corrections    |
-| afterCareJobs        | AfterCareJob[]        | AfterCare jobs and signs  |
-| signPresets          | SignPreset[]          | User-defined sign presets |
-| gpsSettings          | GpsSettings           | GPS/EKF settings          |
-| windGustThreshold    | number                | Wind gust alert threshold |
-| defaultRegion        | string                | Default region selection  |
-| offlineToggles       | OfflineToggles        | Data source toggles       |
-| trafficCountHistory  | TrafficCountRecord[]  | Traffic count records     |
+| **Key**              | **Type**              | **Description**            |
+| -------------------- | --------------------- | -------------------------- |
+| speedSignOverrides   | SpeedSignOverride[]   | Speed sign overrides       |
+| speedZoneCorrections | SpeedZoneCorrection[] | Speed zone corrections     |
+| afterCareJobs        | AfterCareJob[]        | AfterCare jobs and signs   |
+| signPresets          | SignPreset[]          | User-defined sign presets  |
+| gpsSettings          | GpsSettings           | GPS/EKF settings           |
+| windGustThreshold    | number                | Wind gust alert threshold  |
+| defaultRegion        | string                | Default region selection   |
+| offlineToggles       | OfflineToggles        | Data source toggles        |
+| trafficCountHistory  | TrafficCountRecord[]  | Traffic count records      |
+| cycleTimers          | CycleTimer[]          | Cycle timer records        |
+| trafficEventLogger   | TrafficEventState     | Traffic event logger state |
+| ai_api_key           | string                | AI API key for Q&A         |
 
 ### 13.2 OfflineToggles
 
@@ -849,7 +852,120 @@ Metadata for synced datasets:
 
 ---
 
-## 14. PWA Manifest Structure
+## 14. Traffic Event Logger Data Structures
+
+### 14.1 TrafficEventState
+
+State for the traffic event logger:
+
+| **Field**           | **Type**       | **Description**                           |
+| ------------------- | -------------- | ----------------------------------------- |
+| events              | TrafficEvent[] | Array of logged events                    |
+| roadId              | string         | Current road ID                           |
+| slk                 | number         | Current SLK position                      |
+| tcAssignmentLeft    | string \| null | TC assigned to True Left (TC1, TC2, TC3)  |
+| tcAssignmentRight   | string \| null | TC assigned to True Right (TC1, TC2, TC3) |
+| isHoldOn            | boolean        | Hold timer active                         |
+| isBreakOn           | boolean        | Break timer active                        |
+| isShuttleMode       | boolean        | Shuttle mode enabled                      |
+| holdStartTime       | number \| null | Hold start timestamp                      |
+| breakStartTime      | number \| null | Break start timestamp                     |
+| sentCountLeft       | number         | Vehicles sent True Left                   |
+| sentCountRight      | number         | Vehicles sent True Right                  |
+| rlrCount            | number         | Red light runner count                    |
+| tripOutCount        | number         | Trip out count                            |
+| lastSentTime        | number \| null | Last sent event timestamp                 |
+| lastShuttleSendTime | number \| null | Last shuttle send timestamp               |
+| note                | string         | Current note text                         |
+| sheetsId            | string \| null | Google Sheets ID for sync                 |
+| sheetsRange         | string \| null | Google Sheets range                       |
+| offlineQueue        | QueuedEvent[]  | Events queued for later sync              |
+
+### 14.2 TrafficEvent
+
+Individual logged event:
+
+| **Field**  | **Type**         | **Description**                      |
+| ---------- | ---------------- | ------------------------------------ |
+| id         | string           | Unique event ID (UUID)               |
+| type       | TrafficEventType | Event type (see below)               |
+| timestamp  | number           | Unix timestamp                       |
+| roadId     | string           | Road ID at event time                |
+| slk        | number           | SLK at event time                    |
+| lat        | number \| null   | GPS latitude                         |
+| lon        | number \| null   | GPS longitude                        |
+| direction  | string \| null   | TL, TR, or Both                      |
+| tcAssigned | string \| null   | TC assignment (TC1, TC2, TC3)        |
+| note       | string           | Event note                           |
+| duration   | number \| null   | Duration in seconds (for Hold/Break) |
+
+### 14.3 TrafficEventType
+
+Event types enum:
+
+| **Value**         | **Description**                 |
+| ----------------- | ------------------------------- |
+| sent_tl           | Vehicle sent True Left          |
+| sent_tr           | Vehicle sent True Right         |
+| rlr_tl            | Red light runner True Left      |
+| rlr_tr            | Red light runner True Right     |
+| spot_call         | Spot call event                 |
+| shuttle_send      | Shuttle send event              |
+| hold_on           | Hold started                    |
+| hold_off          | Hold ended (includes duration)  |
+| break_on          | Break started                   |
+| break_off         | Break ended (includes duration) |
+| suspend           | Data entry suspended            |
+| resume            | Data entry resumed              |
+| start_tc_tl       | TC assigned to True Left        |
+| start_tc_tr       | TC assigned to True Right       |
+| end_tc_both       | TC assignments ended            |
+| flasher_tl_on     | Advanced flasher True Left on   |
+| flasher_tr_on     | Advanced flasher True Right on  |
+| flasher_both_on   | Advanced flasher Both on        |
+| flasher_off       | All flashers off                |
+| shift_start       | Shift started                   |
+| pre_start         | Pre-start activity              |
+| travel_to_site    | Traveling to site               |
+| arrived_at_site   | Arrived at site                 |
+| site_setup        | Site setup complete             |
+| wait_for_crew     | Waiting for crew                |
+| crew_arrived      | Crew arrived                    |
+| spot_for_crew     | Spotting for crew               |
+| crew_departed     | Crew departed                   |
+| pack_up_site      | Pack up site                    |
+| work_site_debrief | Work site debrief               |
+| travel_to_depot   | Traveling to depot              |
+| arrived_at_depot  | Arrived at depot                |
+| shift_end         | Shift ended                     |
+
+### 14.4 CycleTimer
+
+Cycle timer for tracking vehicle travel times:
+
+| **Field** | **Type**       | **Description**              |
+| --------- | -------------- | ---------------------------- |
+| id        | string         | Unique timer ID              |
+| name      | string         | Timer name (e.g., "Truck 1") |
+| isRunning | boolean        | Timer currently running      |
+| startTime | number \| null | Current lap start timestamp  |
+| laps      | LapRecord[]    | Array of completed laps      |
+| createdAt | string         | ISO timestamp of creation    |
+
+### 14.5 LapRecord
+
+Completed lap record:
+
+| **Field**  | **Type** | **Description**              |
+| ---------- | -------- | ---------------------------- |
+| id         | string   | Unique lap ID                |
+| startTime  | number   | Lap start timestamp          |
+| endTime    | number   | Lap end timestamp            |
+| durationMs | number   | Lap duration in milliseconds |
+
+---
+
+## 15. PWA Manifest Structure
 
 ### 14.1 manifest.json
 

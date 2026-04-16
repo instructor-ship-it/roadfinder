@@ -1,6 +1,6 @@
 # Direction-Aware Speed Zones
 
-## Technical Addendum for RC 1.9.9
+## Technical Addendum for 1.28.5
 
 ### Bidirectional Speed Zone Detection and Manual Corrections
 
@@ -232,7 +232,14 @@ The direction detection algorithm requires a minimum speed of 5 km/h and a minim
 
 ## 13. Version History
 
-### RC 1.9.9 (Current)
+### 1.28.5 (Current)
+
+- Updated documentation version to 1.28.5
+- Added Traffic Event Logger feature
+- Added Cycle Timer feature
+- Added AI direct chat mode
+
+### RC 1.9.9
 
 - Updated documentation version to RC 1.9.9
 
@@ -263,4 +270,4 @@ The direction detection algorithm requires a minimum speed of 5 km/h and a minim
 
 ---
 
-_This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.9._
+_This document is part of the TC Work Zone Locator documentation suite, Version 1.28.5._

@@ -2,7 +2,7 @@
 
 ## Program Logic Documentation
 
-**Version RC 1.9.9**
+**Version 1.28.5**
 
 **Western Australia Traffic Controllers**
 
