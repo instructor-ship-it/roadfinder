@@ -360,7 +360,7 @@ export function SettingsDrawer({
                     Set Distance Active
                   </div>
                 )}
-                {onExportReport && result && (
+                {onExportReport && result !== null && result !== undefined && (
                   <MenuItem
                     icon="📄"
                     label={exporting ? 'Exporting...' : 'Export Report'}
