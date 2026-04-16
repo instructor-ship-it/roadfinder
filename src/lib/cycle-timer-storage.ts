@@ -3,7 +3,7 @@
  *
  * Manages multiple named timers with lap times for monitoring
  * truck travel times and vehicle movement cycles.
- * @version 1.28.4
+ * @version 1.28.5
  */
 
 // ============================================================================

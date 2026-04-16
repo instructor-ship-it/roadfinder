@@ -148,7 +148,7 @@ export default function CycleTimerPage() {
             <ArrowLeftIcon className="h-5 w-5" />
           </Link>
           <h1 className="text-lg font-semibold flex-1">Cycle Timer</h1>
-          <span className="text-xs text-gray-500">v1.28.4</span>
+          <span className="text-xs text-gray-500">v1.28.5</span>
         </div>
         <p className="text-xs text-gray-500 mt-1">Monitor truck travel times and vehicle cycles</p>
       </div>
