@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { APP_VERSION } from '@/components/SettingsDrawer';
@@ -30,6 +31,7 @@ interface SearchableDocument {
 
 export default function QaPage() {
   // State
+  const [activeTab, setActiveTab] = useState('answers');
   const [documents, setDocuments] = useState<SearchableDocument[]>([]);
   const [selectedDocs, setSelectedDocs] = useState<Set<string>>(new Set());
   const [question, setQuestion] = useState('');
@@ -171,7 +173,7 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
     // Check for API key
     const key = localStorage.getItem('ai_api_key') || aiApiKey;
     if (!key) {
-      setAiError('Please configure your z.ai API key in Settings first.');
+      setAiError('Please configure your z.ai API key first.');
       return;
     }
 
@@ -369,410 +371,446 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
               onClick={() => setSavedQAs(getQaHistory())}
               className="bg-gray-700 border-gray-600"
             >
-              🔄 Refresh ({savedQAs.length})
+              🔄 Refresh
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
-        {/* Mode indicator & API Key config */}
-        <div
-          className={`rounded-lg p-4 border text-sm ${aiApiKey ? 'bg-green-900/30 border-green-700' : 'bg-blue-900/30 border-blue-700'}`}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <h3 className={`font-semibold ${aiApiKey ? 'text-green-300' : 'text-blue-300'}`}>
-              {aiApiKey ? '🤖 AI Chat Ready' : '📋 Prompt Generation Mode'}
-            </h3>
-            <Button
-              size="sm"
-              onClick={() => setShowApiKeyInput(!showApiKeyInput)}
-              className="bg-gray-700 hover:bg-gray-600 text-gray-300 text-xs"
+      <div className="max-w-4xl mx-auto px-4 py-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 bg-gray-800 border border-gray-700 mb-6">
+            <TabsTrigger
+              value="answers"
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
             >
-              {showApiKeyInput ? '✕ Close' : '⚙️ API Key'}
-            </Button>
-          </div>
+              📚 Answers ({savedQAs.length})
+            </TabsTrigger>
+            <TabsTrigger
+              value="ask"
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+            >
+              💬 Ask a Question
+            </TabsTrigger>
+          </TabsList>
 
-          {aiApiKey ? (
-            <p className="text-green-200">
-              Ask questions and get direct AI responses. Your API key is configured.
-            </p>
-          ) : (
-            <p className="text-blue-200">
-              Generate prompts to use with any AI assistant (ChatGPT, Claude, etc.), or configure
-              your API key below for direct AI chat.
-            </p>
-          )}
-
-          {/* API Key Input Section */}
-          {showApiKeyInput && (
-            <div className="mt-3 pt-3 border-t border-gray-700 space-y-2">
-              <label className="block text-xs text-gray-400">z.ai API Key</label>
-              <div className="flex gap-2">
-                <Input
-                  type="password"
-                  placeholder="Enter your API key"
-                  value={aiApiKey}
-                  onChange={(e) => setAiApiKey(e.target.value)}
-                  className="bg-gray-800 border-gray-600 text-white flex-1 h-9"
-                />
-                <Button
-                  onClick={() => {
-                    localStorage.setItem('ai_api_key', aiApiKey);
-                    setShowApiKeyInput(false);
-                    alert('✓ API key saved!');
-                  }}
-                  className="bg-cyan-600 hover:bg-cyan-700 h-9"
-                >
-                  Save
-                </Button>
-                <Button
-                  onClick={async () => {
-                    if (!aiApiKey) {
-                      alert('Please enter an API key first');
-                      return;
-                    }
-                    setAiTestingKey(true);
-                    try {
-                      const response = await fetch('/api/ai/verify', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ apiKey: aiApiKey }),
-                      });
-                      const data = await response.json();
-                      if (data.success) {
-                        alert('✓ API key is valid!');
-                      } else {
-                        alert('✗ API key verification failed');
-                      }
-                    } catch {
-                      alert('✗ Connection failed');
-                    } finally {
-                      setAiTestingKey(false);
-                    }
-                  }}
-                  disabled={aiTestingKey}
-                  className="bg-gray-700 hover:bg-gray-600 h-9"
-                >
-                  {aiTestingKey ? 'Testing...' : 'Test'}
-                </Button>
-              </div>
-              <p className="text-xs text-gray-500">
-                Get your API key from z.ai. The key is stored locally on your device.
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Question Input */}
-        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-          <label className="block text-sm font-medium text-gray-300 mb-2">
-            Ask a question about traffic management, WHS, or road work:
-          </label>
-          <div className="flex gap-2">
-            <Input
-              type="text"
-              placeholder="e.g., What are the speed zone requirements for TC positions?"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              onKeyDown={(e) =>
-                e.key === 'Enter' && (aiApiKey ? askAiDirectly() : generatePrompt())
-              }
-              className="bg-gray-700 border-gray-600 text-white flex-1"
-            />
-            {aiApiKey ? (
-              <Button
-                onClick={askAiDirectly}
-                disabled={!question.trim() || aiLoading}
-                className="bg-green-600 hover:bg-green-700 px-6 disabled:opacity-50"
-              >
-                {aiLoading ? '🤔 Thinking...' : '🤖 Ask AI'}
-              </Button>
-            ) : (
-              <Button
-                onClick={generatePrompt}
-                disabled={!question.trim()}
-                className="bg-blue-600 hover:bg-blue-700 px-6 disabled:opacity-50"
-              >
-                📋 Generate Prompt
-              </Button>
-            )}
-          </div>
-          <p className="text-xs text-gray-500 mt-2">
-            {aiApiKey
-              ? 'Press Enter or click Ask AI to get an answer directly.'
-              : 'Press Enter or click Generate Prompt to create a prompt you can use with any AI assistant.'}
-          </p>
-        </div>
-
-        {/* Generated Prompt */}
-        {generatedPrompt && (
-          <div className="bg-green-900/30 border border-green-700 rounded-lg p-4">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-semibold text-green-300">✅ Your Prompt is Ready!</h3>
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => copyToClipboard(generatedPrompt!)}
-                  className={copied ? 'bg-green-600' : 'bg-blue-600 hover:bg-blue-700'}
-                >
-                  {copied ? '✓ Copied!' : '📋 Copy'}
-                </Button>
-                <Button
-                  onClick={() => setGeneratedPrompt(null)}
-                  className="bg-gray-700 hover:bg-gray-600 text-gray-300"
-                >
-                  ✕ Clear
-                </Button>
-              </div>
-            </div>
-            <pre className="bg-gray-900 rounded p-3 text-sm text-gray-300 whitespace-pre-wrap overflow-x-auto max-h-64 overflow-y-auto">
-              {generatedPrompt}
-            </pre>
-            <p className="text-green-200 text-sm mt-3">
-              👆 Copy this prompt and paste it in your AI chat (ChatGPT, Claude, etc.)
-            </p>
-          </div>
-        )}
-
-        {/* AI Answer */}
-        {(aiAnswer || aiError) && (
-          <div
-            className={`rounded-lg p-4 border ${aiError ? 'bg-red-900/30 border-red-700' : 'bg-green-900/30 border-green-700'}`}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <h3 className={`font-semibold ${aiError ? 'text-red-300' : 'text-green-300'}`}>
-                {aiError ? '❌ Error' : '✅ AI Answer'}
-              </h3>
-              {aiAnswer && (
+          {/* ANSWERS TAB */}
+          <TabsContent value="answers" className="space-y-4">
+            {/* Search and Filter */}
+            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-white">Saved Q&As</h3>
                 <div className="flex gap-2">
                   <Button
-                    onClick={saveAiAnswer}
-                    className="bg-purple-600 hover:bg-purple-700 text-sm"
+                    variant={filter === 'all' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setFilter('all')}
+                    className={filter === 'all' ? 'bg-blue-600' : 'bg-gray-700 border-gray-600'}
                   >
-                    💾 Save to History
+                    All
                   </Button>
                   <Button
-                    onClick={() => copyToClipboard(aiAnswer)}
-                    className="bg-blue-600 hover:bg-blue-700 text-sm"
+                    variant={filter === 'favorites' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setFilter('favorites')}
+                    className={
+                      filter === 'favorites' ? 'bg-amber-600' : 'bg-gray-700 border-gray-600'
+                    }
                   >
-                    {copied ? '✓ Copied!' : '📋 Copy'}
+                    ⭐ Favorites
                   </Button>
+                </div>
+              </div>
+
+              <Input
+                type="text"
+                placeholder="Search saved Q&As..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white mb-3"
+              />
+
+              {filteredQAs.length === 0 ? (
+                <div className="text-center py-8 text-gray-400">
+                  <p>No saved Q&As yet</p>
+                  <p className="text-sm mt-2">
+                    Go to the "Ask" tab to generate a prompt or ask AI a question.
+                  </p>
+                  <Button
+                    onClick={() => setActiveTab('ask')}
+                    className="mt-4 bg-blue-600 hover:bg-blue-700"
+                  >
+                    💬 Ask a Question
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-3 max-h-[60vh] overflow-y-auto">
+                  {filteredQAs.map((qa) => (
+                    <Card key={qa.id} className="bg-gray-900 border-gray-700">
+                      <CardContent className="p-4">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              {qa.isFavorite && <span className="text-amber-400">⭐</span>}
+                              {qa.category && (
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs border-blue-500 text-blue-400"
+                                >
+                                  {qa.category}
+                                </Badge>
+                              )}
+                              <span className="text-xs text-gray-500">
+                                {new Date(qa.createdAt).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <p className="font-semibold text-white mb-2">{qa.question}</p>
+                            <div
+                              className={`text-sm text-gray-300 prose prose-invert prose-sm max-w-none ${expandedId === qa.id ? '' : 'line-clamp-3'}`}
+                            >
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>{qa.answer}</ReactMarkdown>
+                            </div>
+                            <button
+                              onClick={() => setExpandedId(expandedId === qa.id ? null : qa.id)}
+                              className="text-blue-400 text-xs mt-1 hover:underline"
+                            >
+                              {expandedId === qa.id ? '▲ Show less' : '▼ Show full answer'}
+                            </button>
+                            {qa.documentNames?.length > 0 && (
+                              <p className="text-xs text-gray-500 mt-2">
+                                Sources: {qa.documentNames.join(', ')}
+                              </p>
+                            )}
+                          </div>
+                          <div className="flex flex-col gap-1 shrink-0">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleToggleFavorite(qa.id)}
+                              className={qa.isFavorite ? 'text-amber-400' : 'text-gray-500'}
+                            >
+                              {qa.isFavorite ? '⭐' : '☆'}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => copyToClipboard(qa.answer)}
+                              className="text-blue-400"
+                            >
+                              📋
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDeleteEntry(qa.id)}
+                              className="text-red-400 hover:text-red-300"
+                            >
+                              🗑️
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+
+              {/* Export/Import/Clear buttons */}
+              <div className="flex gap-2 mt-4 pt-4 border-t border-gray-700">
+                <Button
+                  onClick={handleExport}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 bg-gray-700 border-gray-600"
+                >
+                  📤 Export
+                </Button>
+                <Button
+                  onClick={handleImport}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 bg-gray-700 border-gray-600"
+                >
+                  📥 Import
+                </Button>
+                <Button
+                  onClick={handleClearAll}
+                  variant="outline"
+                  size="sm"
+                  className="bg-gray-700 border-gray-600 text-red-400 hover:text-red-300"
+                >
+                  🗑️ Clear
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* ASK TAB */}
+          <TabsContent value="ask" className="space-y-4">
+            {/* Mode indicator & API Key config */}
+            <div
+              className={`rounded-lg p-4 border text-sm ${aiApiKey ? 'bg-green-900/30 border-green-700' : 'bg-blue-900/30 border-blue-700'}`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <h3 className={`font-semibold ${aiApiKey ? 'text-green-300' : 'text-blue-300'}`}>
+                  {aiApiKey ? '🤖 AI Chat Ready' : '📋 Prompt Generation Mode'}
+                </h3>
+                <Button
+                  size="sm"
+                  onClick={() => setShowApiKeyInput(!showApiKeyInput)}
+                  className="bg-gray-700 hover:bg-gray-600 text-gray-300 text-xs"
+                >
+                  {showApiKeyInput ? '✕ Close' : '⚙️ API Key'}
+                </Button>
+              </div>
+
+              {aiApiKey ? (
+                <p className="text-green-200">
+                  Ask questions and get direct AI responses. Your API key is configured.
+                </p>
+              ) : (
+                <p className="text-blue-200">
+                  Generate prompts to use with any AI assistant (ChatGPT, Claude, etc.), or
+                  configure your API key below for direct AI chat.
+                </p>
+              )}
+
+              {/* API Key Input Section */}
+              {showApiKeyInput && (
+                <div className="mt-3 pt-3 border-t border-gray-700 space-y-2">
+                  <label className="block text-xs text-gray-400">z.ai API Key</label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="password"
+                      placeholder="Enter your API key"
+                      value={aiApiKey}
+                      onChange={(e) => setAiApiKey(e.target.value)}
+                      className="bg-gray-800 border-gray-600 text-white flex-1 h-9"
+                    />
+                    <Button
+                      onClick={() => {
+                        localStorage.setItem('ai_api_key', aiApiKey);
+                        setShowApiKeyInput(false);
+                        alert('✓ API key saved!');
+                      }}
+                      className="bg-cyan-600 hover:bg-cyan-700 h-9"
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      onClick={async () => {
+                        if (!aiApiKey) {
+                          alert('Please enter an API key first');
+                          return;
+                        }
+                        setAiTestingKey(true);
+                        try {
+                          const response = await fetch('/api/ai/verify', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ apiKey: aiApiKey }),
+                          });
+                          const data = await response.json();
+                          if (data.success) {
+                            alert('✓ API key is valid!');
+                          } else {
+                            alert('✗ API key verification failed');
+                          }
+                        } catch {
+                          alert('✗ Connection failed');
+                        } finally {
+                          setAiTestingKey(false);
+                        }
+                      }}
+                      disabled={aiTestingKey}
+                      className="bg-gray-700 hover:bg-gray-600 h-9"
+                    >
+                      {aiTestingKey ? 'Testing...' : 'Test'}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    Get your API key from z.ai. The key is stored locally on your device.
+                  </p>
                 </div>
               )}
             </div>
-            {aiError ? (
-              <p className="text-red-200">{aiError}</p>
-            ) : aiAnswer ? (
-              <div className="prose prose-invert prose-sm max-w-none text-gray-200">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{aiAnswer}</ReactMarkdown>
+
+            {/* Question Input */}
+            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Ask a question about traffic management, WHS, or road work:
+              </label>
+              <div className="flex gap-2">
+                <Input
+                  type="text"
+                  placeholder="e.g., What are the speed zone requirements for TC positions?"
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  onKeyDown={(e) =>
+                    e.key === 'Enter' && (aiApiKey ? askAiDirectly() : generatePrompt())
+                  }
+                  className="bg-gray-700 border-gray-600 text-white flex-1"
+                />
+                {aiApiKey ? (
+                  <Button
+                    onClick={askAiDirectly}
+                    disabled={!question.trim() || aiLoading}
+                    className="bg-green-600 hover:bg-green-700 px-6 disabled:opacity-50"
+                  >
+                    {aiLoading ? '🤔 Thinking...' : '🤖 Ask AI'}
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={generatePrompt}
+                    disabled={!question.trim()}
+                    className="bg-blue-600 hover:bg-blue-700 px-6 disabled:opacity-50"
+                  >
+                    📋 Generate Prompt
+                  </Button>
+                )}
               </div>
-            ) : null}
-            {aiAnswer && selectedDocs.size > 0 && (
-              <p className="text-xs text-gray-500 mt-3">
-                Sources:{' '}
-                {documents
-                  .filter((d) => selectedDocs.has(d.id))
-                  .slice(0, 10)
-                  .map((d) => d.shortTitle)
-                  .join(', ')}
+              <p className="text-xs text-gray-500 mt-2">
+                {aiApiKey
+                  ? 'Press Enter or click Ask AI to get an answer directly.'
+                  : 'Press Enter or click Generate Prompt to create a prompt you can use with any AI assistant.'}
               </p>
-            )}
-          </div>
-        )}
-
-        {/* Document Selection */}
-        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-white">📄 Select Documents to Search</h3>
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={selectAllDocuments}
-                className="text-blue-400"
-              >
-                Select All
-              </Button>
-              <Button variant="ghost" size="sm" onClick={clearSelection} className="text-gray-400">
-                Clear
-              </Button>
             </div>
-          </div>
 
-          {loadingDocs ? (
-            <div className="text-center py-4 text-gray-400">Loading documents...</div>
-          ) : (
-            <div className="space-y-3 max-h-64 overflow-y-auto">
-              {Object.entries(documentsByCategory).map(([category, docs]) => (
-                <div key={category}>
-                  <p className="text-xs text-gray-500 uppercase mb-1">{category}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {docs.map((doc) => (
-                      <button
-                        key={doc.id}
-                        onClick={() => toggleDocument(doc.id)}
-                        className={`px-3 py-1 rounded text-sm transition-colors ${
-                          selectedDocs.has(doc.id)
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                        }`}
-                      >
-                        {selectedDocs.has(doc.id) ? '☑ ' : '☐ '}
-                        {doc.shortTitle}
-                      </button>
-                    ))}
+            {/* Generated Prompt */}
+            {generatedPrompt && (
+              <div className="bg-green-900/30 border border-green-700 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-green-300">✅ Your Prompt is Ready!</h3>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => copyToClipboard(generatedPrompt!)}
+                      className={copied ? 'bg-green-600' : 'bg-blue-600 hover:bg-blue-700'}
+                    >
+                      {copied ? '✓ Copied!' : '📋 Copy'}
+                    </Button>
+                    <Button
+                      onClick={() => setGeneratedPrompt(null)}
+                      className="bg-gray-700 hover:bg-gray-600 text-gray-300"
+                    >
+                      ✕ Clear
+                    </Button>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+                <pre className="bg-gray-900 rounded p-3 text-sm text-gray-300 whitespace-pre-wrap overflow-x-auto max-h-64 overflow-y-auto">
+                  {generatedPrompt}
+                </pre>
+                <p className="text-green-200 text-sm mt-3">
+                  👆 Copy this prompt and paste it in your AI chat (ChatGPT, Claude, etc.)
+                </p>
+              </div>
+            )}
 
-          <p className="text-xs text-gray-500 mt-3">
-            {selectedDocs.size === 0
-              ? 'No documents selected - will search all documents'
-              : `${selectedDocs.size} document${selectedDocs.size !== 1 ? 's' : ''} selected`}
-          </p>
-        </div>
-
-        {/* Saved Q&As */}
-        <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-white">📚 Saved Q&As ({savedQAs.length})</h3>
-            <div className="flex gap-2">
-              <Button
-                variant={filter === 'all' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setFilter('all')}
-                className={filter === 'all' ? 'bg-blue-600' : 'bg-gray-700 border-gray-600'}
+            {/* AI Answer */}
+            {(aiAnswer || aiError) && (
+              <div
+                className={`rounded-lg p-4 border ${aiError ? 'bg-red-900/30 border-red-700' : 'bg-green-900/30 border-green-700'}`}
               >
-                All
-              </Button>
-              <Button
-                variant={filter === 'favorites' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setFilter('favorites')}
-                className={filter === 'favorites' ? 'bg-amber-600' : 'bg-gray-700 border-gray-600'}
-              >
-                ⭐ Favorites
-              </Button>
-            </div>
-          </div>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className={`font-semibold ${aiError ? 'text-red-300' : 'text-green-300'}`}>
+                    {aiError ? '❌ Error' : '✅ AI Answer'}
+                  </h3>
+                  {aiAnswer && (
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={saveAiAnswer}
+                        className="bg-purple-600 hover:bg-purple-700 text-sm"
+                      >
+                        💾 Save to Answers
+                      </Button>
+                      <Button
+                        onClick={() => copyToClipboard(aiAnswer)}
+                        className="bg-blue-600 hover:bg-blue-700 text-sm"
+                      >
+                        {copied ? '✓ Copied!' : '📋 Copy'}
+                      </Button>
+                    </div>
+                  )}
+                </div>
+                {aiError ? (
+                  <p className="text-red-200">{aiError}</p>
+                ) : aiAnswer ? (
+                  <div className="prose prose-invert prose-sm max-w-none text-gray-200">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{aiAnswer}</ReactMarkdown>
+                  </div>
+                ) : null}
+                {aiAnswer && selectedDocs.size > 0 && (
+                  <p className="text-xs text-gray-500 mt-3">
+                    Sources:{' '}
+                    {documents
+                      .filter((d) => selectedDocs.has(d.id))
+                      .slice(0, 10)
+                      .map((d) => d.shortTitle)
+                      .join(', ')}
+                  </p>
+                )}
+              </div>
+            )}
 
-          <Input
-            type="text"
-            placeholder="Search saved Q&As..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-gray-700 border-gray-600 text-white mb-3"
-          />
+            {/* Document Selection */}
+            <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-white">📄 Select Documents to Search</h3>
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={selectAllDocuments}
+                    className="text-blue-400"
+                  >
+                    Select All
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearSelection}
+                    className="text-gray-400"
+                  >
+                    Clear
+                  </Button>
+                </div>
+              </div>
 
-          {filteredQAs.length === 0 ? (
-            <div className="text-center py-8 text-gray-400">
-              <p>No saved Q&As yet</p>
-              <p className="text-sm mt-2">
-                Generate a prompt, get an answer from AI, and save it here!
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-3 max-h-96 overflow-y-auto">
-              {filteredQAs.map((qa) => (
-                <Card key={qa.id} className="bg-gray-900 border-gray-700">
-                  <CardContent className="p-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          {qa.isFavorite && <span className="text-amber-400">⭐</span>}
-                          {qa.category && (
-                            <Badge
-                              variant="outline"
-                              className="text-xs border-blue-500 text-blue-400"
-                            >
-                              {qa.category}
-                            </Badge>
-                          )}
-                          <span className="text-xs text-gray-500">
-                            {new Date(qa.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <p className="font-semibold text-white mb-2">{qa.question}</p>
-                        <div
-                          className={`text-sm text-gray-300 prose prose-invert prose-sm max-w-none ${expandedId === qa.id ? '' : 'line-clamp-3'}`}
-                        >
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>{qa.answer}</ReactMarkdown>
-                        </div>
-                        <button
-                          onClick={() => setExpandedId(expandedId === qa.id ? null : qa.id)}
-                          className="text-blue-400 text-xs mt-1 hover:underline"
-                        >
-                          {expandedId === qa.id ? '▲ Show less' : '▼ Show full answer'}
-                        </button>
-                        {qa.documentNames?.length > 0 && (
-                          <p className="text-xs text-gray-500 mt-2">
-                            Sources: {qa.documentNames.join(', ')}
-                          </p>
-                        )}
-                      </div>
-                      <div className="flex flex-col gap-1 shrink-0">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleToggleFavorite(qa.id)}
-                          className={qa.isFavorite ? 'text-amber-400' : 'text-gray-500'}
-                        >
-                          {qa.isFavorite ? '⭐' : '☆'}
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => copyToClipboard(qa.answer)}
-                          className="text-blue-400"
-                        >
-                          📋
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteEntry(qa.id)}
-                          className="text-red-400 hover:text-red-300"
-                        >
-                          🗑️
-                        </Button>
+              {loadingDocs ? (
+                <div className="text-center py-4 text-gray-400">Loading documents...</div>
+              ) : (
+                <div className="space-y-3 max-h-64 overflow-y-auto">
+                  {Object.entries(documentsByCategory).map(([category, docs]) => (
+                    <div key={category}>
+                      <p className="text-xs text-gray-500 uppercase mb-1">{category}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {docs.map((doc) => (
+                          <button
+                            key={doc.id}
+                            onClick={() => toggleDocument(doc.id)}
+                            className={`px-3 py-1 rounded text-sm transition-colors ${
+                              selectedDocs.has(doc.id)
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                            }`}
+                          >
+                            {selectedDocs.has(doc.id) ? '☑ ' : '☐ '}
+                            {doc.shortTitle}
+                          </button>
+                        ))}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
+                  ))}
+                </div>
+              )}
 
-          {/* Export/Import/Clear buttons */}
-          <div className="flex gap-2 mt-4 pt-4 border-t border-gray-700">
-            <Button
-              onClick={handleExport}
-              variant="outline"
-              size="sm"
-              className="flex-1 bg-gray-700 border-gray-600"
-            >
-              📤 Export
-            </Button>
-            <Button
-              onClick={handleImport}
-              variant="outline"
-              size="sm"
-              className="flex-1 bg-gray-700 border-gray-600"
-            >
-              📥 Import
-            </Button>
-            <Button
-              onClick={handleClearAll}
-              variant="outline"
-              size="sm"
-              className="bg-gray-700 border-gray-600 text-red-400 hover:text-red-300"
-            >
-              🗑️ Clear All
-            </Button>
-          </div>
-        </div>
+              <p className="text-xs text-gray-500 mt-3">
+                {selectedDocs.size === 0
+                  ? 'No documents selected - will search all documents'
+                  : `${selectedDocs.size} document${selectedDocs.size !== 1 ? 's' : ''} selected`}
+              </p>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
