@@ -291,10 +291,17 @@ export default function UserManualPage() {
         </ul>
         <p class="mb-2"><strong>Additional Events (via More menu):</strong></p>
         <ul class="list-disc list-inside space-y-1 mb-3">
-          <li>Hold ON/OFF with running timer</li>
+          <li>Hold ON/OFF with running timer (Hold OFF logs duration, e.g., "5m 30s")</li>
           <li>Break ON/OFF with running timer</li>
           <li>Suspend/Resume operations</li>
-          <li>Advanced Flasher controls (TL, TR, Both)</li>
+          <li>Advanced Flasher controls (True Left, True Right, Both)</li>
+        </ul>
+        <p class="mb-2"><strong>Shift Actions (via Shift menu):</strong></p>
+        <ul class="list-disc list-inside space-y-1 mb-3">
+          <li>Shift start, Pre-start, Travel to site, Arrived at site</li>
+          <li>Site setup, Wait for crew, Crew arrived, Spot for crew</li>
+          <li>Crew departed, Pack up site, Work site debrief</li>
+          <li>Travel to depot, Arrived at depot, Shift end</li>
         </ul>
         <p class="mb-2"><strong>Features:</strong></p>
         <ul class="list-disc list-inside space-y-1 mb-3">
@@ -325,14 +332,24 @@ export default function UserManualPage() {
         </ul>
 
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">🤖 AI Q&A Assistant</h3>
-        <p class="mb-3">Ask questions about traffic management, sign usage, and road regulations. The AI assistant can help with:</p>
+        <p class="mb-3">Ask questions about traffic management, sign usage, and road regulations. The Q&A page uses a tab-based layout:</p>
+        <ul class="list-disc list-inside space-y-1 mb-3">
+          <li><strong>Answers Tab:</strong> View, search, and manage your saved Q&As. Filter by favorites, expand answers, copy to clipboard.</li>
+          <li><strong>Ask Tab:</strong> Enter questions and select documents to search. Choose between direct AI chat or prompt generation.</li>
+        </ul>
+        <p class="mb-2"><strong>Two Modes Available:</strong></p>
+        <ul class="list-disc list-inside space-y-1 mb-3">
+          <li><strong>Prompt Generation Mode:</strong> No API key required. Generate a formatted prompt you can copy and paste into ChatGPT, Claude, or any AI assistant.</li>
+          <li><strong>Direct AI Chat Mode:</strong> Configure your z.ai API key in the Ask tab to get real-time answers directly in the app.</li>
+        </ul>
+        <p class="mb-2"><strong>The AI assistant can help with:</strong></p>
         <ul class="list-disc list-inside space-y-1 mb-3">
           <li>Sign selection and placement</li>
           <li>TMP requirements for different work types</li>
           <li>Speed zone calculations</li>
           <li>Regulation clarifications</li>
         </ul>
-        <p class="text-sm text-gray-400 mb-3">Note: AI assistant requires an API key configured in Settings → AI Assistant section.</p>
+        <p class="text-sm text-gray-400 mb-3">Tip: You can configure your API key directly in the Q&A page by clicking "⚙️ API Key" in the Ask tab.</p>
 
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">📖 Expanded Library</h3>
         <p class="mb-3">Access additional resources including industry guidelines, best practices, and reference materials.</p>

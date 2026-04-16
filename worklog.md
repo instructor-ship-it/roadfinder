@@ -1,7 +1,41 @@
 # TC Work Zone Locator - Work Log
 
-> **Last Updated:** 2026-04-16
-> **Current Version:** 1.28.1
+> **Last Updated:** 2026-04-17
+> **Current Version:** 1.28.5
+
+---
+
+## Task ID: 2026-04-17-001
+
+**Agent:** Main Agent
+**Task:** User Manual Updates (v1.28.5)
+
+### Work Log:
+
+- **Manual Review and Updates:**
+  - Reviewed user manual for accuracy against current implementation
+  - Identified missing features from recent version updates
+
+- **Traffic Event Logger Section Updates:**
+  - Added "Work site debrief" to shift actions documentation
+  - Added Hold duration logging feature (Hold OFF logs duration, e.g., "5m 30s")
+  - Changed "TL, TR, Both" to "True Left, True Right, Both" for Advanced Flasher controls
+  - Added complete Shift Actions list for reference
+
+- **AI Q&A Assistant Section Updates:**
+  - Added tab-based layout documentation (Answers tab and Ask tab)
+  - Added two modes documentation (Prompt Generation Mode and Direct AI Chat Mode)
+  - Added tip about inline API key configuration
+
+### Files Changed:
+
+- `src/app/manual/page.tsx` (Traffic Event Logger and AI Q&A sections updated)
+- `worklog.md` (this entry, version header updated to 1.28.5)
+
+### Stage Summary:
+
+- User manual now reflects current v1.28.5 features
+- Ready for push to GitHub
 
 ---
 
