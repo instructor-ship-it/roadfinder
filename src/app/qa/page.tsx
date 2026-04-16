@@ -385,12 +385,11 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
               {aiApiKey ? '🤖 AI Chat Ready' : '📋 Prompt Generation Mode'}
             </h3>
             <Button
-              variant="ghost"
               size="sm"
               onClick={() => setShowApiKeyInput(!showApiKeyInput)}
-              className="text-gray-400 hover:text-white text-xs"
+              className="bg-gray-700 hover:bg-gray-600 text-gray-300 text-xs"
             >
-              {showApiKeyInput ? 'Hide' : '⚙️ API Key'}
+              {showApiKeyInput ? '✕ Close' : '⚙️ API Key'}
             </Button>
           </div>
 
@@ -511,12 +510,20 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
           <div className="bg-green-900/30 border border-green-700 rounded-lg p-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold text-green-300">✅ Your Prompt is Ready!</h3>
-              <Button
-                onClick={() => copyToClipboard(generatedPrompt!)}
-                className={copied ? 'bg-green-600' : 'bg-blue-600 hover:bg-blue-700'}
-              >
-                {copied ? '✓ Copied!' : '📋 Copy Prompt'}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => copyToClipboard(generatedPrompt!)}
+                  className={copied ? 'bg-green-600' : 'bg-blue-600 hover:bg-blue-700'}
+                >
+                  {copied ? '✓ Copied!' : '📋 Copy'}
+                </Button>
+                <Button
+                  onClick={() => setGeneratedPrompt(null)}
+                  className="bg-gray-700 hover:bg-gray-600 text-gray-300"
+                >
+                  ✕ Clear
+                </Button>
+              </div>
             </div>
             <pre className="bg-gray-900 rounded p-3 text-sm text-gray-300 whitespace-pre-wrap overflow-x-auto max-h-64 overflow-y-auto">
               {generatedPrompt}
