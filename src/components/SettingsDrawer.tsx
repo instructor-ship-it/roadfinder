@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 
 // App version constant - single source of truth
-export const APP_VERSION = '1.28.3';
+export const APP_VERSION = '1.28.4';
 
 // Offline toggles type - shared with page.tsx
 export interface OfflineToggles {
@@ -706,6 +706,18 @@ export function SettingsDrawer({
                       className="text-cyan-400 hover:text-cyan-300 text-sm pl-2 block"
                     >
                       📊 Traffic Counter
+                    </Link>
+                  </DrawerClose>
+                </div>
+
+                {/* Cycle Timer */}
+                <div className="pt-1">
+                  <DrawerClose asChild>
+                    <Link
+                      href="/cycle-timer"
+                      className="text-cyan-400 hover:text-cyan-300 text-sm pl-2 block"
+                    >
+                      ⏱️ Cycle Timer
                     </Link>
                   </DrawerClose>
                 </div>
