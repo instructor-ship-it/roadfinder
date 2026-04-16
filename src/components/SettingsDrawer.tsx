@@ -795,3 +795,6 @@ export function SettingsDrawer({
     </Drawer>
   );
 }
+
+// Default export for backward compatibility
+export default SettingsDrawer;
