@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -30,6 +30,8 @@ interface SearchableDocument {
 }
 
 export default function QaPage() {
+  const router = useRouter();
+
   // State
   const [activeTab, setActiveTab] = useState('answers');
   const [documents, setDocuments] = useState<SearchableDocument[]>([]);
@@ -355,11 +357,14 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link href="/library">
-                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
-                  ← Library
-                </Button>
-              </Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => router.back()}
+                className="text-gray-400 hover:text-white"
+              >
+                ← Back
+              </Button>
               <div>
                 <h1 className="text-xl font-bold text-white">🤖 AI Q&A Assistant</h1>
                 <p className="text-xs text-gray-500">{APP_VERSION}</p>
