@@ -385,13 +385,23 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
           </div>
         ) : (
           <div className="bg-blue-900/30 border border-blue-700 rounded-lg p-4 text-sm">
-            <h3 className="font-semibold text-blue-300 mb-2">📋 Setup Required</h3>
+            <h3 className="font-semibold text-blue-300 mb-2">📋 Prompt Generation Mode</h3>
             <p className="text-blue-200 mb-2">
-              Configure your z.ai API key in Settings to enable direct AI chat.
+              You can generate prompts to use with any AI assistant (ChatGPT, Claude, etc.).
+              Configure your z.ai API key in Settings to enable direct AI chat within the app.
             </p>
-            <Link href="/library">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-sm">⚙️ Go to Settings</Button>
-            </Link>
+            <div className="flex gap-2">
+              <Link href="/library">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-sm">⚙️ Settings</Button>
+              </Link>
+              <Button
+                onClick={generatePrompt}
+                disabled={!question.trim()}
+                className="bg-purple-600 hover:bg-purple-700 text-sm disabled:opacity-50"
+              >
+                📋 Generate Prompt
+              </Button>
+            </div>
           </div>
         )}
 
@@ -406,17 +416,34 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
               placeholder="e.g., What are the speed zone requirements for TC positions?"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && aiApiKey && askAiDirectly()}
+              onKeyDown={(e) =>
+                e.key === 'Enter' && (aiApiKey ? askAiDirectly() : generatePrompt())
+              }
               className="bg-gray-700 border-gray-600 text-white flex-1"
             />
-            <Button
-              onClick={askAiDirectly}
-              disabled={!question.trim() || aiLoading || !aiApiKey}
-              className="bg-green-600 hover:bg-green-700 px-6 disabled:opacity-50"
-            >
-              {aiLoading ? '🤔 Thinking...' : '🤖 Ask AI'}
-            </Button>
+            {aiApiKey ? (
+              <Button
+                onClick={askAiDirectly}
+                disabled={!question.trim() || aiLoading}
+                className="bg-green-600 hover:bg-green-700 px-6 disabled:opacity-50"
+              >
+                {aiLoading ? '🤔 Thinking...' : '🤖 Ask AI'}
+              </Button>
+            ) : (
+              <Button
+                onClick={generatePrompt}
+                disabled={!question.trim()}
+                className="bg-blue-600 hover:bg-blue-700 px-6 disabled:opacity-50"
+              >
+                📋 Generate Prompt
+              </Button>
+            )}
           </div>
+          <p className="text-xs text-gray-500 mt-2">
+            {aiApiKey
+              ? 'Press Enter or click Ask AI to get an answer directly.'
+              : 'Press Enter or click Generate Prompt to create a prompt you can use with any AI assistant.'}
+          </p>
         </div>
 
         {/* AI Answer */}
