@@ -313,7 +313,7 @@ export default function UserManualPage() {
         keywords: ['library', 'document', 'tmp', 'regulation', 'ai', 'qa'],
         content: `
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">Accessing the Library</h3>
-        <p class="mb-3">From Settings, expand the Library section to access document resources.</p>
+        <p class="mb-3">From Settings, expand the Library section to access document resources and AI tools.</p>
 
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">📚 Document Registers</h3>
         <p class="mb-3">Browse and search official documents including:</p>
@@ -339,9 +339,6 @@ export default function UserManualPage() {
 
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">📋 TMP Documents</h3>
         <p class="mb-3">Browse TMP templates and examples organized by region. Useful for understanding requirements for different road authorities.</p>
-
-        <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">🧠 Document Processing</h3>
-        <p class="mb-3">Upload and process documents for AI-assisted analysis and question answering. Helps extract information from custom TMPs or site-specific documentation.</p>
       `,
       },
       {
