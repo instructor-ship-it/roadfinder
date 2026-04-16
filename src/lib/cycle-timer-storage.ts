@@ -21,6 +21,7 @@ export interface Lap {
 export interface CycleTimer {
   id: string;
   label: string;
+  description?: string; // Optional short description
   createdAt: number;
   laps: Lap[];
   isRunning: boolean;
@@ -39,11 +40,11 @@ export interface CycleTimerState {
 const STORAGE_KEY = 'tc-cycle-timer';
 
 const DEFAULT_PRESET_LABELS = [
-  'Truck 1',
-  'Truck 2',
-  'Truck 3',
-  'Truck 4',
-  'Truck 5',
+  'Timer 1',
+  'Timer 2',
+  'Timer 3',
+  'Timer 4',
+  'Timer 5',
   'Queue East',
   'Queue West',
   'Spot Call',
@@ -119,12 +120,13 @@ export function formatDurationShort(ms: number | null): string {
 // Timer Functions
 // ============================================================================
 
-export function createTimer(label: string): CycleTimer {
+export function createTimer(label: string, description?: string): CycleTimer {
   const state = getState();
 
   const timer: CycleTimer = {
     id: generateId(),
     label: label || `Timer ${state.timers.length + 1}`,
+    description: description || '',
     createdAt: Date.now(),
     laps: [],
     isRunning: false,
@@ -222,6 +224,16 @@ export function updateTimerLabel(timerId: string, label: string): void {
   if (!timer) return;
 
   timer.label = label;
+  saveState(state);
+}
+
+export function updateTimerDescription(timerId: string, description: string): void {
+  const state = getState();
+  const timer = state.timers.find((t) => t.id === timerId);
+
+  if (!timer) return;
+
+  timer.description = description;
   saveState(state);
 }
 

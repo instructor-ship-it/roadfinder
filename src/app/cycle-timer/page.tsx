@@ -11,6 +11,7 @@ import {
   resetTimer,
   clearAllTimers,
   updateTimerLabel,
+  updateTimerDescription,
   getTimerStats,
   formatDuration,
   formatDurationShort,
@@ -29,9 +30,11 @@ import {
 export default function CycleTimerPage() {
   const [state, setState] = useState<CycleTimerState>(getState);
   const [newTimerLabel, setNewTimerLabel] = useState('');
+  const [newTimerDescription, setNewTimerDescription] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingTimerId, setEditingTimerId] = useState<string | null>(null);
   const [editingLabel, setEditingLabel] = useState('');
+  const [editingDescription, setEditingDescription] = useState('');
   const [expandedTimerId, setExpandedTimerId] = useState<string | null>(null);
 
   // Refresh state from storage
@@ -58,11 +61,12 @@ export default function CycleTimerPage() {
   // Handle add timer
   const handleAddTimer = useCallback(() => {
     if (!newTimerLabel.trim()) return;
-    createTimer(newTimerLabel.trim());
+    createTimer(newTimerLabel.trim(), newTimerDescription.trim());
     setNewTimerLabel('');
+    setNewTimerDescription('');
     setShowAddForm(false);
     refreshState();
-  }, [newTimerLabel, refreshState]);
+  }, [newTimerLabel, newTimerDescription, refreshState]);
 
   // Handle quick add with preset
   const handleQuickAdd = useCallback(
@@ -118,16 +122,19 @@ export default function CycleTimerPage() {
   const handleStartEdit = useCallback((timer: CycleTimer) => {
     setEditingTimerId(timer.id);
     setEditingLabel(timer.label);
+    setEditingDescription(timer.description || '');
   }, []);
 
   const handleSaveEdit = useCallback(() => {
     if (editingTimerId && editingLabel.trim()) {
       updateTimerLabel(editingTimerId, editingLabel.trim());
+      updateTimerDescription(editingTimerId, editingDescription.trim());
       refreshState();
     }
     setEditingTimerId(null);
     setEditingLabel('');
-  }, [editingTimerId, editingLabel, refreshState]);
+    setEditingDescription('');
+  }, [editingTimerId, editingLabel, editingDescription, refreshState]);
 
   // Sort timers: running first, then by creation time
   const sortedTimers = [...state.timers].sort((a, b) => {
@@ -150,7 +157,7 @@ export default function CycleTimerPage() {
           <h1 className="text-lg font-semibold flex-1">Cycle Timer</h1>
           <span className="text-xs text-gray-500">v1.28.5</span>
         </div>
-        <p className="text-xs text-gray-500 mt-1">Monitor truck travel times and vehicle cycles</p>
+        <p className="text-xs text-gray-500 mt-1">Monitor travel times and vehicle cycles</p>
       </div>
 
       {/* Quick Add Buttons */}
@@ -180,32 +187,43 @@ export default function CycleTimerPage() {
       {/* Add Timer Form */}
       {showAddForm && (
         <div className="px-4 py-3 bg-gray-800 border-b border-gray-700">
-          <div className="flex gap-2">
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={newTimerLabel}
+                onChange={(e) => setNewTimerLabel(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleAddTimer()}
+                placeholder="Timer label (e.g., Timer 6)"
+                className="flex-1 px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                autoFocus
+              />
+              <button
+                onClick={handleAddTimer}
+                disabled={!newTimerLabel.trim()}
+                className="px-4 py-2 rounded-lg bg-cyan-600 text-white text-sm font-medium hover:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                Add
+              </button>
+              <button
+                onClick={() => {
+                  setShowAddForm(false);
+                  setNewTimerLabel('');
+                  setNewTimerDescription('');
+                }}
+                className="px-4 py-2 rounded-lg bg-gray-600 text-white text-sm hover:bg-gray-500 transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
             <input
               type="text"
-              value={newTimerLabel}
-              onChange={(e) => setNewTimerLabel(e.target.value)}
+              value={newTimerDescription}
+              onChange={(e) => setNewTimerDescription(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleAddTimer()}
-              placeholder="Timer label (e.g., Truck 6)"
-              className="flex-1 px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
-              autoFocus
+              placeholder="Optional description (e.g., Blue truck - Great Eastern Hwy)"
+              className="w-full px-3 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
-            <button
-              onClick={handleAddTimer}
-              disabled={!newTimerLabel.trim()}
-              className="px-4 py-2 rounded-lg bg-cyan-600 text-white text-sm font-medium hover:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              Add
-            </button>
-            <button
-              onClick={() => {
-                setShowAddForm(false);
-                setNewTimerLabel('');
-              }}
-              className="px-4 py-2 rounded-lg bg-gray-600 text-white text-sm hover:bg-gray-500 transition-colors"
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
@@ -242,27 +260,44 @@ export default function CycleTimerPage() {
                         className={`w-3 h-3 rounded-full ${timer.isRunning ? 'bg-green-500 animate-pulse' : 'bg-gray-600'}`}
                       />
 
-                      {/* Label */}
+                      {/* Label and Description */}
                       <div className="flex-1 min-w-0">
                         {editingTimerId === timer.id ? (
-                          <input
-                            type="text"
-                            value={editingLabel}
-                            onChange={(e) => setEditingLabel(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') handleSaveEdit();
-                              if (e.key === 'Escape') setEditingTimerId(null);
-                            }}
-                            onBlur={handleSaveEdit}
-                            className="w-full px-2 py-1 rounded bg-gray-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                            autoFocus
-                          />
+                          <div className="space-y-1">
+                            <input
+                              type="text"
+                              value={editingLabel}
+                              onChange={(e) => setEditingLabel(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleSaveEdit();
+                                if (e.key === 'Escape') setEditingTimerId(null);
+                              }}
+                              placeholder="Timer label"
+                              className="w-full px-2 py-1 rounded bg-gray-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                              autoFocus
+                            />
+                            <input
+                              type="text"
+                              value={editingDescription}
+                              onChange={(e) => setEditingDescription(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleSaveEdit();
+                                if (e.key === 'Escape') setEditingTimerId(null);
+                              }}
+                              placeholder="Description (optional)"
+                              className="w-full px-2 py-1 rounded bg-gray-700 text-gray-300 text-xs focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                            />
+                          </div>
                         ) : (
-                          <div
-                            className="font-medium text-white truncate cursor-pointer hover:text-cyan-400"
-                            onClick={() => handleStartEdit(timer)}
-                          >
-                            {timer.label}
+                          <div onClick={() => handleStartEdit(timer)} className="cursor-pointer">
+                            <div className="font-medium text-white truncate hover:text-cyan-400">
+                              {timer.label}
+                            </div>
+                            {timer.description && (
+                              <div className="text-xs text-gray-400 truncate">
+                                {timer.description}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -291,39 +326,60 @@ export default function CycleTimerPage() {
 
                     {/* Controls */}
                     <div className="flex items-center gap-2 mt-3">
-                      <button
-                        onClick={() => handleToggleTimer(timer.id, timer.isRunning)}
-                        className={`flex-1 py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors ${
-                          timer.isRunning
-                            ? 'bg-amber-600 hover:bg-amber-700 text-white'
-                            : 'bg-green-600 hover:bg-green-700 text-white'
-                        }`}
-                      >
-                        {timer.isRunning ? (
-                          <>
-                            <PauseIcon className="h-4 w-4" /> Stop Lap
-                          </>
-                        ) : (
-                          <>
-                            <PlayIcon className="h-4 w-4" /> Start Lap
-                          </>
-                        )}
-                      </button>
-                      <button
-                        onClick={() => handleResetTimer(timer.id)}
-                        disabled={timer.laps.length === 0 && !timer.isRunning}
-                        className="p-2.5 rounded-lg bg-gray-700 text-gray-400 hover:text-white hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                        title="Reset"
-                      >
-                        <RotateCcwIcon className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDeleteTimer(timer.id)}
-                        className="p-2.5 rounded-lg bg-gray-700 text-gray-400 hover:text-red-400 hover:bg-gray-600 transition-colors"
-                        title="Delete"
-                      >
-                        <TrashIcon className="h-4 w-4" />
-                      </button>
+                      {editingTimerId === timer.id ? (
+                        // Edit mode buttons
+                        <>
+                          <button
+                            onClick={handleSaveEdit}
+                            className="flex-1 py-2.5 rounded-lg font-medium text-sm bg-cyan-600 hover:bg-cyan-700 text-white transition-colors"
+                          >
+                            ✓ Save
+                          </button>
+                          <button
+                            onClick={() => setEditingTimerId(null)}
+                            className="flex-1 py-2.5 rounded-lg font-medium text-sm bg-gray-600 hover:bg-gray-500 text-white transition-colors"
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        // Normal mode buttons
+                        <>
+                          <button
+                            onClick={() => handleToggleTimer(timer.id, timer.isRunning)}
+                            className={`flex-1 py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-2 transition-colors ${
+                              timer.isRunning
+                                ? 'bg-amber-600 hover:bg-amber-700 text-white'
+                                : 'bg-green-600 hover:bg-green-700 text-white'
+                            }`}
+                          >
+                            {timer.isRunning ? (
+                              <>
+                                <PauseIcon className="h-4 w-4" /> Stop Lap
+                              </>
+                            ) : (
+                              <>
+                                <PlayIcon className="h-4 w-4" /> Start Lap
+                              </>
+                            )}
+                          </button>
+                          <button
+                            onClick={() => handleResetTimer(timer.id)}
+                            disabled={timer.laps.length === 0 && !timer.isRunning}
+                            className="p-2.5 rounded-lg bg-gray-700 text-gray-400 hover:text-white hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                            title="Reset"
+                          >
+                            <RotateCcwIcon className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteTimer(timer.id)}
+                            className="p-2.5 rounded-lg bg-gray-700 text-gray-400 hover:text-red-400 hover:bg-gray-600 transition-colors"
+                            title="Delete"
+                          >
+                            <TrashIcon className="h-4 w-4" />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </div>
 
