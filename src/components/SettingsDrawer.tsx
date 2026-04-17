@@ -185,7 +185,10 @@ function MenuItem({
   if (href) {
     return (
       <DrawerClose asChild>
-        <Link href={href} className="block py-2 px-3 text-sm text-gray-300 hover:text-white hover:bg-gray-800/50 rounded transition-colors">
+        <Link
+          href={href}
+          className="block py-2 px-3 text-sm text-gray-300 hover:text-white hover:bg-gray-800/50 rounded transition-colors"
+        >
           {content}
         </Link>
       </DrawerClose>
@@ -219,7 +222,9 @@ function ToggleSwitch({
   disabled?: boolean;
 }) {
   return (
-    <label className={`flex items-center justify-between py-2 ${disabled ? 'opacity-50' : 'cursor-pointer'}`}>
+    <label
+      className={`flex items-center justify-between py-2 ${disabled ? 'opacity-50' : 'cursor-pointer'}`}
+    >
       <div className="flex-1">
         <span className="text-sm text-white">{label}</span>
         {description && <p className="text-xs text-gray-500 mt-0.5">{description}</p>}
@@ -370,6 +375,7 @@ export function SettingsDrawer({
                 <MenuItem icon="🚧" label="AfterCare Signs" href="/aftercare" />
                 <MenuItem icon="📊" label="Traffic Counter" href="/traffic-counter" />
                 <MenuItem icon="⏱️" label="Cycle Timer" href="/cycle-timer" />
+                <MenuItem icon="👥" label="Contact Directory" href="/contacts" />
                 {onOpenTrafficEventLogger && (
                   <MenuItem icon="📝" label="Event Logger" onClick={onOpenTrafficEventLogger} />
                 )}
@@ -479,9 +485,13 @@ export function SettingsDrawer({
                         <SelectValue placeholder="Select region" />
                       </SelectTrigger>
                       <SelectContent className="bg-gray-800 border-gray-700">
-                        <SelectItem value="__none__" className="text-gray-400">None</SelectItem>
+                        <SelectItem value="__none__" className="text-gray-400">
+                          None
+                        </SelectItem>
                         {regions.map((r) => (
-                          <SelectItem key={r} value={r} className="text-white">{r}</SelectItem>
+                          <SelectItem key={r} value={r} className="text-white">
+                            {r}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -560,7 +570,9 @@ export function SettingsDrawer({
                   {offlineStats ? (
                     <>
                       <div className="text-sm">
-                        <p className="text-green-400">✓ {offlineStats.total_roads.toLocaleString()} roads downloaded</p>
+                        <p className="text-green-400">
+                          ✓ {offlineStats.total_roads.toLocaleString()} roads downloaded
+                        </p>
                         <p className="text-xs text-gray-500 mt-1">
                           Updated: {new Date(offlineStats.download_date).toLocaleDateString()}
                         </p>
@@ -600,7 +612,9 @@ export function SettingsDrawer({
                   )}
 
                   {downloadProgress && (
-                    <p className={`text-sm ${downloadProgress.startsWith('✓') ? 'text-green-400' : 'text-blue-400'}`}>
+                    <p
+                      className={`text-sm ${downloadProgress.startsWith('✓') ? 'text-green-400' : 'text-blue-400'}`}
+                    >
                       {downloadProgress}
                     </p>
                   )}
@@ -695,11 +709,17 @@ export function SettingsDrawer({
               {expanded === 'admin' && (
                 <div className="px-3 pb-3 space-y-2">
                   <div className="flex gap-2">
-                    <Button onClick={onSyncAll} className="flex-1 bg-purple-600 hover:bg-purple-700 h-9">
+                    <Button
+                      onClick={onSyncAll}
+                      className="flex-1 bg-purple-600 hover:bg-purple-700 h-9"
+                    >
                       Sync All
                     </Button>
                     {onGenerateDebug && (
-                      <Button onClick={onGenerateDebug} className="bg-gray-700 hover:bg-gray-600 h-9">
+                      <Button
+                        onClick={onGenerateDebug}
+                        className="bg-gray-700 hover:bg-gray-600 h-9"
+                      >
                         Debug
                       </Button>
                     )}
@@ -738,7 +758,10 @@ export function SettingsDrawer({
                   className="w-full px-3 py-2 rounded bg-gray-800 border border-gray-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 />
                 <div className="flex gap-2">
-                  <Button onClick={saveAiApiKey} className="flex-1 bg-cyan-600 hover:bg-cyan-700 h-9">
+                  <Button
+                    onClick={saveAiApiKey}
+                    className="flex-1 bg-cyan-600 hover:bg-cyan-700 h-9"
+                  >
                     Save Key
                   </Button>
                   <Button
