@@ -1,7 +1,7 @@
 # TC Work Zone Locator
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.28.5-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
+[![Version](https://img.shields.io/badge/version-1.29.0-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
@@ -67,6 +67,17 @@ A mobile-friendly web application for Traffic Controller (TC) work zone planning
 - Public toilets
 - Distance and navigation links
 
+### 📊 Traffic Event Logger (v1.29+)
+
+- **Real-time event logging** for traffic controllers
+- Log sent trips, holds, breaks, shuttle operations, and more
+- **Counter tracking** — True Left, True Right, RLR, Trip counts
+- **Timer tracking** — Hold duration, break duration
+- **Cloud Sync** — Optional sync to your own private Google Sheet
+- **Offline-first** — All data stored locally, syncs when online
+- **CSV export** — Download event history as spreadsheet
+- **User-configurable sync** — Each user sets up their own Google Sheet for privacy
+
 ### 🤖 AI Q&A Assistant (v1.27+)
 
 - Ask questions about traffic management, WHS, and road work documents
@@ -103,6 +114,99 @@ Open [http://localhost:3000](http://localhost:3000) to use the application.
 bun run build
 bun start
 ```
+
+## Cloud Sync Setup
+
+The Traffic Event Logger can sync your events to your own private Google Sheet. This is optional and each user configures their own sheet for privacy.
+
+### Step 1: Create a Google Sheet
+
+1. Go to [sheets.google.com](https://sheets.google.com) and create a new spreadsheet
+2. Add headers in row 1 (optional but recommended):
+
+```
+Time | Type | Label | Note | Road ID | Road Name | SLK | Op | Target ID | Lat | Lon
+```
+
+### Step 2: Add Google Apps Script
+
+1. In your sheet, go to **Extensions → Apps Script**
+2. Delete any existing code
+3. Paste the following script:
+
+```javascript
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+
+  var time = e.parameter.time || '';
+  var type = e.parameter.type || '';
+  var label = e.parameter.label || '';
+  var note = e.parameter.note || '';
+  var roadId = e.parameter.roadId || '';
+  var roadName = e.parameter.roadName || '';
+  var slk = e.parameter.slk || '';
+  var op = e.parameter.op || '';
+  var targetId = e.parameter.targetId || '';
+  var latitude = e.parameter.latitude || '';
+  var longitude = e.parameter.longitude || '';
+
+  // Handle DELETE operation (for undo events)
+  if (op === 'DELETE') {
+    var data = sheet.getDataRange().getValues();
+    for (var i = data.length - 1; i >= 0; i--) {
+      if (data[i][8] === targetId) {
+        sheet.deleteRow(i + 1);
+        break;
+      }
+    }
+    return ContentService.createTextOutput('OK');
+  }
+
+  sheet.appendRow([
+    time,
+    type,
+    label,
+    note,
+    roadId,
+    roadName,
+    slk,
+    op,
+    targetId,
+    latitude,
+    longitude,
+  ]);
+  return ContentService.createTextOutput('OK');
+}
+```
+
+4. Click **Save** (Ctrl+S or Cmd+S)
+
+### Step 3: Deploy as Web App
+
+1. Click **Deploy → New deployment**
+2. Choose type: **Web app**
+3. Set **Execute as**: Me
+4. Set **Who has access**: Anyone
+5. Click **Deploy**
+6. **Copy the Web app URL** (looks like `https://script.google.com/macros/s/.../exec`)
+
+### Step 4: Configure in the App
+
+1. Open Traffic Event Logger (from TC Tools menu)
+2. Tap **More** (•••)
+3. Tap **Configure Sync**
+4. Paste your URL in the **Google Apps Script URL** field
+5. (Optional) Add a secret key for extra security
+6. Tap **Save**
+
+Your events will now sync to your private Google Sheet in real-time when online.
+
+### Security Note
+
+- Your data goes to **YOUR sheet only** - no one else has access
+- Each user should create their own Google Sheet
+- The secret key provides an additional authentication layer (optional)
+- Data is still stored locally in localStorage even without cloud sync
 
 ## Usage Guide
 
@@ -268,7 +372,20 @@ src/
 
 ## Version History
 
-### 1.28.5 (Current) - Q&A Page Restructure
+### 1.29.0 (Current) - Cloud Sync Security & Traffic Event Logger
+
+- **Security: User-configurable Cloud Sync** — Removed hardcoded Google Sheets URL
+  - Each user now configures their own private Google Sheet
+  - Cloud sync disabled by default until user sets up their own URL
+  - Prevents data from being sent to shared/public sheets
+- **Traffic Event Logger Enhancements**
+  - Added step-by-step setup guide dialog with copyable script
+  - Added Cloud Sync Settings UI in More menu
+  - Status indicators show sync state (No Sync / Sync ON / Sync OFF)
+- **Contact Directory** — Track people, titles, vehicles, contact info with job tagging
+- **Cycle Timer** — Renamed "Truck" to "Timer", added description field
+
+### 1.28.5 - Q&A Page Restructure
 
 - **Tab-based Q&A layout** — Answers tab first, Ask tab second for better UX
 - **Generate Prompt button** — create prompts for external AI assistants (ChatGPT, Claude, etc.)
