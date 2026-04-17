@@ -68,7 +68,21 @@ export function getState(): CycleTimerState {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       const parsed = JSON.parse(stored);
-      return { ...DEFAULT_STATE, ...parsed };
+
+      // Migrate old "Truck" labels to "Timer" labels
+      if (parsed.timers && Array.isArray(parsed.timers)) {
+        parsed.timers = parsed.timers.map((timer: CycleTimer) => ({
+          ...timer,
+          label: timer.label?.replace(/^Truck (\d+)$/, 'Timer $1') || timer.label,
+        }));
+      }
+
+      // Always use fresh default presets (don't persist old "Truck" presets)
+      return {
+        ...DEFAULT_STATE,
+        ...parsed,
+        presetLabels: DEFAULT_PRESET_LABELS, // Always use current defaults
+      };
     }
   } catch (e) {
     console.error('Failed to load cycle timer state:', e);
