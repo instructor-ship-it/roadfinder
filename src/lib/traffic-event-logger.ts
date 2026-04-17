@@ -59,6 +59,8 @@ export interface TrafficEventState {
   shuttle: boolean;
   advancedFlashers: AdvancedFlashers;
   sheetsEnabled: boolean;
+  sheetsUrl: string; // User-configurable Google Apps Script URL
+  sheetsSecret: string; // Optional secret for authentication
   shiftStartTime: string | null;
   lastSentInterval: number | null;
   lastShuttleInterval: number | null;
@@ -71,8 +73,7 @@ export interface TrafficEventState {
 // ============================================================================
 
 const STORAGE_KEY = 'tc-traffic-event-logger';
-const SHEETS_URL =
-  'https://script.google.com/macros/s/AKfycbx9ORdxMtuQrlwy3i2o0q8gvY28uebYhpIE6RQTxw5lLTyGgJaEeSs9ENRD5e2jcynW/exec';
+const LEGACY_STORAGE_KEY = 'tc-traffic-event-logger-legacy'; // For migrating old URL
 
 const DEFAULT_STATE: TrafficEventState = {
   events: [],
@@ -86,7 +87,9 @@ const DEFAULT_STATE: TrafficEventState = {
   suspended: false,
   shuttle: false,
   advancedFlashers: { north: false, south: false, east: false, west: false, both: false },
-  sheetsEnabled: true,
+  sheetsEnabled: false, // Disabled by default - user must configure their own URL
+  sheetsUrl: '', // Empty by default - user must set their own
+  sheetsSecret: '', // Optional secret for authentication
   shiftStartTime: null,
   lastSentInterval: null,
   lastShuttleInterval: null,
@@ -778,12 +781,43 @@ export function getBreakElapsedTime(): number {
 }
 
 // ============================================================================
-// Google Sheets Sync
+// Google Sheets Sync (User-Configurable)
 // ============================================================================
 
-function buildSheetsURL(event: TrafficEvent): string {
+/**
+ * Set the Google Sheets URL and optional secret
+ * This allows each user to configure their own sync destination
+ */
+export function setSheetsConfig(url: string, secret: string = ''): void {
+  const state = getState();
+  state.sheetsUrl = url.trim();
+  state.sheetsSecret = secret.trim();
+  // Auto-enable sync when URL is set
+  if (url.trim()) {
+    state.sheetsEnabled = true;
+  }
+  saveState(state);
+  notifyListeners();
+}
+
+/**
+ * Get current sheets configuration
+ */
+export function getSheetsConfig(): { url: string; secret: string; enabled: boolean } {
+  const state = getState();
+  return {
+    url: state.sheetsUrl,
+    secret: state.sheetsSecret,
+    enabled: state.sheetsEnabled,
+  };
+}
+
+/**
+ * Build the full URL for sending to Google Sheets
+ */
+function buildSheetsURL(event: TrafficEvent, sheetsUrl: string, sheetsSecret: string): string {
   const params = new URLSearchParams({
-    secret: 'jaytec',
+    secret: sheetsSecret || '',
     type: event.type,
     label: event.label,
     note: event.note,
@@ -798,16 +832,31 @@ function buildSheetsURL(event: TrafficEvent): string {
     _ts: Date.now().toString(),
   });
 
-  return `${SHEETS_URL}?${params.toString()}`;
+  return `${sheetsUrl}?${params.toString()}`;
 }
 
 function sendToSheets(event: TrafficEvent): void {
-  const url = buildSheetsURL(event);
+  const state = getState();
+
+  // Don't send if no URL is configured
+  if (!state.sheetsUrl) {
+    console.warn('⚠️ Sheets sync skipped: No URL configured');
+    state.queue.push(event);
+    saveState(state);
+    return;
+  }
+
+  const url = buildSheetsURL(event, state.sheetsUrl, state.sheetsSecret);
   console.log('🔥 SENDING TO SHEETS:', url);
 
   fetch(url, { mode: 'no-cors', cache: 'no-cache' })
     .then(() => console.log('✅ SHEET OK:', event.label))
-    .catch((err) => console.error('❌ SHEET ERROR:', err, url));
+    .catch((err) => {
+      console.error('❌ SHEET ERROR:', err);
+      // Re-queue on failure
+      state.queue.push(event);
+      saveState(state);
+    });
 }
 
 export function flushQueue(): void {
@@ -823,23 +872,33 @@ export function flushQueue(): void {
   notifyListeners();
 }
 
-export function testSheetsConnection(): void {
+export function testSheetsConnection(): { success: boolean; message: string } {
+  const state = getState();
+
+  if (!state.sheetsUrl) {
+    return {
+      success: false,
+      message: 'No sync URL configured. Set up cloud sync in More → Cloud Sync Settings.',
+    };
+  }
+
   const testEvent: TrafficEvent = {
     id: generateId(),
     time: formatTime(new Date()),
     type: 'TEST',
     label: 'TEST EVENT',
-    note: 'TC1',
-    roadId: 'H001',
-    roadName: 'Test Road',
-    slk: '10.00',
+    note: 'Connection test',
+    roadId: state.roadId || 'TEST',
+    roadName: state.roadName || 'Test Road',
+    slk: state.slk || '0.00',
     op: 'LOG',
-    targetId: 'TEST123',
-    latitude: '-31.89',
-    longitude: '115.99',
+    targetId: 'TEST' + Date.now(),
+    latitude: '0.00',
+    longitude: '0.00',
   };
 
   sendToSheets(testEvent);
+  return { success: true, message: 'Test event sent to your cloud sheet.' };
 }
 
 // ============================================================================

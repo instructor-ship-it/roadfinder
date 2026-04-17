@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Drawer,
   DrawerContent,
@@ -7,6 +8,7 @@ import {
   DrawerTitle,
   DrawerFooter,
 } from '@/components/ui/drawer';
+import { setSheetsConfig, toggleSheets } from '@/lib/traffic-event-logger';
 import type { TrafficEventState } from '@/lib/traffic-event-logger';
 
 interface MoreSheetProps {
@@ -32,6 +34,29 @@ export function MoreSheet({
   onLogEvent,
   onOpenFlashers,
 }: MoreSheetProps) {
+  // Cloud sync settings state
+  const [showSyncSettings, setShowSyncSettings] = useState(false);
+  const [syncUrl, setSyncUrl] = useState(state.sheetsUrl || '');
+  const [syncSecret, setSyncSecret] = useState(state.sheetsSecret || '');
+  const [saveMessage, setSaveMessage] = useState('');
+
+  // Handle save
+  const handleSaveSync = () => {
+    setSheetsConfig(syncUrl, syncSecret);
+    setSaveMessage('✅ Saved!');
+    setTimeout(() => setSaveMessage(''), 2000);
+  };
+
+  // Handle toggle sheets on/off
+  const handleToggleSync = () => {
+    if (!state.sheetsUrl) {
+      // No URL configured - show settings
+      setShowSyncSettings(true);
+      return;
+    }
+    toggleSheets();
+  };
+
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerContent className="bg-gray-900 border-t border-gray-700">
@@ -39,6 +64,84 @@ export function MoreSheet({
           <DrawerTitle className="text-white">More Actions</DrawerTitle>
         </DrawerHeader>
         <div className="p-4 space-y-2 overflow-y-auto max-h-[60vh]">
+          {/* Cloud Sync Section */}
+          <div className="border border-gray-700 rounded-lg p-3 bg-gray-800/50">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-gray-300">☁️ Cloud Sync</span>
+              <button
+                onClick={handleToggleSync}
+                disabled={!state.sheetsUrl}
+                className={`px-3 py-1 rounded text-xs font-medium transition-all ${
+                  state.sheetsEnabled && state.sheetsUrl
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-700 text-gray-400'
+                }`}
+              >
+                {state.sheetsEnabled && state.sheetsUrl ? 'ON' : 'OFF'}
+              </button>
+            </div>
+
+            {/* Sync status */}
+            {!state.sheetsUrl ? (
+              <p className="text-xs text-amber-400 mb-2">
+                ⚠️ No sync URL configured. Data is stored locally only.
+              </p>
+            ) : (
+              <p className="text-xs text-green-400 mb-2">
+                ✓ Sync configured • {state.sheetsUrl.slice(0, 40)}...
+              </p>
+            )}
+
+            {/* Show/hide settings button */}
+            <button
+              onClick={() => setShowSyncSettings(!showSyncSettings)}
+              className="w-full py-2 px-3 rounded border border-gray-600 bg-gray-700 text-gray-200 text-xs hover:bg-gray-600 transition-all"
+            >
+              {showSyncSettings ? '▲ Hide Settings' : '▼ Configure Sync'}
+            </button>
+
+            {/* Settings panel */}
+            {showSyncSettings && (
+              <div className="mt-3 space-y-2">
+                <div>
+                  <label className="block text-xs text-gray-400 mb-1">Google Apps Script URL</label>
+                  <input
+                    type="url"
+                    placeholder="https://script.google.com/macros/s/..."
+                    value={syncUrl}
+                    onChange={(e) => setSyncUrl(e.target.value)}
+                    className="w-full py-2 px-3 rounded bg-gray-700 border border-gray-600 text-white text-xs placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-400 mb-1">Secret (optional)</label>
+                  <input
+                    type="text"
+                    placeholder="Your secret key"
+                    value={syncSecret}
+                    onChange={(e) => setSyncSecret(e.target.value)}
+                    className="w-full py-2 px-3 rounded bg-gray-700 border border-gray-600 text-white text-xs placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleSaveSync}
+                    className="flex-1 py-2 px-3 rounded bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition-all"
+                  >
+                    Save
+                  </button>
+                  {saveMessage && <span className="text-xs text-green-400">{saveMessage}</span>}
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  💡 Each user should configure their own Google Sheet. See docs for setup
+                  instructions.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-gray-700 my-3" />
           {/* On Hold - Red toggle */}
           <button
             onClick={() => {

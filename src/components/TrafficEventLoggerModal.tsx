@@ -307,8 +307,8 @@ export function TrafficEventLoggerModal({
 
   // Test sheets
   const handleTestSheets = useCallback(() => {
-    testSheetsConnection();
-    showStatus('✅ Test sent');
+    const result = testSheetsConnection();
+    showStatus(result.message);
   }, [showStatus]);
 
   // Handle TC selector open
@@ -424,12 +424,18 @@ export function TrafficEventLoggerModal({
               </span>
               <span
                 className={`px-2 py-0.5 rounded-full text-xs ${
-                  state.sheetsEnabled
-                    ? 'bg-green-500/20 text-green-400'
-                    : 'bg-red-500/20 text-red-400'
+                  state.sheetsUrl
+                    ? state.sheetsEnabled
+                      ? 'bg-green-500/20 text-green-400'
+                      : 'bg-yellow-500/20 text-yellow-400'
+                    : 'bg-gray-500/20 text-gray-400'
                 }`}
               >
-                Sheets: {state.sheetsEnabled ? 'ON' : 'OFF'}
+                {state.sheetsUrl
+                  ? state.sheetsEnabled
+                    ? '☁️ Sync ON'
+                    : '☁️ Sync OFF'
+                  : '☁️ No Sync'}
               </span>
             </div>
 
