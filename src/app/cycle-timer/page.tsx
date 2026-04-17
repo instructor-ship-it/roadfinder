@@ -174,8 +174,43 @@ export default function CycleTimerPage() {
         subtitle="Monitor travel times and vehicle cycles"
         showBack
         backHref="/"
-        backLabel="Back"
       />
+
+      {/* Other Tools Links */}
+      <section className="px-4 py-2 border-b border-gray-800 bg-gray-850" aria-label="Other tools">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-4 px-4 scrollbar-hide">
+          <Link
+            href="/aftercare"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-700/50 text-gray-300 text-xs whitespace-nowrap hover:bg-gray-700 transition-colors touch-manipulation"
+          >
+            <span>🚧</span> AfterCare
+          </Link>
+          <Link
+            href="/traffic-counter"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-700/50 text-gray-300 text-xs whitespace-nowrap hover:bg-gray-700 transition-colors touch-manipulation"
+          >
+            <span>📊</span> Counter
+          </Link>
+          <Link
+            href="/contacts"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-700/50 text-gray-300 text-xs whitespace-nowrap hover:bg-gray-700 transition-colors touch-manipulation"
+          >
+            <span>👥</span> Contacts
+          </Link>
+          <Link
+            href="/calibrate"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-700/50 text-gray-300 text-xs whitespace-nowrap hover:bg-gray-700 transition-colors touch-manipulation"
+          >
+            <span>📍</span> Calibrate
+          </Link>
+          <Link
+            href="/qa"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gray-700/50 text-gray-300 text-xs whitespace-nowrap hover:bg-gray-700 transition-colors touch-manipulation"
+          >
+            <span>🤖</span> AI Q&A
+          </Link>
+        </div>
+      </section>
 
       {/* Quick Add Buttons */}
       <section className="px-4 py-3 border-b border-gray-800" aria-label="Quick add timers">
