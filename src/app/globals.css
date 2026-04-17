@@ -1,10 +1,10 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 @plugin "@tailwindcss/typography";
 
 /* React-PDF styles */
-@import "react-pdf/dist/Page/AnnotationLayer.css";
-@import "react-pdf/dist/Page/TextLayer.css";
+@import 'react-pdf/dist/Page/AnnotationLayer.css';
+@import 'react-pdf/dist/Page/TextLayer.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -177,14 +177,25 @@
   @apply bg-transparent p-0;
 }
 
-.prose h1, .prose h2, .prose h3, .prose h4 {
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
   @apply text-white font-bold;
 }
 
-.prose h1 { @apply text-xl mt-6 mb-4; }
-.prose h2 { @apply text-lg mt-5 mb-3; }
-.prose h3 { @apply text-base mt-4 mb-2; }
-.prose h4 { @apply text-sm mt-3 mb-2; }
+.prose h1 {
+  @apply text-xl mt-6 mb-4;
+}
+.prose h2 {
+  @apply text-lg mt-5 mb-3;
+}
+.prose h3 {
+  @apply text-base mt-4 mb-2;
+}
+.prose h4 {
+  @apply text-sm mt-3 mb-2;
+}
 
 .prose ul {
   @apply list-disc list-inside space-y-1;
@@ -200,4 +211,63 @@
 
 .prose a {
   @apply text-blue-400 hover:text-blue-300 underline;
+}
+
+/* Mobile-optimized styles */
+@layer utilities {
+  /* Safe area padding for iPhone X+ notch and home indicator */
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .safe-area-pt {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  /* Touch manipulation - prevents double-tap zoom on mobile */
+  .touch-manipulation {
+    touch-action: manipulation;
+  }
+
+  /* High contrast focus ring for accessibility */
+  .focus-visible-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900;
+  }
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Improved focus states for keyboard navigation */
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-cyan-400;
+}
+
+/* Button active state for mobile */
+button:active:not(:disabled),
+a:active {
+  transform: scale(0.98);
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent text selection on interactive elements */
+button,
+[role='button'],
+.nav-item {
+  -webkit-user-select: none;
+  user-select: none;
 }

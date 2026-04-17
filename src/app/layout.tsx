@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
+import { ConfirmProvider } from '@/components/ui/confirm-dialog';
+import { BottomNav, BottomNavSpacer } from '@/components/ui/bottom-nav';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -76,9 +79,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <ServiceWorkerRegistration />
-        {children}
-        <Toaster />
+        <ErrorBoundary>
+          <ConfirmProvider>
+            <ServiceWorkerRegistration />
+            <main id="main-content" className="min-h-screen">
+              {children}
+            </main>
+            <BottomNavSpacer />
+            <BottomNav />
+            <Toaster />
+          </ConfirmProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );
