@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/select';
 import SettingsDrawer, { APP_VERSION } from '@/components/SettingsDrawer';
 import { TrafficEventLoggerModal } from '@/components/TrafficEventLoggerModal';
+import { Onboarding } from '@/components/Onboarding';
 import { SavedLocations } from '@/components/home/SavedLocations';
 import { WeatherSection } from '@/components/home/WeatherSection';
 import { TrafficSection } from '@/components/home/TrafficSection';
@@ -4173,14 +4174,22 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gray-900 text-white" role="application">
+      {/* Skip link for accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-cyan-600 focus:text-white focus:rounded-lg"
+      >
+        Skip to main content
+      </a>
       <div className="max-w-md mx-auto px-4 py-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-1">
+        <header className="flex items-center justify-between mb-1" role="banner">
           <button
             onClick={getEmergencyLocation}
             className="w-8 h-8 flex items-center justify-center rounded-full text-lg bg-red-600 hover:bg-red-700"
             title="Emergency Location (000)"
+            aria-label="Get emergency location for 000 call"
           >
             🆘
           </button>
@@ -4228,7 +4237,7 @@ export default function Home() {
               offlineReady={offlineReady}
             />
           </div>
-        </div>
+        </header>
 
         {/* Debug Info Popup */}
         {showDebug && (
@@ -7352,6 +7361,9 @@ export default function Home() {
         roadName={roadInfo?.road_name}
         slk={startSlk}
       />
+
+      {/* First-run Onboarding */}
+      <Onboarding />
     </div>
   );
 }

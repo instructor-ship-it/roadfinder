@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 
 // App version constant - single source of truth
-export const APP_VERSION = '1.29.0';
+export const APP_VERSION = '1.30.0';
 
 // Offline toggles type - shared with page.tsx
 export interface OfflineToggles {
@@ -335,6 +335,8 @@ export function SettingsDrawer({
         <button
           className="w-8 h-8 flex items-center justify-center rounded-full text-xl font-bold bg-gray-700 hover:bg-gray-600"
           title="Settings"
+          aria-label="Open settings menu"
+          aria-haspopup="dialog"
         >
           ☰
         </button>

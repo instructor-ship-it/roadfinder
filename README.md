@@ -416,7 +416,30 @@ API keys (e.g., for AI Assistant) are stored in **localStorage** on your device:
 
 ## Version History
 
-### 1.29.0 (Current) - Cloud Sync Security & Traffic Event Logger
+### 1.30.0 (Current) - Usability & Accessibility Improvements
+
+- **First-Run Onboarding** — Guided setup for new users
+  - Step-by-step introduction to key features
+  - Offline data download prompt
+  - Quick setup checklist in settings
+- **Accessibility Enhancements**
+  - ARIA labels on all interactive elements
+  - Skip link for keyboard navigation
+  - User-scalable viewport (zoom enabled)
+  - Proper role attributes on landmark regions
+- **Loading States** — Skeleton components for visual feedback
+  - WorkZoneSkeleton, SpeedZoneSkeleton, SignageSkeleton
+  - HomePageSkeleton, DrivePageSkeleton
+- **Form Validation** — Mobile-friendly validation feedback
+  - Inline error messages with icons
+  - Real-time validation on blur
+  - SLK range validation
+- **Navigation Consistency** — Unified header component
+  - MobileNav component with back/home buttons
+  - Consistent emergency button placement
+  - Offline status indicators
+
+### 1.29.0 - Cloud Sync Security & Traffic Event Logger
 
 - **Security: User-configurable Cloud Sync** — Removed hardcoded Google Sheets URL
   - Each user now configures their own private Google Sheet
