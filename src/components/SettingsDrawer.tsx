@@ -772,6 +772,9 @@ export function SettingsDrawer({
                     {aiTestingKey ? 'Testing...' : 'Test'}
                   </Button>
                 </div>
+                <p className="text-xs text-amber-500/80 mt-1">
+                  ⚠️ Key stored locally. Only use on trusted devices.
+                </p>
               </div>
             )}
           </div>

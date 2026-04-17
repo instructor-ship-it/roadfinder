@@ -370,6 +370,50 @@ src/
 
 **Note**: Geolocation requires HTTPS in production.
 
+## Security
+
+### Data Storage
+
+This app uses **client-side storage only**:
+
+- **localStorage** — User preferences, AfterCare jobs, Q&A history, Contact directory
+- **IndexedDB** — Offline road data, speed zones, signage
+
+**Important**: All data is stored locally on your device. No data is sent to external servers unless you explicitly configure cloud sync.
+
+### Cloud Sync (Traffic Event Logger)
+
+If you enable cloud sync in the Traffic Event Logger:
+
+- You provide your own Google Apps Script URL and optional secret
+- Data is sent directly from your browser to YOUR Google Sheet
+- **No shared or public sheets** — each user configures their own
+
+### API Keys
+
+API keys (e.g., for AI Assistant) are stored in **localStorage** on your device:
+
+- Keys are never transmitted to our servers
+- Keys are accessible only within this app on your device
+- **Recommendation**: Only save API keys on trusted personal devices
+- Clear the key after use on shared devices
+
+### Best Practices
+
+1. **Only use trusted devices** for sensitive operations
+2. **Configure your own cloud sync** — never use someone else's Google Sheet URL
+3. **Clear API keys** after use on shared devices
+4. **Keep your Google Apps Script URL and secret private**
+
+### Security Audit Summary (v1.29.0)
+
+- ✅ No hardcoded API keys or secrets in source code
+- ✅ Google Sheets URL is user-configurable (not shared)
+- ✅ API keys stored server-side via environment variables
+- ✅ All external API calls use HTTPS
+- ✅ JSON parsing wrapped in try-catch blocks
+- ⚠️ API keys in localStorage (user responsibility on shared devices)
+
 ## Version History
 
 ### 1.29.0 (Current) - Cloud Sync Security & Traffic Event Logger
