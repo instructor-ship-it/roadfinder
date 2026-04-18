@@ -66,7 +66,7 @@ export function useOrientation(): OrientationInfo {
     // Also use matchMedia for more reliable detection
     const mediaQuery = window.matchMedia('(orientation: landscape)');
     const handleChange = () => updateOrientation();
-    
+
     // Modern browsers
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener('change', handleChange);
@@ -81,7 +81,7 @@ export function useOrientation(): OrientationInfo {
     return () => {
       window.removeEventListener('resize', updateOrientation);
       window.removeEventListener('orientationchange', updateOrientation);
-      
+
       if (mediaQuery.removeEventListener) {
         mediaQuery.removeEventListener('change', handleChange);
       } else {
