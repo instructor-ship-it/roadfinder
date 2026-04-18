@@ -6,7 +6,7 @@
 
 | Field          | Value                                            |
 | -------------- | ------------------------------------------------ |
-| **Version**    | RC 1.4.3                                         |
+| **Version**    | RC 1.34.0                                        |
 | **Date**       | April 2026                                       |
 | **Repository** | https://github.com/instructor-ship-it/roadfinder |
 
@@ -618,7 +618,7 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 
 ## 17. Version History
 
-### RC 1.4.3 (Current) - IndexedDB for Saved Locations
+### RC 1.34.0 (Current) - IndexedDB for Saved Locations
 
 - **Migrated saved locations from localStorage to IndexedDB**
   - Removed 200 location limit - now supports unlimited saved locations

@@ -1,6 +1,6 @@
-# RC 1.4.3 Key Learnings & Concepts
+# RC 1.34.0 Key Learnings & Concepts
 
-> **Version:** RC 1.4.3
+> **Version:** RC 1.34.0
 > **Date:** April 2026
 > **Author:** Development Session Notes
 
@@ -1461,4 +1461,4 @@ const handleSaveLocation = async (name: string) => {
 
 ---
 
-_Document updated from RC 1.4.3 development session notes._
+_Document updated from RC 1.34.0 development session notes._
