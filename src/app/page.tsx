@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -261,6 +261,38 @@ export default function Home() {
     }
     return [];
   });
+
+  // Sort mode for saved locations: 'date' = most recent first, 'road' = road_id then SLK
+  const [savedLocationsSort, setSavedLocationsSort] = useState<'date' | 'road'>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('savedLocationsSort') as 'date' | 'road') || 'date';
+    }
+    return 'date';
+  });
+
+  // Sorted saved locations based on sort mode
+  const sortedSavedLocations = useMemo(() => {
+    const sorted = [...savedLocations];
+    if (savedLocationsSort === 'date') {
+      // Sort by created_at descending (most recent first)
+      sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    } else {
+      // Sort by road_id first, then by start_slk
+      sorted.sort((a, b) => {
+        const roadCompare = a.road_id.localeCompare(b.road_id);
+        if (roadCompare !== 0) return roadCompare;
+        return a.start_slk - b.start_slk;
+      });
+    }
+    return sorted;
+  }, [savedLocations, savedLocationsSort]);
+
+  // Persist sort preference
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('savedLocationsSort', savedLocationsSort);
+    }
+  }, [savedLocationsSort]);
 
   const saveLocation = (name: string) => {
     if (!selectedRoad || !startSlk) return;
@@ -4538,14 +4570,40 @@ export default function Home() {
             {/* Saved Locations */}
             {savedLocations.length > 0 && (
               <div className="bg-gray-800 rounded-lg p-3 mt-4 overflow-hidden">
-                <h4 className="text-sm font-semibold text-purple-400 mb-2 shrink-0">
-                  📌 Saved Locations ({savedLocations.length})
-                </h4>
+                <div className="flex items-center justify-between mb-2 shrink-0">
+                  <h4 className="text-sm font-semibold text-purple-400">
+                    📌 Saved Locations ({savedLocations.length})
+                  </h4>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => setSavedLocationsSort('date')}
+                      className={`px-2 py-0.5 text-xs rounded transition-colors ${
+                        savedLocationsSort === 'date'
+                          ? 'bg-purple-600 text-white'
+                          : 'bg-gray-700 text-gray-400 hover:text-white'
+                      }`}
+                      title="Sort by date"
+                    >
+                      📅 Date
+                    </button>
+                    <button
+                      onClick={() => setSavedLocationsSort('road')}
+                      className={`px-2 py-0.5 text-xs rounded transition-colors ${
+                        savedLocationsSort === 'road'
+                          ? 'bg-purple-600 text-white'
+                          : 'bg-gray-700 text-gray-400 hover:text-white'
+                      }`}
+                      title="Sort by road ID then SLK"
+                    >
+                      🛣️ Road
+                    </button>
+                  </div>
+                </div>
                 <div
                   className="space-y-2 max-h-48 overflow-y-auto overscroll-contain pr-1"
                   style={{ scrollbarWidth: 'thin' }}
                 >
-                  {savedLocations.map((loc) => {
+                  {sortedSavedLocations.map((loc) => {
                     // Format the saved date
                     const savedDate = loc.created_at ? new Date(loc.created_at) : null;
                     const dateStr = savedDate
