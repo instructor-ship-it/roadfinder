@@ -26,6 +26,11 @@ function NearbySignsContent() {
   const direction = (searchParams.get('direction') as 'increasing' | 'decreasing') || 'increasing';
   const lookahead = parseFloat(searchParams.get('lookahead') || '5');
 
+  // Preserve original destination parameters (if any)
+  const destRoadId = searchParams.get('dest_road_id') || '';
+  const destRoadName = searchParams.get('dest_road_name') || '';
+  const destSlkStr = searchParams.get('dest_slk') || '';
+
   const [refreshKey, setRefreshKey] = useState(0);
   const [editingSign, setEditingSign] = useState<{ jobId: string; signId: string } | null>(null);
   const [editSlk, setEditSlk] = useState('');
@@ -167,8 +172,10 @@ function NearbySignsContent() {
     return `https://www.google.com/maps/dir//${coords}`;
   }, [signs]);
 
-  // Back URL
-  const backUrl = `/drive?road_id=${encodeURIComponent(roadId)}&slk=${slk}&autostart=true`;
+  // Back URL - preserve original destination if it existed
+  const backUrl = destRoadId
+    ? `/drive?road_id=${encodeURIComponent(destRoadId)}&road_name=${encodeURIComponent(destRoadName)}&slk=${destSlkStr}&autostart=true`
+    : `/drive?autostart=true`;
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4 max-w-lg mx-auto">

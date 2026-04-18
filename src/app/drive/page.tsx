@@ -1020,7 +1020,7 @@ function DriveContent() {
             {/* AfterCare Indicator */}
             {showAfterCareOnDrive && nearbyAfterCare.hasSigns && (
               <a
-                href={`/drive/nearby-signs?road_id=${encodeURIComponent(roadInfo.road_id)}&slk=${roadInfo.slk}&direction=${slkDirection || 'increasing'}&lookahead=${afterCareLookaheadKm}`}
+                href={`/drive/nearby-signs?road_id=${encodeURIComponent(roadInfo.road_id)}&slk=${roadInfo.slk}&direction=${slkDirection || 'increasing'}&lookahead=${afterCareLookaheadKm}${destRoadId ? `&dest_road_id=${encodeURIComponent(destRoadId)}&dest_road_name=${encodeURIComponent(destRoadName)}&dest_slk=${destSlk}` : ''}`}
                 className="mt-4 w-full bg-cyan-900/40 border border-cyan-700/50 rounded-lg px-3 py-2 hover:bg-cyan-900/60 transition-colors"
               >
                 <div className="flex items-center justify-center gap-2">
@@ -1782,7 +1782,7 @@ function DriveContent() {
           {showAfterCareOnDrive && nearbyAfterCare.hasSigns && (
             <div className="mt-3 pt-3 border-t border-gray-700">
               <a
-                href={`/drive/nearby-signs?road_id=${encodeURIComponent(roadInfo.road_id)}&slk=${roadInfo.slk}&direction=${slkDirection || 'increasing'}&lookahead=${afterCareLookaheadKm}`}
+                href={`/drive/nearby-signs?road_id=${encodeURIComponent(roadInfo.road_id)}&slk=${roadInfo.slk}&direction=${slkDirection || 'increasing'}&lookahead=${afterCareLookaheadKm}${destRoadId ? `&dest_road_id=${encodeURIComponent(destRoadId)}&dest_road_name=${encodeURIComponent(destRoadName)}&dest_slk=${destSlk}` : ''}`}
                 className="block bg-cyan-900/40 border border-cyan-700/50 rounded-lg p-3 hover:bg-cyan-900/60 transition-colors"
               >
                 <div className="flex items-center justify-between">
