@@ -6,6 +6,13 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import {
   initDB,
   isOfflineDataAvailable as checkOfflineData,
   findRoadNearGps,
@@ -113,6 +120,18 @@ function AfterCareContent() {
 
   // Route optimization state
   const [isOptimizing, setIsOptimizing] = useState(false);
+
+  // Report modal state
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportType, setReportType] = useState<'status' | 'retrieved'>('status');
+  const [reportDateStart, setReportDateStart] = useState<string>(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 30); // Default to 30 days ago
+    return d.toISOString().split('T')[0];
+  });
+  const [reportDateEnd, setReportDateEnd] = useState<string>(() => {
+    return new Date().toISOString().split('T')[0];
+  });
 
   // Check if we're in filtered mode
   const isFilteredMode = !!(filterRoadId && filterSlk);
@@ -288,8 +307,8 @@ function AfterCareContent() {
     }
   };
 
-  // Handle print report
-  const handlePrintReport = () => {
+  // Handle print status report (original report)
+  const handlePrintStatusReport = () => {
     const report = generateReport(jobs);
     const printWindow = window.open('', '_blank');
     if (!printWindow) {
@@ -401,6 +420,149 @@ function AfterCareContent() {
     printWindow.document.write(html);
     printWindow.document.close();
     printWindow.print();
+  };
+
+  // Handle print retrieved signage report (new report)
+  const handlePrintRetrievedReport = () => {
+    // Get all retrieved signs with their retrieved_date
+    const retrievedSigns: (AfterCareSign & {
+      job: AfterCareJob;
+      effectiveRetrievedDate: string;
+    })[] = [];
+
+    for (const job of jobs) {
+      for (const sign of job.signs) {
+        if (sign.status === 'retrieved') {
+          // Use retrieved_date if available, otherwise use placed_date as fallback
+          const effectiveDate = sign.retrieved_date || sign.placed_date;
+          retrievedSigns.push({
+            ...sign,
+            job,
+            effectiveRetrievedDate: effectiveDate,
+          });
+        }
+      }
+    }
+
+    // Filter by date range
+    const startDate = new Date(reportDateStart);
+    const endDate = new Date(reportDateEnd);
+    endDate.setHours(23, 59, 59, 999); // End of day
+
+    const filteredSigns = retrievedSigns.filter((s) => {
+      const signDate = new Date(s.effectiveRetrievedDate);
+      return signDate >= startDate && signDate <= endDate;
+    });
+
+    // Sort by retrieved date descending (most recent first)
+    filteredSigns.sort((a, b) => {
+      const dateA = new Date(
+        a.effectiveRetrievedDate + (a.retrieved_time ? `T${a.retrieved_time}` : '')
+      );
+      const dateB = new Date(
+        b.effectiveRetrievedDate + (b.retrieved_time ? `T${b.retrieved_time}` : '')
+      );
+      return dateB.getTime() - dateA.getTime();
+    });
+
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) {
+      alert('Please allow popups to print the report');
+      return;
+    }
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Retrieved Signage Report</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; font-size: 12px; }
+    h1 { font-size: 20px; margin-bottom: 5px; }
+    h2 { font-size: 14px; margin-top: 20px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+    .date-range { color: #666; margin-bottom: 20px; }
+    .stats { background: #f5f5f5; padding: 10px; margin-bottom: 20px; }
+    .stat { display: inline-block; margin-right: 20px; }
+    .stat-label { color: #666; font-size: 10px; }
+    .stat-value { font-size: 18px; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background: #f5f5f5; font-weight: bold; }
+    .retrieved-date { white-space: nowrap; }
+    .road-id { font-family: monospace; }
+    @media print { body { -webkit-print-color-adjust: exact; } }
+  </style>
+</head>
+<body>
+  <h1>✅ Retrieved Signage Report</h1>
+  <p class="date-range">Date Range: ${formatAusDate(reportDateStart)} to ${formatAusDate(reportDateEnd)}</p>
+  
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Total Retrieved</div><div class="stat-value">${filteredSigns.length}</div></div>
+    <div class="stat"><div class="stat-label">Jobs Involved</div><div class="stat-value">${new Set(filteredSigns.map((s) => s.job.id)).size}</div></div>
+  </div>
+  
+  ${
+    filteredSigns.length === 0
+      ? '<p>No signage retrieved in this date range.</p>'
+      : `
+    <table>
+      <thead>
+        <tr>
+          <th>Retrieved Date</th>
+          <th>Road</th>
+          <th>SLK</th>
+          <th>Sign Type</th>
+          <th>Direction</th>
+          <th>Description</th>
+          <th>Job</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${filteredSigns
+          .map(
+            (s) => `
+          <tr>
+            <td class="retrieved-date">${formatRetrievedDateTime(s) || formatAusDate(s.effectiveRetrievedDate)}</td>
+            <td class="road-id">${s.job.road_id}</td>
+            <td>${s.slk.toFixed(2)}</td>
+            <td>${s.sign_type}</td>
+            <td>${s.direction === 'True Left' ? 'TL' : 'TR'}</td>
+            <td>${s.description || '-'}</td>
+            <td>${s.job.job_name}</td>
+          </tr>
+        `
+          )
+          .join('')}
+      </tbody>
+    </table>
+  `
+  }
+  
+  <p style="margin-top:30px; text-align:center; color:#999; font-size:10px;">
+    AfterCare Signs v${APP_VERSION} - Generated: ${formatAusDate(new Date())}
+  </p>
+</body>
+</html>`;
+
+    printWindow.document.write(html);
+    printWindow.document.close();
+    printWindow.print();
+  };
+
+  // Handle report button click
+  const handleReportClick = () => {
+    setShowReportModal(true);
+  };
+
+  // Handle report execution
+  const handleExecuteReport = () => {
+    setShowReportModal(false);
+    if (reportType === 'status') {
+      handlePrintStatusReport();
+    } else {
+      handlePrintRetrievedReport();
+    }
   };
 
   return (
@@ -534,7 +696,7 @@ function AfterCareContent() {
                 )}
                 {jobs.length > 0 && (
                   <Button
-                    onClick={handlePrintReport}
+                    onClick={handleReportClick}
                     className="flex-1 bg-purple-700 hover:bg-purple-600 text-xs h-7 min-w-[100px]"
                   >
                     🖨️ Report
@@ -734,6 +896,94 @@ function AfterCareContent() {
 
       {/* Presets View */}
       {view === 'presets' && <PresetsView onBack={() => setView('list')} onUpdate={refreshData} />}
+
+      {/* Report Selection Modal */}
+      <Dialog open={showReportModal} onOpenChange={setShowReportModal}>
+        <DialogContent className="bg-gray-800 text-white border-gray-700 max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-cyan-400">🖨️ Select Report</DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Choose which report to generate
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            {/* Report Type Selection */}
+            <div className="space-y-2">
+              <label className="text-sm text-gray-300">Report Type</label>
+              <div className="space-y-2">
+                <button
+                  onClick={() => setReportType('status')}
+                  className={`w-full p-3 rounded-lg text-left text-sm transition-colors ${
+                    reportType === 'status'
+                      ? 'bg-cyan-700 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  <span className="font-medium">📊 Status Report</span>
+                  <p className="text-xs opacity-75 mt-1">
+                    Jobs grouped by status (retrieval, maintenance, active)
+                  </p>
+                </button>
+                <button
+                  onClick={() => setReportType('retrieved')}
+                  className={`w-full p-3 rounded-lg text-left text-sm transition-colors ${
+                    reportType === 'retrieved'
+                      ? 'bg-cyan-700 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  <span className="font-medium">✅ Retrieved Signage</span>
+                  <p className="text-xs opacity-75 mt-1">
+                    All retrieved signage sorted by date (descending)
+                  </p>
+                </button>
+              </div>
+            </div>
+
+            {/* Date Range (only for retrieved report) */}
+            {reportType === 'retrieved' && (
+              <div className="space-y-3 pt-2 border-t border-gray-700">
+                <label className="text-sm text-gray-300">Date Range</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs text-gray-400 block mb-1">From</label>
+                    <Input
+                      type="date"
+                      value={reportDateStart}
+                      onChange={(e) => setReportDateStart(e.target.value)}
+                      className="bg-gray-700 border-gray-600 text-white text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-400 block mb-1">To</label>
+                    <Input
+                      type="date"
+                      value={reportDateEnd}
+                      onChange={(e) => setReportDateEnd(e.target.value)}
+                      className="bg-gray-700 border-gray-600 text-white text-sm"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-2 pt-2">
+            <Button
+              onClick={() => setShowReportModal(false)}
+              variant="outline"
+              className="flex-1 border-gray-600 text-gray-300"
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleExecuteReport} className="flex-1 bg-cyan-700 hover:bg-cyan-600">
+              Generate Report
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
