@@ -1,0 +1,67 @@
+name: Mark stale issues and PRs
+
+on:
+  schedule:
+    - cron: '30 1 * * *' # Run daily at 1:30 UTC
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Mark stale issues and pull requests
+        uses: actions/stale@v9
+        with:
+          # Issue settings
+          stale-issue-message: |
+            This issue has been automatically marked as stale because it has not had any activity for 30 days.
+            
+            If this is still relevant:
+            - Add a comment with any new information
+            - Remove the `stale` label
+            
+            This issue will be closed in 7 days if no further activity occurs.
+          close-issue-message: |
+            This issue has been automatically closed due to inactivity.
+            
+            If you believe this was closed in error, please:
+            - Reopen the issue
+            - Add a comment explaining why it's still relevant
+            
+            Thank you for your contribution!
+          stale-issue-label: 'stale'
+          days-before-issue-stale: 30
+          days-before-issue-close: 7
+
+          # PR settings
+          stale-pr-message: |
+            This pull request has been automatically marked as stale because it has not had any activity for 14 days.
+            
+            If this PR is still being worked on:
+            - Add a comment with the current status
+            - Remove the `stale` label
+            
+            This PR will be closed in 7 days if no further activity occurs.
+          close-pr-message: |
+            This pull request has been automatically closed due to inactivity.
+            
+            If you believe this was closed in error, please:
+            - Reopen the PR
+            - Add a comment explaining the current status
+            
+            Thank you for your contribution!
+          stale-pr-label: 'stale'
+          days-before-pr-stale: 14
+          days-before-pr-close: 7
+
+          # Exempt labels (issues/PRs with these labels won't be marked stale)
+          exempt-issue-labels: 'pinned,security,enhancement,bug,help wanted'
+          exempt-pr-labels: 'pinned,security,work-in-progress'
+
+          # Other settings
+          remove-stale-when-updated: true
+          delete-branch: false

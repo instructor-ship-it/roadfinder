@@ -1,12 +1,12 @@
 # TC Work Zone Locator
 
-## Release Candidate 1.4.3
+## Version 1.34.1
 
 **Complete Layout & Functionality Documentation**
 
 | Field          | Value                                            |
 | -------------- | ------------------------------------------------ |
-| **Version**    | RC 1.34.0                                        |
+| **Version**    | 1.34.1                                           |
 | **Date**       | April 2026                                       |
 | **Repository** | https://github.com/instructor-ship-it/roadfinder |
 

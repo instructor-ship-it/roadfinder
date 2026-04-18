@@ -1,0 +1,47 @@
+# CODEOWNERS - Code Review Ownership
+#
+# This file defines who is responsible for reviewing code changes.
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Lines starting with '#' are comments.
+# Each line is a file pattern followed by one or more owners.
+
+# Default owners for everything in the repo
+* @instructor-ship-it
+
+# API routes - backend logic
+/src/app/api/ @instructor-ship-it
+
+# Core business logic
+/src/lib/ @instructor-ship-it
+
+# React components
+/src/components/ @instructor-ship-it
+
+# Custom hooks
+/src/hooks/ @instructor-ship-it
+
+# TypeScript types
+/src/types/ @instructor-ship-it
+
+# Database and offline storage
+/src/lib/offline-db.ts @instructor-ship-it
+/src/lib/offline-db/ @instructor-ship-it
+/prisma/ @instructor-ship-it
+
+# Documentation
+/docs/ @instructor-ship-it
+README.md @instructor-ship-it
+CHANGELOG.md @instructor-ship-it
+CONTRIBUTING.md @instructor-ship-it
+
+# Configuration files
+package.json @instructor-ship-it
+tsconfig.json @instructor-ship-it
+eslint.config.mjs @instructor-ship-it
+
+# CI/CD
+/.github/workflows/ @instructor-ship-it
+
+# Scripts
+/scripts/ @instructor-ship-it
