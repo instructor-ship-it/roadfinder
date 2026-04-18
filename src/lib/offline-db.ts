@@ -6,7 +6,7 @@
 import { haversineDistance } from './utils';
 
 const DB_NAME = 'RoadFinderDB';
-const DB_VERSION = 6; // Incremented to ensure amenitiesData store is created
+const DB_VERSION = 7; // Incremented to add savedLocations store
 
 // ============================================================================
 // Speed Sign Overrides (Community-Verified Corrections)
@@ -464,6 +464,13 @@ export function initDB(): Promise<IDBDatabase> {
         db.deleteObjectStore('amenitiesData');
       }
       db.createObjectStore('amenitiesData', { keyPath: 'region' });
+
+      // Saved locations (user's saved work locations) - unlimited storage
+      if (!db.objectStoreNames.contains('savedLocations')) {
+        const savedLocationsStore = db.createObjectStore('savedLocations', { keyPath: 'id' });
+        savedLocationsStore.createIndex('road_id', 'road_id', { unique: false });
+        savedLocationsStore.createIndex('created_at', 'created_at', { unique: false });
+      }
     };
   });
 }

@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { SavedLocation } from '@/types/shared';
+import { getSavedLocations as getSavedLocationsFromDB } from '@/lib/saved-locations-db';
 import 'leaflet/dist/leaflet.css';
 
 // Dynamic imports for Leaflet components (SSR disabled)
@@ -45,31 +46,24 @@ export default function SavedLocationsMapPage() {
   const [locationsWithCoords, setLocationsWithCoords] = useState<LocationWithCoords[]>([]);
   const [loadingAll, setLoadingAll] = useState(true);
 
-  // Load saved locations from localStorage
+  // Load saved locations from IndexedDB
   useEffect(() => {
-    const saved = localStorage.getItem('savedLocations');
-    if (saved) {
-      try {
-        const parsed: SavedLocation[] = JSON.parse(saved);
-        // eslint-disable-next-line react-hooks/set-state-in-effect -- Intentional for SSR-safe client-side rendering
-        setLocations(parsed);
-        // Initialize with loading state
-
-        setLocationsWithCoords(
-          parsed.map((loc) => ({
-            ...loc,
-            lat: null,
-            lon: null,
-            loading: true,
-            error: false,
-          }))
-        );
-      } catch {
-        setLocations([]);
-      }
+    async function loadLocations() {
+      const parsed = await getSavedLocationsFromDB();
+      setLocations(parsed);
+      // Initialize with loading state
+      setLocationsWithCoords(
+        parsed.map((loc) => ({
+          ...loc,
+          lat: null,
+          lon: null,
+          loading: true,
+          error: false,
+        }))
+      );
+      setLoadingAll(false);
     }
-
-    setLoadingAll(false);
+    loadLocations();
   }, []);
 
   // Fetch coordinates for all locations

@@ -78,6 +78,12 @@ import {
   type TrafficCountRecord,
 } from '@/lib/traffic-counter-storage';
 import { WeatherData, WarningItem, WarningData, TrafficData, SavedLocation } from '@/types/shared';
+import {
+  getSavedLocations as getSavedLocationsFromDB,
+  saveLocation as saveLocationToDB,
+  deleteSavedLocation as deleteSavedLocationFromDB,
+  migrateFromLocalStorage,
+} from '@/lib/saved-locations-db';
 
 // Helper function to format distance for emergency messages
 // Rounds to nearest 100m when under 1km for easier communication
@@ -248,19 +254,21 @@ export default function Home() {
   const [isSinglePoint, setIsSinglePoint] = useState<boolean>(false);
   const [exporting, setExporting] = useState<boolean>(false);
 
-  const [savedLocations, setSavedLocations] = useState<SavedLocation[]>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('savedLocations');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch {
-          return [];
-        }
-      }
+  const [savedLocations, setSavedLocations] = useState<SavedLocation[]>([]);
+  const [savedLocationsLoaded, setSavedLocationsLoaded] = useState(false);
+
+  // Load saved locations from IndexedDB on mount
+  useEffect(() => {
+    async function loadSavedLocations() {
+      // Migrate from localStorage if needed
+      await migrateFromLocalStorage();
+      // Load from IndexedDB
+      const locations = await getSavedLocationsFromDB();
+      setSavedLocations(locations);
+      setSavedLocationsLoaded(true);
     }
-    return [];
-  });
+    loadSavedLocations();
+  }, []);
 
   // Sort mode for saved locations: 'date' = most recent first, 'road' = road_id then SLK
   const [savedLocationsSort, setSavedLocationsSort] = useState<'date' | 'road'>(() => {
@@ -294,7 +302,7 @@ export default function Home() {
     }
   }, [savedLocationsSort]);
 
-  const saveLocation = (name: string) => {
+  const handleSaveLocation = async (name: string) => {
     if (!selectedRoad || !startSlk) return;
 
     const newLocation: SavedLocation = {
@@ -308,15 +316,21 @@ export default function Home() {
       created_at: new Date().toISOString(),
     };
 
-    const updated = [newLocation, ...savedLocations].slice(0, 20); // Keep max 20
-    setSavedLocations(updated);
-    localStorage.setItem('savedLocations', JSON.stringify(updated));
+    // Save to IndexedDB (no limit - unlimited storage)
+    const success = await saveLocationToDB(newLocation);
+    if (success) {
+      // Update local state
+      setSavedLocations((prev) => [newLocation, ...prev]);
+    }
   };
 
-  const deleteSavedLocation = (id: string) => {
-    const updated = savedLocations.filter((loc) => loc.id !== id);
-    setSavedLocations(updated);
-    localStorage.setItem('savedLocations', JSON.stringify(updated));
+  const handleDeleteSavedLocation = async (id: string) => {
+    // Delete from IndexedDB
+    const success = await deleteSavedLocationFromDB(id);
+    if (success) {
+      // Update local state
+      setSavedLocations((prev) => prev.filter((loc) => loc.id !== id));
+    }
   };
 
   const recallLocation = async (loc: SavedLocation) => {
@@ -4558,7 +4572,7 @@ export default function Home() {
                     `${selectedRoad} @ ${startSlk}`
                   );
                   if (name !== null) {
-                    saveLocation(name);
+                    handleSaveLocation(name);
                   }
                 }}
                 className="w-full h-10 text-sm bg-purple-600 hover:bg-purple-700 flex items-center justify-center gap-2"
@@ -4658,7 +4672,7 @@ export default function Home() {
                           )}
                         </button>
                         <button
-                          onClick={() => deleteSavedLocation(loc.id)}
+                          onClick={() => handleDeleteSavedLocation(loc.id)}
                           className="text-red-400 hover:text-red-300 hover:bg-red-900/30 p-2 rounded text-lg shrink-0"
                           title="Delete"
                         >

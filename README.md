@@ -1,7 +1,7 @@
 # TC Work Zone Locator
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.33.1-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
+[![Version](https://img.shields.io/badge/version-1.34.0-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
@@ -52,14 +52,14 @@ A mobile-friendly web application for Traffic Controller (TC) work zone planning
 - Street View links for all locations
 - Direct link to start SLK tracking from any result
 
-### 📌 Saved Locations (v1.33+)
+### 📌 Saved Locations (v1.34+)
 
 - **Save frequently used locations** for quick recall
 - **Road name display** — Shows road name for each saved location
 - **Sort options** — By date (most recent) or by road ID then SLK
 - **Interactive map view** — View all saved locations on a map
 - **Day of week** — Date shows day name (e.g., "Fri 18 Apr")
-- Stores up to 20 locations in localStorage
+- **Unlimited storage** — Uses IndexedDB for unlimited location storage
 
 ### 🌤️ Weather & Traffic Data
 
@@ -387,8 +387,8 @@ src/
 
 This app uses **client-side storage only**:
 
-- **localStorage** — User preferences, AfterCare jobs, Q&A history, Contact directory
-- **IndexedDB** — Offline road data, speed zones, signage
+- **localStorage** — User preferences, AfterCare jobs, Q&A history, Contact directory, sort preferences
+- **IndexedDB** — Offline road data, speed zones, signage, saved locations
 
 **Important**: All data is stored locally on your device. No data is sent to external servers unless you explicitly configure cloud sync.
 
@@ -427,7 +427,14 @@ API keys (e.g., for AI Assistant) are stored in **localStorage** on your device:
 
 ## Version History
 
-### 1.33.1 (Current) - Saved Locations Enhancements
+### 1.34.0 (Current) - Unlimited Saved Locations
+
+- **IndexedDB Storage** — Saved locations now use IndexedDB instead of localStorage
+- **No storage limit** — Store unlimited work locations (was limited to 200)
+- **Automatic migration** — Existing localStorage data migrated to IndexedDB on first load
+- **Better data persistence** — IndexedDB is more reliable than localStorage for larger datasets
+
+### 1.33.1 - Saved Locations Enhancements
 
 - **Day of Week in Saved Locations** — Date now shows day (e.g., "Fri 18 Apr at 2:30 PM")
 

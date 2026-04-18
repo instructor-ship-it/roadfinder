@@ -1,7 +1,51 @@
 # TC Work Zone Locator - Work Log
 
 > **Last Updated:** 2026-04-18
-> **Current Version:** 1.33.1
+> **Current Version:** 1.34.0
+
+---
+
+## Task ID: 2026-04-18-002
+
+**Agent:** Main Agent
+**Task:** IndexedDB Storage for Saved Locations (v1.34.0)
+
+### Work Log:
+
+- **Feature: Unlimited Saved Locations Storage**
+  - User asked why storage limit was 20 locations, wanted to store all work locations
+  - Previous limit was actually 200 locations (in localStorage)
+  - Migrated saved locations from localStorage to IndexedDB for unlimited storage
+
+- **Implementation Details**:
+  - Added `savedLocations` object store to IndexedDB schema (DB_VERSION 7)
+  - Created new module `src/lib/saved-locations-db.ts` with CRUD functions
+  - Added indexes on `road_id` and `created_at` for efficient querying
+  - Migration function `migrateFromLocalStorage()` moves existing data on first load
+  - Migration flag stored in localStorage to prevent re-migration
+
+- **Files Changed**:
+  - `src/lib/offline-db.ts` - Added savedLocations object store, bumped DB_VERSION to 7
+  - `src/lib/saved-locations-db.ts` - NEW module with IndexedDB CRUD functions
+  - `src/app/page.tsx` - Use IndexedDB instead of localStorage for saved locations
+  - `src/app/saved-locations/map/page.tsx` - Load locations from IndexedDB
+  - `src/components/SettingsDrawer.tsx` - Version 1.34.0
+  - `README.md` - Updated version badge, Saved Locations section, version history
+  - `worklog.md` - This entry
+
+### Key Learnings:
+
+- **IndexedDB vs localStorage**: IndexedDB has no practical size limit (hundreds of MB), localStorage limited to ~5MB
+- **Migration strategy**: Keep localStorage data as backup, use flag to prevent re-migration
+- **Async operations**: IndexedDB operations are async, requires useEffect for loading on mount
+
+### Stage Summary:
+
+- Version: 1.34.0
+- Saved locations now stored in IndexedDB with unlimited capacity
+- Existing localStorage data automatically migrated on first load
+- All TypeScript checks pass, no errors
+- Ready for push to GitHub
 
 ---
 
