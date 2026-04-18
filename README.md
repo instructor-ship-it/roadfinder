@@ -1,7 +1,7 @@
 # TC Work Zone Locator
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.29.0-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
+[![Version](https://img.shields.io/badge/version-1.33.1-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
@@ -51,6 +51,15 @@ A mobile-friendly web application for Traffic Controller (TC) work zone planning
 - One-tap navigation to Google Maps
 - Street View links for all locations
 - Direct link to start SLK tracking from any result
+
+### 📌 Saved Locations (v1.33+)
+
+- **Save frequently used locations** for quick recall
+- **Road name display** — Shows road name for each saved location
+- **Sort options** — By date (most recent) or by road ID then SLK
+- **Interactive map view** — View all saved locations on a map
+- **Day of week** — Date shows day name (e.g., "Fri 18 Apr")
+- Stores up to 20 locations in localStorage
 
 ### 🌤️ Weather & Traffic Data
 
@@ -317,6 +326,8 @@ src/
 │   ├── drive/            # SLK tracking pages
 │   │   ├── page.tsx      # Main tracking page
 │   │   └── nearby-signs/ # Nearby signs for AfterCare
+│   ├── saved-locations/  # Saved locations map
+│   │   └── map/          # Interactive map view
 │   ├── qa/page.tsx       # AI Q&A Assistant
 │   ├── library/          # Document library
 │   ├── aftercare/        # Signage tracking & retrieval
@@ -416,7 +427,37 @@ API keys (e.g., for AI Assistant) are stored in **localStorage** on your device:
 
 ## Version History
 
-### 1.30.0 (Current) - Usability & Accessibility Improvements
+### 1.33.1 (Current) - Saved Locations Enhancements
+
+- **Day of Week in Saved Locations** — Date now shows day (e.g., "Fri 18 Apr at 2:30 PM")
+
+### 1.33.0 - Saved Locations Map & Road Name
+
+- **Road Name Display** — Each saved location now shows the road name below road ID and SLK
+- **Interactive Map View** — New `/saved-locations/map` page
+  - View all saved locations on an interactive OpenStreetMap
+  - Fetches GPS coordinates for each location via API
+  - Tap markers for location details and navigation links
+  - "Open in Google Maps" button for route planning
+
+### 1.32.6 - Saved Locations Sorting
+
+- **Sort Buttons** — Two new buttons for organizing saved locations
+  - 📅 Date — Sort by most recent first (default)
+  - 🛣️ Road — Sort by road ID then SLK ascending
+- Sort preference persisted in localStorage
+
+### 1.32.5 - Distance Display & Dialog Improvements
+
+- **Smart Distance Display** — Shows km for distances ≥1km, metres for <1km
+- **AfterCare Cancel Button** — Fixed grey text on white background (now dark grey with white text)
+
+### 1.32.4 - Destination SLK Preservation
+
+- **Fixed destination overwrite bug** — Marking signage as retrieved no longer overwrites your destination SLK
+- Original destination preserved when returning from nearby-signs page
+
+### 1.30.0 - Usability & Accessibility Improvements
 
 - **First-Run Onboarding** — Guided setup for new users
   - Step-by-step introduction to key features
