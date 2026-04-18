@@ -20,16 +20,12 @@
  * // Get speed zones for a road
  * const zones = await getSpeedZones('H001');
  * const { speedLimit } = getSpeedLimitForDirection(zones, 50.0, 'increasing');
- *
- * @deprecated This file is now a re-export module. Import from '@/lib/offline-db' still works.
- * The actual implementation is in the './offline-db' directory modules.
  */
 
 // ============================================================================
-// Re-export everything from the modular structure
+// Types
 // ============================================================================
 
-// Types
 export type {
   SpeedSignOverride,
   ParsedSpeedZone,
@@ -48,9 +44,12 @@ export type {
   CachedWeather,
   SpeedZoneOverride,
   RoadData,
-} from './offline-db/types';
+} from './types';
 
+// ============================================================================
 // Database Core
+// ============================================================================
+
 export {
   DB_NAME,
   DB_VERSION,
@@ -59,45 +58,63 @@ export {
   getOfflineMetadata,
   clearOfflineData,
   getOfflineDataStats,
-} from './offline-db/db-core';
+} from './db-core';
 
+// ============================================================================
 // Speed Zones
+// ============================================================================
+
 export {
+  // Speed sign overrides
   loadSpeedSignOverrides,
   getSpeedSignOverrides,
   clearSpeedOverridesCache,
   getSpeedOverridesMetadata,
   signsToSpeedZones,
+  // Speed zones
   getSpeedZones,
   getSpeedLimitForDirection,
   getSpeedSignsNearSlk,
+  // Speed zone corrections
   getSpeedZoneCorrections,
   addSpeedZoneCorrection,
   removeSpeedZoneCorrection,
   clearSpeedZoneCorrections,
   applySpeedZoneCorrections,
+  // Storage
   storeSpeedZones,
   storeSpeedZonesData,
   correctDefaultZones,
+  // Legacy aliases
   getSpeedOverrides,
   loadSpeedOverrides,
-} from './offline-db/speed-zones';
+} from './speed-zones';
 
+// ============================================================================
 // Signage
+// ============================================================================
+
 export {
+  // Rail crossings
   getRailCrossings,
   storeRailCrossings,
   storeRailCrossingsData,
+  // Regulatory signs
   getRegulatorySigns,
   storeRegulatorySigns,
   storeRegulatorySignsData,
+  // Warning signs
   getWarningSigns,
   storeWarningSigns,
   storeWarningSignsData,
+  // Corridor signage
   getSignageInCorridor,
-} from './offline-db/signage';
+} from './signage';
 
+// ============================================================================
 // Roads
+// ============================================================================
+
 export {
   storeRegionData,
   storeRoadsData,
@@ -106,23 +123,30 @@ export {
   findRoadNearGps,
   getRoadInfoById,
   clearDataset,
-} from './offline-db/roads';
+} from './roads';
 
+// ============================================================================
 // Work Zone
-export { getWorkZoneOffline, getWorkZoneFromOfflineDb } from './offline-db/work-zone';
+// ============================================================================
 
+export { getWorkZoneOffline, getWorkZoneFromOfflineDb } from './work-zone';
+
+// ============================================================================
 // Pavement
-export { storePavementData, getPavementData, hasPavementData } from './offline-db/pavement';
+// ============================================================================
 
+export { storePavementData, getPavementData, hasPavementData } from './pavement';
+
+// ============================================================================
 // Traffic
-export {
-  storeTrafficData,
-  getTrafficData,
-  getNearestTrafficData,
-  hasTrafficData,
-} from './offline-db/traffic';
+// ============================================================================
 
+export { storeTrafficData, getTrafficData, getNearestTrafficData, hasTrafficData } from './traffic';
+
+// ============================================================================
 // Amenities
+// ============================================================================
+
 export {
   storeAmenitiesData,
   storeAllAmenitiesData,
@@ -130,22 +154,28 @@ export {
   getAllAmenitiesData,
   findNearestAmenities,
   hasAmenitiesData,
-} from './offline-db/amenities';
+} from './amenities';
 
+// ============================================================================
 // Weather Cache
+// ============================================================================
+
 export {
   cacheWeatherData,
   getCachedWeatherData,
   clearWeatherCache,
   WEATHER_CACHE_KEY,
   WEATHER_CACHE_DURATION,
-} from './offline-db/weather-cache';
+} from './weather-cache';
 
+// ============================================================================
 // Metadata
+// ============================================================================
+
 export {
   storeMetadata,
   storeDatasetMeta,
   getDatasetMeta,
   getAllDatasetMeta,
   getDetailedStats,
-} from './offline-db/metadata';
+} from './metadata';
