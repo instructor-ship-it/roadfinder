@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Work Log
 
-> **Last Updated:** 2026-04-17
-> **Current Version:** 1.28.5
+> **Last Updated:** 2026-04-18
+> **Current Version:** 1.33.1
 
 ---
 
@@ -5517,3 +5517,67 @@ Stage Summary:
 - Intersection search significantly faster with pre-filtering
 - page.tsx further reduced in line count (5 interface blocks removed)
 - Build clean, 18 new warnings are informational (not blocking)
+
+---
+
+## Task ID: 2026-04-18-001
+
+**Agent:** Main Agent
+**Task:** Multiple Feature Updates (v1.32.4 - v1.33.1)
+
+### Work Log:
+
+- **Destination SLK Preservation Fix (v1.32.4)**:
+  - Fixed bug where marking signage as retrieved from nearby-signs page would overwrite the user's destination SLK
+  - Added `dest_road_id`, `dest_road_name`, `dest_slk` URL parameters to preserve original destination
+  - Updated drive/page.tsx to pass destination params to nearby-signs page
+  - Updated nearby-signs/page.tsx to restore original destination when returning to drive page
+
+- **Distance Display Format (v1.32.5)**:
+  - Added `formatDistance()` helper function to show distances intelligently
+  - Distances < 1km shown in metres (e.g., `850m`)
+  - Distances ≥ 1km shown in kilometres (e.g., `1.25km`)
+  - Applied to drive page (landscape and portrait) and nearby-signs page
+
+- **AfterCare Report Dialog Cancel Button (v1.32.5)**:
+  - Fixed grey text on white background readability issue
+  - Changed to dark grey background (bg-gray-700) with white text
+
+- **Saved Locations Sort Buttons (v1.32.6)**:
+  - Added two sort buttons: 📅 Date and 🛣️ Road
+  - Date sort: shows most recent locations first (default)
+  - Road sort: sorts by road ID (e.g., H006, H007) then by SLK ascending
+  - Sort preference persisted in localStorage
+
+- **Saved Locations Enhancements (v1.33.0)**:
+  - Added road name display to each saved location item
+  - Created new `/saved-locations/map` page with Leaflet integration
+  - Map fetches GPS coordinates for each location via API
+  - Displays all locations as purple markers on interactive map
+  - Popup shows road ID, SLK, road name, location name
+  - Links to navigate via Google Maps or view details on home page
+  - "Open in Google Maps" button for route planning
+
+- **Day of Week in Saved Locations (v1.33.1)**:
+  - Updated date format to include day of week
+  - Changed from `📅 18 Apr at 2:30 PM` to `📅 Fri 18 Apr at 2:30 PM`
+
+### Files Changed:
+
+- `src/app/drive/page.tsx` (destination preservation, distance format)
+- `src/app/drive/nearby-signs/page.tsx` (destination preservation, distance format)
+- `src/app/aftercare/page.tsx` (cancel button styling)
+- `src/app/page.tsx` (sort buttons, map link, road name, day of week)
+- `src/app/saved-locations/map/page.tsx` (new file - interactive map)
+- `src/components/SettingsDrawer.tsx` (version bumps)
+
+### Stage Summary:
+
+- Version: 1.33.1
+- Destination SLK now preserved when interacting with AfterCare signage during drive mode
+- Distance display more intuitive with km/metre switching
+- Saved locations now show road name and day of week
+- Interactive map view added for all saved locations
+- All changes pushed to GitHub
+
+---
