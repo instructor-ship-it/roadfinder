@@ -1,7 +1,7 @@
 /**
  * Custom hook for Set Distance feature
  *
- * Manages distance measurement using GPS tracking.
+ * Manages distance measurement using GPS tracking with road lookup support.
  *
  * @module hooks/useSetDistance
  */
@@ -12,36 +12,34 @@ import { useState, useCallback, useRef } from 'react';
 
 export interface SetDistanceMark {
   id: number;
-  lat: number;
-  lon: number;
-  distance: number;
+  distance: number; // meters from reference
   slk: number | null;
+  roadId: string | null;
   roadName: string | null;
-  timestamp: number;
+  timestamp: string;
 }
 
 export interface SetDistanceRefPoint {
   lat: number;
   lon: number;
-}
-
-export interface SetDistanceCurrentPos {
-  lat: number;
-  lon: number;
+  slk: number;
+  roadId: string | null;
+  roadName: string | null;
 }
 
 export interface SetDistanceCurrentRoad {
-  road_id: string;
-  road_name: string;
+  roadId: string;
+  roadName: string;
 }
 
 // ─── Hook ────────────────────────────────────────────────────────────────────
 
 export function useSetDistance() {
+  // State
   const [active, setActive] = useState<boolean>(false);
   const [watchId, setWatchId] = useState<number | null>(null);
   const [refPoint, setRefPoint] = useState<SetDistanceRefPoint | null>(null);
-  const [currentPos, setCurrentPos] = useState<SetDistanceCurrentPos | null>(null);
+  const [currentPos, setCurrentPos] = useState<{ lat: number; lon: number } | null>(null);
   const [currentSlk, setCurrentSlk] = useState<number | null>(null);
   const [currentRoad, setCurrentRoad] = useState<SetDistanceCurrentRoad | null>(null);
   const [distance, setDistance] = useState<number>(0);
@@ -49,35 +47,85 @@ export function useSetDistance() {
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const [markId, setMarkId] = useState<number>(0);
 
-  // Refs for GPS callback
-  const refPointRef = useRef<SetDistanceRefPoint | null>(null);
-  const onPositionUpdateRef = useRef<{
-    onUpdate: (lat: number, lon: number) => void;
-    onRoadUpdate: (roadId: string, roadName: string, slk: number) => void;
-  } | null>(null);
+  // Ref for reference point to avoid closure staleness in watchPosition
+  const refPointRef = useRef<{ lat: number; lon: number } | null>(null);
 
-  // Start set distance tracking
-  const startTracking = useCallback(() => {
+  // Start Set Distance tracking
+  const startTracking = useCallback(async () => {
     if (!navigator.geolocation) {
+      alert('GPS not available');
       return;
     }
 
     setActive(true);
-    setMarks([]);
-    setTotalDistance(0);
-    setMarkId(0);
-    setDistance(0);
-    setCurrentSlk(null);
-    setCurrentRoad(null);
 
-    const id = navigator.geolocation.watchPosition(
-      (position) => {
+    // Get current position to set as reference
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;
 
         setCurrentPos({ lat, lon });
 
-        // If we have a reference point, calculate distance
+        // Try to get road info for current position
+        try {
+          const response = await fetch(`/api/gps?lat=${lat}&lon=${lon}`);
+          const data = await response.json();
+
+          if (data.road_id && data.slk !== undefined) {
+            // Set reference point with road info
+            setRefPoint({
+              lat,
+              lon,
+              slk: data.slk,
+              roadId: data.road_id,
+              roadName: data.road_name || data.road_id,
+            });
+            refPointRef.current = { lat, lon };
+            setCurrentSlk(data.slk);
+            setCurrentRoad({
+              roadId: data.road_id,
+              roadName: data.road_name || data.road_id,
+            });
+          } else {
+            // No road found, just use GPS position
+            setRefPoint({
+              lat,
+              lon,
+              slk: 0,
+              roadId: null,
+              roadName: null,
+            });
+            refPointRef.current = { lat, lon };
+          }
+        } catch (err) {
+          // Use GPS position without road info
+          setRefPoint({
+            lat,
+            lon,
+            slk: 0,
+            roadId: null,
+            roadName: null,
+          });
+          refPointRef.current = { lat, lon };
+        }
+      },
+      (err) => {
+        alert('Could not get GPS position: ' + err.message);
+        setActive(false);
+      },
+      { enableHighAccuracy: true }
+    );
+
+    // Start watching position
+    const id = navigator.geolocation.watchPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        setCurrentPos({ lat, lon });
+
+        // Calculate distance from reference (use ref to avoid stale closure)
         if (refPointRef.current) {
           const dist = calculateDistance(
             refPointRef.current.lat,
@@ -88,102 +136,101 @@ export function useSetDistance() {
           setDistance(dist);
         }
 
-        // Call position update callback if set
-        if (onPositionUpdateRef.current) {
-          onPositionUpdateRef.current.onUpdate(lat, lon);
+        // Try to get road info
+        try {
+          const response = await fetch(`/api/gps?lat=${lat}&lon=${lon}`);
+          const data = await response.json();
+
+          if (data.road_id && data.slk !== undefined) {
+            setCurrentSlk(data.slk);
+            setCurrentRoad({
+              roadId: data.road_id,
+              roadName: data.road_name || data.road_id,
+            });
+          }
+        } catch {
+          // Silently fail - might be offline
         }
       },
-      (error) => {
-        console.error('Set distance GPS error:', error);
+      (err) => {
+        console.error('GPS watch error:', err);
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0,
-      }
+      { enableHighAccuracy: true, maximumAge: 1000 }
     );
 
     setWatchId(id);
   }, []);
 
-  // Stop set distance tracking
+  // Set current position as new reference (reset trip meter to 0)
+  const setReference = useCallback(() => {
+    if (currentPos) {
+      setRefPoint({
+        lat: currentPos.lat,
+        lon: currentPos.lon,
+        slk: currentSlk || 0,
+        roadId: currentRoad?.roadId || null,
+        roadName: currentRoad?.roadName || null,
+      });
+      refPointRef.current = {
+        lat: currentPos.lat,
+        lon: currentPos.lon,
+      };
+      setDistance(0);
+    }
+  }, [currentPos, currentSlk, currentRoad]);
+
+  // Mark current position
+  const markPosition = useCallback(() => {
+    if (!currentPos) return;
+
+    const newMark: SetDistanceMark = {
+      id: markId,
+      distance: distance,
+      slk: currentSlk,
+      roadId: currentRoad?.roadId || null,
+      roadName: currentRoad?.roadName || null,
+      timestamp: new Date().toLocaleTimeString(),
+    };
+
+    // Calculate total distance (sum of all mark distances from reference)
+    const newTotal = totalDistance + distance;
+
+    setMarks((prev) => [...prev, newMark]);
+    setTotalDistance(newTotal);
+    setMarkId((prev) => prev + 1);
+
+    // Reset reference to current position for next mark
+    setReference();
+  }, [currentPos, distance, currentSlk, currentRoad, markId, totalDistance, setReference]);
+
+  // Reset completely
+  const reset = useCallback(() => {
+    setMarks([]);
+    setTotalDistance(0);
+    setDistance(0);
+    setMarkId(0);
+    if (currentPos) {
+      setReference();
+    }
+  }, [currentPos, setReference]);
+
+  // Stop tracking
   const stopTracking = useCallback(() => {
     if (watchId !== null) {
       navigator.geolocation.clearWatch(watchId);
-      setWatchId(null);
     }
-
     setActive(false);
-    setRefPoint(null);
-    refPointRef.current = null;
+    setWatchId(null);
     setCurrentPos(null);
     setDistance(0);
     setCurrentSlk(null);
     setCurrentRoad(null);
   }, [watchId]);
 
-  // Set reference point
-  const setReferencePoint = useCallback((lat: number, lon: number) => {
-    setRefPoint({ lat, lon });
-    refPointRef.current = { lat, lon };
-    setDistance(0);
-  }, []);
-
-  // Add a mark at current position
-  const addMark = useCallback(
-    (lat: number, lon: number, slk: number | null, roadName: string | null) => {
-      setMarkId((prev) => {
-        const newId = prev + 1;
-        const mark: SetDistanceMark = {
-          id: newId,
-          lat,
-          lon,
-          distance: distance,
-          slk,
-          roadName,
-          timestamp: Date.now(),
-        };
-
-        setMarks((prevMarks) => [...prevMarks, mark]);
-        setTotalDistance(distance);
-
-        return newId;
-      });
-    },
-    [distance]
-  );
-
-  // Clear all marks
-  const clearMarks = useCallback(() => {
-    setMarks([]);
-    setTotalDistance(0);
-    setMarkId(0);
-  }, []);
-
-  // Set position update callback
-  const setOnPositionUpdate = useCallback(
-    (callbacks: {
-      onUpdate: (lat: number, lon: number) => void;
-      onRoadUpdate: (roadId: string, roadName: string, slk: number) => void;
-    }) => {
-      onPositionUpdateRef.current = callbacks;
-    },
-    []
-  );
-
-  // Update current road info
-  const updateCurrentRoad = useCallback((roadId: string, roadName: string, slk: number) => {
-    setCurrentRoad({ road_id: roadId, road_name: roadName });
-    setCurrentSlk(slk);
-
-    if (onPositionUpdateRef.current) {
-      onPositionUpdateRef.current.onRoadUpdate(roadId, roadName, slk);
-    }
-  }, []);
-
   return {
     // State
     setDistanceActive: active,
+    setDistanceWatchId: watchId,
     setDistanceRefPoint: refPoint,
     setDistanceCurrentPos: currentPos,
     setDistanceCurrentSlk: currentSlk,
@@ -197,11 +244,9 @@ export function useSetDistance() {
     setSetDistanceActive: setActive,
     startSetDistance: startTracking,
     stopSetDistance: stopTracking,
-    setReferencePoint,
-    addMark,
-    clearMarks,
-    setOnPositionUpdate,
-    updateCurrentRoad,
+    setSetDistanceReference: setReference,
+    markSetDistancePosition: markPosition,
+    resetSetDistance: reset,
   };
 }
 
