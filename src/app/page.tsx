@@ -4614,7 +4614,11 @@ export default function Home() {
                     // Format the saved date
                     const savedDate = loc.created_at ? new Date(loc.created_at) : null;
                     const dateStr = savedDate
-                      ? savedDate.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })
+                      ? savedDate.toLocaleDateString('en-AU', {
+                          weekday: 'short',
+                          day: 'numeric',
+                          month: 'short',
+                        })
                       : '';
                     const timeStr = savedDate
                       ? savedDate.toLocaleTimeString('en-AU', {
