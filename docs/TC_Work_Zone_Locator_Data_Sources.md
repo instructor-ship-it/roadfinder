@@ -4,7 +4,7 @@
 
 ### Complete Reference for All Data APIs and Sources
 
-**Version: 1.28.5**
+**Version: 1.34.1**
 
 **Date: April 2026**
 
@@ -603,4 +603,4 @@ The home page (`fetchPlaces()` in `src/app/page.tsx`) uses a **3-source parallel
 
 ---
 
-_This document is part of the TC Work Zone Locator documentation suite, Version 1.28.5._
+_This document is part of the TC Work Zone Locator documentation suite, Version 1.34.1._

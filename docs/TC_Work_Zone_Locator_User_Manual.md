@@ -2,7 +2,7 @@
 
 **User Manual**
 
-Version 1.34.0
+Version 1.34.1
 
 April 2026
 

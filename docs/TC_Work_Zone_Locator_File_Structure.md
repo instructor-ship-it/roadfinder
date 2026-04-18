@@ -2,7 +2,7 @@
 
 ## File Structure Documentation
 
-**Version 1.28.5**
+**Version 1.34.1**
 
 ---
 
@@ -322,6 +322,8 @@ Route optimization for multi-stop signage retrieval:
 
 | Version   | Date       | Key Changes                                                                         |
 | --------- | ---------- | ----------------------------------------------------------------------------------- |
+| 1.34.1    | April 2026 | Phase 3 refactoring, component extraction, mrwaStatus type fix                      |
+| 1.34.0    | April 2026 | IndexedDB for saved locations, unlimited storage, localStorage migration            |
 | 1.28.5    | April 2026 | Traffic Event Logger, Cycle Timer, AI direct chat, PDF viewer improvements          |
 | 1.28.0    | April 2026 | Traffic Event Logger with TC assignments, Google Sheets sync                        |
 | 1.27.0    | April 2026 | PDF Viewer Modal with landscape/portrait support                                    |

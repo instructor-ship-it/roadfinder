@@ -47,6 +47,130 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.33.1] - 2026-04-17
+
+### Changed
+
+- **Saved Locations Enhancements**
+  - Day of Week in Saved Locations — Date now shows day (e.g., "Fri 18 Apr at 2:30 PM")
+
+---
+
+## [1.33.0] - 2026-04-17
+
+### Added
+
+- **Saved Locations Map & Road Name**
+  - Road Name Display — Each saved location now shows the road name below road ID and SLK
+  - Interactive Map View — New `/saved-locations/map` page
+  - View all saved locations on an interactive OpenStreetMap
+  - Fetches GPS coordinates for each location via API
+  - Tap markers for location details and navigation links
+  - "Open in Google Maps" button for route planning
+
+---
+
+## [1.32.6] - 2026-04-16
+
+### Added
+
+- **Saved Locations Sorting**
+  - 📅 Date — Sort by most recent first (default)
+  - 🛣️ Road — Sort by road ID then SLK ascending
+  - Sort preference persisted in localStorage
+
+---
+
+## [1.32.5] - 2026-04-16
+
+### Changed
+
+- **Smart Distance Display** — Shows km for distances ≥1km, metres for <1km
+- **AfterCare Cancel Button** — Fixed grey text on white background (now dark grey with white text)
+
+---
+
+## [1.32.4] - 2026-04-16
+
+### Fixed
+
+- **Destination SLK Preservation** — Fixed destination overwrite bug
+  - Marking signage as retrieved no longer overwrites your destination SLK
+  - Original destination preserved when returning from nearby-signs page
+
+---
+
+## [1.30.0] - 2026-04-14
+
+### Added
+
+- **First-Run Onboarding** — Guided setup for new users
+  - Step-by-step introduction to key features
+  - Offline data download prompt
+  - Quick setup checklist in settings
+- **Accessibility Enhancements**
+  - ARIA labels on all interactive elements
+  - Skip link for keyboard navigation
+  - User-scalable viewport (zoom enabled)
+  - Proper role attributes on landmark regions
+- **Loading States** — Skeleton components for visual feedback
+  - WorkZoneSkeleton, SpeedZoneSkeleton, SignageSkeleton
+  - HomePageSkeleton, DrivePageSkeleton
+- **Form Validation** — Mobile-friendly validation feedback
+  - Inline error messages with icons
+  - Real-time validation on blur
+  - SLK range validation
+- **Navigation Consistency** — Unified header component
+  - MobileNav component with back/home buttons
+  - Consistent emergency button placement
+  - Offline status indicators
+
+---
+
+## [1.29.0] - 2026-04-13
+
+### Changed
+
+- **Security: User-configurable Cloud Sync** — Removed hardcoded Google Sheets URL
+  - Each user now configures their own private Google Sheet
+  - Cloud sync disabled by default until user sets up their own URL
+  - Prevents data from being sent to shared/public sheets
+- **Traffic Event Logger Enhancements**
+  - Added step-by-step setup guide dialog with copyable script
+  - Added Cloud Sync Settings UI in More menu
+  - Status indicators show sync state (No Sync / Sync ON / Sync OFF)
+- **Contact Directory** — Track people, titles, vehicles, contact info with job tagging
+- **Cycle Timer** — Renamed "Truck" to "Timer", added description field
+
+---
+
+## [1.28.5] - 2026-04-12
+
+### Changed
+
+- **Q&A Page Restructure**
+  - Tab-based Q&A layout — Answers tab first, Ask tab second for better UX
+  - Generate Prompt button — create prompts for external AI assistants (ChatGPT, Claude, etc.)
+  - Direct AI Chat mode — configure API key for in-app AI responses
+  - Improved tab styling — better contrast and visibility for active/inactive states
+  - Clear prompt button — quickly clear generated prompts
+  - API key configuration — save and test z.ai API key for direct AI chat
+
+---
+
+## [1.28.0] - 2026-04-11
+
+### Added
+
+- **Q&A Enhancements**
+  - Q&A history management — save, favorite, search, and filter Q&A entries
+  - Export/Import Q&A — backup and restore Q&A history as JSON
+  - Document selection — choose specific documents to search or search all
+  - Category badges — organize Q&A entries by category
+  - Expandable answers — toggle full answer view with show more/less
+
+---
+
 ## [1.27.0] - 2026-04-06
 
 ### Added
@@ -521,6 +645,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | ------- | ---------- | ------------------------------------------------------------------------------------------- |
 | 1.34.1  | 2026-04-19 | Phase 3 refactoring (page.tsx 43% reduction), component extraction, mrwaStatus type fix     |
 | 1.34.0  | 2026-04-18 | Unlimited saved locations via IndexedDB, migration from localStorage                        |
+| 1.33.1  | 2026-04-17 | Saved locations day of week display                                                         |
+| 1.33.0  | 2026-04-17 | Saved locations map view, road name display                                                 |
+| 1.32.6  | 2026-04-16 | Saved locations sorting (date/road)                                                         |
+| 1.32.5  | 2026-04-16 | Smart distance display, AfterCare cancel button fix                                         |
+| 1.32.4  | 2026-04-16 | Destination SLK preservation fix                                                            |
+| 1.30.0  | 2026-04-14 | Onboarding, accessibility, skeleton loading, form validation                                |
+| 1.29.0  | 2026-04-13 | User-configurable cloud sync, contact directory, cycle timer rename                          |
+| 1.28.5  | 2026-04-12 | Q&A page restructure, tab layout, direct AI chat mode                                       |
+| 1.28.0  | 2026-04-11 | Q&A history, export/import, document selection                                              |
 | 1.27.0  | 2026-04-06 | PDF viewer modal with landscape/portrait support, navigation in header for landscape        |
 | 1.26.0  | 2026-04-06 | PDF viewer with page offset, smart document routing, zoom fix, back button fix              |
 | 1.25.0  | 2026-04-06 | PDF viewer improvements, CDN fallbacks, open in new tab button                              |

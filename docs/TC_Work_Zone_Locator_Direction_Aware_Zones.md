@@ -1,6 +1,6 @@
 # Direction-Aware Speed Zones
 
-## Technical Addendum for 1.28.5
+## Technical Addendum for 1.34.1
 
 ### Bidirectional Speed Zone Detection and Manual Corrections
 
@@ -232,7 +232,18 @@ The direction detection algorithm requires a minimum speed of 5 km/h and a minim
 
 ## 13. Version History
 
-### 1.28.5 (Current)
+### 1.34.1 (Current)
+
+- Phase 3 refactoring (page.tsx 43% reduction)
+- TypeScript build fix (mrwaStatus type)
+- Updated documentation version to 1.34.1
+
+### 1.34.0
+
+- IndexedDB for saved locations (unlimited storage)
+- Migration from localStorage to IndexedDB
+
+### 1.28.5
 
 - Updated documentation version to 1.28.5
 - Added Traffic Event Logger feature
@@ -270,4 +281,4 @@ The direction detection algorithm requires a minimum speed of 5 km/h and a minim
 
 ---
 
-_This document is part of the TC Work Zone Locator documentation suite, Version 1.28.5._
+_This document is part of the TC Work Zone Locator documentation suite, Version 1.34.1._
