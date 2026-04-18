@@ -35,7 +35,7 @@ export function BottomNav() {
       id: 'drive',
       label: 'Drive',
       icon: <Navigation className="w-5 h-5" />,
-      href: '/drive',
+      href: '/drive?autostart=true',
       matchPatterns: ['/drive'],
     },
     {
