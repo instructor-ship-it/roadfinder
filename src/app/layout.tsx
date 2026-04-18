@@ -4,7 +4,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
 import { ConfirmProvider } from '@/components/ui/confirm-dialog';
-import { BottomNav, BottomNavSpacer } from '@/components/ui/bottom-nav';
+import { BottomNavWrapper } from '@/components/ui/bottom-nav-wrapper';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 
 const geistSans = Geist({
@@ -85,8 +85,7 @@ export default function RootLayout({
             <main id="main-content" className="min-h-screen">
               {children}
             </main>
-            <BottomNavSpacer />
-            <BottomNav />
+            <BottomNavWrapper />
             <Toaster />
           </ConfirmProvider>
         </ErrorBoundary>
