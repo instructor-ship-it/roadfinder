@@ -94,7 +94,7 @@ interface SettingsDrawerProps {
     railCrossings?: { total: number };
     regulatorySigns?: { total: number };
     warningSigns?: { total: number };
-  };
+  } | null;
   datasetStats?: {
     roads: { count: number; lastSync: string | null };
     speedZones: { count: number; lastSync: string | null };
