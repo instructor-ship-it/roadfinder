@@ -36,6 +36,7 @@ export default function UserManualPage() {
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">Key Features</h3>
         <ul class="list-disc list-inside space-y-1 mb-3">
           <li><strong>Work Zone Lookup</strong> - Find coordinates for any road by SLK</li>
+          <li><strong>Saved Locations</strong> - Bookmark work zones for quick recall</li>
           <li><strong>Real-time GPS Tracking</strong> - Track position with EKF smoothing</li>
           <li><strong>Speed Zone Display</strong> - See current speed limit with lookahead warnings</li>
           <li><strong>AfterCare Tracking</strong> - Track signage placed for later retrieval</li>
@@ -129,7 +130,17 @@ export default function UserManualPage() {
       {
         id: 'home',
         title: '4. Home Page - Work Zone Lookup',
-        keywords: ['road', 'slk', 'region', 'lookup', 'search', 'select', 'local roads'],
+        keywords: [
+          'road',
+          'slk',
+          'region',
+          'lookup',
+          'search',
+          'select',
+          'local roads',
+          'saved locations',
+          'bookmark',
+        ],
         content: `
         <h3 class="text-lg font-semibold text-blue-400 mt-4 mb-2">Selecting a Road</h3>
 
@@ -176,7 +187,34 @@ export default function UserManualPage() {
           <li><span class="text-gray-400">Gray</span> = Sealed shoulder</li>
           <li><span class="text-blue-400">Blue</span> = Trafficable lanes</li>
         </ul>
-        <p class="text-sm text-gray-400">Widths are from MRWA Layer 12 (Pavement and Surfacing State).</p>
+        <p class="text-sm text-gray-400 mb-3">Widths are from MRWA Layer 12 (Pavement and Surfacing State).</p>
+
+        <h3 class="text-lg font-semibold text-purple-400 mt-4 mb-2">📌 Saved Locations</h3>
+        <p class="mb-3">Save frequently used work zones for quick recall. After entering a road and SLK, a purple "Save Location" button appears.</p>
+
+        <p class="mb-2"><strong>Each saved location shows:</strong></p>
+        <ul class="list-disc list-inside space-y-1 mb-3">
+          <li>Road ID and SLK range</li>
+          <li>Road name (e.g., "Albany Highway")</li>
+          <li>Custom location name</li>
+          <li>Date saved with day of week (e.g., "Fri 18 Apr at 2:30 PM")</li>
+        </ul>
+
+        <p class="mb-2"><strong>Sort Options:</strong></p>
+        <ul class="list-disc list-inside space-y-1 mb-3">
+          <li><strong>📅 Date</strong> - Most recent first (default)</li>
+          <li><strong>🛣️ Road</strong> - Sort by road ID then SLK ascending (e.g., H006, H007)</li>
+        </ul>
+
+        <p class="mb-2"><strong>Map View:</strong></p>
+        <p class="mb-3">Tap the "🗺️ Map" button to see all saved locations on an interactive map. Features include:</p>
+        <ul class="list-disc list-inside space-y-1 mb-3">
+          <li>Purple markers for each location</li>
+          <li>Tap markers for details and navigation links</li>
+          <li>"Open in Google Maps" for route planning</li>
+        </ul>
+
+        <p class="text-sm text-gray-400">Stores up to 20 locations in localStorage. Works offline.</p>
       `,
       },
       {
@@ -679,7 +717,7 @@ export default function UserManualPage() {
           <div className="w-16"></div>
         </div>
 
-        <p className="text-xs text-gray-400 text-center mb-4">Version 1.28.5 • April 2026</p>
+        <p className="text-xs text-gray-400 text-center mb-4">Version 1.33.1 • April 2026</p>
 
         {/* Search Bar */}
         <div className="mb-4">
