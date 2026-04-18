@@ -1,13 +1,13 @@
 # TC Work Zone Locator
 
-## Release Candidate 1.9.9
+## Release Candidate 1.4.3
 
 **Complete Layout & Functionality Documentation**
 
 | Field          | Value                                            |
 | -------------- | ------------------------------------------------ |
-| **Version**    | RC 1.9.9                                         |
-| **Date**       | March 2026                                       |
+| **Version**    | RC 1.4.3                                         |
+| **Date**       | April 2026                                       |
 | **Repository** | https://github.com/instructor-ship-it/roadfinder |
 
 ---
@@ -63,6 +63,7 @@ TC Work Zone Locator is a mobile-first Progressive Web Application (PWA) designe
 - **Fuel price display** with daily updated diesel pricing from FuelWatch WA
 - **Hospital type badges** (ED, Public, Private, Nursing Post)
 - **Multi-source amenity data** (WA Health SLIP + FuelWatch WA + Overpass)
+- **Saved Locations** with unlimited IndexedDB storage and sort options
 
 ### 1.2 Technology Stack
 
@@ -617,7 +618,16 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 
 ## 17. Version History
 
-### RC 1.9.9 (Current) - Fuel Stations, Hospital Badges, Multi-Source Amenities
+### RC 1.4.3 (Current) - IndexedDB for Saved Locations
+
+- **Migrated saved locations from localStorage to IndexedDB**
+  - Removed 200 location limit - now supports unlimited saved locations
+  - Auto-migration from existing localStorage data on first load
+  - Added sort options: by date (most recent first) or by road (road_id then SLK)
+  - New saved-locations-db.ts module for IndexedDB operations
+  - Added savedLocations object store to offline-db.ts (DB version 7)
+
+### RC 1.9.9 - Fuel Stations, Hospital Badges, Multi-Source Amenities
 
 - **Fuel station search** now merges FuelWatch WA and Overpass data for comprehensive coverage
 - **Hospital type badges** show ED, Public, Private, or Nursing Post status

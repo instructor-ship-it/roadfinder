@@ -2,7 +2,7 @@
 
 **User Manual**
 
-Version 1.28.5
+Version 1.4.3
 
 April 2026
 
@@ -57,6 +57,7 @@ TC Work Zone Locator is a mobile-first web application designed specifically for
 - **Traffic Event Logger** - Log TC events with timestamps, GPS, and Google Sheets sync
 - **Q&A Assistant** - AI-powered help with questions (prompt generation or direct chat)
 - **Speeding Alert** - Warning with WA fine information
+- **Saved Locations** - Save work zones for quick recall with unlimited storage via IndexedDB
 
 ### 1.3 Who Should Use This App
 
@@ -171,6 +172,7 @@ This is essential for Traffic Controllers working in remote areas of Western Aus
 | Traffic Counter         | localStorage             | ✓ Yes                     |
 | Cycle Timer             | localStorage             | ✓ Yes                     |
 | Traffic Event Logger    | localStorage             | ✓ Yes (syncs when online) |
+| Saved Locations         | IndexedDB                | ✓ Yes (unlimited)         |
 | Q&A Assistant           | AI API                   | ✗ No                      |
 | Settings                | localStorage             | ✓ Yes                     |
 
@@ -197,6 +199,7 @@ This is essential for Traffic Controllers working in remote areas of Western Aus
 - Warning signs
 - Pavement data
 - Traffic volume
+- Saved locations (unlimited storage)
 
 **localStorage (always available):**
 

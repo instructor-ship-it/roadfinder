@@ -1,10 +1,10 @@
-# RC 1.9.9 Key Learnings & Concepts
+# RC 1.4.3 Key Learnings & Concepts
 
-> **Version:** RC 1.9.9
-> **Date:** June 2025
+> **Version:** RC 1.4.3
+> **Date:** April 2026
 > **Author:** Development Session Notes
 
-This document captures all key learnings, architectural decisions, and coding patterns from the RC 1.9.1 development session.
+This document captures all key learnings, architectural decisions, and coding patterns from the development sessions.
 
 ---
 
@@ -45,6 +45,7 @@ This document captures all key learnings, architectural decisions, and coding pa
 33. [Documents Library Organization](#33-documents-library-organization)
 34. [WA Traffic Law Reference](#34-wa-traffic-law-reference)
 35. [Component Consolidation Pattern](#35-component-consolidation-pattern)
+36. [IndexedDB for Saved Locations](#36-indexeddb-for-saved-locations-unlimited-storage)
 
 ---
 
@@ -1297,4 +1298,167 @@ import { SettingsDrawer } from '@/components/SettingsDrawer';
 
 ---
 
-_Document updated from RC 1.9.1 development session notes._
+---
+
+## 36. IndexedDB for Saved Locations (Unlimited Storage)
+
+### Problem
+
+localStorage has ~5MB limit, which limited saved locations to 200 entries. For Traffic Controllers who work on many different roads, this limit was too restrictive.
+
+### Solution
+
+Migrate saved locations from localStorage to IndexedDB, which has much larger storage capacity (hundreds of MB).
+
+```typescript
+// src/lib/saved-locations-db.ts
+
+import { SavedLocation } from '@/types/shared';
+import { initDB } from './offline-db';
+
+const STORAGE_KEY = 'savedLocations';
+const MIGRATION_KEY = 'savedLocationsMigrated';
+
+/**
+ * Get all saved locations from IndexedDB
+ */
+export async function getSavedLocations(): Promise<SavedLocation[]> {
+  try {
+    const db = await initDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction('savedLocations', 'readonly');
+      const store = tx.objectStore('savedLocations');
+      const request = store.getAll();
+
+      request.onsuccess = () => {
+        const locations = request.result || [];
+        locations.sort(
+          (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+        resolve(locations);
+      };
+
+      request.onerror = () => {
+        console.error('Failed to get saved locations:', request.error);
+        resolve([]);
+      };
+    });
+  } catch (error) {
+    console.error('Failed to get saved locations:', error);
+    return [];
+  }
+}
+
+/**
+ * Save a location to IndexedDB (no limit!)
+ */
+export async function saveLocation(location: SavedLocation): Promise<boolean> {
+  const db = await initDB();
+  return new Promise((resolve) => {
+    const tx = db.transaction('savedLocations', 'readwrite');
+    const store = tx.objectStore('savedLocations');
+    const request = store.put(location);
+    request.onsuccess = () => resolve(true);
+    request.onerror = () => resolve(false);
+  });
+}
+
+/**
+ * Migrate existing localStorage data to IndexedDB
+ */
+export async function migrateFromLocalStorage(): Promise<number> {
+  if (typeof window === 'undefined') return 0;
+
+  const alreadyMigrated = localStorage.getItem(MIGRATION_KEY);
+  if (alreadyMigrated) return 0;
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (!saved) {
+    localStorage.setItem(MIGRATION_KEY, 'true');
+    return 0;
+  }
+
+  const locations: SavedLocation[] = JSON.parse(saved);
+  let migratedCount = 0;
+  for (const location of locations) {
+    const success = await saveLocation(location);
+    if (success) migratedCount++;
+  }
+
+  localStorage.setItem(MIGRATION_KEY, 'true');
+  console.log(`Migrated ${migratedCount} saved locations to IndexedDB`);
+  return migratedCount;
+}
+```
+
+### Database Schema Update
+
+```typescript
+// In offline-db.ts, added savedLocations store
+
+const DB_VERSION = 7; // Incremented for new store
+
+// In onupgradeneeded:
+if (!db.objectStoreNames.contains('savedLocations')) {
+  const savedLocationsStore = db.createObjectStore('savedLocations', {
+    keyPath: 'id',
+  });
+  savedLocationsStore.createIndex('road_id', 'road_id', { unique: false });
+  savedLocationsStore.createIndex('created_at', 'created_at', { unique: false });
+}
+```
+
+### Usage in Component
+
+```typescript
+// In page.tsx
+
+const [savedLocations, setSavedLocations] = useState<SavedLocation[]>([]);
+
+// Load from IndexedDB on mount
+useEffect(() => {
+  async function loadSavedLocations() {
+    await migrateFromLocalStorage(); // One-time migration
+    const locations = await getSavedLocationsFromDB();
+    setSavedLocations(locations);
+  }
+  loadSavedLocations();
+}, []);
+
+// Save new location (no limit!)
+const handleSaveLocation = async (name: string) => {
+  const newLocation: SavedLocation = {
+    id: `${selectedRoad}-${startSlk}-${Date.now()}`,
+    name: name || `${selectedRoad} @ ${startSlk}`,
+    road_id: selectedRoad,
+    // ... other fields
+  };
+
+  const success = await saveLocationToDB(newLocation);
+  if (success) {
+    setSavedLocations((prev) => [newLocation, ...prev]);
+  }
+};
+```
+
+### Benefits
+
+| Before (localStorage)    | After (IndexedDB)              |
+| ------------------------ | ------------------------------ |
+| Limited to 200 locations | Unlimited locations            |
+| ~5MB total storage       | ~50MB+ storage                 |
+| Manual JSON parsing      | Native object storage          |
+| Sync (blocking)          | Async (non-blocking)           |
+| No indexes               | Indexed by road_id, created_at |
+
+### Files Modified
+
+| File                            | Changes                               |
+| ------------------------------- | ------------------------------------- |
+| `src/lib/saved-locations-db.ts` | New module for IndexedDB operations   |
+| `src/lib/offline-db.ts`         | Added savedLocations store (v7)       |
+| `src/app/page.tsx`              | Use IndexedDB instead of localStorage |
+
+---
+
+_Document updated from RC 1.4.3 development session notes._
