@@ -4574,7 +4574,14 @@ export default function Home() {
                   <h4 className="text-sm font-semibold text-purple-400">
                     📌 Saved Locations ({savedLocations.length})
                   </h4>
-                  <div className="flex gap-1">
+                  <div className="flex gap-1 items-center">
+                    <Link
+                      href="/saved-locations/map"
+                      className="px-2 py-0.5 text-xs rounded bg-gray-700 text-cyan-400 hover:bg-gray-600 transition-colors"
+                      title="View all on map"
+                    >
+                      🗺️ Map
+                    </Link>
                     <button
                       onClick={() => setSavedLocationsSort('date')}
                       className={`px-2 py-0.5 text-xs rounded transition-colors ${
@@ -4634,6 +4641,11 @@ export default function Home() {
                               {loc.end_slk ? ` - ${loc.end_slk}` : ''}
                             </span>
                           </div>
+                          {loc.road_name && (
+                            <div className="text-xs text-gray-400 truncate mt-0.5">
+                              {loc.road_name}
+                            </div>
+                          )}
                           <div className="text-xs text-gray-300 truncate">{loc.name}</div>
                           {savedDate && (
                             <div className="text-xs text-gray-500 mt-0.5">
