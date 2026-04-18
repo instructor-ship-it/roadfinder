@@ -1,0 +1,14 @@
+# Issue Template Configuration
+# https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Documentation
+    url: https://github.com/instructor-ship-it/roadfinder#readme
+    about: Check the README for usage instructions and feature documentation.
+  - name: 💬 Discussions
+    url: https://github.com/instructor-ship-it/roadfinder/discussions
+    about: Ask questions and discuss ideas with the community.
+  - name: 🔒 Security Vulnerability
+    url: https://github.com/instructor-ship-it/roadfinder/security/advisories
+    about: Please report security vulnerabilities through GitHub Security Advisories.

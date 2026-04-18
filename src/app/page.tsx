@@ -1886,7 +1886,7 @@ export default function Home() {
           <div className="text-center flex-1">
             <h1 className="text-xl font-bold">TC Work Zone Locator</h1>
             <p className="text-xs text-gray-400">
-              v{APP_VERSION} Intersection Colors{' '}
+              v{APP_VERSION}{' '}
               {offlineReady && <span className="text-green-400">• Offline Ready</span>}
             </p>
           </div>

@@ -1,0 +1,77 @@
+# PR Labeler Configuration
+# Automatically labels PRs based on files changed
+# https://github.com/actions/labeler
+
+# Frontend/UI changes
+frontend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/components/**/*'
+          - 'src/app/**/*.tsx'
+          - 'src/styles/**/*'
+          - 'tailwind.config.*'
+
+# Backend/API changes
+backend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'src/app/api/**/*'
+          - 'src/lib/**/*.ts'
+
+# Database changes
+database:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'prisma/**/*'
+          - 'src/lib/offline-db*'
+          - 'src/lib/saved-locations-db*'
+
+# Documentation changes
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/**/*'
+          - 'README.md'
+          - 'CHANGELOG.md'
+          - 'CONTRIBUTING.md'
+          - '*.md'
+
+# CI/CD changes
+ci-cd:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/workflows/**/*'
+          - '.github/dependabot.yml'
+
+# Configuration changes
+config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'package.json'
+          - 'tsconfig.json'
+          - 'eslint.config.*'
+          - '.prettierrc*'
+          - 'next.config.*'
+
+# Test changes
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.test.ts'
+          - '**/*.test.tsx'
+          - '**/*.spec.ts'
+          - 'vitest.config.*'
+
+# Data/script changes
+data:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'scripts/**/*'
+          - 'public/data/**/*'
+
+# Dependencies
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'package.json'
+          - 'bun.lock'

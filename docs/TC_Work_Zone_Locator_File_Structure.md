@@ -145,21 +145,20 @@ The TC Work Zone Locator is a Next.js 15 application built with the App Router a
 
 ## 5. Documentation (docs/)
 
-| File                                            | Purpose                       |
-| ----------------------------------------------- | ----------------------------- |
-| `TC_Work_Zone_Locator_RC1_Documentation.md`     | Main documentation            |
-| `TC_Work_Zone_Locator_Data_Dictionary.md`       | Data structures               |
-| `TC_Work_Zone_Locator_File_Structure.md`        | This file                     |
-| `TC_Work_Zone_Locator_Direction_Aware_Zones.md` | Bidirectional zones           |
-| `TC_Work_Zone_Locator_Data_Sources.md`          | Data sources                  |
-| `TC_Work_Zone_Locator_Program_Logic.md`         | Program logic                 |
-| `TC_Work_Zone_Locator_User_Manual.md`           | User manual                   |
-| `RC1_Test_Checklist.md`                         | Testing checklist             |
-| `RC1.4.2_Key_Learnings.md`                      | AI context and learnings      |
-| `Work_Zone_Report_Implementation_Guide.md`      | Report implementation         |
-| `BOM_Warnings_Integration_Mockup.md`            | Future: BOM integration       |
-| `Road_Incidents_Integration_Mockup.md`          | Future: Incidents integration |
-| `screenshots/`                                  | Test screenshots              |
+| File                                        | Purpose                       |
+| ------------------------------------------- | ----------------------------- |
+| `ARCHITECTURE.md`                           | Main architecture documentation |
+| `DATA_STRUCTURES.md`                        | Data structures and types      |
+| `API_REFERENCE.md`                          | External API documentation     |
+| `TC_Work_Zone_Locator_File_Structure.md`    | This file                     |
+| `TC_Work_Zone_Locator_Direction_Aware_Zones.md` | Bidirectional zones       |
+| `TC_Work_Zone_Locator_Program_Logic.md`     | Business logic documentation   |
+| `TC_Work_Zone_Locator_User_Manual.md`       | End-user manual               |
+| `RC1_Test_Checklist.md`                     | Testing checklist             |
+| `RC1.34.0_Key_Learnings.md`                 | Development patterns          |
+| `Work_Zone_Report_Implementation_Guide.md`  | Report feature guide          |
+| `future/`                                   | Future feature mockups        |
+| `screenshots/`                              | Test screenshots              |
 
 ---
 
