@@ -82,6 +82,10 @@ export const DEFAULT_PRESETS: AfterCarePresets = {
 
 const JOBS_STORAGE_KEY = 'afterCareJobs';
 const PRESETS_STORAGE_KEY = 'afterCarePresets';
+const MIGRATION_VERSION_KEY = 'afterCareMigrationVersion';
+
+// Current migration version - increment when adding new migrations
+const CURRENT_MIGRATION_VERSION = 1;
 
 // ============================================
 // HELPER FUNCTIONS
@@ -92,6 +96,14 @@ const PRESETS_STORAGE_KEY = 'afterCarePresets';
  */
 import { generateId, formatAusDate, toIsoDate } from './utils';
 export { generateId, formatAusDate, toIsoDate };
+
+/**
+ * Get current time in HH:MM format (24-hour)
+ */
+export function getCurrentTime(): string {
+  const now = new Date();
+  return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+}
 
 /**
  * Parse Australian date string to Date object
@@ -163,6 +175,22 @@ export function formatRelativeDays(days: number): string {
   if (days === -1) return 'yesterday';
   if (days > 0) return `in ${days} days`;
   return `${Math.abs(days)} days ago`;
+}
+
+/**
+ * Format retrieved date/time for display
+ * Returns formatted string like "15/04/2026 14:30" or just date if no time
+ */
+export function formatRetrievedDateTime(sign: AfterCareSign): string | null {
+  if (!sign.retrieved_date) return null;
+
+  const dateStr = formatAusDate(sign.retrieved_date);
+
+  if (sign.retrieved_time) {
+    return `${dateStr} ${sign.retrieved_time}`;
+  }
+
+  return dateStr;
 }
 
 // ============================================
@@ -342,13 +370,54 @@ export function getStatusInfo(status: ComputedJobStatus): {
 // ============================================
 
 /**
+ * Run migrations on jobs data
+ * Migration 1: Add retrieved_date to retrieved signs that don't have it (use placed_date as fallback)
+ */
+function runMigrations(jobs: AfterCareJob[]): AfterCareJob[] {
+  if (typeof window === 'undefined') return jobs;
+
+  // Check current migration version
+  const storedVersion = parseInt(localStorage.getItem(MIGRATION_VERSION_KEY) || '0', 10);
+
+  if (storedVersion >= CURRENT_MIGRATION_VERSION) {
+    return jobs; // Already migrated
+  }
+
+  let needsSave = false;
+
+  // Migration 1: Add retrieved_date to retrieved signs without it
+  if (storedVersion < 1) {
+    for (const job of jobs) {
+      for (const sign of job.signs) {
+        if (sign.status === 'retrieved' && !sign.retrieved_date) {
+          // Use placed_date as fallback for retrieved_date
+          sign.retrieved_date = sign.placed_date;
+          needsSave = true;
+        }
+      }
+    }
+  }
+
+  // Update migration version
+  if (needsSave || storedVersion < CURRENT_MIGRATION_VERSION) {
+    localStorage.setItem(MIGRATION_VERSION_KEY, String(CURRENT_MIGRATION_VERSION));
+    if (needsSave) {
+      saveAfterCareJobs(jobs);
+    }
+  }
+
+  return jobs;
+}
+
+/**
  * Get all afterCare jobs from localStorage
  */
 export function getAfterCareJobs(): AfterCareJob[] {
   if (typeof window === 'undefined') return [];
   try {
     const data = localStorage.getItem(JOBS_STORAGE_KEY);
-    return data ? JSON.parse(data) : [];
+    const jobs = data ? JSON.parse(data) : [];
+    return runMigrations(jobs);
   } catch {
     console.error('Failed to load afterCare jobs');
     return [];
@@ -509,6 +578,7 @@ export function markSignRetrieved(jobId: string, signId: string): boolean {
   return updateSignInJob(jobId, signId, {
     status: 'retrieved',
     retrieved_date: toIsoDate(new Date()),
+    retrieved_time: getCurrentTime(),
   });
 }
 
@@ -530,10 +600,12 @@ export function markAllSignsRetrieved(jobId: string): boolean {
   if (!job) return false;
 
   const today = toIsoDate(new Date());
+  const currentTime = getCurrentTime();
   const updatedSigns = job.signs.map((s) => ({
     ...s,
     status: 'retrieved' as SignStatus,
     retrieved_date: today,
+    retrieved_time: currentTime,
   }));
 
   updateAfterCareJob(jobId, {

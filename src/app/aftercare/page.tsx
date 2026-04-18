@@ -58,6 +58,8 @@ import {
   calculateSignStatus,
   updateSignStatuses,
   getNearbySigns,
+  formatRetrievedDateTime,
+  getCurrentTime,
 } from '@/lib/aftercare';
 import { APP_VERSION } from '@/components/SettingsDrawer';
 import {
@@ -1807,7 +1809,12 @@ function EditJobView({ job: initialJob, onBack, onSave }: EditJobViewProps) {
   const handleMarkSignRetrieved = (signId: string) => {
     const updatedSigns = job.signs.map((s) =>
       s.id === signId
-        ? { ...s, status: 'retrieved' as const, retrieved_date: toIsoDate(new Date()) }
+        ? {
+            ...s,
+            status: 'retrieved' as const,
+            retrieved_date: toIsoDate(new Date()),
+            retrieved_time: getCurrentTime(),
+          }
         : s
     );
     setJob({ ...job, signs: updatedSigns });
@@ -1825,7 +1832,13 @@ function EditJobView({ job: initialJob, onBack, onSave }: EditJobViewProps) {
   const handleUnretrieveSign = (signId: string) => {
     const updatedSigns = job.signs.map((s) =>
       s.id === signId
-        ? { ...s, status: 'placed' as const, retrieved_date: undefined, status_manually_set: false }
+        ? {
+            ...s,
+            status: 'placed' as const,
+            retrieved_date: undefined,
+            retrieved_time: undefined,
+            status_manually_set: false,
+          }
         : s
     );
     setJob({ ...job, signs: updatedSigns });
@@ -2341,7 +2354,7 @@ function EditJobView({ job: initialJob, onBack, onSave }: EditJobViewProps) {
                 {/* Retrieved Date */}
                 {sign.status === 'retrieved' && sign.retrieved_date && (
                   <div className="text-green-400 text-xs mt-1.5">
-                    ✓ Retrieved {formatAusDate(sign.retrieved_date)}
+                    ✓ Retrieved {formatRetrievedDateTime(sign)}
                   </div>
                 )}
 
@@ -2435,10 +2448,13 @@ function EditJobView({ job: initialJob, onBack, onSave }: EditJobViewProps) {
       <div className="flex gap-2 mb-4">
         <Button
           onClick={() => {
+            const now = toIsoDate(new Date());
+            const currentTime = getCurrentTime();
             const updatedSigns = job.signs.map((s) => ({
               ...s,
               status: 'retrieved' as const,
-              retrieved_date: toIsoDate(new Date()),
+              retrieved_date: now,
+              retrieved_time: currentTime,
             }));
             setJob({ ...job, signs: updatedSigns, status: 'retrieved' });
           }}
