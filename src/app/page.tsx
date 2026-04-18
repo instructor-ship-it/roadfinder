@@ -9,6 +9,7 @@ import { EmergencyLocationModal } from '@/components/EmergencyLocationModal';
 import { TrafficCountDetailModal } from '@/components/TrafficCountDetailModal';
 import { DebugInfoPopup } from '@/components/DebugInfoPopup';
 import { useSetDistance } from '@/hooks/useSetDistance';
+import { useOfflineData } from '@/hooks/useOfflineData';
 import { IncidentsSection } from '@/components/IncidentsSection';
 import { WarningsSection } from '@/components/WarningsSection';
 import SpeedZoneLayout from '@/components/SpeedZoneLayout';
@@ -353,70 +354,31 @@ export default function Home() {
   } | null>(null);
   const [showGpsDialog, setShowGpsDialog] = useState<boolean>(false);
 
-  // Offline data state
-  const [offlineReady, setOfflineReady] = useState<boolean>(false);
-  const [defaultRegion, setDefaultRegion] = useState<string>('');
-  const [downloading, setDownloading] = useState<boolean>(false);
-  const [downloadProgress, setDownloadProgress] = useState<string>('');
-  const [offlineStats, setOfflineStats] = useState<{
-    total_roads: number;
-    download_date: string;
-    pavement_roads?: number;
-    traffic_roads?: number;
-    amenities_regions?: number;
-  } | null>(null);
+  // Offline data hook
+  const {
+    offlineReady,
+    defaultRegion,
+    downloading,
+    downloadProgress,
+    offlineStats,
+    offlineToggles,
+    syncProgress,
+    datasetStats,
+    mrwaStatus,
+    syncingDatasets,
+    updateOfflineToggle,
+    resetOfflineToggles,
+    handleDownloadOfflineData,
+    handleClearOfflineData,
+    loadDatasetStats,
+    fetchMrwaStatus,
+    syncDatasetFromMrwa,
+    syncAllDatasets,
+  } = useOfflineData();
+
   const [speedLimit, setSpeedLimit] = useState<number | null>(null);
   const [debugInfo, setDebugInfo] = useState<string>('');
   const [showDebug, setShowDebug] = useState<boolean>(false);
-
-  // Offline data source toggles ({APP_VERSION}) - when true, use offline data; when false, use online API
-  // Default to offline mode (true) - if offline data not available, functions will fall back to online
-  interface OfflineToggles {
-    roadsList: boolean; // Roads list by region
-    workZoneLookup: boolean; // Work zone geometry lookup
-    speedZones: boolean; // Speed zones
-    railCrossings: boolean; // Rail crossings
-    regulatorySigns: boolean; // Regulatory signs
-    warningSigns: boolean; // Warning signs
-    amenities: boolean; // Amenities (hospitals, fuel, toilets) - default ONLINE for better rural coverage
-  }
-
-  const DEFAULT_OFFLINE_TOGGLES: OfflineToggles = {
-    roadsList: true,
-    workZoneLookup: true,
-    speedZones: true,
-    railCrossings: true,
-    regulatorySigns: true,
-    warningSigns: true,
-    amenities: false, // Default to ONLINE for better rural/regional coverage
-  };
-
-  const [offlineToggles, setOfflineToggles] = useState<OfflineToggles>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('offlineToggles');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          // Merge with defaults to handle new toggle additions
-          return { ...DEFAULT_OFFLINE_TOGGLES, ...parsed };
-        } catch {
-          return DEFAULT_OFFLINE_TOGGLES;
-        }
-      }
-    }
-    return DEFAULT_OFFLINE_TOGGLES;
-  });
-
-  const updateOfflineToggle = (key: keyof OfflineToggles, value: boolean) => {
-    const newToggles = { ...offlineToggles, [key]: value };
-    setOfflineToggles(newToggles);
-    localStorage.setItem('offlineToggles', JSON.stringify(newToggles));
-  };
-
-  const resetOfflineToggles = () => {
-    setOfflineToggles(DEFAULT_OFFLINE_TOGGLES);
-    localStorage.setItem('offlineToggles', JSON.stringify(DEFAULT_OFFLINE_TOGGLES));
-  };
 
   // Speed display setting (controls visibility on /drive page)
   const [showSpeedDisplay, setShowSpeedDisplay] = useState<boolean>(() => {
@@ -425,20 +387,6 @@ export default function Home() {
     }
     return false;
   });
-
-  // Admin sync state
-  const [syncProgress, setSyncProgress] = useState<
-    Record<string, { status: string; percent: number; message: string }>
-  >({});
-  const [datasetStats, setDatasetStats] = useState<{
-    roads: { count: number; lastSync: string | null };
-    speedZones: { count: number; lastSync: string | null };
-    railCrossings: { count: number; lastSync: string | null };
-    regulatorySigns: { count: number; lastSync: string | null };
-    warningSigns: { count: number; lastSync: string | null };
-  } | null>(null);
-  const [mrwaStatus, setMrwaStatus] = useState<any>(null);
-  const [syncingDatasets, setSyncingDatasets] = useState<Set<string>>(new Set());
 
   // GPS Enhancement Settings (EKF-based)
   const [gpsSettings, setGpsSettings] = useState<{
@@ -657,319 +605,6 @@ export default function Home() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRegion]);
-
-  const checkOfflineStatus = async () => {
-    try {
-      await initDB();
-      const hasData = await isOfflineDataAvailable();
-      setOfflineReady(hasData);
-
-      // Get offline metadata if data exists
-      if (hasData) {
-        const metadata = await getOfflineMetadata();
-        if (metadata) {
-          setOfflineStats({
-            total_roads: metadata.total_roads,
-            download_date: metadata.download_date,
-          });
-        }
-      }
-    } catch (e) {
-      console.error('Failed to check offline status:', e);
-    }
-  };
-
-  const handleDownloadOfflineData = async () => {
-    setDownloading(true);
-    setDownloadProgress('Clearing old data...');
-
-    try {
-      // Always clear old data before downloading new data to prevent corruption
-      await clearOfflineData();
-
-      // Check if static data is available
-      setDownloadProgress('Checking for static data...');
-      const { available, metadata } = await checkStaticData();
-
-      if (!available) {
-        setDownloadProgress(
-          'No static data available. Please run: node scripts/download-roads.js locally and commit the data files.'
-        );
-        setTimeout(() => setDownloading(false), 5000);
-        return;
-      }
-
-      setDownloadProgress(
-        `Found data from ${metadata.download_date ? new Date(metadata.download_date).toLocaleDateString() : 'unknown date'}. Loading...`
-      );
-
-      const downloadDate = new Date().toISOString();
-
-      // Load static data into IndexedDB
-      const result = await loadStaticData(
-        async (region, roads, speedZones, railCrossings, regulatorySigns, warningSigns) => {
-          await storeRegionData(region, roads);
-          await storeSpeedZones(speedZones);
-          if (railCrossings && railCrossings.length > 0) {
-            await storeRailCrossings(railCrossings);
-          }
-          if (regulatorySigns && regulatorySigns.length > 0) {
-            await storeRegulatorySigns(regulatorySigns);
-          }
-          if (warningSigns && warningSigns.length > 0) {
-            await storeWarningSigns(warningSigns);
-          }
-        },
-        (progress) => {
-          setDownloadProgress(progress.message);
-        },
-        // Store pavement data
-        async (pavementData) => {
-          await storePavementData(pavementData);
-        },
-        // Store traffic data
-        async (trafficData) => {
-          await storeTrafficData(trafficData);
-        },
-        // Store amenities data
-        async (amenitiesData) => {
-          await storeAllAmenitiesData(amenitiesData);
-        }
-      );
-
-      // Save metadata
-      await storeMetadata({
-        download_date: downloadDate,
-        total_roads: result.totalRoads,
-        regions: result.regions,
-      });
-
-      setOfflineReady(true);
-      setOfflineStats({
-        total_roads: result.totalRoads,
-        download_date: downloadDate,
-      });
-
-      // Build summary message
-      const parts: string[] = [];
-      parts.push(`${result.totalRoads} roads`);
-      parts.push(`${result.totalSpeedZones} speed zones`);
-      if (result.totalPavement > 0) parts.push(`${result.totalPavement} roads with pavement data`);
-      if (result.totalTraffic > 0) parts.push(`${result.totalTraffic} roads with traffic data`);
-      if (result.totalAmenities > 0) parts.push(`${result.totalAmenities} amenities`);
-      if (result.totalRailCrossings > 0) parts.push(`${result.totalRailCrossings} rail crossings`);
-      if (result.totalRegulatorySigns > 0)
-        parts.push(`${result.totalRegulatorySigns} regulatory signs`);
-      if (result.totalWarningSigns > 0) parts.push(`${result.totalWarningSigns} warning signs`);
-
-      setDownloadProgress(`✓ Loaded ${parts.join(', ')} from ${result.regions.length} regions`);
-
-      setTimeout(() => {
-        setDownloadProgress('');
-      }, 5000);
-    } catch (e: any) {
-      setDownloadProgress(`Error: ${e.message}`);
-    } finally {
-      setDownloading(false);
-    }
-  };
-
-  const handleClearOfflineData = async () => {
-    try {
-      await clearOfflineData();
-      setOfflineReady(false);
-      setOfflineStats(null);
-      setDatasetStats(null);
-      setDownloadProgress('Offline data cleared');
-      setTimeout(() => setDownloadProgress(''), 2000);
-    } catch (e) {
-      setDownloadProgress('Failed to clear data');
-    }
-  };
-
-  // Load dataset stats from IndexedDB
-  const loadDatasetStats = async () => {
-    try {
-      const stats = await getDetailedStats();
-      setDatasetStats(stats);
-    } catch (e) {
-      console.error('Failed to load dataset stats:', e);
-    }
-  };
-
-  // Fetch MRWA status (record counts)
-  const fetchMrwaStatus = async () => {
-    try {
-      const response = await fetch('/api/admin-sync?action=status');
-      if (response.ok) {
-        const data = await response.json();
-        setMrwaStatus(data);
-      }
-    } catch (e) {
-      console.error('Failed to fetch MRWA status:', e);
-    }
-  };
-
-  // Sync a single dataset from MRWA with real-time progress
-  const syncDatasetFromMrwa = async (dataset: string) => {
-    setSyncingDatasets((prev) => new Set(prev).add(dataset));
-    setSyncProgress((prev) => ({
-      ...prev,
-      [dataset]: { status: 'syncing', percent: 0, message: 'Starting...' },
-    }));
-
-    try {
-      // Use streaming for real-time progress
-      const response = await fetch('/api/admin-sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          datasets: [dataset],
-          streamToClient: true,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Sync failed');
-      }
-
-      // Read the stream for progress updates
-      const reader = response.body?.getReader();
-      const decoder = new TextDecoder();
-      let records: any[] = [];
-
-      if (reader) {
-        let buffer = '';
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-
-          // Parse SSE events (format: "data: {...}\n\n")
-          const lines = buffer.split('\n\n');
-          buffer = lines.pop() || ''; // Keep incomplete line in buffer
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              try {
-                const event = JSON.parse(line.substring(6));
-
-                if (event.type === 'progress') {
-                  // Update progress
-                  const fetched = event.fetched ?? 0;
-                  const total = event.total ?? 0;
-                  const percent = event.percent ?? 0;
-                  setSyncProgress((prev) => ({
-                    ...prev,
-                    [dataset]: {
-                      status: 'syncing',
-                      percent,
-                      message: `Fetching ${fetched.toLocaleString()} of ${total.toLocaleString()}...`,
-                    },
-                  }));
-                } else if (event.type === 'data') {
-                  // Store the records
-                  records = event.records || [];
-                  setSyncProgress((prev) => ({
-                    ...prev,
-                    [dataset]: {
-                      status: 'syncing',
-                      percent: 100,
-                      message: `Storing ${records.length.toLocaleString()} records...`,
-                    },
-                  }));
-                } else if (event.type === 'complete') {
-                  const count = event.count ?? 0;
-                  setSyncProgress((prev) => ({
-                    ...prev,
-                    [dataset]: {
-                      status: 'complete',
-                      percent: 100,
-                      message: `Synced ${count.toLocaleString()} records`,
-                    },
-                  }));
-                } else if (event.type === 'error') {
-                  throw new Error(event.message || 'Unknown error');
-                }
-              } catch (parseError) {
-                console.error('Failed to parse event:', line);
-              }
-            }
-          }
-        }
-      }
-
-      // Store in IndexedDB
-      if (records && records.length > 0) {
-        let storedCount = 0;
-        switch (dataset) {
-          case 'roads':
-            storedCount = await storeRoadsData(records, 'mrwa');
-            break;
-          case 'speedZones':
-            storedCount = await storeSpeedZonesData(records, 'mrwa');
-            break;
-          case 'railCrossings':
-            storedCount = await storeRailCrossingsData(records, 'mrwa');
-            break;
-          case 'regulatorySigns':
-            storedCount = await storeRegulatorySignsData(records, 'mrwa');
-            break;
-          case 'warningSigns':
-            storedCount = await storeWarningSignsData(records, 'mrwa');
-            break;
-        }
-
-        setSyncProgress((prev) => ({
-          ...prev,
-          [dataset]: {
-            status: 'complete',
-            percent: 100,
-            message: `Stored ${(storedCount || 0).toLocaleString()} records`,
-          },
-        }));
-      }
-
-      // Refresh stats
-      await loadDatasetStats();
-      await checkOfflineStatus();
-    } catch (e: any) {
-      setSyncProgress((prev) => ({
-        ...prev,
-        [dataset]: { status: 'error', percent: 0, message: e.message || 'Sync failed' },
-      }));
-    } finally {
-      setSyncingDatasets((prev) => {
-        const next = new Set(prev);
-        next.delete(dataset);
-        return next;
-      });
-    }
-  };
-
-  // Sync all datasets
-  const syncAllDatasets = async () => {
-    const datasets = ['roads', 'speedZones', 'railCrossings', 'regulatorySigns', 'warningSigns'];
-    for (const dataset of datasets) {
-      await syncDatasetFromMrwa(dataset);
-    }
-  };
-
-  // Clear a specific dataset
-  const handleClearDataset = async (dataset: string) => {
-    try {
-      await clearDataset(dataset);
-      await loadDatasetStats();
-      setSyncProgress((prev) => ({
-        ...prev,
-        [dataset]: { status: 'cleared', percent: 0, message: 'Dataset cleared' },
-      }));
-    } catch (e) {
-      console.error('Failed to clear dataset:', e);
-    }
-  };
 
   const generateDebugInfo = async () => {
     const lines: string[] = [];
