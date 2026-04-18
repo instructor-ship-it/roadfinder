@@ -350,8 +350,17 @@ src/
 ├── lib/
 │   ├── offline-db.ts     # IndexedDB client-side storage
 │   ├── offline-data.ts   # Server-side data loading
-│   └── qa-storage.ts     # Q&A history management
-└── components/ui/        # UI components
+│   ├── qa-storage.ts     # Q&A history management
+│   ├── errors.ts         # Centralized error handling utilities
+│   ├── validation.ts     # Zod schemas for input validation
+│   └── saved-locations-db.ts  # Saved locations IndexedDB operations
+├── types/
+│   └── shared.ts         # Shared TypeScript type definitions
+└── components/ui/
+    ├── skip-link.tsx     # Accessibility skip link
+    ├── live-announcer.tsx # Screen reader announcements
+    ├── focus-trap.tsx    # Focus management for modals
+    └── ...               # Other UI components
 ```
 
 ## API Endpoints

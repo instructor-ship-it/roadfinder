@@ -3757,7 +3757,10 @@ export default function Home() {
       );
       const corridorData = await corridorResponse.json();
       if (corridorResponse.ok) setCorridorIntersections(corridorData.crossRoads || []);
-    } catch (err) {}
+    } catch (err) {
+      // Graceful degradation - intersection data not critical for core functionality
+      console.warn('[fetchCrossRoads] Failed to fetch intersections:', err);
+    }
   };
 
   // Get current GPS location from device

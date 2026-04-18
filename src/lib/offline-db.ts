@@ -1,9 +1,29 @@
 /**
  * Client-side Offline Database
- * Uses IndexedDB to store road data for fast offline access
+ *
+ * Uses IndexedDB to store road data for fast offline access.
+ * This module provides functions for:
+ * - Road network data (search, lookup by GPS, SLK calculations)
+ * - Speed zones and community-verified overrides
+ * - Traffic signage (regulatory, warning, rail crossings)
+ * - Amenities (hospitals, fuel, toilets)
+ * - Weather caching
+ *
+ * @module lib/offline-db
+ * @version 1.34.0
+ *
+ * @example
+ * // Search for a road by GPS coordinates
+ * const road = await findRoadNearGps(-31.95, 115.86, 0.5);
+ *
+ * @example
+ * // Get speed zones for a road
+ * const zones = await getSpeedZones('H001');
+ * const { speedLimit } = getSpeedLimitForDirection(zones, 50.0, 'increasing');
  */
 
 import { haversineDistance } from './utils';
+import { STORAGE_KEYS, DB_CONFIG, TC_DEFAULTS } from './config';
 
 const DB_NAME = 'RoadFinderDB';
 const DB_VERSION = 7; // Incremented to add savedLocations store
