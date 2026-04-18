@@ -368,12 +368,14 @@ export default function Home() {
     syncingDatasets,
     updateOfflineToggle,
     resetOfflineToggles,
+    updateDefaultRegion,
     handleDownloadOfflineData,
     handleClearOfflineData,
     loadDatasetStats,
     fetchMrwaStatus,
     syncDatasetFromMrwa,
     syncAllDatasets,
+    setDownloadProgress,
   } = useOfflineData();
 
   const [speedLimit, setSpeedLimit] = useState<number | null>(null);
@@ -549,20 +551,6 @@ export default function Home() {
   } | null>(null);
   // State to trigger UI re-render during restore (hides inputs)
   const [isRestoringUI, setIsRestoringUI] = useState<boolean>(false);
-
-  // Check offline data status on mount
-  useEffect(() => {
-    checkOfflineStatus();
-  }, []);
-
-  // Load default region from localStorage on mount
-  useEffect(() => {
-    const savedDefaultRegion = localStorage.getItem('defaultRegion');
-    if (savedDefaultRegion) {
-      setDefaultRegion(savedDefaultRegion);
-      // Don't set selectedRegion here - wait for regions to load
-    }
-  }, []);
 
   // Fetch regions on mount
   useEffect(() => {
@@ -1915,8 +1903,7 @@ export default function Home() {
               defaultRegion={defaultRegion}
               regions={regions}
               onUpdateRegion={(region) => {
-                setDefaultRegion(region);
-                localStorage.setItem('defaultRegion', region);
+                updateDefaultRegion(region);
               }}
               windGustThreshold={windGustThreshold}
               onUpdateWindGustThreshold={updateWindGustThreshold}

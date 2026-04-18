@@ -59,6 +59,18 @@ export interface SyncProgress {
   message: string;
 }
 
+export interface MrwaStatus {
+  _meta?: {
+    mrwaReachable: boolean;
+    message: string;
+  };
+  roads?: { total: number };
+  speedZones?: { total: number };
+  railCrossings?: { total: number };
+  regulatorySigns?: { total: number };
+  warningSigns?: { total: number };
+}
+
 const DEFAULT_OFFLINE_TOGGLES: OfflineToggles = {
   roadsList: true,
   workZoneLookup: true,
@@ -98,7 +110,7 @@ export function useOfflineData() {
   // Admin sync state
   const [syncProgress, setSyncProgress] = useState<Record<string, SyncProgress>>({});
   const [datasetStats, setDatasetStats] = useState<DatasetStats | null>(null);
-  const [mrwaStatus, setMrwaStatus] = useState<unknown>(null);
+  const [mrwaStatus, setMrwaStatus] = useState<MrwaStatus | null>(null);
   const [syncingDatasets, setSyncingDatasets] = useState<Set<string>>(new Set());
 
   // Check offline data availability on mount
