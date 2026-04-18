@@ -17,6 +17,7 @@ const LIBRARY_ITEMS = [
 // Tools menu items
 const TOOLS_ITEMS = [
   { id: 'aftercare', icon: '🚧', label: 'AfterCare Signs', href: '/aftercare' },
+  { id: 'event-logger', icon: '📝', label: 'Event Logger', href: '/event-logger' },
   { id: 'traffic-counter', icon: '📊', label: 'Traffic Counter', href: '/traffic-counter' },
   { id: 'cycle-timer', icon: '⏱️', label: 'Cycle Timer', href: '/cycle-timer' },
   { id: 'contacts', icon: '👥', label: 'Contact Directory', href: '/contacts' },
@@ -136,6 +137,7 @@ export function BottomNav() {
     '/aftercare',
     '/contacts',
     '/calibrate',
+    '/event-logger',
   ].some((p) => pathname.startsWith(p));
 
   const isDriveActive = pathname.startsWith('/drive');
@@ -344,7 +346,7 @@ export function useShowBottomNav(): boolean {
   const pathname = usePathname();
 
   // Hide bottom nav on full-screen pages
-  const hideOnPages = ['/drive', '/calibrate'];
+  const hideOnPages = ['/drive', '/calibrate', '/event-logger'];
 
   return !hideOnPages.some((page) => pathname.startsWith(page));
 }
