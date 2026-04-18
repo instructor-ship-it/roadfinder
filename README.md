@@ -1,7 +1,7 @@
 # TC Work Zone Locator
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/badge/version-1.34.0-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
+[![Version](https://img.shields.io/badge/version-1.34.1-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
@@ -436,7 +436,16 @@ API keys (e.g., for AI Assistant) are stored in **localStorage** on your device:
 
 ## Version History
 
-### 1.34.0 (Current) - Unlimited Saved Locations
+### 1.34.1 (Current) - Phase 3 Refactoring & Build Fix
+
+- **Phase 3 Refactoring** — Large file breakdown
+  - Reduced page.tsx from 7,460 to ~4,285 lines (43% reduction)
+  - Extracted TrafficCountDetailModal component (206 lines)
+  - Extracted DebugInfoPopup component (57 lines)
+  - Enhanced useSetDistance and useOfflineData hooks
+- **TypeScript build fix** — `mrwaStatus` prop type mismatch in SettingsDrawer component
+
+### 1.34.0 - Unlimited Saved Locations
 
 - **IndexedDB Storage** — Saved locations now use IndexedDB instead of localStorage
 - **No storage limit** — Store unlimited work locations (was limited to 200)

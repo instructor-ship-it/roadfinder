@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.34.1] - 2026-04-19
+
+### Changed
+
+- **Phase 3 Refactoring — Large File Breakdown**
+  - Reduced page.tsx from 7,460 lines to ~4,285 lines (43% reduction)
+  - Extracted TrafficCountDetailModal component (206 lines) — Modal for displaying traffic count details with "Use This Count" functionality
+  - Extracted DebugInfoPopup component (57 lines) — Popup for displaying debug information
+  - Enhanced useSetDistance hook — Added GPS road lookup functionality, integrated into page.tsx
+  - Enhanced useOfflineData hook — Added full download/clear/sync logic, integrated into page.tsx
+  - All extracted components maintain existing functionality while improving code organization
+
+### Fixed
+
+- **TypeScript build error** — `mrwaStatus` prop type mismatch in SettingsDrawer component
+  - SettingsDrawer expected `mrwaStatus?: { ... }` but hook provides `MrwaStatus | null`
+  - Updated prop type to accept `null` in addition to object type: `mrwaStatus?: { ... } | null`
+  - Build now passes TypeScript compilation
+
+### Technical
+
+- **Component Extraction Pattern**: Created focused, single-responsibility components
+- **Hook Enhancement**: Moved complex logic from page.tsx into dedicated hooks
+- **Improved Maintainability**: Easier to test, modify, and understand individual components
+
+---
+
+## [1.34.0] - 2026-04-18
+
+### Added
+
+- **Unlimited Saved Locations Storage** via IndexedDB
+  - Migrated saved locations from localStorage to IndexedDB for unlimited storage
+  - No practical size limit (hundreds of MB) vs localStorage's ~5MB limit
+  - Automatic migration of existing localStorage data on first load
+  - Added `savedLocations` object store to IndexedDB schema (DB_VERSION 7)
+  - Created new module `src/lib/saved-locations-db.ts` with CRUD functions
+
+---
+
 ## [1.27.0] - 2026-04-06
 
 ### Added
@@ -479,6 +519,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Key Changes                                                                                 |
 | ------- | ---------- | ------------------------------------------------------------------------------------------- |
+| 1.34.1  | 2026-04-19 | Phase 3 refactoring (page.tsx 43% reduction), component extraction, mrwaStatus type fix     |
+| 1.34.0  | 2026-04-18 | Unlimited saved locations via IndexedDB, migration from localStorage                        |
 | 1.27.0  | 2026-04-06 | PDF viewer modal with landscape/portrait support, navigation in header for landscape        |
 | 1.26.0  | 2026-04-06 | PDF viewer with page offset, smart document routing, zoom fix, back button fix              |
 | 1.25.0  | 2026-04-06 | PDF viewer improvements, CDN fallbacks, open in new tab button                              |
