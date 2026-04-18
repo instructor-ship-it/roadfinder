@@ -454,15 +454,47 @@ function AfterCareContent() {
       return signDate >= startDate && signDate <= endDate;
     });
 
-    // Sort by retrieved date descending (most recent first)
-    filteredSigns.sort((a, b) => {
-      const dateA = new Date(
-        a.effectiveRetrievedDate + (a.retrieved_time ? `T${a.retrieved_time}` : '')
-      );
-      const dateB = new Date(
-        b.effectiveRetrievedDate + (b.retrieved_time ? `T${b.retrieved_time}` : '')
-      );
-      return dateB.getTime() - dateA.getTime();
+    // Group signs by job
+    const signsByJob = new Map<AfterCareJob, typeof filteredSigns>();
+    for (const sign of filteredSigns) {
+      const existing = signsByJob.get(sign.job) || [];
+      existing.push(sign);
+      signsByJob.set(sign.job, existing);
+    }
+
+    // Sort signs within each job by retrieved date descending
+    for (const [job, signs] of signsByJob) {
+      signs.sort((a, b) => {
+        const dateA = new Date(
+          a.effectiveRetrievedDate + (a.retrieved_time ? `T${a.retrieved_time}` : '')
+        );
+        const dateB = new Date(
+          b.effectiveRetrievedDate + (b.retrieved_time ? `T${b.retrieved_time}` : '')
+        );
+        return dateB.getTime() - dateA.getTime();
+      });
+    }
+
+    // Sort jobs by most recent retrieval date (descending)
+    const sortedJobs = Array.from(signsByJob.keys()).sort((jobA, jobB) => {
+      const signsA = signsByJob.get(jobA) || [];
+      const signsB = signsByJob.get(jobB) || [];
+      // Get the most recent retrieval date from each job's signs
+      const latestA =
+        signsA.length > 0
+          ? new Date(
+              signsA[0].effectiveRetrievedDate +
+                (signsA[0].retrieved_time ? `T${signsA[0].retrieved_time}` : '')
+            ).getTime()
+          : 0;
+      const latestB =
+        signsB.length > 0
+          ? new Date(
+              signsB[0].effectiveRetrievedDate +
+                (signsB[0].retrieved_time ? `T${signsB[0].retrieved_time}` : '')
+            ).getTime()
+          : 0;
+      return latestB - latestA;
     });
 
     const printWindow = window.open('', '_blank');
@@ -485,11 +517,15 @@ function AfterCareContent() {
     .stat { display: inline-block; margin-right: 20px; }
     .stat-label { color: #666; font-size: 10px; }
     .stat-value { font-size: 18px; font-weight: bold; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
-    th { background: #f5f5f5; font-weight: bold; }
+    .job-group { margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; }
+    .job-header { background: #e8f4f8; padding: 10px; border-bottom: 1px solid #ddd; }
+    .job-header h3 { margin: 0 0 5px 0; font-size: 14px; }
+    .job-header .job-meta { font-size: 11px; color: #666; }
+    .job-header .road-id { font-family: monospace; font-weight: bold; color: #333; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 6px 8px; text-align: left; border-bottom: 1px solid #eee; }
+    th { background: #f9f9f9; font-weight: bold; font-size: 11px; }
     .retrieved-date { white-space: nowrap; }
-    .road-id { font-family: monospace; }
     @media print { body { -webkit-print-color-adjust: exact; } }
   </style>
 </head>
@@ -499,44 +535,55 @@ function AfterCareContent() {
   
   <div class="stats">
     <div class="stat"><div class="stat-label">Total Retrieved</div><div class="stat-value">${filteredSigns.length}</div></div>
-    <div class="stat"><div class="stat-label">Jobs Involved</div><div class="stat-value">${new Set(filteredSigns.map((s) => s.job.id)).size}</div></div>
+    <div class="stat"><div class="stat-label">Jobs Involved</div><div class="stat-value">${sortedJobs.length}</div></div>
   </div>
   
   ${
     filteredSigns.length === 0
       ? '<p>No signage retrieved in this date range.</p>'
-      : `
-    <table>
-      <thead>
-        <tr>
-          <th>Retrieved Date</th>
-          <th>Road</th>
-          <th>SLK</th>
-          <th>Sign Type</th>
-          <th>Direction</th>
-          <th>Description</th>
-          <th>Job</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${filteredSigns
-          .map(
-            (s) => `
+      : sortedJobs
+          .map((job) => {
+            const jobSigns = signsByJob.get(job) || [];
+            return `
+    <div class="job-group">
+      <div class="job-header">
+        <h3>${job.job_name}</h3>
+        <div class="job-meta">
+          <span class="road-id">${job.road_id}</span>
+          ${job.road_name ? ` - ${job.road_name}` : ''}
+          <span style="margin-left: 15px;">${jobSigns.length} sign${jobSigns.length !== 1 ? 's' : ''} retrieved</span>
+        </div>
+      </div>
+      <table>
+        <thead>
           <tr>
-            <td class="retrieved-date">${formatRetrievedDateTime(s) || formatAusDate(s.effectiveRetrievedDate)}</td>
-            <td class="road-id">${s.job.road_id}</td>
-            <td>${s.slk.toFixed(2)}</td>
-            <td>${s.sign_type}</td>
-            <td>${s.direction === 'True Left' ? 'TL' : 'TR'}</td>
-            <td>${s.description || '-'}</td>
-            <td>${s.job.job_name}</td>
+            <th>Retrieved Date</th>
+            <th>SLK</th>
+            <th>Sign Type</th>
+            <th>Direction</th>
+            <th>Description</th>
           </tr>
-        `
-          )
-          .join('')}
-      </tbody>
-    </table>
-  `
+        </thead>
+        <tbody>
+          ${jobSigns
+            .map(
+              (s) => `
+            <tr>
+              <td class="retrieved-date">${formatRetrievedDateTime(s) || formatAusDate(s.effectiveRetrievedDate)}</td>
+              <td>${s.slk.toFixed(2)}</td>
+              <td>${s.sign_type}</td>
+              <td>${s.direction === 'True Left' ? 'TL' : 'TR'}</td>
+              <td>${s.description || '-'}</td>
+            </tr>
+          `
+            )
+            .join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+          })
+          .join('')
   }
   
   <p style="margin-top:30px; text-align:center; color:#999; font-size:10px;">
