@@ -44,6 +44,14 @@ interface GpsLagSettings {
   speedLookaheadTime?: number;
 }
 
+// Helper function to format distance - km if >= 1km, metres if < 1km
+function formatDistance(distanceM: number): string {
+  if (distanceM >= 1000) {
+    return `${(distanceM / 1000).toFixed(2)}km`;
+  }
+  return `${Math.round(distanceM)}m`;
+}
+
 function DriveContent() {
   const searchParams = useSearchParams();
   const { isLandscape, screenWidth } = useOrientation();
@@ -1048,7 +1056,7 @@ function DriveContent() {
                             <span className="text-white font-medium">{sign.sign_type}</span> (
                             {sign.direction === 'True Left' ? 'TL' : 'TR'}){' '}
                             <span className="text-cyan-300 font-medium">
-                              {distanceM.toFixed(0)}m
+                              {formatDistance(distanceM)}
                             </span>
                           </span>
                         </div>
@@ -1818,7 +1826,9 @@ function DriveContent() {
                           <span className={`${positionColor} font-medium`}>{positionLabel}</span>
                           <span className="text-white font-medium">{sign.sign_type}</span>
                           <span className="text-gray-400">({dirLabel})</span>
-                          <span className="text-cyan-300 font-medium">{distanceM.toFixed(0)}m</span>
+                          <span className="text-cyan-300 font-medium">
+                            {formatDistance(distanceM)}
+                          </span>
                         </div>
                       );
                     })}

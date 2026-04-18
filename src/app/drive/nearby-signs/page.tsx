@@ -14,6 +14,14 @@ import {
   type ComputedJobStatus,
 } from '@/lib/aftercare';
 
+// Helper function to format distance - km if >= 1km, metres if < 1km
+function formatDistance(distanceM: number): string {
+  if (distanceM >= 1000) {
+    return `${(distanceM / 1000).toFixed(2)}km`;
+  }
+  return `${Math.round(distanceM)}m`;
+}
+
 // ============================================
 // MAIN COMPONENT
 // ============================================
@@ -315,7 +323,8 @@ function NearbySignsContent() {
                                 <span className="text-gray-400 text-sm">({dirLabel})</span>
                               </div>
                               <div className="text-sm text-gray-400 mt-1">
-                                SLK {sign.slk.toFixed(2)} • {distanceM.toFixed(0)}m {sign.position}
+                                SLK {sign.slk.toFixed(2)} • {formatDistance(distanceM)}{' '}
+                                {sign.position}
                               </div>
                               {sign.description && (
                                 <div className="text-xs text-gray-500 mt-1">{sign.description}</div>

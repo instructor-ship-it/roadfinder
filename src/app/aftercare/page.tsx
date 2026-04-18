@@ -1021,7 +1021,7 @@ function AfterCareContent() {
             <Button
               onClick={() => setShowReportModal(false)}
               variant="outline"
-              className="flex-1 border-gray-600 text-gray-300"
+              className="flex-1 bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
             >
               Cancel
             </Button>
