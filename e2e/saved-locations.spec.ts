@@ -5,9 +5,25 @@ import { test, expect } from '@playwright/test';
  * Tests for save, recall, and manage locations functionality
  */
 
+/**
+ * Helper to dismiss onboarding dialog if present
+ */
+async function dismissOnboarding(page: import('@playwright/test').Page) {
+  const onboardingDialog = page.locator('[role="dialog"][aria-labelledby="onboarding-title"]');
+  if (await onboardingDialog.isVisible({ timeout: 2000 }).catch(() => false)) {
+    // Click skip or close button
+    const skipButton = page.getByRole('button', { name: /Skip|Close|Get Started|Continue/i });
+    if (await skipButton.isVisible({ timeout: 1000 }).catch(() => false)) {
+      await skipButton.click();
+      await page.waitForTimeout(300);
+    }
+  }
+}
+
 test.describe('Saved Locations', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await dismissOnboarding(page);
   });
 
   test('should show saved locations section', async ({ page }) => {
@@ -131,6 +147,7 @@ test.describe('Saved Locations Persistence', () => {
   test('should persist saved locations across page reloads', async ({ page }) => {
     // First, save a location if possible
     await page.goto('/');
+    await dismissOnboarding(page);
 
     await page.getByRole('combobox').first().click();
     await page.getByRole('option', { name: 'Wheatbelt' }).click();
@@ -195,6 +212,7 @@ test.describe('Saved Locations UX', () => {
   test('should show helpful message when no saved locations', async ({ page }) => {
     // Clear any existing saved locations (if possible)
     await page.goto('/');
+    await dismissOnboarding(page);
     await page.waitForTimeout(2000);
 
     // Look for empty state message
@@ -207,6 +225,7 @@ test.describe('Saved Locations UX', () => {
 
   test('should show road name and SLK for each saved location', async ({ page }) => {
     await page.goto('/');
+    await dismissOnboarding(page);
     await page.waitForTimeout(2000);
 
     // Look for saved location entries that show road info
@@ -226,6 +245,7 @@ test.describe('Saved Locations UX', () => {
 
   test('should navigate to drive page after recalling location', async ({ page }) => {
     await page.goto('/');
+    await dismissOnboarding(page);
     await page.waitForTimeout(2000);
 
     // Find and click a saved location
