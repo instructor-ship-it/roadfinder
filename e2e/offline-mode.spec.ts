@@ -6,25 +6,48 @@ import { test, expect } from '@playwright/test';
  */
 
 /**
- * Helper to dismiss onboarding dialog if present
+ * Pre-seed localStorage so the onboarding dialog is skipped entirely.
  */
-async function dismissOnboarding(page: import('@playwright/test').Page) {
-  const onboardingDialog = page.locator('[role="dialog"][aria-labelledby="onboarding-title"]');
-  if (await onboardingDialog.isVisible({ timeout: 2000 }).catch(() => false)) {
-    // Click skip or close button
-    const skipButton = page.getByRole('button', { name: /Skip|Close|Get Started|Continue/i });
-    if (await skipButton.isVisible({ timeout: 1000 }).catch(() => false)) {
-      await skipButton.click();
-      await page.waitForTimeout(300);
-    }
-  }
+async function skipOnboarding(page: import('@playwright/test').Page) {
+  await page.evaluate(() => {
+    localStorage.setItem(
+      'tc-onboarding-complete',
+      JSON.stringify({ version: 1, completed: true, completedAt: new Date().toISOString() })
+    );
+  });
+}
+
+/**
+ * Helper: Select a region from the Radix Select dropdown.
+ */
+async function selectRegion(page: import('@playwright/test').Page, regionName: string) {
+  const regionTrigger = page.locator('button[data-slot="select-trigger"]').first();
+  await regionTrigger.click();
+  const option = page.getByRole('option', { name: new RegExp(regionName, 'i') });
+  await expect(option).toBeVisible({ timeout: 5000 });
+  await option.click();
+  await page.waitForTimeout(1000);
+}
+
+/**
+ * Helper: Select the first road from the road dropdown.
+ */
+async function selectFirstRoad(page: import('@playwright/test').Page) {
+  const roadTrigger = page.locator('button[data-slot="select-trigger"]').nth(1);
+  await expect(roadTrigger).toBeEnabled({ timeout: 5000 });
+  await roadTrigger.click();
+  const firstRoad = page.getByRole('option').first();
+  await expect(firstRoad).toBeVisible({ timeout: 5000 });
+  await firstRoad.click();
+  await page.waitForTimeout(500);
 }
 
 test.describe('Offline Mode', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await skipOnboarding(page);
+    await page.reload();
     await page.waitForLoadState('networkidle');
-    await dismissOnboarding(page);
   });
 
   test('should show offline indicator when offline', async ({ page, context }) => {
@@ -38,17 +61,19 @@ test.describe('Offline Mode', () => {
 
     // Look for offline indicator
     const offlineIndicator = page.locator('text=/Offline|offline|No connection/i');
-    const hasIndicator = await offlineIndicator.isVisible({ timeout: 3000 }).catch(() => false);
+    const hasIndicator = await offlineIndicator.isVisible({ timeout: 5000 }).catch(() => false);
 
     // Re-enable network
     await context.setOffline(false);
 
-    expect(typeof hasIndicator).toBe('boolean');
+    expect(hasIndicator).toBeTruthy();
   });
 
   test('should load cached regions when offline', async ({ page, context }) => {
     // First load online to cache data
     await page.goto('/');
+    await skipOnboarding(page);
+    await page.reload();
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
 
@@ -60,7 +85,8 @@ test.describe('Offline Mode', () => {
     await page.waitForTimeout(2000);
 
     // Region selector should still work (from cache)
-    await page.getByRole('combobox').first().click();
+    const regionTrigger = page.locator('button[data-slot="select-trigger"]').first();
+    await regionTrigger.click();
     const options = await page.getByRole('option').count();
 
     // Re-enable network
@@ -77,56 +103,42 @@ test.describe('Offline Mode', () => {
     await page.waitForTimeout(2000);
 
     // Try to select a region and road
-    await page.getByRole('combobox').first().click();
-    const firstOption = page.getByRole('option').first();
-    if (await firstOption.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await firstOption.click();
-      await page.waitForTimeout(1000);
+    const regionTrigger = page.locator('button[data-slot="select-trigger"]').first();
+    if (await regionTrigger.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await regionTrigger.click();
+      const firstOption = page.getByRole('option').first();
+      if (await firstOption.isVisible({ timeout: 3000 }).catch(() => false)) {
+        await firstOption.click();
+        await page.waitForTimeout(1000);
+      }
     }
 
     // Look for download prompt or offline message
     const downloadPrompt = page.locator('text=/Download|offline|cache|data/i');
-    const hasPrompt = await downloadPrompt.isVisible({ timeout: 3000 }).catch(() => false);
+    const hasPrompt = await downloadPrompt.isVisible({ timeout: 5000 }).catch(() => false);
 
     // Re-enable network
     await context.setOffline(false);
 
-    expect(typeof hasPrompt).toBe('boolean');
+    expect(hasPrompt).toBeTruthy();
   });
 
   test('should persist saved locations offline', async ({ page, context }) => {
     // First save a location online
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await selectRegion(page, 'Wheatbelt');
+    await selectFirstRoad(page);
 
-    // Complete a work zone lookup
-    await page.getByRole('combobox').first().click();
-    const wheatbeltOption = page.getByRole('option', { name: /Wheatbelt/i });
-    if (await wheatbeltOption.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await wheatbeltOption.click();
-      await page.waitForTimeout(1500);
-    }
-
-    const roadSelector = page.getByRole('combobox').nth(1);
-    await roadSelector.click();
-    const firstRoad = page.getByRole('option').first();
-    if (await firstRoad.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await firstRoad.click();
-    }
-
-    await page.getByPlaceholder(/Start SLK/i).fill('55.00');
+    await page.getByPlaceholder('e.g. 100.0').fill('100.00');
     await page.getByRole('button', { name: /Get Work Zone Info/i }).click();
-    await page.waitForTimeout(4000);
 
     // Save the location
     const saveButton = page.getByRole('button', { name: /Save Location/i });
-    if (await saveButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+    if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
       await saveButton.click();
-      await page.waitForTimeout(1000);
 
       // Handle prompt if present
       const nameInput = page.getByPlaceholder(/name/i);
-      if (await nameInput.isVisible({ timeout: 1000 }).catch(() => false)) {
+      if (await nameInput.isVisible({ timeout: 2000 }).catch(() => false)) {
         await nameInput.fill('Offline Test Location');
         await page.getByRole('button', { name: /Save|Add/i }).click();
         await page.waitForTimeout(500);
@@ -139,57 +151,63 @@ test.describe('Offline Mode', () => {
     await page.waitForTimeout(2000);
 
     // Check if saved location is visible
-    const savedLocation = page.locator('text=/Offline Test Location|55.00|Saved Location/i');
-    const isVisible = await savedLocation.isVisible({ timeout: 3000 }).catch(() => false);
+    const savedLocation = page.locator('text=/Offline Test Location|100.00|Saved Location/i');
+    const isVisible = await savedLocation.isVisible({ timeout: 5000 }).catch(() => false);
 
     // Re-enable network
     await context.setOffline(false);
 
-    expect(typeof isVisible).toBe('boolean');
+    expect(isVisible).toBeTruthy();
   });
 });
 
 test.describe('Offline Data Download', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await skipOnboarding(page);
+    await page.reload();
     await page.waitForLoadState('networkidle');
-    await dismissOnboarding(page);
   });
 
   test('should show settings drawer', async ({ page }) => {
     // Look for settings button (gear icon or settings text)
-    const settingsButton = page.getByRole('button', { name: /Settings|⚙️|gear/i });
-    if (await settingsButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+    const settingsButton = page.getByRole('button', { name: /Settings|gear/i });
+    if (await settingsButton.isVisible({ timeout: 5000 }).catch(() => false)) {
       await settingsButton.click();
-      await page.waitForTimeout(500);
 
       // Should show settings panel
       const settingsPanel = page.locator('text=/Offline|Download|Data|Settings/i');
-      await expect(settingsPanel).toBeVisible({ timeout: 3000 });
+      await expect(settingsPanel).toBeVisible({ timeout: 5000 });
     }
   });
 
   test('should show offline data download options', async ({ page }) => {
     // Open settings
-    const settingsButton = page.getByRole('button').filter({ has: page.locator('svg') }).last();
+    const settingsButton = page
+      .getByRole('button')
+      .filter({ has: page.locator('svg') })
+      .last();
     await settingsButton.click();
     await page.waitForTimeout(500);
 
     // Look for download section
     const downloadSection = page.locator('text=/Download|Offline Data|Sync/i');
-    const isVisible = await downloadSection.isVisible({ timeout: 3000 }).catch(() => false);
-    expect(typeof isVisible).toBe('boolean');
+    const isVisible = await downloadSection.isVisible({ timeout: 5000 }).catch(() => false);
+    expect(isVisible).toBeTruthy();
   });
 
   test('should show download progress when downloading', async ({ page }) => {
     // Open settings
-    const settingsButton = page.getByRole('button').filter({ has: page.locator('svg') }).last();
+    const settingsButton = page
+      .getByRole('button')
+      .filter({ has: page.locator('svg') })
+      .last();
     await settingsButton.click();
     await page.waitForTimeout(500);
 
     // Look for download button
     const downloadButton = page.getByRole('button', { name: /Download|Sync/i });
-    if (await downloadButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+    if (await downloadButton.isVisible({ timeout: 3000 }).catch(() => false)) {
       // Note: We won't actually click download as it takes too long
       // Just verify the button exists
       await expect(downloadButton).toBeVisible();
@@ -198,22 +216,26 @@ test.describe('Offline Data Download', () => {
 
   test('should show offline data status', async ({ page }) => {
     // Open settings
-    const settingsButton = page.getByRole('button').filter({ has: page.locator('svg') }).last();
+    const settingsButton = page
+      .getByRole('button')
+      .filter({ has: page.locator('svg') })
+      .last();
     await settingsButton.click();
     await page.waitForTimeout(500);
 
     // Look for status indicators
     const statusText = page.locator('text=/Ready|Downloaded|Available|Offline Ready/i');
-    const hasStatus = await statusText.isVisible({ timeout: 3000 }).catch(() => false);
-    expect(typeof hasStatus).toBe('boolean');
+    const hasStatus = await statusText.isVisible({ timeout: 5000 }).catch(() => false);
+    expect(hasStatus).toBeTruthy();
   });
 });
 
 test.describe('PWA Features', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await skipOnboarding(page);
+    await page.reload();
     await page.waitForLoadState('networkidle');
-    await dismissOnboarding(page);
   });
 
   test('should have service worker registered', async ({ page }) => {
@@ -224,7 +246,7 @@ test.describe('PWA Features', () => {
       });
     });
 
-    expect(typeof swRegistered).toBe('boolean');
+    expect(swRegistered).toBeTruthy();
   });
 
   test('should have web app manifest', async ({ page }) => {
@@ -245,7 +267,7 @@ test.describe('PWA Features', () => {
     const hasViewport = viewport !== null;
 
     expect(hasViewport).toBeTruthy();
-    expect(typeof hasThemeColor).toBe('boolean');
+    expect(hasThemeColor).toBeTruthy();
   });
 
   test('should have app icons configured', async ({ page }) => {
@@ -258,15 +280,16 @@ test.describe('PWA Features', () => {
     const hasIcon = icon !== null;
 
     expect(hasIcon).toBeTruthy();
-    expect(typeof hasAppleIcon).toBe('boolean');
+    expect(hasAppleIcon).toBeTruthy();
   });
 });
 
 test.describe('Offline Work Zone Lookup', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await skipOnboarding(page);
+    await page.reload();
     await page.waitForLoadState('networkidle');
-    await dismissOnboarding(page);
   });
 
   test('should attempt work zone lookup when offline', async ({ page, context }) => {
@@ -275,55 +298,56 @@ test.describe('Offline Work Zone Lookup', () => {
     await page.waitForTimeout(1000);
 
     // Try to do a lookup
-    await page.getByRole('combobox').first().click();
-    const firstOption = page.getByRole('option').first();
-    if (await firstOption.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await firstOption.click();
-      await page.waitForTimeout(1000);
+    const regionTrigger = page.locator('button[data-slot="select-trigger"]').first();
+    if (await regionTrigger.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await regionTrigger.click();
+      const firstOption = page.getByRole('option').first();
+      if (await firstOption.isVisible({ timeout: 3000 }).catch(() => false)) {
+        await firstOption.click();
+        await page.waitForTimeout(1000);
+      }
     }
 
-    const roadSelector = page.getByRole('combobox').nth(1);
-    if (await roadSelector.isEnabled({ timeout: 2000 }).catch(() => false)) {
-      await roadSelector.click();
+    const roadTrigger = page.locator('button[data-slot="select-trigger"]').nth(1);
+    if (await roadTrigger.isEnabled({ timeout: 3000 }).catch(() => false)) {
+      await roadTrigger.click();
       const roadOption = page.getByRole('option').first();
-      if (await roadOption.isVisible({ timeout: 1000 }).catch(() => false)) {
+      if (await roadOption.isVisible({ timeout: 2000 }).catch(() => false)) {
         await roadOption.click();
       }
     }
 
-    await page.getByPlaceholder(/Start SLK/i).fill('50.00');
-    await page.getByRole('button', { name: /Get Work Zone Info/i }).click();
-    await page.waitForTimeout(3000);
+    await page.getByPlaceholder('e.g. 100.0').fill('100.00');
+
+    const submitButton = page.getByRole('button', { name: /Get Work Zone Info|Searching/i });
+    if (await submitButton.isEnabled({ timeout: 2000 }).catch(() => false)) {
+      await submitButton.click();
+      // Wait for search to complete
+      await page.waitForTimeout(5000);
+    }
 
     // Should either show cached results or an offline message
     const result = page.locator('text=/Work Zone|Error|Offline|cache|not available/i');
-    const hasResult = await result.isVisible({ timeout: 5000 }).catch(() => false);
+    const hasResult = await result.isVisible({ timeout: 10000 }).catch(() => false);
 
     // Re-enable network
     await context.setOffline(false);
 
-    expect(typeof hasResult).toBe('boolean');
+    expect(hasResult).toBeTruthy();
   });
 
   test('should show cached weather when offline', async ({ page, context }) => {
     // First do a lookup online to cache weather
-    await page.getByRole('combobox').first().click();
-    const wheatbeltOption = page.getByRole('option', { name: /Wheatbelt/i });
-    if (await wheatbeltOption.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await wheatbeltOption.click();
-      await page.waitForTimeout(1500);
-    }
+    await selectRegion(page, 'Wheatbelt');
+    await selectFirstRoad(page);
 
-    const roadSelector = page.getByRole('combobox').nth(1);
-    await roadSelector.click();
-    const firstRoad = page.getByRole('option').first();
-    if (await firstRoad.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await firstRoad.click();
-    }
-
-    await page.getByPlaceholder(/Start SLK/i).fill('60.00');
+    await page.getByPlaceholder('e.g. 100.0').fill('100.00');
     await page.getByRole('button', { name: /Get Work Zone Info/i }).click();
-    await page.waitForTimeout(5000);
+
+    // Wait for search to complete
+    await expect(page.getByRole('button', { name: /^Get Work Zone Info$/i }))
+      .toBeVisible({ timeout: 20000 })
+      .catch(() => {});
 
     // Now go offline
     await context.setOffline(true);
@@ -331,55 +355,68 @@ test.describe('Offline Work Zone Lookup', () => {
 
     // Check if weather shows cached indicator
     const cachedWeather = page.locator('text=/Cached|cache/i');
-    const hasCached = await cachedWeather.isVisible({ timeout: 3000 }).catch(() => false);
+    const hasCached = await cachedWeather.isVisible({ timeout: 5000 }).catch(() => false);
 
     // Re-enable network
     await context.setOffline(false);
 
-    expect(typeof hasCached).toBe('boolean');
+    expect(hasCached).toBeTruthy();
   });
 });
 
 test.describe('Offline Toggle Settings', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await skipOnboarding(page);
+    await page.reload();
     await page.waitForLoadState('networkidle');
-    await dismissOnboarding(page);
   });
 
   test('should have offline mode toggles', async ({ page }) => {
     // Open settings
-    const settingsButton = page.getByRole('button').filter({ has: page.locator('svg') }).last();
+    const settingsButton = page
+      .getByRole('button')
+      .filter({ has: page.locator('svg') })
+      .last();
     await settingsButton.click();
     await page.waitForTimeout(500);
 
     // Look for toggle switches
     const toggleSwitch = page.locator('[role="switch"], input[type="checkbox"]').first();
-    const hasToggle = await toggleSwitch.isVisible({ timeout: 3000 }).catch(() => false);
-    expect(typeof hasToggle).toBe('boolean');
+    const hasToggle = await toggleSwitch.isVisible({ timeout: 5000 }).catch(() => false);
+    expect(hasToggle).toBeTruthy();
   });
 
   test('should toggle offline mode for specific data types', async ({ page }) => {
     // Open settings
-    const settingsButton = page.getByRole('button').filter({ has: page.locator('svg') }).last();
+    const settingsButton = page
+      .getByRole('button')
+      .filter({ has: page.locator('svg') })
+      .last();
     await settingsButton.click();
     await page.waitForTimeout(500);
 
     // Look for data type toggles
     const toggleLabels = page.locator('text=/Roads|Speed Zones|Weather|Amenities/i');
-    const hasLabels = await toggleLabels.first().isVisible({ timeout: 2000 }).catch(() => false);
-    expect(typeof hasLabels).toBe('boolean');
+    const hasLabels = await toggleLabels
+      .first()
+      .isVisible({ timeout: 5000 })
+      .catch(() => false);
+    expect(hasLabels).toBeTruthy();
   });
 
   test('should remember offline toggle settings', async ({ page }) => {
     // Open settings
-    const settingsButton = page.getByRole('button').filter({ has: page.locator('svg') }).last();
+    const settingsButton = page
+      .getByRole('button')
+      .filter({ has: page.locator('svg') })
+      .last();
     await settingsButton.click();
     await page.waitForTimeout(500);
 
     // Find a toggle
     const toggle = page.locator('[role="switch"]').first();
-    if (await toggle.isVisible({ timeout: 2000 }).catch(() => false)) {
+    if (await toggle.isVisible({ timeout: 5000 }).catch(() => false)) {
       // Get current state
       const initialState = await toggle.getAttribute('aria-checked');
 
@@ -403,8 +440,9 @@ test.describe('Offline Toggle Settings', () => {
 test.describe('Network Recovery', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
+    await skipOnboarding(page);
+    await page.reload();
     await page.waitForLoadState('networkidle');
-    await dismissOnboarding(page);
   });
 
   test('should recover when network returns', async ({ page, context }) => {
@@ -421,28 +459,21 @@ test.describe('Network Recovery', () => {
     await page.waitForTimeout(1000);
 
     // Try a lookup
-    await page.getByRole('combobox').first().click();
-    const wheatbeltOption = page.getByRole('option', { name: /Wheatbelt/i });
-    if (await wheatbeltOption.isVisible({ timeout: 3000 }).catch(() => false)) {
-      await wheatbeltOption.click();
-      await page.waitForTimeout(1500);
-    }
+    await selectRegion(page, 'Wheatbelt');
+    await selectFirstRoad(page);
 
-    const roadSelector = page.getByRole('combobox').nth(1);
-    await roadSelector.click();
-    const firstRoad = page.getByRole('option').first();
-    if (await firstRoad.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await firstRoad.click();
-    }
-
-    await page.getByPlaceholder(/Start SLK/i).fill('70.00');
+    await page.getByPlaceholder('e.g. 100.0').fill('100.00');
     await page.getByRole('button', { name: /Get Work Zone Info/i }).click();
-    await page.waitForTimeout(4000);
+
+    // Wait for search to complete
+    await expect(page.getByRole('button', { name: /^Get Work Zone Info$/i }))
+      .toBeVisible({ timeout: 20000 })
+      .catch(() => {});
 
     // Should work now that we're online
     const results = page.locator('text=/Work Zone|Speed Zone|Traffic|Error/i');
-    const hasResults = await results.isVisible({ timeout: 5000 }).catch(() => false);
-    expect(typeof hasResults).toBe('boolean');
+    const hasResults = await results.isVisible({ timeout: 15000 }).catch(() => false);
+    expect(hasResults).toBeTruthy();
   });
 
   test('should sync cached data when back online', async ({ page, context }) => {
@@ -459,13 +490,16 @@ test.describe('Network Recovery', () => {
     await page.waitForTimeout(2000);
 
     // Open settings to check sync status
-    const settingsButton = page.getByRole('button').filter({ has: page.locator('svg') }).last();
+    const settingsButton = page
+      .getByRole('button')
+      .filter({ has: page.locator('svg') })
+      .last();
     await settingsButton.click();
     await page.waitForTimeout(500);
 
     // Look for sync indicator
     const syncIndicator = page.locator('text=/Sync|synced|Updated/i');
-    const hasSync = await syncIndicator.isVisible({ timeout: 3000 }).catch(() => false);
-    expect(typeof hasSync).toBe('boolean');
+    const hasSync = await syncIndicator.isVisible({ timeout: 5000 }).catch(() => false);
+    expect(hasSync).toBeTruthy();
   });
 });
