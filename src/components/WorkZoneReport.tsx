@@ -1884,14 +1884,34 @@ export function WorkZoneReport({
         <div className="p-4 border-t border-gray-700 space-y-2">
           <div className="flex gap-2">
             <Button
-              onClick={() => {
-                navigator.clipboard.writeText(reportContent);
-                alert('Report copied to clipboard!');
+              onClick={async () => {
+                // Try Web Share API first, fallback to clipboard
+                const shareData = {
+                  title: `Work Zone Report - ${result?.road_id || 'Unknown'}`,
+                  text: reportContent,
+                };
+
+                if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+                  try {
+                    await navigator.share(shareData);
+                    // Share successful - no need for alert as the OS handles feedback
+                  } catch (err) {
+                    // User cancelled or share failed - fall back to clipboard
+                    if ((err as Error).name !== 'AbortError') {
+                      await navigator.clipboard.writeText(reportContent);
+                      alert('Report copied to clipboard!');
+                    }
+                  }
+                } else {
+                  // Web Share not supported - use clipboard
+                  await navigator.clipboard.writeText(reportContent);
+                  alert('Report copied to clipboard!');
+                }
               }}
               className="flex-1 bg-blue-600 hover:bg-blue-500"
               disabled={reportGenerating || !reportContent}
             >
-              📋 Copy to Clipboard
+              📤 Share / Copy
             </Button>
             <Button
               onClick={() => {

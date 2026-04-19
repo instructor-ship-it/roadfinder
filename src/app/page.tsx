@@ -10,6 +10,8 @@ import { TrafficCountDetailModal } from '@/components/TrafficCountDetailModal';
 import { DebugInfoPopup } from '@/components/DebugInfoPopup';
 import { useSetDistance } from '@/hooks/useSetDistance';
 import { useOfflineData } from '@/hooks/useOfflineData';
+import { useHomeSettings } from '@/hooks/useHomeSettings';
+import { useSavedLocations } from '@/hooks/useSavedLocations';
 import { IncidentsSection } from '@/components/IncidentsSection';
 import { WarningsSection } from '@/components/WarningsSection';
 import SpeedZoneLayout from '@/components/SpeedZoneLayout';
@@ -28,6 +30,8 @@ import { WeatherSection } from '@/components/home/WeatherSection';
 import { TrafficSection } from '@/components/home/TrafficSection';
 import { AmenitiesSection } from '@/components/home/AmenitiesSection';
 import { WorkZoneSummary } from '@/components/home/WorkZoneSummary';
+import { SignageCorridorSection } from '@/components/home/SignageCorridorSection';
+import { IntersectionsSection } from '@/components/home/IntersectionsSection';
 import { WorkZoneReport } from '@/components/WorkZoneReport';
 import { SetDistanceControls } from '@/components/SetDistanceControls';
 import { GpsLookupDialog } from '@/components/GpsLookupDialog';
@@ -240,83 +244,28 @@ export default function Home() {
   const [isSinglePoint, setIsSinglePoint] = useState<boolean>(false);
   const [exporting, setExporting] = useState<boolean>(false);
 
-  const [savedLocations, setSavedLocations] = useState<SavedLocation[]>([]);
-  const [savedLocationsLoaded, setSavedLocationsLoaded] = useState(false);
+  // Saved locations hook
+  const {
+    savedLocations,
+    savedLocationsLoaded,
+    savedLocationsSort,
+    sortedSavedLocations,
+    handleSaveLocation: saveLocationBase,
+    handleDeleteSavedLocation,
+    setSavedLocationsSort,
+  } = useSavedLocations();
 
-  // Load saved locations from IndexedDB on mount
-  useEffect(() => {
-    async function loadSavedLocations() {
-      // Migrate from localStorage if needed
-      await migrateFromLocalStorage();
-      // Load from IndexedDB
-      const locations = await getSavedLocationsFromDB();
-      setSavedLocations(locations);
-      setSavedLocationsLoaded(true);
-    }
-    loadSavedLocations();
-  }, []);
-
-  // Sort mode for saved locations: 'date' = most recent first, 'road' = road_id then SLK
-  const [savedLocationsSort, setSavedLocationsSort] = useState<'date' | 'road'>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('savedLocationsSort') as 'date' | 'road') || 'date';
-    }
-    return 'date';
-  });
-
-  // Sorted saved locations based on sort mode
-  const sortedSavedLocations = useMemo(() => {
-    const sorted = [...savedLocations];
-    if (savedLocationsSort === 'date') {
-      // Sort by created_at descending (most recent first)
-      sorted.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-    } else {
-      // Sort by road_id first, then by start_slk
-      sorted.sort((a, b) => {
-        const roadCompare = a.road_id.localeCompare(b.road_id);
-        if (roadCompare !== 0) return roadCompare;
-        return a.start_slk - b.start_slk;
-      });
-    }
-    return sorted;
-  }, [savedLocations, savedLocationsSort]);
-
-  // Persist sort preference
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('savedLocationsSort', savedLocationsSort);
-    }
-  }, [savedLocationsSort]);
-
+  // Wrapper for handleSaveLocation that uses current form values
   const handleSaveLocation = async (name: string) => {
     if (!selectedRoad || !startSlk) return;
-
-    const newLocation: SavedLocation = {
-      id: `${selectedRoad}-${startSlk}-${Date.now()}`,
-      name: name || `${selectedRoad} @ ${startSlk}`,
-      road_id: selectedRoad,
-      road_name: roadInfo?.road_name || selectedRoad,
-      region: selectedRegion,
-      start_slk: parseFloat(startSlk),
-      end_slk: endSlk ? parseFloat(endSlk) : null,
-      created_at: new Date().toISOString(),
-    };
-
-    // Save to IndexedDB (no limit - unlimited storage)
-    const success = await saveLocationToDB(newLocation);
-    if (success) {
-      // Update local state
-      setSavedLocations((prev) => [newLocation, ...prev]);
-    }
-  };
-
-  const handleDeleteSavedLocation = async (id: string) => {
-    // Delete from IndexedDB
-    const success = await deleteSavedLocationFromDB(id);
-    if (success) {
-      // Update local state
-      setSavedLocations((prev) => prev.filter((loc) => loc.id !== id));
-    }
+    await saveLocationBase(
+      name,
+      selectedRoad,
+      roadInfo?.road_name || selectedRoad,
+      selectedRegion,
+      parseFloat(startSlk),
+      endSlk ? parseFloat(endSlk) : null
+    );
   };
 
   const recallLocation = async (loc: SavedLocation) => {
@@ -382,123 +331,16 @@ export default function Home() {
   const [debugInfo, setDebugInfo] = useState<string>('');
   const [showDebug, setShowDebug] = useState<boolean>(false);
 
-  // Speed display setting (controls visibility on /drive page)
-  const [showSpeedDisplay, setShowSpeedDisplay] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('showSpeedDisplay') === 'true';
-    }
-    return false;
-  });
-
-  // GPS Enhancement Settings (EKF-based)
-  const [gpsSettings, setGpsSettings] = useState<{
-    ekfEnabled: boolean;
-    roadConstraint: boolean;
-    maxPredictionTime: number;
-    showUncertainty: boolean;
-    earlyWarnings: boolean;
-    speedLookaheadTime: number;
-    gpsLagCompensation: number;
-  }>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('gpsSettings');
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          // Migrate old settings to new format
-          if ('interpolation' in parsed || 'smoothing' in parsed) {
-            return {
-              ekfEnabled: true,
-              roadConstraint: true,
-              maxPredictionTime: 30,
-              showUncertainty: true,
-              earlyWarnings: parsed.earlyWarnings ?? true,
-              speedLookaheadTime: 5,
-              gpsLagCompensation: 0,
-            };
-          }
-          // Add speedLookaheadTime if missing (migration)
-          if (!('speedLookaheadTime' in parsed)) {
-            return {
-              ...parsed,
-              speedLookaheadTime: 5,
-              gpsLagCompensation: parsed.gpsLagCompensation ?? 0,
-            };
-          }
-          // Add gpsLagCompensation if missing (migration)
-          if (!('gpsLagCompensation' in parsed)) {
-            return { ...parsed, gpsLagCompensation: 0 };
-          }
-          return parsed;
-        } catch {
-          return {
-            ekfEnabled: true,
-            roadConstraint: true,
-            maxPredictionTime: 30,
-            showUncertainty: true,
-            earlyWarnings: true,
-            speedLookaheadTime: 5,
-            gpsLagCompensation: 0,
-          };
-        }
-      }
-    }
-    return {
-      ekfEnabled: true,
-      roadConstraint: true,
-      maxPredictionTime: 30,
-      showUncertainty: true,
-      earlyWarnings: true,
-      speedLookaheadTime: 5,
-      gpsLagCompensation: 0,
-    };
-  });
-
-  const updateGpsSetting = (key: string, value: boolean | number) => {
-    const newSettings = { ...gpsSettings, [key]: value };
-    setGpsSettings(newSettings);
-    localStorage.setItem('gpsSettings', JSON.stringify(newSettings));
-  };
-
-  // Wind Gust Alert Settings
-  const [windGustThreshold, setWindGustThreshold] = useState<number>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('windGustThreshold');
-      if (saved) {
-        try {
-          return parseInt(saved, 10);
-        } catch {
-          return 60;
-        }
-      }
-    }
-    return 60; // Default 60 km/h
-  });
-
-  const updateWindGustThreshold = (value: number) => {
-    setWindGustThreshold(value);
-    localStorage.setItem('windGustThreshold', value.toString());
-  };
-
-  // AfterCare Lookahead Distance
-  const [afterCareLookaheadKm, setAfterCareLookaheadKm] = useState<number>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('afterCareLookaheadKm');
-      if (saved) {
-        try {
-          return parseInt(saved, 10);
-        } catch {
-          return 5;
-        }
-      }
-    }
-    return 5; // Default 5 km
-  });
-
-  const updateAfterCareLookaheadKm = useCallback((value: number) => {
-    setAfterCareLookaheadKm(value);
-    localStorage.setItem('afterCareLookaheadKm', value.toString());
-  }, []);
+  // Home settings hook (GPS settings, wind threshold, afterCare lookahead, speed display)
+  const {
+    showSpeedDisplay,
+    gpsSettings,
+    updateGpsSetting,
+    windGustThreshold,
+    updateWindGustThreshold,
+    afterCareLookaheadKm,
+    updateAfterCareLookaheadKm,
+  } = useHomeSettings();
 
   // Set Distance hook
   const {

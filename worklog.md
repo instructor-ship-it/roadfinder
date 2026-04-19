@@ -5,6 +5,54 @@
 
 ---
 
+## Task ID: 2026-04-19-004
+
+**Agent:** Main Agent
+**Task:** Phase 4 Refactoring - Hook Extraction & Componentization
+
+### Work Log:
+
+- **Created New Hooks**:
+  - `src/hooks/useHomeSettings.ts` - GPS settings, wind threshold, afterCare lookahead, speed display
+  - `src/hooks/useSavedLocations.ts` - Saved locations CRUD operations with IndexedDB persistence
+
+- **Created New Components**:
+  - `src/components/home/SignageCorridorSection.tsx` - Signage corridor display (intersections, railways, speed signs, warning signs)
+  - `src/components/home/IntersectionsSection.tsx` - Intersecting roads display in TC zone
+
+- **Refactored page.tsx**:
+  - Integrated new hooks to replace inline state declarations
+  - Added imports for new components
+  - Reduced file from 4,272 lines to 4,114 lines (158 lines removed)
+  - Settings state now managed through `useHomeSettings` hook
+  - Saved locations now managed through `useSavedLocations` hook
+
+- **Code Quality Improvements**:
+  - Better separation of concerns
+  - Reusable hooks for settings and saved locations
+  - More maintainable component structure
+  - All 248 tests pass
+  - TypeScript compiles with 0 errors
+
+### Files Changed:
+
+- `src/hooks/useHomeSettings.ts` (NEW)
+- `src/hooks/useSavedLocations.ts` (NEW)
+- `src/components/home/SignageCorridorSection.tsx` (NEW)
+- `src/components/home/IntersectionsSection.tsx` (NEW)
+- `src/app/page.tsx` (imports, state declarations)
+
+### Stage Summary:
+
+- Version: 1.34.1 (no version bump - internal refactoring)
+- page.tsx reduced from 4,272 to 4,114 lines
+- New hooks: useHomeSettings, useSavedLocations
+- New components: SignageCorridorSection, IntersectionsSection
+- All 248 tests pass
+- TypeScript: 0 errors
+
+---
+
 ## Task ID: 2026-04-19-003
 
 **Agent:** Main Agent

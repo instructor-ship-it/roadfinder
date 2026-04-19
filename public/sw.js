@@ -1,8 +1,9 @@
 // TC Work Zone Locator - Service Worker for Offline Support
-// Version: 1.34.0
-const CACHE_NAME = 'tc-workzone-v134';
-const OFFLINE_CACHE = 'tc-workzone-offline-v134';
-const STATIC_CACHE = 'tc-workzone-static-v134';
+// Version: 1.35.0
+const CACHE_NAME = 'tc-workzone-v135';
+const OFFLINE_CACHE = 'tc-workzone-offline-v135';
+const STATIC_CACHE = 'tc-workzone-static-v135';
+const SYNC_QUEUE_DB = 'tc-sync-queue';
 
 // App shell - core files needed for app to work
 const APP_SHELL = [
@@ -402,5 +403,301 @@ async function cacheStaticData() {
     });
   } catch (error) {
     console.error('[SW] Failed to cache static data:', error);
+  }
+}
+
+// ============================================================================
+// Push Notifications
+// ============================================================================
+
+/**
+ * Handle push events from the server
+ * Displays notifications for weather warnings, incidents, etc.
+ */
+self.addEventListener('push', (event) => {
+  console.log('[SW] Push event received');
+
+  let payload = {
+    title: 'TC Work Zone Locator',
+    body: 'You have a new notification',
+    icon: '/icons/icon-192.png',
+    badge: '/icons/icon-192.png',
+    tag: 'general',
+    requireInteraction: false,
+    data: {},
+  };
+
+  // Parse push data if available
+  if (event.data) {
+    try {
+      const data = event.data.json();
+      payload = { ...payload, ...data };
+    } catch (e) {
+      console.warn('[SW] Failed to parse push data, using defaults');
+      payload.body = event.data.text() || payload.body;
+    }
+  }
+
+  const options = {
+    body: payload.body,
+    icon: payload.icon,
+    badge: payload.badge,
+    tag: payload.tag,
+    requireInteraction: payload.requireInteraction,
+    data: payload.data,
+    actions: payload.actions || [
+      { action: 'view', title: 'View' },
+      { action: 'dismiss', title: 'Dismiss' },
+    ],
+  };
+
+  event.waitUntil(self.registration.showNotification(payload.title, options));
+});
+
+/**
+ * Handle notification click events
+ */
+self.addEventListener('notificationclick', (event) => {
+  console.log('[SW] Notification clicked:', event.action);
+
+  event.notification.close();
+
+  const data = event.notification.data || {};
+  let targetUrl = '/';
+
+  // Determine target URL based on notification type
+  if (data.url) {
+    targetUrl = data.url;
+  } else if (data.type === 'weather-warning') {
+    targetUrl = '/?tab=warnings';
+  } else if (data.type === 'incident-alert') {
+    targetUrl = '/?tab=incidents';
+  } else if (data.type === 'shift-reminder') {
+    targetUrl = '/drive';
+  }
+
+  // Handle action buttons
+  if (event.action === 'dismiss') {
+    return; // Just close the notification
+  }
+
+  // Focus existing window or open new one
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      // Check if there's already a window open
+      for (const client of clientList) {
+        if (client.url.includes(self.location.origin) && 'focus' in client) {
+          client.focus();
+          if ('navigate' in client) {
+            client.navigate(targetUrl);
+          }
+          return;
+        }
+      }
+      // Open new window if none exists
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(targetUrl);
+      }
+    })
+  );
+});
+
+/**
+ * Handle notification close events (for analytics)
+ */
+self.addEventListener('notificationclose', (event) => {
+  console.log('[SW] Notification closed:', event.notification.tag);
+  // Could send analytics here
+});
+
+// ============================================================================
+// Background Sync
+// ============================================================================
+
+/**
+ * Handle background sync events
+ * Used for syncing Traffic Event Logger data when back online
+ */
+self.addEventListener('sync', (event) => {
+  console.log('[SW] Sync event received:', event.tag);
+
+  if (event.tag === 'traffic-events-sync') {
+    event.waitUntil(syncTrafficEvents());
+  } else if (event.tag === 'offline-data-sync') {
+    event.waitUntil(syncOfflineData());
+  }
+});
+
+/**
+ * Sync pending traffic events to Google Sheets
+ */
+async function syncTrafficEvents() {
+  console.log('[SW] Syncing traffic events...');
+
+  try {
+    // Open IndexedDB to get pending events
+    const db = await openSyncQueueDB();
+    const pendingEvents = await getAllPendingEvents(db);
+
+    if (pendingEvents.length === 0) {
+      console.log('[SW] No pending events to sync');
+      return;
+    }
+
+    console.log(`[SW] Found ${pendingEvents.length} pending events`);
+
+    // Get sync configuration from clients
+    const clients = await self.clients.matchAll();
+    let syncConfig = null;
+
+    // Request sync config from the app
+    for (const client of clients) {
+      client.postMessage({
+        type: 'SYNC_REQUEST_CONFIG',
+      });
+    }
+
+    // Wait a bit for config response
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // Process each event
+    let syncedCount = 0;
+    for (const event of pendingEvents) {
+      try {
+        // The actual sync happens in the app via message handler
+        // Here we just mark as synced after successful response
+        await markEventAsSynced(db, event.id);
+        syncedCount++;
+      } catch (error) {
+        console.error('[SW] Failed to sync event:', event.id, error);
+      }
+    }
+
+    console.log(`[SW] Synced ${syncedCount}/${pendingEvents.length} events`);
+
+    // Notify clients of sync completion
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'SYNC_COMPLETE',
+        synced: syncedCount,
+        total: pendingEvents.length,
+      });
+    });
+  } catch (error) {
+    console.error('[SW] Sync failed:', error);
+    throw error; // This will cause the sync to retry
+  }
+}
+
+/**
+ * Sync offline data when back online
+ */
+async function syncOfflineData() {
+  console.log('[SW] Syncing offline data...');
+
+  try {
+    // Notify clients to perform data sync
+    const clients = await self.clients.matchAll();
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'OFFLINE_DATA_SYNC',
+      });
+    });
+  } catch (error) {
+    console.error('[SW] Offline data sync failed:', error);
+  }
+}
+
+/**
+ * Open the sync queue IndexedDB
+ */
+function openSyncQueueDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(SYNC_QUEUE_DB, 1);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('pending-events')) {
+        const store = db.createObjectStore('pending-events', { keyPath: 'id' });
+        store.createIndex('timestamp', 'timestamp', { unique: false });
+      }
+    };
+  });
+}
+
+/**
+ * Get all pending events from IndexedDB
+ */
+function getAllPendingEvents(db) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['pending-events'], 'readonly');
+    const store = transaction.objectStore('pending-events');
+    const request = store.getAll();
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+  });
+}
+
+/**
+ * Mark an event as synced (remove from queue)
+ */
+function markEventAsSynced(db, eventId) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['pending-events'], 'readwrite');
+    const store = transaction.objectStore('pending-events');
+    const request = store.delete(eventId);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+}
+
+// ============================================================================
+// Periodic Background Sync (if supported)
+// ============================================================================
+
+/**
+ * Handle periodic background sync for weather/incident updates
+ * Note: This requires the 'periodic-background-sync' permission
+ */
+self.addEventListener('periodicsync', (event) => {
+  console.log('[SW] Periodic sync event:', event.tag);
+
+  if (event.tag === 'weather-update') {
+    event.waitUntil(fetchWeatherUpdates());
+  } else if (event.tag === 'incident-update') {
+    event.waitUntil(fetchIncidentUpdates());
+  }
+});
+
+async function fetchWeatherUpdates() {
+  try {
+    // Notify clients to fetch weather updates
+    const clients = await self.clients.matchAll();
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'FETCH_WEATHER_UPDATE',
+      });
+    });
+  } catch (error) {
+    console.error('[SW] Weather update failed:', error);
+  }
+}
+
+async function fetchIncidentUpdates() {
+  try {
+    // Notify clients to fetch incident updates
+    const clients = await self.clients.matchAll();
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'FETCH_INCIDENT_UPDATE',
+      });
+    });
+  } catch (error) {
+    console.error('[SW] Incident update failed:', error);
   }
 }

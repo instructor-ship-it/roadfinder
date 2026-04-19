@@ -3,7 +3,14 @@
  *
  * Manages event logging, counters, timers, and Google Sheets sync
  * for the Traffic Event Logger modal.
- * @version 1.28.5
+ *
+ * Features:
+ * - Local event storage with counters and timers
+ * - Background Sync API for offline queue sync
+ * - Google Sheets integration (user-configurable)
+ *
+ * @module traffic-event-logger
+ * @version 1.35.0
  */
 
 // ============================================================================
@@ -859,6 +866,225 @@ function sendToSheets(event: TrafficEvent): void {
     });
 }
 
+// ============================================================================
+// Background Sync API Integration
+// ============================================================================
+
+/**
+ * Check if Background Sync API is supported
+ */
+export function isBackgroundSyncSupported(): boolean {
+  return 'serviceWorker' in navigator && 'SyncManager' in window;
+}
+
+/**
+ * Register a background sync event
+ * This will trigger sync when the device comes back online
+ */
+export async function registerBackgroundSync(
+  tag: string = 'traffic-events-sync'
+): Promise<boolean> {
+  if (!isBackgroundSyncSupported()) {
+    console.warn('[BGSync] Background Sync API not supported');
+    return false;
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.ready;
+
+    if (!registration.sync) {
+      console.warn('[BGSync] SyncManager not available');
+      return false;
+    }
+
+    await registration.sync.register(tag);
+    console.log(`[BGSync] Registered sync event: ${tag}`);
+    return true;
+  } catch (error) {
+    console.error('[BGSync] Failed to register sync:', error);
+    return false;
+  }
+}
+
+/**
+ * Store event in IndexedDB for background sync
+ * This provides persistent storage for events that need to be synced
+ */
+async function storeEventForSync(event: TrafficEvent): Promise<void> {
+  const SYNC_QUEUE_DB = 'tc-sync-queue';
+
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(SYNC_QUEUE_DB, 1);
+
+    request.onerror = () => reject(request.error);
+
+    request.onsuccess = () => {
+      const db = request.result;
+
+      // Create object store if it doesn't exist
+      if (!db.objectStoreNames.contains('pending-events')) {
+        db.close();
+        // Need to upgrade the database
+        const upgradeRequest = indexedDB.open(SYNC_QUEUE_DB, 2);
+        upgradeRequest.onupgradeneeded = (e) => {
+          const upgradeDb = (e.target as IDBOpenDBRequest).result;
+          if (!upgradeDb.objectStoreNames.contains('pending-events')) {
+            const store = upgradeDb.createObjectStore('pending-events', { keyPath: 'id' });
+            store.createIndex('timestamp', 'timestamp', { unique: false });
+          }
+        };
+        upgradeRequest.onsuccess = () => {
+          storeEventInDB(upgradeRequest.result, event).then(resolve).catch(reject);
+        };
+        return;
+      }
+
+      storeEventInDB(db, event).then(resolve).catch(reject);
+    };
+
+    request.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      if (!db.objectStoreNames.contains('pending-events')) {
+        const store = db.createObjectStore('pending-events', { keyPath: 'id' });
+        store.createIndex('timestamp', 'timestamp', { unique: false });
+      }
+    };
+  });
+}
+
+/**
+ * Helper function to store event in IndexedDB
+ */
+function storeEventInDB(db: IDBDatabase, event: TrafficEvent): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['pending-events'], 'readwrite');
+    const store = transaction.objectStore('pending-events');
+
+    const syncEvent = {
+      ...event,
+      timestamp: Date.now(),
+      synced: false,
+    };
+
+    const request = store.put(syncEvent);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+}
+
+/**
+ * Remove synced event from IndexedDB
+ */
+async function removeSyncedEvent(eventId: string): Promise<void> {
+  const SYNC_QUEUE_DB = 'tc-sync-queue';
+
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(SYNC_QUEUE_DB, 1);
+
+    request.onerror = () => reject(request.error);
+
+    request.onsuccess = () => {
+      const db = request.result;
+
+      if (!db.objectStoreNames.contains('pending-events')) {
+        resolve();
+        return;
+      }
+
+      const transaction = db.transaction(['pending-events'], 'readwrite');
+      const store = transaction.objectStore('pending-events');
+      const deleteRequest = store.delete(eventId);
+
+      deleteRequest.onerror = () => reject(deleteRequest.error);
+      deleteRequest.onsuccess = () => resolve();
+    };
+  });
+}
+
+/**
+ * Sync pending events to Google Sheets
+ * Called when coming back online or via Background Sync
+ */
+export async function syncPendingEvents(): Promise<{ synced: number; failed: number }> {
+  const state = getState();
+
+  if (!state.sheetsEnabled || !state.sheetsUrl) {
+    return { synced: 0, failed: 0 };
+  }
+
+  if (state.queue.length === 0) {
+    return { synced: 0, failed: 0 };
+  }
+
+  const pending = [...state.queue];
+  let synced = 0;
+  let failed = 0;
+
+  for (const event of pending) {
+    try {
+      await sendToSheetsAsync(event);
+      state.queue = state.queue.filter((e) => e.id !== event.id);
+      await removeSyncedEvent(event.id);
+      synced++;
+    } catch (error) {
+      console.error('[Sync] Failed to sync event:', event.id, error);
+      failed++;
+    }
+  }
+
+  saveState(state);
+  notifyListeners();
+
+  return { synced, failed };
+}
+
+/**
+ * Async version of sendToSheets that returns a Promise
+ */
+function sendToSheetsAsync(event: TrafficEvent): Promise<void> {
+  const state = getState();
+
+  if (!state.sheetsUrl) {
+    return Promise.reject(new Error('No sync URL configured'));
+  }
+
+  const url = buildSheetsURL(event, state.sheetsUrl, state.sheetsSecret);
+
+  return fetch(url, { mode: 'no-cors', cache: 'no-cache' })
+    .then(() => {
+      console.log('✅ SHEET OK:', event.label);
+    })
+    .catch((err) => {
+      console.error('❌ SHEET ERROR:', err);
+      throw err;
+    });
+}
+
+/**
+ * Queue an event for background sync
+ * Stores in localStorage (immediate) and IndexedDB (for background sync)
+ */
+async function queueForSync(event: TrafficEvent): Promise<void> {
+  const state = getState();
+
+  // Add to localStorage queue (immediate sync when online)
+  state.queue.push(event);
+  saveState(state);
+
+  // Also store in IndexedDB for background sync
+  try {
+    await storeEventForSync(event);
+
+    // Register background sync if supported
+    if (isBackgroundSyncSupported()) {
+      await registerBackgroundSync('traffic-events-sync');
+    }
+  } catch (error) {
+    console.warn('[BGSync] Failed to store event for background sync:', error);
+    // Continue anyway - localStorage queue is the fallback
+  }
+}
+
 export function flushQueue(): void {
   const state = getState();
 
@@ -870,6 +1096,14 @@ export function flushQueue(): void {
 
   pending.forEach((event) => sendToSheets(event));
   notifyListeners();
+}
+
+/**
+ * Flush queue using async sync (preferred)
+ * Use this for Background Sync integration
+ */
+export async function flushQueueAsync(): Promise<{ synced: number; failed: number }> {
+  return syncPendingEvents();
 }
 
 export function testSheetsConnection(): { success: boolean; message: string } {
