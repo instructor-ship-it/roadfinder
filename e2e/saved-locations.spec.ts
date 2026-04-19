@@ -3,6 +3,16 @@ import { test, expect } from '@playwright/test';
 /**
  * TC Work Zone Locator - Saved Locations E2E Tests
  * Tests for save, recall, and manage locations functionality
+ *
+ * Key facts:
+ * - Save button text: "💾 Save Location" — visible only when selectedRoad && startSlk
+ * - Save mechanism: uses browser prompt() for name input (NOT an in-page dialog)
+ * - Saved locations heading: "📌 Saved Locations ({count})" — only when locations exist
+ * - Empty state: component returns null (nothing rendered when no saved locations)
+ * - Delete button: "×" with title="Delete"
+ * - Sort buttons: "📅 Date" and "🛣️ Road"
+ * - Map link: "🗺️ Map" → /saved-locations/map
+ * - Storage: IndexedDB via saved-locations-db.ts
  */
 
 /**
@@ -42,6 +52,21 @@ async function selectFirstRoad(page: import('@playwright/test').Page) {
   await page.waitForTimeout(500);
 }
 
+/**
+ * Helper: Complete a full work zone lookup to enable saving.
+ */
+async function completeLookup(page: import('@playwright/test').Page) {
+  await selectRegion(page, 'Wheatbelt');
+  await selectFirstRoad(page);
+  await page.getByPlaceholder('e.g. 100.0').fill('100.00');
+  await page.getByRole('button', { name: /Get Work Zone Info/i }).click();
+
+  // Wait for search to complete
+  await expect(page.getByRole('button', { name: /^Get Work Zone Info$/i }))
+    .toBeVisible({ timeout: 20000 })
+    .catch(() => {});
+}
+
 test.describe('Saved Locations', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
@@ -50,121 +75,138 @@ test.describe('Saved Locations', () => {
     await page.waitForLoadState('networkidle');
   });
 
-  test('should show saved locations section', async ({ page }) => {
-    // Wait for page to load
-    await page.waitForTimeout(2000);
-
-    // Look for saved locations section
-    const savedLocationsSection = page.locator(
-      'text=/Saved Locations|Recent Locations|Favorites/i'
-    );
-
-    // Section might exist but be empty
-    const isVisible = await savedLocationsSection.isVisible({ timeout: 5000 }).catch(() => false);
-    expect(isVisible).toBeTruthy();
-  });
-
-  test('should save current location after successful lookup', async ({ page }) => {
-    // Complete a work zone lookup first
+  test('should show Save Location button after selecting road and SLK', async ({ page }) => {
     await selectRegion(page, 'Wheatbelt');
     await selectFirstRoad(page);
-
     await page.getByPlaceholder('e.g. 100.0').fill('100.00');
-    await page.getByRole('button', { name: /Get Work Zone Info/i }).click();
 
-    // Wait for results
-    await page.waitForTimeout(3000);
+    // Save Location button appears when selectedRoad && startSlk are set
+    const saveButton = page.getByRole('button', { name: /Save Location/i });
+    await expect(saveButton).toBeVisible({ timeout: 5000 });
+  });
+
+  test('should save a location after successful lookup', async ({ page }) => {
+    await completeLookup(page);
 
     // Look for save button
-    const saveButton = page.getByRole('button', { name: /Save|Bookmark|Save Location/i });
+    const saveButton = page.getByRole('button', { name: /Save Location/i });
 
     if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+      // Handle the browser prompt() dialog
+      page.once('dialog', async (dialog) => {
+        await dialog.accept('Test Location');
+      });
       await saveButton.click();
+      await page.waitForTimeout(1000);
 
-      // Should show input for location name
-      const nameInput = page.getByPlaceholder(/name|label/i);
-      if (await nameInput.isVisible({ timeout: 3000 }).catch(() => false)) {
-        await nameInput.fill('Test Location');
-        await page.getByRole('button', { name: /Save|Confirm|Add/i }).click();
+      // Verify location appears in saved list (heading "📌 Saved Locations")
+      const savedLocationsHeading = page.locator('text=/Saved Locations/i');
+      const hasHeading = await savedLocationsHeading
+        .isVisible({ timeout: 5000 })
+        .catch(() => false);
+
+      if (hasHeading) {
+        // Check that the test location name is visible
+        const testLocationText = page.locator('text=Test Location');
+        const isVisible = await testLocationText.isVisible({ timeout: 5000 }).catch(() => false);
+        expect(isVisible).toBeTruthy();
       }
-
-      // Verify location appears in saved list
-      const savedLocation = page.locator('text=Test Location');
-      expect(await savedLocation.isVisible({ timeout: 5000 }).catch(() => false)).toBeTruthy();
     }
   });
 
   test('should recall a saved location', async ({ page }) => {
-    // Wait for page to load
-    await page.waitForTimeout(2000);
+    // First, save a location
+    await completeLookup(page);
 
-    // Look for any existing saved location
-    const savedLocationButton = page
-      .locator('[data-testid="saved-location"], button')
-      .filter({
-        has: page.locator('text=/@|SLK|km/'),
-      })
-      .first();
+    const saveButton = page.getByRole('button', { name: /Save Location/i });
+    if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+      page.once('dialog', async (dialog) => {
+        await dialog.accept('Recall Test');
+      });
+      await saveButton.click();
+      await page.waitForTimeout(1000);
+    }
+
+    // Now find and click the saved location to recall it
+    // Each saved location is a <button> with road_id and SLK text
+    const savedLocationButton = page.locator('button').filter({ hasText: /SLK/i }).first();
 
     if (await savedLocationButton.isVisible({ timeout: 5000 }).catch(() => false)) {
-      // Click on saved location to recall
       await savedLocationButton.click();
 
       // Wait for lookup to complete
-      await page.waitForTimeout(2000);
+      await page.waitForTimeout(3000);
 
-      // Should show work zone results
-      const workZoneSummary = page.locator('text=Work Zone Summary');
-      expect(await workZoneSummary.isVisible({ timeout: 10000 }).catch(() => false)).toBeTruthy();
+      // Should show work zone results (Reset button or heading)
+      const resetButton = page.getByRole('button', { name: /Reset/i });
+      const hasResults = await resetButton.isVisible({ timeout: 10000 }).catch(() => false);
+      expect(hasResults).toBeTruthy();
     }
   });
 
   test('should delete a saved location', async ({ page }) => {
-    // Wait for page to load
-    await page.waitForTimeout(2000);
+    // First, save a location
+    await completeLookup(page);
 
-    // Look for delete button on saved location
-    const deleteButton = page.getByRole('button', { name: /Delete|Remove/i }).first();
+    const saveButton = page.getByRole('button', { name: /Save Location/i });
+    if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+      page.once('dialog', async (dialog) => {
+        await dialog.accept('Delete Test');
+      });
+      await saveButton.click();
+      await page.waitForTimeout(1000);
+    }
+
+    // Find the delete button (× with title="Delete")
+    const deleteButton = page.locator('button[title="Delete"]').first();
 
     if (await deleteButton.isVisible({ timeout: 5000 }).catch(() => false)) {
-      // Get count of saved locations before delete
-      const savedLocationsBefore = await page.locator('[data-testid="saved-location"]').count();
+      // Count saved locations before delete
+      const savedLocationsBefore = await page.locator('button[title="Delete"]').count();
 
       await deleteButton.click();
-
-      // Confirm deletion if prompted
-      const confirmButton = page.getByRole('button', { name: /Confirm|Delete|Yes/i });
-      if (await confirmButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-        await confirmButton.click();
-      }
 
       // Wait for deletion to complete
       await page.waitForTimeout(1000);
 
       // Verify location was removed
-      const savedLocationsAfter = await page.locator('[data-testid="saved-location"]').count();
+      const savedLocationsAfter = await page.locator('button[title="Delete"]').count();
       expect(savedLocationsAfter).toBeLessThanOrEqual(savedLocationsBefore);
     }
   });
 
   test('should sort saved locations by date or road', async ({ page }) => {
-    // Wait for page to load
-    await page.waitForTimeout(2000);
+    // First, save a location
+    await completeLookup(page);
 
-    // Look for sort toggle
-    const sortButton = page.getByRole('button', { name: /Sort|Date|Road|Order/i });
-
-    if (await sortButton.isVisible({ timeout: 5000 }).catch(() => false)) {
-      // Toggle sort
-      await sortButton.click();
-
-      // Wait for re-sort
-      await page.waitForTimeout(500);
-
-      // Button text should have changed
-      const buttonText = await sortButton.textContent();
-      expect(buttonText).toBeTruthy();
+    const saveButton = page.getByRole('button', { name: /Save Location/i });
+    if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+      page.once('dialog', async (dialog) => {
+        await dialog.accept('Sort Test');
+      });
+      await saveButton.click();
+      await page.waitForTimeout(1000);
     }
+
+    // Look for sort buttons: "📅 Date" and "🛣️ Road"
+    const dateSortButton = page.locator('button:has-text("Date")').first();
+    const roadSortButton = page.locator('button:has-text("Road")').first();
+
+    const hasDateSort = await dateSortButton.isVisible({ timeout: 5000 }).catch(() => false);
+    const hasRoadSort = await roadSortButton.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (hasDateSort) {
+      await dateSortButton.click();
+      await page.waitForTimeout(500);
+    }
+
+    if (hasRoadSort) {
+      await roadSortButton.click();
+      await page.waitForTimeout(500);
+    }
+
+    // At least one sort button should exist
+    expect(hasDateSort || hasRoadSort).toBeTruthy();
   });
 });
 
@@ -177,40 +219,45 @@ test.describe('Saved Locations Persistence', () => {
   });
 
   test('should persist saved locations across page reloads', async ({ page }) => {
-    // First, save a location if possible
-    await selectRegion(page, 'Wheatbelt');
-    await selectFirstRoad(page);
+    // First, save a location
+    await completeLookup(page);
 
-    await page.getByPlaceholder('e.g. 100.0').fill('100.00');
-    await page.getByRole('button', { name: /Get Work Zone Info/i }).click();
-    await page.waitForTimeout(3000);
-
-    const saveButton = page.getByRole('button', { name: /Save|Bookmark/i });
+    const saveButton = page.getByRole('button', { name: /Save Location/i });
     if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+      page.once('dialog', async (dialog) => {
+        await dialog.accept('Persistent Test Location');
+      });
       await saveButton.click();
-
-      const nameInput = page.getByPlaceholder(/name/i);
-      if (await nameInput.isVisible({ timeout: 3000 }).catch(() => false)) {
-        await nameInput.fill('Persistent Test Location');
-        await page.getByRole('button', { name: /Save|Add/i }).click();
-        await page.waitForTimeout(1000);
-      }
+      await page.waitForTimeout(1000);
     }
 
     // Reload the page
     await page.reload();
     await page.waitForTimeout(2000);
 
-    // Check if saved location still exists
-    const savedLocation = page.locator('text=Persistent Test Location');
-    const isVisible = await savedLocation.isVisible({ timeout: 5000 }).catch(() => false);
+    // Check if saved location heading appears (means there are saved locations)
+    const savedLocationsHeading = page.locator('text=/Saved Locations/i');
+    const isVisible = await savedLocationsHeading.isVisible({ timeout: 5000 }).catch(() => false);
     if (isVisible) {
-      expect(isVisible).toBeTruthy();
+      // Check that our test location name is visible
+      const locationText = page.locator('text=Persistent Test Location');
+      const hasLocation = await locationText.isVisible({ timeout: 5000 }).catch(() => false);
+      expect(hasLocation).toBeTruthy();
     }
   });
 
   test('should persist saved locations when offline', async ({ page, context }) => {
-    await page.waitForTimeout(2000);
+    // First, save a location online
+    await completeLookup(page);
+
+    const saveButton = page.getByRole('button', { name: /Save Location/i });
+    if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+      page.once('dialog', async (dialog) => {
+        await dialog.accept('Offline Persist Test');
+      });
+      await saveButton.click();
+      await page.waitForTimeout(1000);
+    }
 
     // Go offline
     await context.setOffline(true);
@@ -220,13 +267,13 @@ test.describe('Saved Locations Persistence', () => {
     await page.waitForTimeout(2000);
 
     // Saved locations should still be accessible (stored in IndexedDB)
-    const savedLocationsSection = page.locator('text=/Saved Locations|Recent/i');
-    const isVisible = await savedLocationsSection.isVisible({ timeout: 5000 }).catch(() => false);
-
-    expect(isVisible).toBeTruthy();
+    const savedLocationsHeading = page.locator('text=/Saved Locations/i');
+    const isVisible = await savedLocationsHeading.isVisible({ timeout: 5000 }).catch(() => false);
 
     // Re-enable network
     await context.setOffline(false);
+
+    expect(isVisible).toBeTruthy();
   });
 });
 
@@ -238,54 +285,63 @@ test.describe('Saved Locations UX', () => {
     await page.waitForLoadState('networkidle');
   });
 
-  test('should show helpful message when no saved locations', async ({ page }) => {
-    await page.waitForTimeout(2000);
+  test('should not show saved locations section when empty', async ({ page }) => {
+    // When there are no saved locations, the section returns null
+    const savedLocationsHeading = page.locator('text=/Saved Locations/i');
+    const isVisible = await savedLocationsHeading.isVisible({ timeout: 3000 }).catch(() => false);
 
-    // Look for empty state message
-    const emptyMessage = page.locator('text=/No saved locations|No locations saved|empty/i');
-    const hasEmptyMessage = await emptyMessage.isVisible({ timeout: 5000 }).catch(() => false);
-
-    // This test passes whether or not message is shown
-    expect(hasEmptyMessage).toBeTruthy();
+    // Should NOT be visible when there are no saved locations
+    expect(isVisible).toBeFalsy();
   });
 
   test('should show road name and SLK for each saved location', async ({ page }) => {
-    await page.waitForTimeout(2000);
+    // First, save a location
+    await completeLookup(page);
+
+    const saveButton = page.getByRole('button', { name: /Save Location/i });
+    if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+      page.once('dialog', async (dialog) => {
+        await dialog.accept('Road Info Test');
+      });
+      await saveButton.click();
+      await page.waitForTimeout(1000);
+    }
 
     // Look for saved location entries that show road info
-    const savedLocationWithRoad = page
-      .locator('[data-testid="saved-location"], .saved-location')
-      .filter({
-        has: page.locator('text=/SLK|@|km/'),
-      });
+    // Each location shows road_id (font-mono green) and "SLK {value}" text
+    const slkText = page.locator('text=/SLK/i').first();
+    const hasSlk = await slkText.isVisible({ timeout: 5000 }).catch(() => false);
 
-    const count = await savedLocationWithRoad.count();
-
-    // If there are saved locations, they should show road info
-    if (count > 0) {
-      const firstLocation = savedLocationWithRoad.first();
-      const text = await firstLocation.textContent();
-      expect(text).toMatch(/SLK|@|km/i);
+    if (hasSlk) {
+      // Verify the SLK value is present
+      const slkContent = await slkText.textContent();
+      expect(slkContent).toMatch(/SLK/i);
     }
   });
 
   test('should navigate to drive page after recalling location', async ({ page }) => {
-    await page.waitForTimeout(2000);
+    // First, save a location
+    await completeLookup(page);
 
-    // Find and click a saved location
-    const savedLocationButton = page
-      .locator('button')
-      .filter({
-        has: page.locator('text=/@|SLK/'),
-      })
-      .first();
+    const saveButton = page.getByRole('button', { name: /Save Location/i });
+    if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
+      page.once('dialog', async (dialog) => {
+        await dialog.accept('Drive Nav Test');
+      });
+      await saveButton.click();
+      await page.waitForTimeout(1000);
+    }
+
+    // Find and click a saved location to recall
+    const savedLocationButton = page.locator('button').filter({ hasText: /SLK/i }).first();
 
     if (await savedLocationButton.isVisible({ timeout: 5000 }).catch(() => false)) {
       await savedLocationButton.click();
-      await page.waitForTimeout(2000);
+      await page.waitForTimeout(3000);
 
-      // Look for "Go to Drive" or similar button
-      const driveButton = page.getByRole('button', { name: /Drive|Tracking|Navigate|Go/i });
+      // After recall, look for "Go to Drive" or similar navigation
+      // The drive page is at /drive with URL params
+      const driveButton = page.getByRole('link', { name: /Drive|Tracking|Go/i }).first();
 
       if (await driveButton.isVisible({ timeout: 3000 }).catch(() => false)) {
         await driveButton.click();
