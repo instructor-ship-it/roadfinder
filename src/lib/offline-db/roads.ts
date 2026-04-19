@@ -8,6 +8,7 @@
 
 import { initDB } from './db-core';
 import { haversineDistance } from '@/lib/utils';
+import { perf } from '@/lib/performance';
 import type { RoadData } from './types';
 
 // Re-export RoadData for backward compatibility
@@ -178,6 +179,9 @@ export async function getRoadsForRegion(region: string): Promise<
  * Find road near GPS coordinates
  * Uses projection math for accurate SLK calculation
  * Prioritizes State Roads over Local Roads only when distances are very close (within 50m)
+ *
+ * Performance: Uses bounding box pre-filtering to skip segments that are clearly
+ * outside the search radius before doing expensive geometry calculations.
  */
 export async function findRoadNearGps(
   lat: number,
@@ -190,8 +194,22 @@ export async function findRoadNearGps(
   distance_m: number;
   network_type: string;
 } | null> {
+  perf.start('findRoadNearGps');
+
   try {
     const db = await initDB();
+
+    // Pre-calculate bounding box for quick filtering
+    // At WA latitude (~32°S), 1 degree lat ≈ 111km, 1 degree lon ≈ 94km
+    const latKmPerDeg = 111;
+    const lonKmPerDeg = 94;
+    const latBuffer = maxDistanceKm / latKmPerDeg;
+    const lonBuffer = maxDistanceKm / lonKmPerDeg;
+    const minLat = lat - latBuffer;
+    const maxLat = lat + latBuffer;
+    const minLon = lon - lonBuffer;
+    const maxLon = lon + lonBuffer;
+    const maxDistM = maxDistanceKm * 1000;
 
     return new Promise((resolve) => {
       const tx = db.transaction('regions', 'readonly');
@@ -206,6 +224,28 @@ export async function findRoadNearGps(
           for (const road of region.roads) {
             for (const segment of road.segments) {
               if (!segment.geometry || segment.geometry.length < 2) continue;
+
+              // Quick bounding box check - skip segments clearly outside range
+              let segMinLat = Infinity,
+                segMaxLat = -Infinity,
+                segMinLon = Infinity,
+                segMaxLon = -Infinity;
+              for (const [ptLat, ptLon] of segment.geometry) {
+                if (ptLat < segMinLat) segMinLat = ptLat;
+                if (ptLat > segMaxLat) segMaxLat = ptLat;
+                if (ptLon < segMinLon) segMinLon = ptLon;
+                if (ptLon > segMaxLon) segMaxLon = ptLon;
+              }
+
+              // Skip if segment bounding box doesn't overlap with search area
+              if (
+                segMaxLat < minLat ||
+                segMinLat > maxLat ||
+                segMaxLon < minLon ||
+                segMinLon > maxLon
+              ) {
+                continue;
+              }
 
               const geometry = segment.geometry;
               const segmentSlkLength = segment.end_slk - segment.start_slk;
@@ -231,6 +271,20 @@ export async function findRoadNearGps(
                 const [lat1, lon1] = geometry[i - 1];
                 const [lat2, lon2] = geometry[i];
 
+                // Quick check: skip if this line segment is outside bounding box
+                const lineMinLat = Math.min(lat1, lat2);
+                const lineMaxLat = Math.max(lat1, lat2);
+                const lineMinLon = Math.min(lon1, lon2);
+                const lineMaxLon = Math.max(lon1, lon2);
+                if (
+                  lineMaxLat < minLat ||
+                  lineMinLat > maxLat ||
+                  lineMaxLon < minLon ||
+                  lineMinLon > maxLon
+                ) {
+                  continue;
+                }
+
                 const dx = lat2 - lat1;
                 const dy = lon2 - lon1;
                 const segmentDistDeg = Math.sqrt(dx * dx + dy * dy);
@@ -251,7 +305,6 @@ export async function findRoadNearGps(
 
                 // Use Haversine for accurate distance in meters
                 const distM = haversineDistance(lat, lon, closestLat, closestLon);
-                const maxDistM = maxDistanceKm * 1000;
 
                 if (distM < maxDistM) {
                   // Calculate segment distance in meters using Haversine
@@ -277,6 +330,7 @@ export async function findRoadNearGps(
         }
 
         if (candidates.length === 0) {
+          perf.end('findRoadNearGps');
           resolve(null);
           return;
         }
@@ -297,6 +351,8 @@ export async function findRoadNearGps(
           return a.distance_m - b.distance_m;
         });
 
+        perf.end('findRoadNearGps');
+
         // Return the best match
         resolve({
           road_id: candidates[0].road_id,
@@ -307,9 +363,13 @@ export async function findRoadNearGps(
         });
       };
 
-      request.onerror = () => resolve(null);
+      request.onerror = () => {
+        perf.end('findRoadNearGps');
+        resolve(null);
+      };
     });
   } catch {
+    perf.end('findRoadNearGps');
     return null;
   }
 }
