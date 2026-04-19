@@ -7,3 +7,7 @@ export { OfflineDataSection } from './OfflineDataSection';
 export { EmergencyLocationButton } from './EmergencyLocationButton';
 export { RoadWidthBreakdown } from './RoadWidthBreakdown';
 export { LaneDirectionDiagram } from './LaneDirectionDiagram';
+export { SignageCorridorSection } from './SignageCorridorSection';
+export { IntersectionsSection } from './IntersectionsSection';
+export { WorkZoneForm } from './WorkZoneForm';
+export { TrafficVolumeSection } from './TrafficVolumeSection';
