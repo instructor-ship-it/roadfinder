@@ -499,6 +499,10 @@ API keys (e.g., for AI Assistant) are stored in **localStorage** on your device:
   - Extracted TrafficCountDetailModal component (206 lines)
   - Extracted DebugInfoPopup component (57 lines)
   - Enhanced useSetDistance and useOfflineData hooks
+- **Component Extraction** — WorkZoneForm and TrafficVolumeSection
+  - Integrated WorkZoneForm component (replaced 280+ lines of inline JSX)
+  - Integrated TrafficVolumeSection component (replaced 955 lines of inline JSX)
+  - Reduced page.tsx from ~3,881 to ~1,948 lines (~50% reduction)
 - **TypeScript build fix** — `mrwaStatus` prop type mismatch in SettingsDrawer component
 
 ### 1.34.0 - Unlimited Saved Locations

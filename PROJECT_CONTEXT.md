@@ -190,7 +190,7 @@ Traffic Controllers working on WA roads who need to:
 
 ### Tech Stack
 
-- **Framework:** Next.js 15 with App Router
+- **Framework:** Next.js 16 with App Router
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
 - **UI Components:** shadcn/ui
@@ -553,7 +553,7 @@ See `scripts/README.md` for full documentation of available scripts.
   - Shows appropriate interface based on configuration
   - Save AI responses to Q&A history
 - **API Routes**
-  - `/api/ai/test` - Test API key validity
+  - `/api/ai/verify` - Verify API key validity
   - `/api/ai/chat` - Chat completion endpoint
 - **Files Changed**
   - `src/components/SettingsDrawer.tsx` (AI settings UI, version 1.21.0)

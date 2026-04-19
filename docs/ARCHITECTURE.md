@@ -623,7 +623,7 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 
 ## 17. Version History
 
-### RC 1.34.0 (Current) - IndexedDB for Saved Locations
+### 1.34.1 (Current) - Phase 3 Refactoring & Component Extraction
 
 - **Migrated saved locations from localStorage to IndexedDB**
   - Removed 200 location limit - now supports unlimited saved locations
