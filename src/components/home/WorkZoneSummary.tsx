@@ -1,29 +1,30 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { LaneDirectionDiagram } from './LaneDirectionDiagram';
 
 interface WorkZone {
   start_slk: number;
   end_slk: number;
   length_m: number;
-  start?: { lat: number; lon: number };
-  end?: { lat: number; lon: number };
+  start?: { lat: number; lon: number } | null;
+  end?: { lat: number; lon: number } | null;
 }
 
 interface GoogleMapsLinks {
-  work_zone_start: string;
-  work_zone_end: string;
+  work_zone_start: string | null;
+  work_zone_end: string | null;
 }
 
 interface PavementData {
-  lanes?: number;
-  width_m?: number;
-  total_pave_width?: number;
-  unsealed_shoulder_l?: number;
-  sealed_shoulder_l?: number;
-  sealed_shoulder_r?: number;
-  unsealed_shoulder_r?: number;
-  cwy?: string;
+  lanes?: number | null;
+  width_m?: number | null;
+  total_pave_width?: number | null;
+  unsealed_shoulder_l?: number | null;
+  sealed_shoulder_l?: number | null;
+  sealed_shoulder_r?: number | null;
+  unsealed_shoulder_r?: number | null;
+  cwy?: string | null;
 }
 
 interface WorkZoneResult {
@@ -40,19 +41,19 @@ interface WorkZoneSummaryProps {
   result: WorkZoneResult;
   isSinglePoint: boolean;
   onOpenStreetView: (lat: number, lon: number) => void;
-  onOpenGoogleMaps: (url: string) => void;
+  onOpenGoogleMaps: (url: string | null) => void;
   onStartSlkTracking: () => void;
 }
 
-export function WorkZoneSummary({ 
-  result, 
+export function WorkZoneSummary({
+  result,
   isSinglePoint,
-  onOpenStreetView, 
+  onOpenStreetView,
   onOpenGoogleMaps,
-  onStartSlkTracking 
+  onStartSlkTracking,
 }: WorkZoneSummaryProps) {
   const p = result.pavement;
-  
+
   // Road width breakdown calculations
   const totalWidth = p?.total_pave_width || 1;
   const unsealedL = p?.unsealed_shoulder_l || 0;
@@ -60,7 +61,7 @@ export function WorkZoneSummary({
   const trafficable = p?.width_m || 0;
   const sealedR = p?.sealed_shoulder_r || 0;
   const unsealedR = p?.unsealed_shoulder_r || 0;
-  
+
   // Calculate percentages
   const pctUnsealedL = (unsealedL / totalWidth) * 100;
   const pctSealedL = (sealedL / totalWidth) * 100;
@@ -72,19 +73,19 @@ export function WorkZoneSummary({
     <div className="bg-gray-800 rounded-lg p-4">
       <div className="border-b border-gray-700 pb-2 mb-3">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-blue-400">
-            📍 Work Zone Summary
-          </h3>
+          <h3 className="text-sm font-semibold text-blue-400">📍 Work Zone Summary</h3>
           {result.work_zone.start && (
             <div className="flex gap-1">
-              <Button 
-                onClick={() => onOpenStreetView(result.work_zone.start!.lat, result.work_zone.start!.lon)}
+              <Button
+                onClick={() =>
+                  onOpenStreetView(result.work_zone.start!.lat, result.work_zone.start!.lon)
+                }
                 className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700 flex items-center gap-1"
                 title="Street View at Start SLK"
               >
                 🏠 Street View
               </Button>
-              <Button 
+              <Button
                 onClick={() => onOpenGoogleMaps(result.google_maps.work_zone_start)}
                 className="h-7 px-2 text-xs bg-green-600 hover:bg-green-700 flex items-center gap-1"
                 title="Google Maps at Start SLK"
@@ -95,11 +96,11 @@ export function WorkZoneSummary({
           )}
         </div>
       </div>
-      
+
       {/* Track button for single point lookups */}
       {isSinglePoint && result.work_zone.start && (
         <div className="mb-3">
-          <Button 
+          <Button
             onClick={onStartSlkTracking}
             className="w-full h-8 text-sm bg-blue-800 hover:bg-blue-900 flex items-center justify-center gap-1"
             title="Start SLK Tracking"
@@ -108,17 +109,19 @@ export function WorkZoneSummary({
           </Button>
         </div>
       )}
-      
+
       <p className="text-lg font-medium">{result.road_name}</p>
       <p className="text-sm text-gray-400">
         Road ID: {result.road_id}
         {result.network_type && (
-          <span className={`ml-2 ${result.network_type === 'Local Road' ? 'text-amber-400' : 'text-gray-500'}`}>
+          <span
+            className={`ml-2 ${result.network_type === 'Local Road' ? 'text-amber-400' : 'text-gray-500'}`}
+          >
             ({result.network_type})
           </span>
         )}
       </p>
-      
+
       <div className="mt-3 grid grid-cols-2 gap-3">
         <div>
           <p className="text-xs text-gray-500">Start SLK</p>
@@ -144,23 +147,25 @@ export function WorkZoneSummary({
             </div>
             <div>
               <p className="text-xs text-gray-500">Road Width</p>
-              <p className="font-medium">{result.pavement.width_m ? `${result.pavement.width_m} m` : '—'}</p>
+              <p className="font-medium">
+                {result.pavement.width_m ? `${result.pavement.width_m} m` : '—'}
+              </p>
             </div>
           </>
         )}
       </div>
-      
+
       {/* Road Width Visual Breakdown */}
       {result.pavement && result.pavement.total_pave_width && (
         <div className="mt-4 pt-3 border-t border-gray-700">
           <p className="text-xs text-gray-500 mb-2">
             Road Width Breakdown (Total: {result.pavement.total_pave_width?.toFixed(1)}m)
           </p>
-          
+
           {/* Visual bar */}
           <div className="flex h-8 rounded overflow-hidden text-xs">
             {unsealedL > 0 && (
-              <div 
+              <div
                 className="bg-amber-700 flex items-center justify-center"
                 style={{ width: `${pctUnsealedL}%` }}
                 title={`Unsealed shoulder L: ${unsealedL.toFixed(1)}m`}
@@ -169,7 +174,7 @@ export function WorkZoneSummary({
               </div>
             )}
             {sealedL > 0 && (
-              <div 
+              <div
                 className="bg-gray-500 flex items-center justify-center"
                 style={{ width: `${pctSealedL}%` }}
                 title={`Sealed shoulder L: ${sealedL.toFixed(1)}m`}
@@ -178,7 +183,7 @@ export function WorkZoneSummary({
               </div>
             )}
             {trafficable > 0 && (
-              <div 
+              <div
                 className="bg-blue-800 flex items-center justify-center"
                 style={{ width: `${pctTrafficable}%` }}
                 title={`Trafficable: ${trafficable.toFixed(1)}m`}
@@ -187,7 +192,7 @@ export function WorkZoneSummary({
               </div>
             )}
             {sealedR > 0 && (
-              <div 
+              <div
                 className="bg-gray-500 flex items-center justify-center"
                 style={{ width: `${pctSealedR}%` }}
                 title={`Sealed shoulder R: ${sealedR.toFixed(1)}m`}
@@ -196,7 +201,7 @@ export function WorkZoneSummary({
               </div>
             )}
             {unsealedR > 0 && (
-              <div 
+              <div
                 className="bg-amber-700 flex items-center justify-center"
                 style={{ width: `${pctUnsealedR}%` }}
                 title={`Unsealed shoulder R: ${unsealedR.toFixed(1)}m`}
@@ -205,7 +210,7 @@ export function WorkZoneSummary({
               </div>
             )}
           </div>
-          
+
           {/* Legend */}
           <div className="flex flex-wrap gap-3 mt-2 text-xs">
             {unsealedL > 0 && (
@@ -237,7 +242,7 @@ export function WorkZoneSummary({
               </div>
             )}
           </div>
-          
+
           {/* Direction labels */}
           <div className="flex justify-between mt-1 text-xs text-gray-500">
             <span>← LEFT</span>
@@ -245,6 +250,14 @@ export function WorkZoneSummary({
             <span>RIGHT →</span>
           </div>
         </div>
+      )}
+
+      {/* Lane Direction Diagram */}
+      {result.pavement && result.pavement.lanes && result.pavement.lanes > 0 && (
+        <LaneDirectionDiagram
+          lanes={result.pavement.lanes}
+          carriageway={result.pavement.cwy || 'Single'}
+        />
       )}
     </div>
   );
