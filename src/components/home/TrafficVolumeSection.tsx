@@ -19,29 +19,12 @@ import {
 } from '@/lib/max-hold-time';
 import { getShuttleFlowLength, getLaneCapacity } from '@/lib/traffic-calculations';
 import type { TrafficData } from '@/types/shared';
+import type { TrafficCountRecord } from '@/lib/traffic-counter-storage';
+
+// Re-export for convenience
+export type { TrafficCountRecord } from '@/lib/traffic-counter-storage';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
-
-export interface TrafficCountRecord {
-  id: string;
-  road_id: string;
-  road_name?: string;
-  date: string;
-  slk?: number;
-  duration_minutes: number;
-  direction_mode: 'one-way' | 'both-ways';
-  total_vehicles: number;
-  total_heavy: number;
-  heavy_percentage: number;
-  vph_one_direction: number;
-  vph_combined?: number;
-  vph_true_left?: number;
-  vph_true_right?: number;
-  true_left_light?: number;
-  true_left_heavy?: number;
-  true_right_light?: number;
-  true_right_heavy?: number;
-}
 
 interface TrafficVolumeSectionProps {
   traffic: TrafficData | null;
