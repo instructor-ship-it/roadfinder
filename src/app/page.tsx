@@ -12,6 +12,10 @@ import { useSetDistance } from '@/hooks/useSetDistance';
 import { useOfflineData } from '@/hooks/useOfflineData';
 import { useHomeSettings } from '@/hooks/useHomeSettings';
 import { useSavedLocations } from '@/hooks/useSavedLocations';
+import { useRegions } from '@/hooks/useRegions';
+import { useRoads } from '@/hooks/useRoads';
+import { useWeather } from '@/hooks/useWeather';
+import { usePlaces } from '@/hooks/usePlaces';
 import { IncidentsSection } from '@/components/IncidentsSection';
 import { WarningsSection } from '@/components/WarningsSection';
 import SpeedZoneLayout from '@/components/SpeedZoneLayout';
@@ -32,6 +36,8 @@ import { AmenitiesSection } from '@/components/home/AmenitiesSection';
 import { WorkZoneSummary } from '@/components/home/WorkZoneSummary';
 import { SignageCorridorSection } from '@/components/home/SignageCorridorSection';
 import { IntersectionsSection } from '@/components/home/IntersectionsSection';
+import { RoadWidthBreakdown } from '@/components/home/RoadWidthBreakdown';
+import { LaneDirectionDiagram } from '@/components/home/LaneDirectionDiagram';
 import { WorkZoneReport } from '@/components/WorkZoneReport';
 import { SetDistanceControls } from '@/components/SetDistanceControls';
 import { GpsLookupDialog } from '@/components/GpsLookupDialog';
@@ -2189,254 +2195,15 @@ export default function Home() {
 
               {/* Road Width Visual Breakdown */}
               {result.pavement && result.pavement.total_pave_width && (
-                <div className="mt-4 pt-3 border-t border-gray-700">
-                  <p className="text-xs text-gray-500 mb-2">
-                    Road Width Breakdown (Total: {result.pavement.total_pave_width?.toFixed(1)}m)
-                  </p>
-
-                  {/* Calculate proportions for visual display */}
-                  {(() => {
-                    const p = result.pavement!;
-                    const totalWidth = p.total_pave_width || 1;
-                    const unsealedL = p.unsealed_shoulder_l || 0;
-                    const sealedL = p.sealed_shoulder_l || 0;
-                    const trafficable = p.width_m || 0;
-                    const sealedR = p.sealed_shoulder_r || 0;
-                    const unsealedR = p.unsealed_shoulder_r || 0;
-
-                    // Calculate percentages
-                    const pctUnsealedL = (unsealedL / totalWidth) * 100;
-                    const pctSealedL = (sealedL / totalWidth) * 100;
-                    const pctTrafficable = (trafficable / totalWidth) * 100;
-                    const pctSealedR = (sealedR / totalWidth) * 100;
-                    const pctUnsealedR = (unsealedR / totalWidth) * 100;
-
-                    return (
-                      <>
-                        {/* Visual bar */}
-                        <div className="flex h-8 rounded overflow-hidden text-xs">
-                          {unsealedL > 0 && (
-                            <div
-                              className="bg-amber-700 flex items-center justify-center"
-                              style={{ width: `${pctUnsealedL}%` }}
-                              title={`Unsealed shoulder L: ${unsealedL.toFixed(1)}m`}
-                            >
-                              {pctUnsealedL > 10 && (
-                                <span className="text-white">{unsealedL.toFixed(1)}</span>
-                              )}
-                            </div>
-                          )}
-                          {sealedL > 0 && (
-                            <div
-                              className="bg-gray-500 flex items-center justify-center"
-                              style={{ width: `${pctSealedL}%` }}
-                              title={`Sealed shoulder L: ${sealedL.toFixed(1)}m`}
-                            >
-                              {pctSealedL > 10 && (
-                                <span className="text-white">{sealedL.toFixed(1)}</span>
-                              )}
-                            </div>
-                          )}
-                          {trafficable > 0 && (
-                            <div
-                              className="bg-blue-800 flex items-center justify-center"
-                              style={{ width: `${pctTrafficable}%` }}
-                              title={`Trafficable: ${trafficable.toFixed(1)}m`}
-                            >
-                              <span className="text-white font-medium">
-                                {trafficable.toFixed(1)}
-                              </span>
-                            </div>
-                          )}
-                          {sealedR > 0 && (
-                            <div
-                              className="bg-gray-500 flex items-center justify-center"
-                              style={{ width: `${pctSealedR}%` }}
-                              title={`Sealed shoulder R: ${sealedR.toFixed(1)}m`}
-                            >
-                              {pctSealedR > 10 && (
-                                <span className="text-white">{sealedR.toFixed(1)}</span>
-                              )}
-                            </div>
-                          )}
-                          {unsealedR > 0 && (
-                            <div
-                              className="bg-amber-700 flex items-center justify-center"
-                              style={{ width: `${pctUnsealedR}%` }}
-                              title={`Unsealed shoulder R: ${unsealedR.toFixed(1)}m`}
-                            >
-                              {pctUnsealedR > 10 && (
-                                <span className="text-white">{unsealedR.toFixed(1)}</span>
-                              )}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Legend */}
-                        <div className="flex flex-wrap gap-3 mt-2 text-xs">
-                          {unsealedL > 0 && (
-                            <div className="flex items-center gap-1">
-                              <div className="w-3 h-3 bg-amber-700 rounded"></div>
-                              <span className="text-gray-400">
-                                Unsealed {unsealedL.toFixed(1)}m
-                              </span>
-                            </div>
-                          )}
-                          {sealedL > 0 && (
-                            <div className="flex items-center gap-1">
-                              <div className="w-3 h-3 bg-gray-500 rounded"></div>
-                              <span className="text-gray-400">Sealed {sealedL.toFixed(1)}m</span>
-                            </div>
-                          )}
-                          <div className="flex items-center gap-1">
-                            <div className="w-3 h-3 bg-blue-800 rounded"></div>
-                            <span className="text-gray-400">Lanes {trafficable.toFixed(1)}m</span>
-                          </div>
-                          {sealedR > 0 && (
-                            <div className="flex items-center gap-1">
-                              <div className="w-3 h-3 bg-gray-500 rounded"></div>
-                              <span className="text-gray-400">Sealed {sealedR.toFixed(1)}m</span>
-                            </div>
-                          )}
-                          {unsealedR > 0 && (
-                            <div className="flex items-center gap-1">
-                              <div className="w-3 h-3 bg-amber-700 rounded"></div>
-                              <span className="text-gray-400">
-                                Unsealed {unsealedR.toFixed(1)}m
-                              </span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Direction labels */}
-                        <div className="flex justify-between mt-1 text-xs text-gray-500">
-                          <span>← LEFT</span>
-                          <span>{result.pavement.cwy} Carriageway</span>
-                          <span>RIGHT →</span>
-                        </div>
-                      </>
-                    );
-                  })()}
-                </div>
+                <RoadWidthBreakdown pavement={result.pavement} />
               )}
 
               {/* Lane Direction Diagram */}
               {result.pavement && result.pavement.lanes && result.pavement.lanes > 0 && (
-                <div className="mt-4 pt-3 border-t border-gray-700">
-                  <p className="text-xs text-gray-500 mb-2">
-                    Lane Directions ({result.pavement.lanes} lanes total)
-                  </p>
-
-                  {(() => {
-                    const lanes = result.pavement.lanes || 0;
-                    const cwy = result.pavement.cwy || 'Single';
-
-                    // Determine lanes per direction
-                    let lanesIncreasing = 0; // → toward higher SLK
-                    let lanesDecreasing = 0; // ← toward lower SLK
-
-                    if (cwy === 'Single') {
-                      // Single carriageway: split evenly between directions
-                      lanesIncreasing = Math.ceil(lanes / 2);
-                      lanesDecreasing = Math.floor(lanes / 2);
-                    } else if (cwy === 'Left') {
-                      // Left carriageway: all lanes go INCREASING SLK
-                      lanesIncreasing = lanes;
-                      lanesDecreasing = 0;
-                    } else if (cwy === 'Right') {
-                      // Right carriageway: all lanes go DECREASING SLK
-                      lanesIncreasing = 0;
-                      lanesDecreasing = lanes;
-                    }
-
-                    // Create lane array with directions
-                    // For Single: left lanes = increasing (→), right lanes = decreasing (←)
-                    const laneDirections: ('increasing' | 'decreasing')[] = [];
-                    for (let i = 0; i < lanesIncreasing; i++) {
-                      laneDirections.push('increasing');
-                    }
-                    for (let i = 0; i < lanesDecreasing; i++) {
-                      laneDirections.push('decreasing');
-                    }
-
-                    return (
-                      <>
-                        {/* Visual lane diagram */}
-                        <div className="flex h-10 rounded overflow-hidden border border-gray-600">
-                          {(() => {
-                            let increasingLaneNum = 0;
-                            let decreasingLaneNum = 0;
-                            return laneDirections.map((dir, idx) => {
-                              if (dir === 'increasing') {
-                                increasingLaneNum++;
-                              } else {
-                                decreasingLaneNum++;
-                              }
-                              // For decreasing, reverse numbering so L1 is curb-side (right side)
-                              const laneNum =
-                                dir === 'increasing'
-                                  ? increasingLaneNum
-                                  : lanesDecreasing - decreasingLaneNum + 1;
-                              return (
-                                <div
-                                  key={idx}
-                                  className={`flex-1 flex flex-col items-center justify-center border-r border-gray-600 last:border-r-0 bg-blue-800`}
-                                  title={
-                                    dir === 'increasing'
-                                      ? 'Toward higher SLK (↑)'
-                                      : 'Toward lower SLK (↓)'
-                                  }
-                                >
-                                  <span
-                                    className={`text-lg font-bold ${dir === 'increasing' ? 'text-white' : 'text-yellow-400'}`}
-                                  >
-                                    {dir === 'increasing' ? '↑' : '↓'}
-                                  </span>
-                                  {lanes >= 3 && (
-                                    <span
-                                      className={`text-[10px] font-medium ${dir === 'increasing' ? 'text-white/70' : 'text-yellow-400/70'}`}
-                                    >
-                                      L{laneNum}
-                                    </span>
-                                  )}
-                                </div>
-                              );
-                            });
-                          })()}
-                        </div>
-
-                        {/* Direction legend */}
-                        <div className="flex justify-between mt-2 text-xs">
-                          <div className="flex items-center gap-1">
-                            <div className="w-3 h-3 bg-white rounded"></div>
-                            <span className="text-gray-400">
-                              ↑ INCREASING SLK ({lanesIncreasing} lane
-                              {lanesIncreasing !== 1 ? 's' : ''})
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <span className="text-gray-400">
-                              DECREASING SLK ({lanesDecreasing} lane
-                              {lanesDecreasing !== 1 ? 's' : ''}) ↓
-                            </span>
-                            <div className="w-3 h-3 bg-yellow-400 rounded"></div>
-                          </div>
-                        </div>
-
-                        {/* Direction explanation */}
-                        <p className="text-xs text-gray-500 mt-2 italic">
-                          {cwy === 'Single'
-                            ? lanes % 2 !== 0
-                              ? `⚠️ Odd lane count - allocation uncertain. Assuming ${lanesIncreasing} lane(s) INCREASING, ${lanesDecreasing} lane(s) DECREASING`
-                              : `${lanesIncreasing} lane(s) toward INCREASING SLK, ${lanesDecreasing} lane(s) toward DECREASING SLK`
-                            : cwy === 'Left'
-                              ? 'Left carriageway: all lanes travel toward INCREASING SLK'
-                              : 'Right carriageway: all lanes travel toward DECREASING SLK'}
-                        </p>
-                      </>
-                    );
-                  })()}
-                </div>
+                <LaneDirectionDiagram
+                  lanes={result.pavement.lanes}
+                  carriageway={result.pavement.cwy || 'Single'}
+                />
               )}
             </div>
 

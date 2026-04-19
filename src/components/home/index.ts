@@ -5,3 +5,5 @@ export { AmenitiesSection } from './AmenitiesSection';
 export { WorkZoneSummary } from './WorkZoneSummary';
 export { OfflineDataSection } from './OfflineDataSection';
 export { EmergencyLocationButton } from './EmergencyLocationButton';
+export { RoadWidthBreakdown } from './RoadWidthBreakdown';
+export { LaneDirectionDiagram } from './LaneDirectionDiagram';
