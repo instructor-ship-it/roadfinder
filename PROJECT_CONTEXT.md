@@ -425,7 +425,7 @@ See `scripts/README.md` for full documentation of available scripts.
 
 ## Recent Changes (v1.x)
 
-### 1.28.1 (Current) - Traffic Event Logger Enhancements
+### 1.34.1 (Current) - Traffic Event Logger Enhancements
 
 - **Shift Actions Enhancement**
   - Added 'Work site debrief' action below 'Pack up site'
