@@ -15,7 +15,7 @@ import {
   cacheWeatherData,
   getCachedWeatherData,
 } from '@/lib/offline-db';
-import { WeatherData, TrafficData } from '@/types/shared';
+import { WeatherData, TrafficData, WarningData } from '@/types/shared';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -68,23 +68,6 @@ export interface CrossRoad {
   roadType: string;
   googleMapsUrl: string;
   intersectionSlk?: number;
-}
-
-export interface WarningItem {
-  id: string;
-  title: string;
-  type: string;
-  severity: string;
-  issued: string;
-  expires?: string;
-  description: string;
-  link?: string;
-}
-
-export interface WarningData {
-  warnings: WarningItem[];
-  lastUpdated?: string;
-  source?: string;
 }
 
 interface WorkZoneResult {
