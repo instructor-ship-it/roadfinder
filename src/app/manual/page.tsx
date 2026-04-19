@@ -214,7 +214,7 @@ export default function UserManualPage() {
           <li>"Open in Google Maps" for route planning</li>
         </ul>
 
-        <p class="text-sm text-gray-400">Stores up to 20 locations in localStorage. Works offline.</p>
+        <p class="text-sm text-gray-400">Unlimited locations stored in IndexedDB. Works offline.</p>
       `,
       },
       {
@@ -717,7 +717,7 @@ export default function UserManualPage() {
           <div className="w-16"></div>
         </div>
 
-        <p className="text-xs text-gray-400 text-center mb-4">Version 1.33.1 • April 2026</p>
+        <p className="text-xs text-gray-400 text-center mb-4">Version 1.34.1 • April 2026</p>
 
         {/* Search Bar */}
         <div className="mb-4">

@@ -558,7 +558,7 @@ See `scripts/README.md` for full documentation of available scripts.
 - **Files Changed**
   - `src/components/SettingsDrawer.tsx` (AI settings UI, version 1.21.0)
   - `src/app/qa/page.tsx` (dual mode support)
-  - `src/app/api/ai/test/route.ts` (NEW)
+  - `src/app/api/ai/verify/route.ts` (NEW)
   - `src/app/api/ai/chat/route.ts` (NEW)
   - `package.json` (version 1.21.0)
 

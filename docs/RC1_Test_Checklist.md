@@ -509,6 +509,106 @@
 
 ---
 
+## Contact Directory Tests (/contacts)
+
+### Page Load
+
+- [ ] Contact list loads from localStorage
+- [ ] Search/filter functionality works
+
+### Contact Management
+
+- [ ] Add new contact with name, title, vehicle, phone
+- [ ] Edit existing contact
+- [ ] Delete contact with confirmation
+- [ ] Tag contacts to jobs
+
+### Export/Import
+
+- [ ] Export contacts as JSON
+- [ ] Import contacts from JSON backup
+
+---
+
+## Cycle Timer Tests (/cycle-timer)
+
+### Timer Functions
+
+- [ ] Start/Stop/Reset timer controls work
+- [ ] Timer displays in MM:SS format
+- [ ] Description field accepts text
+- [ ] Session history saved correctly
+
+---
+
+## Traffic Event Logger Tests
+
+### Modal Access
+
+- [ ] Opens from Settings drawer → TC Tools → Traffic Event Logger
+- [ ] Full-screen dark-themed modal displays
+
+### Event Logging
+
+- [ ] Sent True Left / Sent True Right buttons log events
+- [ ] RLR button prompts for direction
+- [ ] Trip Out button logs trip event
+- [ ] Spot Call uses GPS to get road/SLK
+- [ ] Shuttle Send visible when shuttle mode enabled
+
+### TC Assignment
+
+- [ ] Start TC TL / Start TC TR buttons open TC selector
+- [ ] TC1/TC2/TC3 mutually exclusive assignments
+- [ ] End TC Both clears assignments
+
+### Counters & Timers
+
+- [ ] TL, TR, Total counts display correctly
+- [ ] RLR and Trip Out counts tracked
+- [ ] Hold timer with ON/OFF logging
+- [ ] Break timer works
+- [ ] Hold OFF logs duration (e.g., "5m 30s")
+
+### Shift Actions
+
+- [ ] Start Shift / End Shift buttons work
+- [ ] Pack up site action logs correctly
+- [ ] Work site debrief action logs correctly
+
+### Advanced Flashers
+
+- [ ] True Left / True Right / Both buttons work
+- [ ] Logging uses "AdvFlash True Left: ON" format
+
+### Export
+
+- [ ] CSV export generates file
+- [ ] Google Sheets sync works when configured
+
+---
+
+## Settings Page Tests (/settings)
+
+### Full Page Settings
+
+- [ ] All settings drawer sections available on dedicated page
+- [ ] GPS settings, preferences, admin sync accessible
+- [ ] Settings persist after page reload
+
+---
+
+## Saved Locations Map Tests (/saved-locations/map)
+
+### Map Display
+
+- [ ] Interactive OpenStreetMap loads
+- [ ] Saved locations appear as markers
+- [ ] Tap marker shows location details
+- [ ] "Open in Google Maps" navigation link works
+
+---
+
 ## Settings Drawer Tests
 
 ### Access

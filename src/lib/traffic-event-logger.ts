@@ -10,7 +10,7 @@
  * - Google Sheets integration (user-configurable)
  *
  * @module traffic-event-logger
- * @version 1.35.0
+ * @version 1.34.1
  */
 
 // ============================================================================

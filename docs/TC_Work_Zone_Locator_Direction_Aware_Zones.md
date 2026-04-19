@@ -32,14 +32,14 @@ The solution implements three key components: direction detection, speed zone lo
 
 ### 3.1 Direction Detection
 
-The system tracks SLK movement to determine travel direction. When SLK values increase over time, the user is traveling toward higher SLK values (True Right). When SLK values decrease, the user is traveling toward lower SLK values (True Left). This direction is stored in state and used for speed zone matching.
+The system tracks SLK movement to determine travel direction. When SLK values increase over time, the user is traveling toward higher SLK values (True Left). When SLK values decrease, the user is traveling toward lower SLK values (True Right). This direction is stored in state and used for speed zone matching.
 
 **Direction Mapping:**
 
 | SLK Movement                    | Direction Terminology |
 | ------------------------------- | --------------------- |
-| Increasing (SLK values go up)   | True Right            |
-| Decreasing (SLK values go down) | True Left             |
+| Increasing (SLK values go up)   | True Left             |
+| Decreasing (SLK values go down) | True Right            |
 
 ### 3.2 Direction-Aware Speed Zone Lookup
 
@@ -105,7 +105,7 @@ Priority only applies as a tiebreaker when distances are within 50m:
 | `road_id`        | string                       | Road identifier (e.g., 'M031')                                 |
 | `start_slk`      | number                       | Start SLK of correction zone                                   |
 | `end_slk`        | number                       | End SLK of correction zone                                     |
-| `direction`      | 'increasing' \| 'decreasing' | Travel direction (increasing=True Right, decreasing=True Left) |
+| `direction`      | 'increasing' \| 'decreasing' | Travel direction (increasing=True Left, decreasing=True Right) |
 | `correct_speed`  | number                       | Correct speed limit (km/h)                                     |
 | `original_speed` | number                       | Original (incorrect) MRWA speed                                |
 | `notes`          | string (optional)            | User notes about the correction                                |
@@ -157,7 +157,7 @@ The Signage Corridor dialog has been simplified with neutral colors and reduced 
 
 - Removed intersection warning messages (e.g., '100m from Malabain Rd intersection')
 - Changed row backgrounds from red/amber to neutral gray
-- Removed 'COVER REQUIRED' action text
+- 'COVER REQUIRED' action text still displayed when nearest intersection is found (signs near intersections require covering); falls back to 'Check if covering needed' otherwise
 - Removed 'Signs requiring cover' count
 - Changed footer warning to neutral information text
 

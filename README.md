@@ -5,8 +5,8 @@
 [![Version](https://img.shields.io/badge/version-1.34.1-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
-[![Next.js](https://img.shields.io/badge/Next.js-15-black.svg)](https://nextjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
 
 A mobile-friendly web application for Traffic Controller (TC) work zone planning and real-time SLK (Straight Line Kilometre) tracking using Main Roads WA ArcGIS data.
 
@@ -286,18 +286,18 @@ If the SLK reading is inaccurate:
 
 ### Offline Data
 
-The app includes pre-downloaded road data for **69,471 roads** across all 8 MRWA regions:
+The app includes pre-downloaded road data for **69,534 roads** across all 8 MRWA regions:
 
-- **Metropolitan**: 37,995 roads
-- **South West**: 10,952 roads
-- **Wheatbelt**: 7,895 roads
-- **Great Southern**: 3,760 roads
-- **Mid West-Gascoyne**: 3,707 roads
-- **Pilbara**: 1,793 roads
-- **Kimberley**: 1,132 roads
-- **Other/Unknown**: 2,237 roads
+- **Metropolitan**: 37,996 roads
+- **South West**: 10,980 roads
+- **Wheatbelt**: 7,908 roads
+- **Great Southern**: 3,766 roads
+- **Mid West-Gascoyne**: 3,714 roads
+- **Pilbara**: 1,795 roads
+- **Kimberley**: 1,133 roads
+- **Other/Unknown**: 2,242 roads
 
-Plus **69,455 speed zones** for accurate speed limit display.
+Plus **69,452 speed zones** for accurate speed limit display.
 
 **Speed Zone Overrides** (`/public/data/speed-overrides.json`):
 
@@ -311,12 +311,22 @@ Plus **69,455 speed zones** for accurate speed limit display.
 
 ## Technical Stack
 
-- **Framework**: Next.js 15 with App Router
+- **Framework**: Next.js 16 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **UI Components**: shadcn/ui
 - **Offline Storage**: IndexedDB (client-side)
 - **Maps**: Google Maps Links (no API key required)
+- **State Management:** Zustand
+- **Database ORM:** Prisma
+- **Authentication:** NextAuth.js
+- **Interactive Maps:** Leaflet + react-leaflet
+- **Forms:** react-hook-form + Zod validation
+- **Charts:** Recharts
+- **PDF Viewer:** react-pdf
+- **Animations:** Framer Motion
+- **Document Generation:** docx
+- **Toast Notifications:** Sonner
 
 ## Project Structure
 
@@ -331,12 +341,21 @@ src/
 │   │   └── map/          # Interactive map view
 │   ├── qa/page.tsx       # AI Q&A Assistant
 │   ├── library/          # Document library
+│   │   └── viewer/[docId]/[pageNum]/ # PDF/TMP document viewer
 │   ├── aftercare/        # Signage tracking & retrieval
+│   │   └── map/          # AfterCare map view
 │   ├── traffic-counter/  # Traffic count calculator
+│   │   └── count/        # Traffic count page
 │   ├── overrides/        # Speed zone override management
+│   │   ├── layout/       # Override layout page
+│   │   └── map/          # Override map view
+│   ├── contacts/         # Contact directory
+│   ├── cycle-timer/      # Cycle timer tool
+│   ├── event-logger/     # Traffic event logger
+│   ├── offline/          # Offline management page
+│   ├── settings/         # Settings page
 │   ├── manual/           # User manual page
 │   ├── calibrate/        # SLK calibration
-│   ├── cycle-timer/      # Cycle timer tool
 │   └── api/              # API routes
 │       ├── roads/        # Road data queries
 │       ├── gps/          # GPS to SLK conversion
@@ -350,13 +369,35 @@ src/
 │       └── qa/           # Q&A document search
 ├── lib/
 │   ├── offline-db.ts     # IndexedDB client-side storage
-│   ├── offline-data.ts   # Server-side data loading
 │   ├── qa-storage.ts     # Q&A history management
 │   ├── errors.ts         # Centralized error handling utilities
 │   ├── validation.ts     # Zod schemas for input validation
-│   └── saved-locations-db.ts  # Saved locations IndexedDB operations
+│   ├── saved-locations-db.ts  # Saved locations IndexedDB operations
+│   ├── traffic-event-logger.ts # Traffic event logging storage
+│   ├── cycle-timer-storage.ts  # Cycle timer data storage
+│   ├── contacts-storage.ts     # Contact directory storage
+│   ├── toilet-map.ts     # National Public Toilet Map data
+│   ├── fire-stations.ts  # Fire station data utilities
+│   ├── push-notifications.ts   # Push notification utilities
+│   ├── logger.ts         # Logging utilities
+│   └── summaries-storage.ts    # Summaries data storage
 ├── types/
-│   └── shared.ts         # Shared TypeScript type definitions
+│   ├── shared.ts         # Shared TypeScript type definitions
+│   └── web-apis.d.ts     # Web API type declarations
+├── hooks/
+│   ├── useHomeSettings.ts     # Home page settings hook
+│   ├── useSavedLocations.ts   # Saved locations hook
+│   ├── useGpsLocation.ts      # GPS location hook
+│   ├── useWorkZoneData.ts     # Work zone data hook
+│   ├── useWorkZoneFetch.ts    # Work zone fetch hook
+│   ├── useWorkZone.ts         # Work zone hook
+│   ├── useRoads.ts            # Roads data hook
+│   ├── useRegions.ts          # Regions data hook
+│   ├── useWeather.ts          # Weather data hook
+│   ├── useTraffic.ts          # Traffic data hook
+│   ├── usePlaces.ts           # Places data hook
+│   ├── useOfflineData.ts      # Offline data hook
+│   └── useSetDistance.ts      # Set distance hook
 └── components/ui/
     ├── skip-link.tsx     # Accessibility skip link
     ├── live-announcer.tsx # Screen reader announcements
@@ -366,21 +407,35 @@ src/
 
 ## API Endpoints
 
-| Endpoint             | Method   | Description               |
-| -------------------- | -------- | ------------------------- |
-| `/api/roads`         | GET      | List regions and roads    |
-| `/api/roads`         | POST     | Get SLK coordinates       |
-| `/api/gps`           | GET      | Convert GPS to SLK        |
-| `/api/sync-data`     | POST     | Download offline data     |
-| `/api/weather`       | GET      | Weather at coordinates    |
-| `/api/traffic`       | GET      | Traffic volume data       |
-| `/api/places`        | GET      | Nearby amenities          |
-| `/api/intersections` | GET      | Cross roads in zone       |
-| `/api/admin-sync`    | GET/POST | Sync data from MRWA       |
-| `/api/qa`            | GET      | List searchable documents |
-| `/api/qa-saved`      | GET/POST | Manage saved Q&A entries  |
-| `/api/ai/chat`       | POST     | AI chat completions       |
-| `/api/ai/verify`     | POST     | Verify API key            |
+| Endpoint                | Method              | Description                     |
+| ----------------------- | ------------------- | ------------------------------- |
+| `/api/roads`            | GET                 | List regions and roads          |
+| `/api/roads`            | POST                | Get SLK coordinates             |
+| `/api/gps`              | GET                 | Convert GPS to SLK              |
+| `/api/sync-data`        | GET/POST            | Download offline data           |
+| `/api/weather`          | GET                 | Weather at coordinates          |
+| `/api/traffic`          | GET                 | Traffic volume data             |
+| `/api/places`           | GET                 | Nearby amenities                |
+| `/api/intersections`    | GET                 | Cross roads in zone             |
+| `/api/admin-sync`       | GET/POST            | Sync data from MRWA             |
+| `/api/qa`               | GET                 | List searchable documents       |
+| `/api/qa-saved`         | GET/POST/PUT/DELETE | Manage saved Q&A entries        |
+| `/api/ai/chat`          | POST                | AI chat completions             |
+| `/api/ai/verify`        | POST                | Verify API key                  |
+| `/api/toilets`          | GET                 | National Public Toilet Map data |
+| `/api/hospitals`        | GET                 | Hospital data (WA Health SLIP)  |
+| `/api/nearest-hospital` | GET                 | Nearest hospital lookup         |
+| `/api/fuel-stations`    | GET                 | FuelWatch WA diesel prices      |
+| `/api/police-stations`  | GET                 | WA police station data          |
+| `/api/incidents`        | GET                 | Traffic incident data           |
+| `/api/warnings`         | GET                 | BOM weather warnings            |
+| `/api/speedlimit`       | GET                 | Speed limit at coordinates      |
+| `/api/speed-compare`    | GET                 | Compare speed data sources      |
+| `/api/osm-speed`        | GET/POST            | OpenStreetMap speed data        |
+| `/api/overrides`        | GET/POST            | Speed zone overrides            |
+| `/api/download-signs`   | GET                 | Download signage data           |
+| `/api/export-pdf`       | POST                | Export work zone report as PDF  |
+| `/api/documents`        | GET                 | Document listing                |
 
 ## Browser Support
 
@@ -1550,8 +1605,8 @@ API keys (e.g., for AI Assistant) are stored in **localStorage** on your device:
 
 ### v2.7.0
 
-- **Complete WA road coverage**: 69,471 roads across all 8 MRWA regions
-- **69,455 speed zones** for speed limit lookup
+- **Complete WA road coverage**: 69,534 roads across all 8 MRWA regions
+- **69,452 speed zones** for speed limit lookup
 - Data sourced from Layer 17 (Road Network with RA_NAME for all roads)
 - Static data files in `/public/data/` for reliable offline loading
 - Updated status indicator shows "69K Roads • 8 Regions"

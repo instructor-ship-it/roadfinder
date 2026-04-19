@@ -270,17 +270,23 @@ The application provides internal API routes that aggregate data from multiple s
 
 ### 5.1 Core Routes
 
-| Route                      | Method   | Purpose                                           |
-| -------------------------- | -------- | ------------------------------------------------- |
-| /api/roads                 | GET/POST | Region list, road search, SLK coordinate lookup   |
-| /api/gps                   | GET      | Convert GPS coordinates to road/SLK               |
-| /api/weather               | GET      | Weather conditions from Open-Meteo                |
-| /api/warnings              | GET      | BOM weather warnings RSS feed                     |
-| /api/weather/warnings      | GET      | Combined weather data with warnings               |
-| /api/traffic               | GET      | AADT data from MRWA Layer 27                      |
-| /api/places                | GET      | Nearby amenities from Overpass API                |
-| /api/intersections         | GET      | Cross road detection using MRWA nodes             |
-| /api/nearest-intersections | GET      | Find nearest intersections for emergency location |
+| Route                           | Method   | Purpose                                           |
+| ------------------------------- | -------- | ------------------------------------------------- |
+| /api/roads                      | GET/POST | Region list, road search, SLK coordinate lookup   |
+| /api/gps                        | GET      | Convert GPS coordinates to road/SLK               |
+| /api/weather                    | GET      | Weather conditions from Open-Meteo                |
+| /api/warnings                   | GET      | BOM weather warnings RSS feed                     |
+| /api/weather/warnings           | GET      | Combined weather data with warnings               |
+| /api/traffic                    | GET      | AADT data from MRWA Layer 27                      |
+| /api/places                     | GET      | Nearby amenities from Overpass API                |
+| /api/intersections              | GET      | Cross road detection using MRWA nodes             |
+| /api/nearest-intersections      | GET      | Find nearest intersections for emergency location |
+| /api/toilets                    | GET      | National Public Toilet Map data for WA            |
+| /api/ai/chat                    | POST     | AI chat completions using z.ai API                |
+| /api/ai/verify                  | POST     | Verifies AI API key validity                      |
+| /api/documents                  | GET      | Lists available documents                         |
+| /api/documents/summarize        | POST     | AI document summarization                         |
+| /api/documents/analyze-diagrams | POST     | AI diagram analysis                               |
 
 ### 5.2 Emergency Routes
 
@@ -362,16 +368,19 @@ For offline capability, MRWA data is stored in IndexedDB on the client device. T
 
 ### 6.1 IndexedDB Object Stores
 
-| Store Name      | Key     | Contents                            |
-| --------------- | ------- | ----------------------------------- |
-| regions         | region  | Road data grouped by MRWA region    |
-| speedZones      | road_id | Speed zones indexed by road         |
-| railCrossings   | road_id | Rail crossings indexed by road      |
-| regulatorySigns | road_id | Filtered regulatory signs           |
-| warningSigns    | road_id | Filtered warning signs              |
-| metadata        | key     | Download date, total roads, regions |
-| datasetMeta     | dataset | Sync status per dataset             |
-| amenities       | region  | Amenities cached by region          |
+| Store Name      | Key       | Contents                            |
+| --------------- | --------- | ----------------------------------- |
+| regions         | region    | Road data grouped by MRWA region    |
+| speedZones      | road_id   | Speed zones indexed by road         |
+| railCrossings   | road_id   | Rail crossings indexed by road      |
+| regulatorySigns | road_id   | Filtered regulatory signs           |
+| warningSigns    | road_id   | Filtered warning signs              |
+| metadata        | key       | Download date, total roads, regions |
+| datasetMeta     | dataset   | Sync status per dataset             |
+| amenitiesData   | region    | Amenities cached by region          |
+| pavementData    | road_id   | Pavement data indexed by road       |
+| trafficData     | road_name | Traffic data indexed by road name   |
+| savedLocations  | id        | Saved locations (unlimited)         |
 
 ### 6.2 Data Flow
 
@@ -593,13 +602,20 @@ The home page (`fetchPlaces()` in `src/app/page.tsx`) uses a **3-source parallel
 
 ## 9. Offline Data Files (public/data/)
 
-| File                | Purpose                                 |
-| ------------------- | --------------------------------------- |
-| metadata.json       | Region list, road counts, download info |
-| roads/{region}.json | Road geometry by MRWA region            |
-| pavement.json       | Pavement data (lanes, widths)           |
-| traffic-volume.json | Traffic count data                      |
-| amenities.json      | Nearby amenities                        |
+| File                    | Purpose                                 |
+| ----------------------- | --------------------------------------- |
+| metadata.json           | Region list, road counts, download info |
+| roads-{region}.json     | Road geometry by MRWA region            |
+| pavement-data.json      | Pavement data (lanes, widths)           |
+| traffic-data.json       | Traffic count data                      |
+| amenities.json          | Nearby amenities                        |
+| osm-speed-limits.json   | OpenStreetMap speed limit data          |
+| rail-crossings.json     | Rail crossing data                      |
+| regulatory-signs.json   | Regulatory sign data                    |
+| speed-overrides.json    | Speed override data                     |
+| speed-zones.json        | Speed zone data                         |
+| warning-signs.json      | Warning sign data                       |
+| wa_police_stations.json | WA police station data                  |
 
 ---
 

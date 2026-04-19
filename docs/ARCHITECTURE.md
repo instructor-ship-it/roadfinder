@@ -69,7 +69,7 @@ TC Work Zone Locator is a mobile-first Progressive Web Application (PWA) designe
 
 | Technology      | Description                                 |
 | --------------- | ------------------------------------------- |
-| Framework       | Next.js 15 with App Router                  |
+| Framework       | Next.js 16 with App Router                  |
 | Language        | TypeScript                                  |
 | Styling         | Tailwind CSS with shadcn/ui                 |
 | Offline Storage | IndexedDB + localStorage                    |
@@ -143,7 +143,7 @@ The application has twelve main pages:
 ### 4.1 Header Section
 
 - Application title: "TC Work Zone Locator"
-- Version display: "vRC 1.9.9"
+- Version display: "v1.34.1"
 - Offline status indicator (green when data downloaded)
 - Hamburger menu (☰) - Opens Settings drawer
 
@@ -236,7 +236,7 @@ When exceeding the speed limit, a warning banner displays:
 ### 6.1 Header
 
 - Title: "AfterCare Signs"
-- Version display: "vRC 1.9.9"
+- Version display: "v1.34.1"
 - Back to Work Zone Locator link
 
 ### 6.2 Job List
@@ -328,7 +328,7 @@ Fixed at bottom-left of map:
 
 ### 8.1 Header
 
-- Version: "vRC 1.9.9"
+- Version: "v1.34.1"
 - Storage mode: "Local Storage"
 - Back to Work Zone Locator button
 
@@ -592,27 +592,32 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 
 ## 16. API Endpoints
 
-| Endpoint              | Method   | Description                                                        |
-| --------------------- | -------- | ------------------------------------------------------------------ |
-| `/api/roads`          | GET/POST | Road data, SLK coordinates                                         |
-| `/api/gps`            | GET      | GPS to SLK conversion                                              |
-| `/api/weather`        | GET      | Weather data (Open-Meteo)                                          |
-| `/api/warnings`       | GET      | BOM weather warnings                                               |
-| `/api/traffic`        | GET      | Traffic volume data                                                |
-| `/api/places`         | GET      | Nearby amenities                                                   |
-| `/api/intersections`  | GET      | Cross road detection                                               |
-| `/api/admin-sync`     | GET/POST | MRWA direct sync                                                   |
-| `/api/overrides`      | GET/POST | Override storage                                                   |
-| `/api/speed-compare`  | GET      | MRWA vs OSM comparison                                             |
-| `/api/osm-speed`      | GET      | OSM speed limits                                                   |
-| `/api/speed-verify`   | GET      | Speed verification                                                 |
-| `/api/speedlimit`     | GET      | Speed limit lookup                                                 |
-| `/api/download-signs` | GET      | Sign data download                                                 |
-| `/api/export-pdf`     | POST     | Report export                                                      |
-| `/api/sync-data`      | POST     | Offline data sync                                                  |
-| `/api/qa`             | POST     | Q&A AI assistant                                                   |
-| `/api/library`        | GET      | Library documents                                                  |
-| `/api/fuel-stations`  | GET      | Diesel fuel stations (FuelWatch WA + Overpass merge, 30-min cache) |
+| Endpoint                          | Method   | Description                                                        |
+| --------------------------------- | -------- | ------------------------------------------------------------------ |
+| `/api/roads`                      | GET/POST | Road data, SLK coordinates                                         |
+| `/api/gps`                        | GET      | GPS to SLK conversion                                              |
+| `/api/weather`                    | GET      | Weather data (Open-Meteo)                                          |
+| `/api/warnings`                   | GET      | BOM weather warnings                                               |
+| `/api/traffic`                    | GET      | Traffic volume data                                                |
+| `/api/places`                     | GET      | Nearby amenities                                                   |
+| `/api/intersections`              | GET      | Cross road detection                                               |
+| `/api/admin-sync`                 | GET/POST | MRWA direct sync                                                   |
+| `/api/overrides`                  | GET/POST | Override storage                                                   |
+| `/api/speed-compare`              | GET      | MRWA vs OSM comparison                                             |
+| `/api/osm-speed`                  | GET      | OSM speed limits                                                   |
+| `/api/speed-verify`               | GET      | Speed verification                                                 |
+| `/api/speedlimit`                 | GET      | Speed limit lookup                                                 |
+| `/api/download-signs`             | GET      | Sign data download                                                 |
+| `/api/export-pdf`                 | POST     | Report export                                                      |
+| `/api/sync-data`                  | POST     | Offline data sync                                                  |
+| `/api/qa`                         | GET/POST | Q&A AI assistant                                                   |
+| `/api/toilets`                    | GET      | National Public Toilet Map data                                    |
+| `/api/ai/chat`                    | POST     | AI chat completions                                                |
+| `/api/ai/verify`                  | POST     | Verify AI API key                                                  |
+| `/api/documents`                  | GET      | Document listing                                                   |
+| `/api/documents/summarize`        | POST     | AI document summarization                                          |
+| `/api/documents/analyze-diagrams` | POST     | AI diagram analysis                                                |
+| `/api/fuel-stations`              | GET      | Diesel fuel stations (FuelWatch WA + Overpass merge, 30-min cache) |
 
 ---
 

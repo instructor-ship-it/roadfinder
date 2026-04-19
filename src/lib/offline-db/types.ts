@@ -177,7 +177,7 @@ export interface SpeedZoneCorrection {
   road_id: string;
   start_slk: number;
   end_slk: number;
-  direction: 'increasing' | 'decreasing'; // True Right = increasing, True Left = decreasing
+  direction: 'increasing' | 'decreasing'; // True Left = increasing SLK, True Right = decreasing SLK
   correct_speed: number;
   original_speed: number;
   notes?: string;

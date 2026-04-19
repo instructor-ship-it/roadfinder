@@ -21,6 +21,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### GPS Not Getting Location
 
 **Symptoms:**
+
 - "Waiting for GPS" message persists
 - Location marker doesn't appear on map
 - SLK values don't update while driving
@@ -52,6 +53,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### GPS Accuracy Issues
 
 **Symptoms:**
+
 - Location jumps around erratically
 - SLK values fluctuate wildly
 - Position shows off-road when on the road
@@ -77,6 +79,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Direction Detection Not Working
 
 **Symptoms:**
+
 - Direction shows as "Unknown"
 - Work zones appear for both directions when should be filtered
 
@@ -101,6 +104,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Offline Data Not Available
 
 **Symptoms:**
+
 - "No offline data" message appears
 - Download button doesn't work
 - Data appears to download but isn't available offline
@@ -109,15 +113,14 @@ This guide covers common issues encountered when using or developing the TC Work
 
 1. **Check IndexedDB Storage**
    - Open browser DevTools → Application → Storage → IndexedDB
-   - Look for databases named `work-zone-db`, `roads-db`, `speed-zones-db`
+   - Look for the database named `RoadFinderDB`
    - If missing, try downloading again
 
 2. **Clear and Re-download**
+
    ```javascript
    // Run in browser console to clear all offline data
-   indexedDB.deleteDatabase('work-zone-db');
-   indexedDB.deleteDatabase('roads-db');
-   indexedDB.deleteDatabase('speed-zones-db');
+   indexedDB.deleteDatabase('RoadFinderDB');
    // Then re-download from the app
    ```
 
@@ -126,21 +129,23 @@ This guide covers common issues encountered when using or developing the TC Work
    - If quota is exceeded, clear some data or use incognito mode for testing
 
 4. **Service Worker Issues**
+
    ```javascript
    // Check service worker status in console
-   navigator.serviceWorker.getRegistrations().then(registrations => {
+   navigator.serviceWorker.getRegistrations().then((registrations) => {
      console.log('Registered service workers:', registrations.length);
    });
-   
+
    // Unregister all service workers
-   navigator.serviceWorker.getRegistrations().then(registrations => {
-     registrations.forEach(reg => reg.unregister());
+   navigator.serviceWorker.getRegistrations().then((registrations) => {
+     registrations.forEach((reg) => reg.unregister());
    });
    ```
 
 ### Download Fails or Times Out
 
 **Symptoms:**
+
 - Download progress bar stops mid-way
 - "Download failed" error message
 - Partial data in offline storage
@@ -156,10 +161,11 @@ This guide covers common issues encountered when using or developing the TC Work
    - Use the region selector to limit data scope
 
 3. **Increase Timeout (Development)**
+
    ```typescript
    // In download-roads.js, increase timeout
    const response = await fetch(url, {
-     signal: AbortSignal.timeout(300000) // 5 minutes
+     signal: AbortSignal.timeout(300000), // 5 minutes
    });
    ```
 
@@ -171,6 +177,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Offline Data Out of Sync
 
 **Symptoms:**
+
 - Offline data doesn't match online data
 - Missing new work zones
 - Incorrect speed limits
@@ -197,6 +204,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Weather Data Not Loading
 
 **Symptoms:**
+
 - Weather section shows "Unable to load weather"
 - Weather warnings don't appear
 - BOM alerts missing
@@ -210,6 +218,7 @@ This guide covers common issues encountered when using or developing the TC Work
 2. **CORS Issues**
    - BOM API requires proper CORS headers
    - If developing locally, ensure proxy is configured:
+
    ```javascript
    // next.config.mjs
    async rewrites() {
@@ -229,6 +238,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Work Zone Data Not Updating
 
 **Symptoms:**
+
 - Old work zones still showing
 - New zones not appearing
 - Data appears stale
@@ -254,6 +264,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Map Tiles Not Loading
 
 **Symptoms:**
+
 - Gray or blank map areas
 - "Map data not available" errors
 - Partial tile loading
@@ -275,6 +286,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Map Markers Not Appearing
 
 **Symptoms:**
+
 - Work zones don't show on map
 - Signage markers missing
 - Saved locations not visible
@@ -296,6 +308,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Map Performance Lag
 
 **Symptoms:**
+
 - Panning/zooming is slow
 - Map takes time to respond
 - Browser becomes unresponsive
@@ -321,6 +334,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### App Loading Slowly
 
 **Symptoms:**
+
 - Initial load takes more than 10 seconds
 - White screen before app appears
 - Slow page transitions
@@ -342,6 +356,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Search/Filter Performance
 
 **Symptoms:**
+
 - Typing in search feels laggy
 - Filters take time to apply
 - Results appear slowly
@@ -353,13 +368,13 @@ This guide covers common issues encountered when using or developing the TC Work
    - Wait 300ms after typing for results
 
 2. **Large Dataset Issues**
-   - Roads dataset contains 50,000+ entries
+   - Roads dataset contains 69,000+ entries
    - Consider downloading only needed regions
 
 3. **Index Rebuild**
    ```javascript
    // Rebuild IndexedDB indexes if corruption suspected
-   indexedDB.deleteDatabase('roads-db');
+   indexedDB.deleteDatabase('RoadFinderDB');
    // Then re-download
    ```
 
@@ -370,6 +385,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Dependencies Installation Fails
 
 **Symptoms:**
+
 - `bun install` fails with errors
 - Peer dependency warnings
 - Package not found errors
@@ -377,6 +393,7 @@ This guide covers common issues encountered when using or developing the TC Work
 **Solutions:**
 
 1. **Clear Lock File**
+
    ```bash
    rm bun.lock
    bun install
@@ -395,6 +412,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### TypeScript Errors
 
 **Symptoms:**
+
 - `bun run typecheck` fails
 - IDE shows type errors
 - Build fails with type errors
@@ -402,6 +420,7 @@ This guide covers common issues encountered when using or developing the TC Work
 **Solutions:**
 
 1. **Regenerate Types**
+
    ```bash
    bun run db:generate  # Regenerate Prisma types
    ```
@@ -420,6 +439,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Hot Reload Not Working
 
 **Symptoms:**
+
 - Code changes don't reflect in browser
 - Manual refresh required
 - HMR errors in console
@@ -427,6 +447,7 @@ This guide covers common issues encountered when using or developing the TC Work
 **Solutions:**
 
 1. **Clear Next.js Cache**
+
    ```bash
    rm -rf .next
    bun run dev
@@ -447,6 +468,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Build Fails
 
 **Symptoms:**
+
 - `bun run build` exits with error
 - Out of memory during build
 - Compilation errors
@@ -454,6 +476,7 @@ This guide covers common issues encountered when using or developing the TC Work
 **Solutions:**
 
 1. **Increase Node Memory**
+
    ```bash
    NODE_OPTIONS="--max-old-space-size=4096" bun run build
    ```
@@ -472,6 +495,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Deployment Fails on Vercel
 
 **Symptoms:**
+
 - Vercel build times out
 - Deployment fails with errors
 - Environment variables missing
@@ -493,6 +517,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Production Server Issues
 
 **Symptoms:**
+
 - Server crashes on start
 - API routes return 500 errors
 - Memory leaks
@@ -500,6 +525,7 @@ This guide covers common issues encountered when using or developing the TC Work
 **Solutions:**
 
 1. **Check Server Logs**
+
    ```bash
    # Logs are written to server.log
    tail -f server.log
@@ -520,6 +546,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Safari-Specific Issues
 
 **Symptoms:**
+
 - Features work in Chrome but not Safari
 - Layout issues on Safari
 - Touch events not working
@@ -541,6 +568,7 @@ This guide covers common issues encountered when using or developing the TC Work
 ### Mobile Browser Issues
 
 **Symptoms:**
+
 - App doesn't work on mobile
 - Touch targets too small
 - Layout breaks on small screens
@@ -565,40 +593,40 @@ This guide covers common issues encountered when using or developing the TC Work
 
 ### Common Error Messages
 
-| Error Message | Cause | Solution |
-|---------------|-------|----------|
-| `Failed to fetch` | Network request failed | Check internet connection; verify API endpoint |
-| `QuotaExceededError` | Storage quota exceeded | Clear old data; reduce download scope |
-| `Position unavailable` | GPS couldn't get location | Check permissions; move to better location |
-| `Permission denied` | User denied permission | Grant permission in browser/device settings |
-| `Network error` | Connection lost | Check network; retry request |
-| `Invalid SLK` | SLK value out of range | Enter SLK within road segment range |
-| `Region not found` | Invalid region code | Select valid region from list |
-| `Work zone not found` | No work zones for criteria | Check road selection; expand search radius |
+| Error Message          | Cause                      | Solution                                       |
+| ---------------------- | -------------------------- | ---------------------------------------------- |
+| `Failed to fetch`      | Network request failed     | Check internet connection; verify API endpoint |
+| `QuotaExceededError`   | Storage quota exceeded     | Clear old data; reduce download scope          |
+| `Position unavailable` | GPS couldn't get location  | Check permissions; move to better location     |
+| `Permission denied`    | User denied permission     | Grant permission in browser/device settings    |
+| `Network error`        | Connection lost            | Check network; retry request                   |
+| `Invalid SLK`          | SLK value out of range     | Enter SLK within road segment range            |
+| `Region not found`     | Invalid region code        | Select valid region from list                  |
+| `Work zone not found`  | No work zones for criteria | Check road selection; expand search radius     |
 
 ### IndexedDB Error Codes
 
-| Code | Name | Description |
-|------|------|-------------|
-| 0 | `UnknownError` | Generic error; check console for details |
-| 1 | `ConstraintError` | Duplicate key or constraint violation |
-| 2 | `DataError` | Invalid data provided |
-| 3 | `TransactionInactiveError` | Transaction completed or aborted |
-| 4 | `ReadOnlyError` | Attempted write in read-only transaction |
-| 5 | `VersionError` | Database version mismatch |
+| Code | Name                       | Description                              |
+| ---- | -------------------------- | ---------------------------------------- |
+| 0    | `UnknownError`             | Generic error; check console for details |
+| 1    | `ConstraintError`          | Duplicate key or constraint violation    |
+| 2    | `DataError`                | Invalid data provided                    |
+| 3    | `TransactionInactiveError` | Transaction completed or aborted         |
+| 4    | `ReadOnlyError`            | Attempted write in read-only transaction |
+| 5    | `VersionError`             | Database version mismatch                |
 
 ### HTTP Status Codes
 
-| Code | Meaning | Common Cause |
-|------|---------|--------------|
-| 400 | Bad Request | Invalid request parameters |
-| 401 | Unauthorized | Authentication required |
-| 403 | Forbidden | Insufficient permissions |
-| 404 | Not Found | Resource doesn't exist |
-| 429 | Too Many Requests | Rate limit exceeded |
-| 500 | Server Error | Backend error; check server logs |
-| 502 | Bad Gateway | Upstream server error |
-| 503 | Unavailable | Server temporarily down |
+| Code | Meaning           | Common Cause                     |
+| ---- | ----------------- | -------------------------------- |
+| 400  | Bad Request       | Invalid request parameters       |
+| 401  | Unauthorized      | Authentication required          |
+| 403  | Forbidden         | Insufficient permissions         |
+| 404  | Not Found         | Resource doesn't exist           |
+| 429  | Too Many Requests | Rate limit exceeded              |
+| 500  | Server Error      | Backend error; check server logs |
+| 502  | Bad Gateway       | Upstream server error            |
+| 503  | Unavailable       | Server temporarily down          |
 
 ---
 
@@ -610,6 +638,7 @@ If your issue isn't covered in this guide:
    - Search [GitHub Issues](https://github.com/your-repo/issues) for similar problems
 
 2. **Enable Debug Logging**
+
    ```javascript
    // In browser console
    localStorage.setItem('debug', 'true');

@@ -3,7 +3,7 @@
  *
  * Manages contact directory with job/project assignment.
  * Hybrid approach: permanent contacts + current job tagging.
- * @version 1.28.6
+ * @version 1.34.1
  */
 
 // ============================================================================

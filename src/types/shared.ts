@@ -5,7 +5,7 @@
  * Import these instead of redefining locally.
  *
  * @module types/shared
- * @version 1.34.0
+ * @version 1.34.1
  */
 
 // ─── Weather Types ───────────────────────────────────────────────────────

@@ -8,7 +8,7 @@
 
 ## 1. Project Overview
 
-The TC Work Zone Locator is a Next.js 15 application built with the App Router architecture. This document provides a comprehensive reference of all files and directories in the project, designed specifically for Traffic Controllers in Western Australia to locate work zones, track GPS position, manage signage (AfterCare), work offline in remote areas, and count traffic.
+The TC Work Zone Locator is a Next.js 16 application built with the App Router architecture. This document provides a comprehensive reference of all files and directories in the project, designed specifically for Traffic Controllers in Western Australia to locate work zones, track GPS position, manage signage (AfterCare), work offline in remote areas, and count traffic.
 
 ---
 
@@ -32,60 +32,74 @@ The TC Work Zone Locator is a Next.js 15 application built with the App Router a
 
 ### 3.1 Application Pages (src/app/)
 
-| File                                       | Purpose                                            |
-| ------------------------------------------ | -------------------------------------------------- |
-| `page.tsx`                                 | Home page - Work zone lookup                       |
-| `drive/page.tsx`                           | GPS tracking page with EKF filtering, speed alerts |
-| `drive/nearby-signs/page.tsx`              | Nearby signs requiring action                      |
-| `overrides/page.tsx`                       | Speed sign override management                     |
-| `overrides/layout/page.tsx`                | Override layout visualization                      |
-| `overrides/map/page.tsx`                   | Override map with Leaflet                          |
-| `aftercare/page.tsx`                       | AfterCare job management                           |
-| `aftercare/map/page.tsx`                   | AfterCare map with Leaflet                         |
-| `library/page.tsx`                         | Documents library browser                          |
-| `library/[docId]/page.tsx`                 | Document viewer                                    |
-| `library/[docId]/[pageNum]/page.tsx`       | Document page viewer                               |
-| `library/expanded/page.tsx`                | Expanded library view                              |
-| `library/tmp/[region]/[document]/page.tsx` | Temporary document storage                         |
-| `calibrate/page.tsx`                       | GPS calibration tool                               |
-| `manual/page.tsx`                          | User manual page                                   |
-| `offline/page.tsx`                         | Offline data management                            |
-| `qa/page.tsx`                              | Quality assurance testing page                     |
-| `traffic-counter/page.tsx`                 | Manual traffic counting tool                       |
-| `layout.tsx`                               | Root layout                                        |
-| `globals.css`                              | Global styles                                      |
+| File                                        | Purpose                                            |
+| ------------------------------------------- | -------------------------------------------------- |
+| `page.tsx`                                  | Home page - Work zone lookup                       |
+| `drive/page.tsx`                            | GPS tracking page with EKF filtering, speed alerts |
+| `drive/nearby-signs/page.tsx`               | Nearby signs requiring action                      |
+| `overrides/page.tsx`                        | Speed sign override management                     |
+| `overrides/layout/page.tsx`                 | Override layout visualization                      |
+| `overrides/map/page.tsx`                    | Override map with Leaflet                          |
+| `aftercare/page.tsx`                        | AfterCare job management                           |
+| `aftercare/map/page.tsx`                    | AfterCare map with Leaflet                         |
+| `library/page.tsx`                          | Documents library browser                          |
+| `library/[docId]/page.tsx`                  | Document viewer                                    |
+| `library/[docId]/[pageNum]/page.tsx`        | Document page viewer                               |
+| `library/expanded/page.tsx`                 | Expanded library view                              |
+| `library/tmp/[region]/[document]/page.tsx`  | Temporary document storage                         |
+| `library/viewer/[docId]/page.tsx`           | Library document info                              |
+| `library/viewer/[docId]/[pageNum]/page.tsx` | PDF viewer                                         |
+| `library/tmp/[region]/page.tsx`             | TMP region viewer                                  |
+| `contacts/page.tsx`                         | Contact directory                                  |
+| `cycle-timer/page.tsx`                      | Cycle timer tool                                   |
+| `event-logger/page.tsx`                     | Traffic event logger                               |
+| `settings/page.tsx`                         | Settings page                                      |
+| `saved-locations/map/page.tsx`              | Saved locations map                                |
+| `calibrate/page.tsx`                        | GPS calibration tool                               |
+| `manual/page.tsx`                           | User manual page                                   |
+| `offline/page.tsx`                          | Offline data management                            |
+| `qa/page.tsx`                               | Quality assurance testing page                     |
+| `traffic-counter/page.tsx`                  | Manual traffic counting tool                       |
+| `layout.tsx`                                | Root layout                                        |
+| `globals.css`                               | Global styles                                      |
 
 ### 3.2 API Routes (src/app/api/)
 
-| Route                            | Purpose                                                                                |
-| -------------------------------- | -------------------------------------------------------------------------------------- |
-| `roads/route.ts`                 | Road data, SLK coordinates                                                             |
-| `gps/route.ts`                   | GPS to SLK conversion                                                                  |
-| `weather/route.ts`               | Weather data (Open-Meteo)                                                              |
-| `warnings/route.ts`              | BOM weather warnings RSS                                                               |
-| `weather/warnings/route.ts`      | Weather warnings sub-endpoint                                                          |
-| `traffic/route.ts`               | Traffic volume data                                                                    |
-| `places/route.ts`                | Nearby amenities                                                                       |
-| `intersections/route.ts`         | Cross road detection                                                                   |
-| `nearest-intersections/route.ts` | Find nearest intersections                                                             |
-| `admin-sync/route.ts`            | MRWA direct sync                                                                       |
-| `overrides/route.ts`             | Override storage pass-through                                                          |
-| `speed-compare/route.ts`         | MRWA vs OSM comparison                                                                 |
-| `osm-speed/route.ts`             | OSM speed limit data                                                                   |
-| `speed-verify/route.ts`          | Speed verification                                                                     |
-| `speedlimit/route.ts`            | Speed limit lookup                                                                     |
-| `download-signs/route.ts`        | Sign data download                                                                     |
-| `export-pdf/route.ts`            | Work zone report export                                                                |
-| `sync-data/route.ts`             | Offline data sync                                                                      |
-| `route/route.ts`                 | Route API                                                                              |
-| `emergency-stations/route.ts`    | Emergency facility locations                                                           |
-| `hospitals/route.ts`             | Hospital locations from WA Health SLIP Services (Layers 6 & 7)                         |
-| `nearest-hospital/route.ts`      | Nearest hospital from WA Health SLIP Services, includes nursing posts for remote areas |
-| `police-stations/route.ts`       | Police station locations                                                               |
-| `incidents/route.ts`             | Live road incidents                                                                    |
-| `fuel-stations/route.ts`         | FuelWatch WA + Overpass merged fuel station search                                     |
-| `qa/route.ts`                    | QA test data                                                                           |
-| `qa-saved/route.ts`              | Saved QA results                                                                       |
+| Route                                 | Purpose                                                                                |
+| ------------------------------------- | -------------------------------------------------------------------------------------- |
+| `roads/route.ts`                      | Road data, SLK coordinates                                                             |
+| `gps/route.ts`                        | GPS to SLK conversion                                                                  |
+| `weather/route.ts`                    | Weather data (Open-Meteo)                                                              |
+| `warnings/route.ts`                   | BOM weather warnings RSS                                                               |
+| `weather/warnings/route.ts`           | Weather warnings sub-endpoint                                                          |
+| `traffic/route.ts`                    | Traffic volume data                                                                    |
+| `places/route.ts`                     | Nearby amenities                                                                       |
+| `intersections/route.ts`              | Cross road detection                                                                   |
+| `nearest-intersections/route.ts`      | Find nearest intersections                                                             |
+| `admin-sync/route.ts`                 | MRWA direct sync                                                                       |
+| `overrides/route.ts`                  | Override storage pass-through                                                          |
+| `speed-compare/route.ts`              | MRWA vs OSM comparison                                                                 |
+| `osm-speed/route.ts`                  | OSM speed limit data                                                                   |
+| `speed-verify/route.ts`               | Speed verification                                                                     |
+| `speedlimit/route.ts`                 | Speed limit lookup                                                                     |
+| `download-signs/route.ts`             | Sign data download                                                                     |
+| `export-pdf/route.ts`                 | Work zone report export                                                                |
+| `sync-data/route.ts`                  | Offline data sync                                                                      |
+| `route/route.ts`                      | Route API                                                                              |
+| `emergency-stations/route.ts`         | Emergency facility locations                                                           |
+| `hospitals/route.ts`                  | Hospital locations from WA Health SLIP Services (Layers 6 & 7)                         |
+| `nearest-hospital/route.ts`           | Nearest hospital from WA Health SLIP Services, includes nursing posts for remote areas |
+| `police-stations/route.ts`            | Police station locations                                                               |
+| `incidents/route.ts`                  | Live road incidents                                                                    |
+| `fuel-stations/route.ts`              | FuelWatch WA + Overpass merged fuel station search                                     |
+| `qa/route.ts`                         | QA test data                                                                           |
+| `qa-saved/route.ts`                   | Saved QA results                                                                       |
+| `toilets/route.ts`                    | Toilet data from National Toilet Map                                                   |
+| `ai/chat/route.ts`                    | AI direct chat                                                                         |
+| `ai/verify/route.ts`                  | AI key verification                                                                    |
+| `documents/route.ts`                  | Document listing                                                                       |
+| `documents/summarize/route.ts`        | AI document summarization                                                              |
+| `documents/analyze-diagrams/route.ts` | AI diagram analysis                                                                    |
 
 ### 3.3 Library Modules (src/lib/)
 
@@ -103,15 +117,41 @@ The TC Work Zone Locator is a Next.js 15 application built with the App Router a
 | `download-roads.ts`          | Static data loader                                                  |
 | `qa-storage.ts`              | QA test storage and management                                      |
 | `traffic-counter-storage.ts` | Traffic count record storage                                        |
+| `saved-locations-db.ts`      | Saved locations IndexedDB storage                                   |
+| `cycle-timer-storage.ts`     | Cycle timer storage                                                 |
+| `traffic-event-logger.ts`    | Traffic event logger                                                |
+| `summaries-storage.ts`       | Document summaries storage                                          |
+| `fire-stations.ts`           | Fire station data                                                   |
+| `toilet-map.ts`              | National Toilet Map integration                                     |
+| `push-notifications.ts`      | Push notifications                                                  |
+| `logger.ts`                  | Logging utility                                                     |
+| `errors.ts`                  | Error handling                                                      |
+| `contacts-storage.ts`        | Contacts storage                                                    |
+| `speed-zones.ts`             | Speed zone logic                                                    |
+| `traffic-calculations.ts`    | Traffic calculations                                                |
+| `offline-db/`                | Modular offline database subdirectory (see below)                   |
 
 ### 3.4 React Hooks (src/hooks/)
 
-| File                | Purpose                                          |
-| ------------------- | ------------------------------------------------ |
-| `useGpsTracking.ts` | GPS tracking with EKF, speed zones, speed alerts |
-| `useOrientation.ts` | Screen orientation detection                     |
-| `use-mobile.ts`     | Mobile device detection                          |
-| `use-toast.ts`      | Toast notification hook                          |
+| File                   | Purpose                                          |
+| ---------------------- | ------------------------------------------------ |
+| `useGpsTracking.ts`    | GPS tracking with EKF, speed zones, speed alerts |
+| `useOrientation.ts`    | Screen orientation detection                     |
+| `use-mobile.ts`        | Mobile device detection                          |
+| `use-toast.ts`         | Toast notification hook                          |
+| `useHomeSettings.ts`   | Home page settings hook                          |
+| `useSavedLocations.ts` | Saved locations hook                             |
+| `useGpsLocation.ts`    | GPS location hook                                |
+| `useWorkZoneData.ts`   | Work zone data hook                              |
+| `useWorkZoneFetch.ts`  | Work zone fetch hook                             |
+| `useWorkZone.ts`       | Work zone hook                                   |
+| `useRoads.ts`          | Roads data hook                                  |
+| `useRegions.ts`        | Regions data hook                                |
+| `useWeather.ts`        | Weather data hook                                |
+| `useTraffic.ts`        | Traffic data hook                                |
+| `usePlaces.ts`         | Places/amenities hook                            |
+| `useOfflineData.ts`    | Offline data hook                                |
+| `useSetDistance.ts`    | Set distance hook                                |
 
 ### 3.5 React Components (src/components/)
 
@@ -145,32 +185,34 @@ The TC Work Zone Locator is a Next.js 15 application built with the App Router a
 
 ## 5. Documentation (docs/)
 
-| File                                        | Purpose                       |
-| ------------------------------------------- | ----------------------------- |
-| `ARCHITECTURE.md`                           | Main architecture documentation |
-| `DATA_STRUCTURES.md`                        | Data structures and types      |
-| `API_REFERENCE.md`                          | External API documentation     |
-| `TC_Work_Zone_Locator_File_Structure.md`    | This file                     |
-| `TC_Work_Zone_Locator_Direction_Aware_Zones.md` | Bidirectional zones       |
-| `TC_Work_Zone_Locator_Program_Logic.md`     | Business logic documentation   |
-| `TC_Work_Zone_Locator_User_Manual.md`       | End-user manual               |
-| `RC1_Test_Checklist.md`                     | Testing checklist             |
-| `RC1.34.0_Key_Learnings.md`                 | Development patterns          |
-| `Work_Zone_Report_Implementation_Guide.md`  | Report feature guide          |
-| `future/`                                   | Future feature mockups        |
-| `screenshots/`                              | Test screenshots              |
+| File                                            | Purpose                         |
+| ----------------------------------------------- | ------------------------------- |
+| `ARCHITECTURE.md`                               | Main architecture documentation |
+| `DATA_STRUCTURES.md`                            | Data structures and types       |
+| `API_REFERENCE.md`                              | External API documentation      |
+| `TC_Work_Zone_Locator_File_Structure.md`        | This file                       |
+| `TC_Work_Zone_Locator_Direction_Aware_Zones.md` | Bidirectional zones             |
+| `TC_Work_Zone_Locator_Program_Logic.md`         | Business logic documentation    |
+| `TC_Work_Zone_Locator_User_Manual.md`           | End-user manual                 |
+| `RC1_Test_Checklist.md`                         | Testing checklist               |
+| `RC1.34.0_Key_Learnings.md`                     | Development patterns            |
+| `Work_Zone_Report_Implementation_Guide.md`      | Report feature guide            |
+| `TESTING.md`                                    | Testing documentation           |
+| `TROUBLESHOOTING.md`                            | Troubleshooting guide           |
+| `future/`                                       | Future feature mockups          |
+| `screenshots/`                                  | Test screenshots                |
 
 ---
 
 ## 6. Static Data (public/data/)
 
-| Directory/File        | Purpose                                     |
-| --------------------- | ------------------------------------------- |
-| `roads/`              | Road geometry JSON files by region          |
-| `metadata.json`       | Region list and download metadata           |
-| `pavement.json`       | Pavement data (lanes, widths)               |
-| `traffic-volume.json` | Traffic count data                          |
-| `amenities.json`      | Nearby amenities (hospitals, fuel, toilets) |
+| Directory/File        | Purpose                                                            |
+| --------------------- | ------------------------------------------------------------------ |
+| `roads-{region}.json` | Road geometry JSON files by region (e.g., roads-metropolitan.json) |
+| `metadata.json`       | Region list and download metadata                                  |
+| `pavement-data.json`  | Pavement data (lanes, widths)                                      |
+| `traffic-data.json`   | Traffic count data                                                 |
+| `amenities.json`      | Nearby amenities (hospitals, fuel, toilets)                        |
 
 ---
 
@@ -301,6 +343,25 @@ Route optimization for multi-stop signage retrieval:
 - `getAllSignsDueForRetrieval()`: Get all signs needing retrieval
 - `getAllSignsDueForMaintenance()`: Get all signs needing maintenance
 - `generateReport()`: Create AfterCare report
+
+#### offline-db/ (Modular Offline Database)
+
+The offline database is split into 12 modular files for maintainability:
+
+| File               | Purpose                                                                            |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| `index.ts`         | Re-exports all modules for unified imports                                         |
+| `db-core.ts`       | IndexedDB initialization, version management, core operations                      |
+| `types.ts`         | All type definitions (RoadData, PavementData, ParsedSpeedZone, AmenityPlace, etc.) |
+| `speed-zones.ts`   | Speed zone parsing, sign-to-zone conversion, override merging                      |
+| `signage.ts`       | Rail crossing, regulatory sign, warning sign storage                               |
+| `roads.ts`         | Road data storage and retrieval by region                                          |
+| `pavement.ts`      | Pavement data (lanes, widths, shoulders) storage                                   |
+| `traffic.ts`       | Traffic volume data storage                                                        |
+| `amenities.ts`     | Amenities (hospitals, fuel, toilets) storage                                       |
+| `work-zone.ts`     | Work zone data operations                                                          |
+| `weather-cache.ts` | Weather data caching                                                               |
+| `metadata.ts`      | Dataset sync metadata tracking                                                     |
 
 ---
 

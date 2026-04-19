@@ -113,7 +113,7 @@ When prompted, allow the app to access your location. This is required for:
 
 The header shows important status information:
 
-- Version number (e.g., vRC 1.9.1)
+- Version number (e.g., v1.34.1)
 - Offline status indicator
 - Hamburger menu (☰) = Settings access
 
@@ -318,7 +318,7 @@ Visual bar showing road width components from left to right:
 
 - Nearest hospital (from WA Health SLIP Services — official government data)
 - Nearest fuel station (from FuelWatch WA daily prices + OpenStreetMap)
-- Nearest public toilet (from OpenStreetMap)
+- Nearest public toilet (from National Public Toilet Map ArcGIS Feature Service — 2,714+ WA toilets; fallback: OpenStreetMap via Overpass API)
 
 **Hospital details now show:**
 
@@ -340,11 +340,11 @@ Visual bar showing road width components from left to right:
 
 **Amenity Data Sources:**
 
-| **Amenity**   | **Primary Source**                             | **Fallback**  |
-| ------------- | ---------------------------------------------- | ------------- |
-| Hospitals     | WA Health SLIP Services (official government)  | OpenStreetMap |
-| Fuel Stations | FuelWatch WA (daily diesel prices) + OSM merge | OpenStreetMap |
-| Toilets       | OpenStreetMap                                  | —             |
+| **Amenity**   | **Primary Source**                                    | **Fallback**                   |
+| ------------- | ----------------------------------------------------- | ------------------------------ |
+| Hospitals     | WA Health SLIP Services (official government)         | OpenStreetMap                  |
+| Fuel Stations | FuelWatch WA (daily diesel prices) + OSM merge        | OpenStreetMap                  |
+| Toilets       | National Public Toilet Map ArcGIS (2,714+ WA toilets) | OpenStreetMap via Overpass API |
 
 ### 4.6 TC Tools Section
 

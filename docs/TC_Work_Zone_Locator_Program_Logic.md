@@ -31,7 +31,7 @@
 
 The TC Work Zone Locator is a Progressive Web Application (PWA) designed specifically for Western Australian Traffic Controllers to locate, plan, and navigate work zones on state and local roads. The application operates in multiple primary modes: a static work zone planning mode, a real-time GPS tracking mode for active traffic control operations, an AfterCare signage tracking system for managing signs awaiting retrieval, a traffic counter for manual vehicle counts, and a documents library for accessing MRWA documentation.
 
-The core value proposition centers on providing accurate SLK (Straight Line Kilometre) based location information, which is the standard reference system used by Main Roads Western Australia (MRWA) for all road positioning. The application architecture follows a modern Next.js 15 implementation with App Router, utilizing client-side IndexedDB for offline data storage and real-time GPS tracking capabilities.
+The core value proposition centers on providing accurate SLK (Straight Line Kilometre) based location information, which is the standard reference system used by Main Roads Western Australia (MRWA) for all road positioning. The application architecture follows a modern Next.js 16 implementation with App Router, utilizing client-side IndexedDB for offline data storage and real-time GPS tracking capabilities.
 
 The design philosophy prioritizes offline-first functionality, ensuring that critical road data remains accessible even in remote areas with limited or no network connectivity. This is particularly important for traffic controllers who frequently work in rural Western Australian locations where cellular coverage may be unreliable or non-existent.
 
@@ -41,11 +41,11 @@ The design philosophy prioritizes offline-first functionality, ensuring that cri
 
 ### 2.1 Technology Stack
 
-The application is built on Next.js 15 with the App Router architecture, which provides server-side rendering capabilities and API routes within a single framework. The frontend utilizes React with TypeScript for type safety and improved developer experience. Tailwind CSS handles styling with a custom dark theme optimized for outdoor visibility. The shadcn/ui component library provides accessible, customizable UI components including dialogs, buttons, and input fields. The application runs exclusively on port 3000 in the development environment.
+The application is built on Next.js 16 with the App Router architecture, which provides server-side rendering capabilities and API routes within a single framework. The frontend utilizes React with TypeScript for type safety and improved developer experience. Tailwind CSS handles styling with a custom dark theme optimized for outdoor visibility. The shadcn/ui component library provides accessible, customizable UI components including dialogs, buttons, and input fields. The application runs exclusively on port 3000 in the development environment.
 
 | Component        | Technology                                |
 | ---------------- | ----------------------------------------- |
-| Framework        | Next.js 15 with App Router                |
+| Framework        | Next.js 16 with App Router                |
 | Language         | TypeScript (strict mode)                  |
 | Styling          | Tailwind CSS with dark theme              |
 | UI Components    | shadcn/ui (Radix primitives)              |
@@ -220,16 +220,18 @@ The pace rate indicator is displayed under the GPS confidence accuracy line (e.g
 
 The application uses IndexedDB for client-side storage of all road-related data, enabling full offline functionality. The database schema is designed to optimize the most common query patterns: finding roads by region, retrieving speed zones by road ID, and searching for nearby amenities.
 
-| Object Store    | Key Path           | Purpose                      |
-| --------------- | ------------------ | ---------------------------- |
-| regions         | 'region' (string)  | Roads grouped by MRWA region |
-| speedZones      | 'road_id' (string) | Speed limit zones per road   |
-| metadata        | 'key' (string)     | Download date, total roads   |
-| railCrossings   | 'road_id' (string) | Railway crossing locations   |
-| regulatorySigns | 'road_id' (string) | Regulatory sign positions    |
-| warningSigns    | 'road_id' (string) | Warning sign positions       |
-| datasetMeta     | 'dataset' (string) | Sync status per dataset      |
-| amenities       | 'region' (string)  | Amenities cached by region   |
+Database name: `RoadFinderDB` (version 7)
+
+| Object Store   | Key Path             | Purpose                      |
+| -------------- | -------------------- | ---------------------------- |
+| regions        | 'region' (string)    | Road data grouped by region  |
+| speedZones     | 'road_id' (string)   | Speed zone data              |
+| signage        | 'road_id' (string)   | Regulatory and warning signs |
+| railCrossings  | 'road_id' (string)   | Rail crossing data           |
+| amenitiesData  | 'region' (string)    | Amenities data               |
+| pavementData   | 'road_id' (string)   | Pavement data                |
+| trafficData    | 'road_name' (string) | Traffic volume data          |
+| savedLocations | 'id' (string)        | Saved locations              |
 
 ### 4.2 Data Persistence Strategy
 

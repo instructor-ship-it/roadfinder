@@ -5869,3 +5869,41 @@ Stage Summary:
 - All changes pushed to GitHub
 
 ---
+
+---
+
+Task ID: 2026-04-19-006
+Agent: Main Agent
+Task: Documentation Synchronization — Full Audit and Fix
+
+Work Log:
+
+- Audited all documentation files against actual codebase (README.md, manual/page.tsx, 12 docs/ files, source code JSDoc comments)
+- Identified 70+ discrepancies across categories: version mismatches, missing API endpoints, wrong data structures, reversed direction logic, stale road counts, wrong IndexedDB names
+- Fixed source code: 9 stale @version JSDoc tags (including 2 that were AHEAD of release at 1.35.0), 3 hardcoded version strings, wrong API endpoint name in JSDoc, reversed direction comment in offline-db/types.ts
+- Fixed src/app/manual/page.tsx: version 1.33.1→1.34.1, saved locations "20 in localStorage"→"unlimited in IndexedDB"
+- Fixed PROJECT_CONTEXT.md: api/ai/test→api/ai/verify
+- Fixed README.md: Next.js 15→16, TypeScript 5.0→5.9, road counts updated (69,471→69,534), 16 missing API endpoints added, project structure updated with all new pages/hooks/libs, tech stack expanded with 10 additional technologies
+- Fixed docs/ARCHITECTURE.md: 3 stale "vRC 1.9.9"→"v1.34.1", removed ghost /api/library endpoint, added 6 missing API endpoints, fixed /api/qa method
+- Fixed docs/API_REFERENCE.md: 7 missing routes added, offline data file names corrected (roads/{region}→roads-{region}, pavement→pavement-data, traffic-volume→traffic-data), IndexedDB store names fixed (amenities→amenitiesData, added pavementData/trafficData/savedLocations), 7 missing public/data files added
+- Fixed docs/DATA_STRUCTURES.md: RoadData fields (slk_from→min_slk, slk_to→max_slk, geometry→segments), PavementData fields (slk→start_slk+end_slk, road_width→trafficable_width), 9 missing ParsedSpeedZone fields, 8 removed AmenityPlace fields that don't exist on base type
+- Fixed docs/TC_Work_Zone_Locator_File_Structure.md: Next.js 15→16, 8 missing pages, 6 missing API routes, 13 missing lib modules, 13 missing hooks, file name fixes, missing docs files
+- Fixed docs/TC_Work_Zone_Locator_Program_Logic.md: 3x Next.js 15→16, IndexedDB schema updated (RoadFinderDB v7 with correct stores)
+- Fixed docs/TC_Work_Zone_Locator_User_Manual.md: vRC 1.9.1→v1.34.1, toilet source corrected (primary: National Public Toilet Map, fallback: OSM)
+- Fixed docs/TC_Work_Zone_Locator_Direction_Aware_Zones.md: CRITICAL - reversed direction mapping corrected (Increasing=True Left, Decreasing=True Right), COVER REQUIRED claim corrected (feature still exists)
+- Fixed docs/TESTING.md: coverage exclude list corrected, E2E Playwright section added, test file list expanded to all 9 files, coverage thresholds noted as aspirational
+- Fixed docs/Work_Zone_Report_Implementation_Guide.md: version RC 1.9.9→1.34.1
+- Fixed docs/RC1.34.0_Key_Learnings.md: IndexedDB RoadDataDB→RoadFinderDB v7, roads store→regions store, fine $1,500/6pts→$1,200/7pts, footer date fixed
+- Fixed docs/RC1_Test_Checklist.md: added test sections for /contacts, /cycle-timer, Traffic Event Logger, /settings, /saved-locations/map
+- Fixed docs/TROUBLESHOOTING.md: all IndexedDB names→RoadFinderDB, road count 50,000→69,000+
+- All 248 tests passing
+
+Stage Summary:
+
+- 70+ documentation discrepancies found and fixed across 19 files
+- Critical fix: reversed direction mapping in Direction_Aware_Zones.md
+- Critical fix: wrong IndexedDB database names in TROUBLESHOOTING.md
+- All versions now consistent at 1.34.1
+- All API endpoints now documented
+- All data structures match actual TypeScript types
+- Ready for push to GitHub

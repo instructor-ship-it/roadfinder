@@ -5,7 +5,7 @@
  * Supports weather warnings, incident alerts, and other time-sensitive notifications.
  *
  * @module push-notifications
- * @version 1.35.0
+ * @version 1.34.1
  */
 
 // ============================================================================

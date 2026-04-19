@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 /**
  * Test z.ai API connection
- * POST /api/ai/test
+ * POST /api/ai/verify
  * Body: { apiKey: string }
  *
  * Tests z.ai public API: https://api.z.ai/api/paas/v4/chat/completions
@@ -54,7 +54,8 @@ export async function POST(request: Request) {
         if (errorCode === '1113' || errorMsg?.includes('Insufficient balance')) {
           return NextResponse.json({
             success: false,
-            error: 'API key is valid but account has insufficient balance. Add credits at z.ai/manage-apikey/billing',
+            error:
+              'API key is valid but account has insufficient balance. Add credits at z.ai/manage-apikey/billing',
             needsCredits: true,
             validKey: true,
           });

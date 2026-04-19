@@ -11,6 +11,7 @@ This document provides a comprehensive guide to testing the TC Work Zone Locator
 - [Writing Component Tests](#writing-component-tests)
 - [Testing Hooks](#testing-hooks)
 - [Test Coverage](#test-coverage)
+- [Playwright E2E Testing](#playwright-e2e-testing)
 - [Best Practices](#best-practices)
 - [Common Testing Patterns](#common-testing-patterns)
 - [Debugging Tests](#debugging-tests)
@@ -21,21 +22,22 @@ This document provides a comprehensive guide to testing the TC Work Zone Locator
 
 The project uses the following testing tools:
 
-| Tool | Purpose | Version |
-|------|---------|---------|
-| [Vitest](https://vitest.dev/) | Test runner and assertion library | 4.x |
-| [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/) | React component testing | 16.x |
-| [@testing-library/jest-dom](https://testing-library.com/docs/ecosystem-jest-dom/) | Custom DOM matchers | 6.x |
-| [@vitest/coverage-v8](https://vitest.dev/guide/coverage.html) | Code coverage reports | 4.x |
-| [jsdom](https://github.com/jsdom/jsdom) | DOM simulation environment | 29.x |
+| Tool                                                                                    | Purpose                           | Version |
+| --------------------------------------------------------------------------------------- | --------------------------------- | ------- |
+| [Vitest](https://vitest.dev/)                                                           | Test runner and assertion library | 4.x     |
+| [@testing-library/react](https://testing-library.com/docs/react-testing-library/intro/) | React component testing           | 16.x    |
+| [@testing-library/jest-dom](https://testing-library.com/docs/ecosystem-jest-dom/)       | Custom DOM matchers               | 6.x     |
+| [@vitest/coverage-v8](https://vitest.dev/guide/coverage.html)                           | Code coverage reports             | 4.x     |
+| [jsdom](https://github.com/jsdom/jsdom)                                                 | DOM simulation environment        | 29.x    |
 
 ### Configuration
 
-The testing configuration is defined in `vitest.config.ts` (or embedded in `vite.config.ts`). The setup includes:
+The testing configuration is defined in `vitest.config.ts`. The setup includes:
 
 - **Environment**: jsdom for DOM simulation
+- **Plugin**: `@vitejs/plugin-react` for JSX/TSX transformation
 - **Globals**: Built-in Vitest globals (describe, it, expect, etc.)
-- **Setup Files**: Testing Library jest-dom matchers
+- **Setup Files**: `./src/test/setup.ts` (Testing Library jest-dom matchers)
 - **Coverage**: v8 coverage provider with text, JSON, and HTML reports
 
 ---
@@ -91,22 +93,31 @@ src/
 │   ├── validation.ts
 │   ├── validation.test.ts
 │   ├── max-hold-time.ts
-│   └── max-hold-time.test.ts
+│   ├── max-hold-time.test.ts
+│   ├── errors.ts
+│   ├── errors.test.ts
+│   ├── offline-db.ts
+│   └── offline-db.test.ts
 ├── hooks/
 │   ├── useGpsTracking.ts
 │   └── useGpsTracking.test.ts
 └── components/
-    └── ui/
-        ├── badge.tsx
-        └── badge.test.tsx
+    ├── ui/
+    │   ├── badge.tsx
+    │   ├── badge.test.tsx
+    │   ├── button.tsx
+    │   └── button.test.tsx
+    └── home/
+        ├── OfflineStatusIndicator.tsx
+        └── OfflineStatusIndicator.test.tsx
 ```
 
 ### Naming Conventions
 
-| File Type | Convention | Example |
-|-----------|------------|---------|
-| Unit test | `*.test.ts` | `utils.test.ts` |
-| Component test | `*.test.tsx` | `Button.test.tsx` |
+| File Type        | Convention              | Example                   |
+| ---------------- | ----------------------- | ------------------------- |
+| Unit test        | `*.test.ts`             | `utils.test.ts`           |
+| Component test   | `*.test.tsx`            | `Button.test.tsx`         |
 | Integration test | `*.integration.test.ts` | `api.integration.test.ts` |
 
 ---
@@ -186,12 +197,12 @@ export const mockWorkZone = {
   startSlk: 10.5,
   endSlk: 15.2,
   speedLimit: 60,
-  direction: 'Both'
+  direction: 'Both',
 };
 
 export const mockWorkZones = [
   mockWorkZone,
-  { ...mockWorkZone, road: 'H001', roadName: 'Albany Highway' }
+  { ...mockWorkZone, road: 'H001', roadName: 'Albany Highway' },
 ];
 
 // In test file
@@ -233,10 +244,10 @@ describe('Badge Component', () => {
   it('should handle click events', async () => {
     const handleClick = vi.fn();
     const user = userEvent.setup();
-    
+
     render(<Badge onClick={handleClick}>Clickable</Badge>);
     await user.click(screen.getByText('Clickable'));
-    
+
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 });
@@ -254,13 +265,13 @@ describe('SlkInputForm', () => {
   it('should submit valid SLK values', async () => {
     const onSubmit = vi.fn();
     const user = userEvent.setup();
-    
+
     render(<SlkInputForm onSubmit={onSubmit} />);
-    
+
     await user.type(screen.getByLabelText(/start slk/i), '10.5');
     await user.type(screen.getByLabelText(/end slk/i), '15.2');
     await user.click(screen.getByRole('button', { name: /submit/i }));
-    
+
     await waitFor(() => {
       expect(onSubmit).toHaveBeenCalledWith({
         startSlk: 10.5,
@@ -272,10 +283,10 @@ describe('SlkInputForm', () => {
   it('should show validation errors for invalid input', async () => {
     const user = userEvent.setup();
     render(<SlkInputForm onSubmit={vi.fn()} />);
-    
+
     await user.type(screen.getByLabelText(/start slk/i), 'abc');
     await user.click(screen.getByRole('button', { name: /submit/i }));
-    
+
     expect(screen.getByText(/invalid slk/i)).toBeInTheDocument();
   });
 });
@@ -302,9 +313,9 @@ describe('WorkZoneResults', () => {
   it('should display results after loading', async () => {
     const mockZones = [{ road: 'M0001', speedLimit: 60 }];
     vi.mocked(fetchWorkZones).mockResolvedValue(mockZones);
-    
+
     render(<WorkZoneResults road="M0001" />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('60 km/h')).toBeInTheDocument();
     });
@@ -312,9 +323,9 @@ describe('WorkZoneResults', () => {
 
   it('should handle errors gracefully', async () => {
     vi.mocked(fetchWorkZones).mockRejectedValue(new Error('API Error'));
-    
+
     render(<WorkZoneResults road="M0001" />);
-    
+
     await waitFor(() => {
       expect(screen.getByText(/error/i)).toBeInTheDocument();
     });
@@ -339,11 +350,11 @@ import { useGpsTracking } from './useGpsTracking';
 const mockGeolocation = {
   getCurrentPosition: vi.fn(),
   watchPosition: vi.fn(),
-  clearWatch: vi.fn()
+  clearWatch: vi.fn(),
 };
 
 vi.stubGlobal('navigator', {
-  geolocation: mockGeolocation
+  geolocation: mockGeolocation,
 });
 
 describe('useGpsTracking', () => {
@@ -353,7 +364,7 @@ describe('useGpsTracking', () => {
 
   it('should return initial state', () => {
     const { result } = renderHook(() => useGpsTracking());
-    
+
     expect(result.current.position).toBeNull();
     expect(result.current.isTracking).toBe(false);
     expect(result.current.error).toBeNull();
@@ -361,48 +372,48 @@ describe('useGpsTracking', () => {
 
   it('should start tracking when called', () => {
     const { result } = renderHook(() => useGpsTracking());
-    
+
     act(() => {
       result.current.startTracking();
     });
-    
+
     expect(mockGeolocation.watchPosition).toHaveBeenCalled();
     expect(result.current.isTracking).toBe(true);
   });
 
   it('should update position on geolocation update', () => {
     const mockPosition = {
-      coords: { latitude: -31.95, longitude: 115.86, accuracy: 10 }
+      coords: { latitude: -31.95, longitude: 115.86, accuracy: 10 },
     };
-    
+
     mockGeolocation.watchPosition.mockImplementation((callback) => {
       callback(mockPosition);
       return 1;
     });
-    
+
     const { result } = renderHook(() => useGpsTracking());
-    
+
     act(() => {
       result.current.startTracking();
     });
-    
+
     expect(result.current.position).toEqual({
       lat: -31.95,
       lng: 115.86,
-      accuracy: 10
+      accuracy: 10,
     });
   });
 
   it('should stop tracking and clear watch', () => {
     mockGeolocation.watchPosition.mockReturnValue(123);
-    
+
     const { result } = renderHook(() => useGpsTracking());
-    
+
     act(() => {
       result.current.startTracking();
       result.current.stopTracking();
     });
-    
+
     expect(mockGeolocation.clearWatch).toHaveBeenCalledWith(123);
     expect(result.current.isTracking).toBe(false);
   });
@@ -429,12 +440,12 @@ bun run test:coverage
 
 The project aims for the following coverage targets:
 
-| Metric | Target | Description |
-|--------|--------|-------------|
-| Lines | 70% | Percentage of code lines executed |
-| Functions | 70% | Percentage of functions called |
-| Branches | 60% | Percentage of branches taken |
-| Statements | 70% | Percentage of statements executed |
+| Metric     | Target | Description                       |
+| ---------- | ------ | --------------------------------- |
+| Lines      | 70%    | Percentage of code lines executed |
+| Functions  | 70%    | Percentage of functions called    |
+| Branches   | 60%    | Percentage of branches taken      |
+| Statements | 70%    | Percentage of statements executed |
 
 ### Viewing Coverage Reports
 
@@ -456,14 +467,17 @@ export default defineConfig({
     coverage: {
       exclude: [
         'node_modules/',
-        'src/components/ui/',  // Third-party shadcn components
-        '*.config.ts',
-        '*.d.ts'
-      ]
-    }
-  }
+        'src/test/', // Test utilities and helpers
+        '**/*.d.ts', // Type declaration files
+        '**/*.config.*', // Configuration files
+        '**/types/**', // Type definition directories
+      ],
+    },
+  },
 });
 ```
+
+Note: The coverage targets listed above are aspirational goals, not enforced thresholds. The actual `vitest.config.ts` does not define `thresholds` properties.
 
 ---
 
@@ -550,14 +564,14 @@ screen.getByTestId('submit-button');
 // Mock external dependencies
 vi.mock('@/lib/config', () => ({
   config: {
-    apiUrl: 'https://test-api.example.com'
-  }
+    apiUrl: 'https://test-api.example.com',
+  },
 }));
 
 // Mock with partial implementation
 vi.mock('@/lib/api', () => ({
   fetchWorkZones: vi.fn(),
-  fetchSpeedLimits: vi.fn()
+  fetchSpeedLimits: vi.fn(),
 }));
 ```
 
@@ -578,9 +592,9 @@ describe('Timer functionality', () => {
   it('should call callback after delay', () => {
     const callback = vi.fn();
     setTimeout(callback, 1000);
-    
+
     vi.advanceTimersByTime(1000);
-    
+
     expect(callback).toHaveBeenCalled();
   });
 });
@@ -603,12 +617,12 @@ describe('Offline Database', () => {
     const db = await openDB(dbName, 1, {
       upgrade(db) {
         db.createObjectStore('workZones');
-      }
+      },
     });
 
     await db.put('workZones', { road: 'M0001' }, 'M0001');
     const result = await db.get('workZones', 'M0001');
-    
+
     expect(result).toEqual({ road: 'M0001' });
   });
 });
@@ -625,10 +639,10 @@ import { screen } from '@testing-library/react';
 
 it('should render correctly', () => {
   render(<MyComponent />);
-  
+
   // Print the entire DOM
   screen.debug();
-  
+
   // Print specific element
   screen.debug(screen.getByRole('form'));
 });
@@ -650,6 +664,47 @@ bunx vitest run --reporter=verbose
 # Run specific test file in watch mode
 bunx vitest watch src/lib/utils.test.ts
 ```
+
+---
+
+## Playwright E2E Testing
+
+The project uses [Playwright](https://playwright.dev/) for end-to-end testing of critical user workflows in a real browser environment.
+
+### Setup
+
+Playwright is configured as a devDependency (`@playwright/test ^1.59.1`). Configuration is in `playwright.config.ts` at the project root.
+
+### Running E2E Tests
+
+```bash
+# Run all E2E tests
+bun run test:e2e
+
+# Run specific E2E test file
+bunx playwright test e2e/work-zone-lookup.spec.ts
+
+# Run with UI mode for debugging
+bunx playwright test --ui
+```
+
+### E2E Test Files
+
+| Test File                      | Tests                        |
+| ------------------------------ | ---------------------------- |
+| `e2e/gps-lookup.spec.ts`       | GPS location lookup workflow |
+| `e2e/offline-mode.spec.ts`     | Offline data availability    |
+| `e2e/saved-locations.spec.ts`  | Saved locations CRUD         |
+| `e2e/work-zone-lookup.spec.ts` | Work zone search and results |
+
+### Key Differences from Unit Tests
+
+| Aspect      | Unit Tests (Vitest)             | E2E Tests (Playwright)          |
+| ----------- | ------------------------------- | ------------------------------- |
+| Environment | jsdom (simulated)               | Real browser                    |
+| Speed       | Fast (< 5s total)               | Slower (browser startup)        |
+| Scope       | Individual functions/components | Full user workflows             |
+| Network     | Mocked                          | Real (or mocked at route level) |
 
 ---
 

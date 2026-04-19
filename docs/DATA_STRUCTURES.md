@@ -41,30 +41,34 @@ Comprehensive Data Structure Reference
 
 ### 1.2 RoadData (IndexedDB Storage)
 
-| **Field**    | **Type** | **Description**              |
-| ------------ | -------- | ---------------------------- |
-| road_id      | string   | Unique identifier            |
-| road_name    | string   | Road name                    |
-| slk_from     | number   | Start SLK                    |
-| slk_to       | number   | End SLK                      |
-| geometry     | GeoJSON  | Road geometry                |
-| network_type | string   | State Road, Local Road, etc. |
-| region       | string   | MRWA region                  |
+| **Field**    | **Type** | **Description**                                                                  |
+| ------------ | -------- | -------------------------------------------------------------------------------- |
+| road_id      | string   | Unique identifier                                                                |
+| road_name    | string   | Road name                                                                        |
+| min_slk      | number   | Minimum SLK value                                                                |
+| max_slk      | number   | Maximum SLK value                                                                |
+| network_type | string   | State Road, Local Road, etc.                                                     |
+| segments     | Array    | Array of `{ start_slk, end_slk, geometry: [number, number][] \| null }` segments |
 
 ### 1.3 PavementData (IndexedDB Storage)
 
-| **Field**           | **Type** | **Description**            |
-| ------------------- | -------- | -------------------------- |
-| road_id             | string   | Road identifier            |
-| slk                 | number   | Location SLK               |
-| lanes               | number   | Number of lanes            |
-| road_width          | number   | Total road width in meters |
-| left_shoulder       | number   | Left shoulder width        |
-| right_shoulder      | number   | Right shoulder width       |
-| left_shoulder_type  | string   | Sealed/Unsealed            |
-| right_shoulder_type | string   | Sealed/Unsealed            |
-| kerb_l              | string   | Left kerb type             |
-| kerb_r              | string   | Right kerb type            |
+| **Field**           | **Type**       | **Description**                |
+| ------------------- | -------------- | ------------------------------ |
+| road_id             | string         | Road identifier                |
+| road_name           | string         | Road name                      |
+| start_slk           | number         | Segment start SLK              |
+| end_slk             | number         | Segment end SLK                |
+| lanes               | number \| null | Number of lanes                |
+| trafficable_width   | number \| null | Trafficable width in meters    |
+| cwy                 | string         | Carriageway designation        |
+| total_pave_width    | number \| null | Total pavement width in meters |
+| total_seal_width    | number \| null | Total seal width in meters     |
+| sealed_shoulder_l   | number \| null | Left sealed shoulder width     |
+| sealed_shoulder_r   | number \| null | Right sealed shoulder width    |
+| unsealed_shoulder_l | number \| null | Left unsealed shoulder width   |
+| unsealed_shoulder_r | number \| null | Right unsealed shoulder width  |
+| kerb_l              | string \| null | Left kerb type                 |
+| kerb_r              | string \| null | Right kerb type                |
 
 ---
 
@@ -120,17 +124,27 @@ Comprehensive Data Structure Reference
 
 ### 3.1 ParsedSpeedZone
 
-| **Field**       | **Type** | **Description**        |
-| --------------- | -------- | ---------------------- |
-| road_id         | string   | Road identifier        |
-| road_name       | string   | Road name              |
-| start_slk       | number   | Zone start SLK         |
-| end_slk         | number   | Zone end SLK           |
-| speed_limit     | number   | Speed limit in km/h    |
-| carriageway     | string   | Left, Right, or Single |
-| is_override     | boolean? | Is this an override?   |
-| override_id     | string?  | Override source ID     |
-| override_source | string?  | Override source type   |
+| **Field**             | **Type** | **Description**                              |
+| --------------------- | -------- | -------------------------------------------- |
+| road_id               | string   | Road identifier                              |
+| road_name             | string   | Road name                                    |
+| start_slk             | number   | Zone start SLK                               |
+| end_slk               | number   | Zone end SLK                                 |
+| speed_limit           | number   | Speed limit in km/h                          |
+| carriageway           | string   | Left, Right, or Single                       |
+| is_default            | boolean? | True for default/unrestricted zones          |
+| raw_text              | string?  | Original MRWA text for verification          |
+| requires_verification | boolean? | Flag for zones needing site verification     |
+| speed_corrected       | boolean? | True if this zone was corrected from default |
+| correction_reason     | string?  | Reason for the correction                    |
+| correction_confidence | string?  | Confidence: 'high', 'medium', or 'low'       |
+| is_override           | boolean? | Is this an override?                         |
+| override_id           | string?  | Override source ID                           |
+| override_note         | string?  | Note from the override                       |
+| override_source       | string?  | Override source type                         |
+| sign_face_increasing  | number?  | What increasing SLK traffic sees on sign     |
+| sign_face_decreasing  | number?  | What decreasing SLK traffic sees on sign     |
+| replicated            | boolean? | Is there a matching sign on opposite side?   |
 
 ### 3.2 SpeedZoneForDirection
 
@@ -554,27 +568,21 @@ Cached weather data for offline access:
 
 ### 10.1 AmenityPlace
 
-Individual amenity location:
+Individual amenity location (base type for IndexedDB storage):
 
-| **Field**        | **Type**  | **Description**                                                    |
-| ---------------- | --------- | ------------------------------------------------------------------ |
-| name             | string    | Place name                                                         |
-| type             | enum      | "hospital", "fuel", or "toilet"                                    |
-| lat              | number    | Latitude                                                           |
-| lon              | number    | Longitude                                                          |
-| distance         | number?   | Distance from current location                                     |
-| address          | string?   | Street address                                                     |
-| phone            | string?   | Phone number                                                       |
-| opening_hours    | string?   | Opening hours                                                      |
-| emergency        | boolean?  | Is emergency facility                                              |
-| hospitalType     | string?   | Hospital type: 'Public', 'Private', 'Nursing Post'                 |
-| hospitalCategory | string?   | Hospital category (e.g., 'Acute Hospital')                         |
-| beds             | number?   | Number of hospital beds                                            |
-| suburb           | string?   | Suburb/town name                                                   |
-| fuelBrand        | string?   | Fuel station brand name                                            |
-| fuelPrice        | number?   | Diesel price in cents/L (e.g., 231.3 = $2.313/L)                   |
-| fuelDate         | string?   | Date of fuel price (YYYY-MM-DD)                                    |
-| siteFeatures     | string[]? | Station features array (e.g., ['Open 24 hours', 'Toilets', 'ATM']) |
+| **Field**     | **Type** | **Description**                 |
+| ------------- | -------- | ------------------------------- |
+| name          | string   | Place name                      |
+| type          | enum     | "hospital", "fuel", or "toilet" |
+| lat           | number   | Latitude                        |
+| lon           | number   | Longitude                       |
+| distance      | number?  | Distance from current location  |
+| address       | string?  | Street address                  |
+| phone         | string?  | Phone number                    |
+| opening_hours | string?  | Opening hours                   |
+| emergency     | boolean? | Is emergency facility           |
+
+> **Note:** Extended fields such as `hospitalType`, `hospitalCategory`, `beds`, `suburb`, `fuelBrand`, `fuelPrice`, `fuelDate`, and `siteFeatures` exist only on API response types (see 10.5 FuelStation and 10.6 Hospital), not on the base AmenityPlace type.
 
 ### 10.2 AmenitiesCache
 

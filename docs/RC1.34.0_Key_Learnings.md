@@ -584,7 +584,7 @@ localStorage has ~5MB limit. We have 69,000+ roads.
 ```typescript
 export async function initDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('RoadDataDB', 1);
+    const request = indexedDB.open('RoadFinderDB', 7);
 
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
@@ -592,9 +592,8 @@ export async function initDB(): Promise<IDBDatabase> {
     request.onupgradeneeded = (event) => {
       const db = (event.target as IDBOpenDBRequest).result;
 
-      if (!db.objectStoreNames.contains('roads')) {
-        const roadStore = db.createObjectStore('roads', { keyPath: 'road_id' });
-        roadStore.createIndex('region', 'region', { unique: false });
+      if (!db.objectStoreNames.contains('regions')) {
+        db.createObjectStore('regions', { keyPath: 'region' });
       }
     };
   });
@@ -758,7 +757,7 @@ export async function initDB(): Promise<IDBDatabase | null> {
   if (typeof window === 'undefined') return null;
 
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open('RoadDataDB', 1);
+    const request = indexedDB.open('RoadFinderDB', 7);
     // ...
   });
 }
@@ -945,7 +944,7 @@ const getWAFine = (kmOver: number): { fine: number; points: number } => {
   if (kmOver <= 19) return { fine: 200, points: 2 };
   if (kmOver <= 29) return { fine: 400, points: 3 };
   if (kmOver <= 40) return { fine: 800, points: 6 };
-  return { fine: 1500, points: 6 }; // 40+ km/h over
+  return { fine: 1200, demerits: 7 }; // 40+ km/h over
 };
 ```
 
@@ -1063,7 +1062,7 @@ const settingsSections = [
 
 ---
 
-_Document generated from RC 1.9.1 development session notes._
+_Document generated from RC 1.34.0 development session notes._
 
 ---
 
@@ -1193,13 +1192,13 @@ const documentCategories = [
 
 ### Speeding Fines (Western Australia)
 
-| km/h Over Limit | Fine    | Demerit Points |
-| --------------- | ------- | -------------- |
-| 1-9 km/h        | $100    | 0              |
-| 10-19 km/h      | $200    | 2              |
-| 20-29 km/h      | $400    | 3              |
-| 30-40 km/h      | $800    | 6              |
-| 40+ km/h        | $1,200+ | 6-7            |
+| km/h Over Limit | Fine   | Demerit Points |
+| --------------- | ------ | -------------- |
+| 1-9 km/h        | $100   | 0              |
+| 10-19 km/h      | $200   | 2              |
+| 20-29 km/h      | $400   | 3              |
+| 30-40 km/h      | $800   | 6              |
+| 40+ km/h        | $1,200 | 7              |
 
 ### Slow Driving Fines
 

@@ -5,7 +5,7 @@
  * Debug messages are only logged in development mode.
  *
  * @module lib/logger
- * @version 1.34.0
+ * @version 1.34.1
  */
 
 // ─── Types ────────────────────────────────────────────────────────────────
