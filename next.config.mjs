@@ -2,12 +2,26 @@
 const nextConfig = {
   output: 'standalone',
   reactStrictMode: true,
-  
+
   // Allow cross-origin requests from preview environment
   allowedDevOrigins: [
     '.space.z.ai',
   ],
-  
+
+  // Bundle optimization - reduce initial load time
+  experimental: {
+    // Optimize barrel exports from these packages (reduces bundle size)
+    optimizePackageImports: [
+      'lucide-react',
+      'recharts',
+      'framer-motion',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-select',
+      '@radix-ui/react-tabs',
+    ],
+  },
+
   // Security headers
   async headers() {
     return [

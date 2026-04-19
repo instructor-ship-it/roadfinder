@@ -61,7 +61,24 @@ const CACHE_DURATION_MS = 30 * 60 * 1000; // 30 minutes
 
 // Convert wind direction degrees to cardinal
 function windDirection(degrees: number): string {
-  const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+  const directions = [
+    'N',
+    'NNE',
+    'NE',
+    'ENE',
+    'E',
+    'ESE',
+    'SE',
+    'SSE',
+    'S',
+    'SSW',
+    'SW',
+    'WSW',
+    'W',
+    'WNW',
+    'NW',
+    'NNW',
+  ];
   const index = Math.round(degrees / 22.5) % 16;
   return directions[index];
 }
@@ -104,10 +121,10 @@ function toWATime(utcString: string): string {
   const utcDate = new Date(utcString);
   // WA is UTC+8, no daylight saving
   const waTime = new Date(utcDate.getTime() + 8 * 60 * 60 * 1000);
-  return waTime.toLocaleTimeString('en-AU', { 
-    hour: '2-digit', 
+  return waTime.toLocaleTimeString('en-AU', {
+    hour: '2-digit',
     minute: '2-digit',
-    hour12: false 
+    hour12: false,
   });
 }
 
@@ -115,10 +132,10 @@ function toWATime(utcString: string): string {
 function formatSunTime(utcString: string): string {
   const utcDate = new Date(utcString);
   const waTime = new Date(utcDate.getTime() + 8 * 60 * 60 * 1000);
-  return waTime.toLocaleTimeString('en-AU', { 
-    hour: '2-digit', 
+  return waTime.toLocaleTimeString('en-AU', {
+    hour: '2-digit',
     minute: '2-digit',
-    hour12: true 
+    hour12: true,
   });
 }
 
@@ -150,19 +167,19 @@ function getCacheKey(lat: number, lon: number): string {
 function getCachedWeather(lat: number, lon: number): WeatherData | null {
   const key = getCacheKey(lat, lon);
   const cached = weatherCache.get(key);
-  
+
   if (!cached) return null;
-  
+
   const now = Date.now();
   if (now - cached.timestamp > CACHE_DURATION_MS) {
     weatherCache.delete(key);
     return null;
   }
-  
+
   return {
     ...cached.data,
     cachedAt: new Date(cached.timestamp).toISOString(),
-    source: 'Cached'
+    source: 'Cached',
   };
 }
 
@@ -171,7 +188,7 @@ function setCachedWeather(lat: number, lon: number, data: WeatherData): void {
   const key = getCacheKey(lat, lon);
   weatherCache.set(key, {
     data: { ...data, source: 'Online' },
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 }
 
@@ -192,25 +209,30 @@ export async function GET(request: Request) {
   if (!forceFresh) {
     const cachedData = getCachedWeather(latNum, lonNum);
     if (cachedData) {
-      return NextResponse.json(cachedData);
+      return NextResponse.json(cachedData, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=3600',
+          'X-Cache': 'HIT',
+        },
+      });
     }
   }
 
   // Check if offline mode
   const isOffline = process.env.OFFLINE_MODE === 'true';
-  
+
   // Try to get any cached data as fallback for offline
   const cachedData = getCachedWeather(latNum, lonNum);
-  
+
   if (isOffline) {
     // Return cached data if available, otherwise show unavailable
     if (cachedData) {
       return NextResponse.json({
         ...cachedData,
-        source: 'Offline: Cached data from ' + cachedData.cachedAt
+        source: 'Offline: Cached data from ' + cachedData.cachedAt,
       });
     }
-    
+
     // No cached data available
     return NextResponse.json({
       location: 'Offline Mode',
@@ -220,18 +242,18 @@ export async function GET(request: Request) {
         windSpeed: null,
         windDir: null,
         windGust: null,
-        condition: 'Weather data unavailable - offline mode'
+        condition: 'Weather data unavailable - offline mode',
       },
       sun: {
         sunrise: 'N/A',
         sunset: 'N/A',
         daylightHours: 'N/A',
         uvIndex: null,
-        uvLevel: 'N/A'
+        uvLevel: 'N/A',
       },
       forecast: [],
       cachedAt: null,
-      source: 'Offline: No cached weather data available'
+      source: 'Offline: No cached weather data available',
     });
   }
 
@@ -239,7 +261,7 @@ export async function GET(request: Request) {
     // Get current time and next 8 hours
     const now = new Date();
     const endDate = new Date(now.getTime() + 8 * 60 * 60 * 1000);
-    
+
     const startDateStr = now.toISOString().split('T')[0];
     const endDateStr = endDate.toISOString().split('T')[0];
 
@@ -248,10 +270,10 @@ export async function GET(request: Request) {
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
-    
+
     const response = await fetch(url, { signal: controller.signal });
     clearTimeout(timeoutId);
-    
+
     if (!response.ok) {
       throw new Error('Weather API failed');
     }
@@ -263,12 +285,18 @@ export async function GET(request: Request) {
     try {
       const geoUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
       const geoResponse = await fetch(geoUrl, {
-        headers: { 'User-Agent': 'WheatbeltRoadLocator/1.0' }
+        headers: { 'User-Agent': 'WheatbeltRoadLocator/1.0' },
       });
       if (geoResponse.ok) {
         const geoData = await geoResponse.json();
         const address = geoData.address || {};
-        locationName = address.city || address.town || address.village || address.hamlet || address.county || 'Wheatbelt, WA';
+        locationName =
+          address.city ||
+          address.town ||
+          address.village ||
+          address.hamlet ||
+          address.county ||
+          'Wheatbelt, WA';
         if (address.state) {
           locationName += ', ' + address.state;
         }
@@ -286,13 +314,13 @@ export async function GET(request: Request) {
       windDir: string;
       condition: string;
     }> = [];
-    
+
     for (let i = 0; i < 8; i++) {
       const targetTime = new Date(currentHourUTC);
       targetTime.setHours(targetTime.getHours() + i);
       const targetStr = targetTime.toISOString().slice(0, 13) + ':00';
-      
-      const hourIndex = data.hourly.time.findIndex(t => t === targetStr);
+
+      const hourIndex = data.hourly.time.findIndex((t) => t === targetStr);
 
       if (hourIndex !== -1) {
         forecast.push({
@@ -309,9 +337,10 @@ export async function GET(request: Request) {
     const sunData = {
       sunrise: data.daily.sunrise[0] ? formatSunTime(data.daily.sunrise[0]) : 'N/A',
       sunset: data.daily.sunset[0] ? formatSunTime(data.daily.sunset[0]) : 'N/A',
-      daylightHours: data.daily.sunrise[0] && data.daily.sunset[0] 
-        ? calculateDaylightHours(data.daily.sunrise[0], data.daily.sunset[0]) 
-        : 'N/A',
+      daylightHours:
+        data.daily.sunrise[0] && data.daily.sunset[0]
+          ? calculateDaylightHours(data.daily.sunrise[0], data.daily.sunset[0])
+          : 'N/A',
       uvIndex: data.daily.uv_index_max[0] || 0,
       uvLevel: getUvLevel(data.daily.uv_index_max[0] || 0),
     };
@@ -328,28 +357,41 @@ export async function GET(request: Request) {
       },
       sun: sunData,
       forecast,
-      source: 'Online'
+      source: 'Online',
     };
 
     // Cache the weather data
     setCachedWeather(latNum, lonNum, weatherData);
 
-    return NextResponse.json(weatherData);
+    return NextResponse.json(weatherData, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=3600',
+        'X-Cache': 'MISS',
+      },
+    });
   } catch (error) {
     console.error('Weather API error:', error);
-    
+
     // Try to return cached data even if expired
     const key = getCacheKey(latNum, lonNum);
     const cached = weatherCache.get(key);
     if (cached) {
-      return NextResponse.json({
-        ...cached.data,
-        cachedAt: new Date(cached.timestamp).toISOString(),
-        source: 'Cached (API unavailable)'
-      });
+      return NextResponse.json(
+        {
+          ...cached.data,
+          cachedAt: new Date(cached.timestamp).toISOString(),
+          source: 'Cached (API unavailable)',
+        },
+        {
+          headers: {
+            'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+            'X-Cache': 'STALE',
+          },
+        }
+      );
     }
-    
-    return NextResponse.json({ 
+
+    return NextResponse.json({
       error: 'Failed to fetch weather',
       location: 'Unknown',
       current: {
@@ -358,17 +400,17 @@ export async function GET(request: Request) {
         windSpeed: null,
         windDir: null,
         windGust: null,
-        condition: 'Weather data unavailable'
+        condition: 'Weather data unavailable',
       },
       sun: {
         sunrise: 'N/A',
         sunset: 'N/A',
         daylightHours: 'N/A',
         uvIndex: null,
-        uvLevel: 'N/A'
+        uvLevel: 'N/A',
       },
       forecast: [],
-      source: 'Error: Unable to fetch weather data'
+      source: 'Error: Unable to fetch weather data',
     });
   }
 }

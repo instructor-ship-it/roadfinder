@@ -109,7 +109,7 @@ export {
 } from './offline-db/roads';
 
 // Work Zone
-export { getWorkZoneOffline, getWorkZoneFromOfflineDb } from './offline-db/work-zone';
+export { getWorkZoneOffline } from './offline-db/work-zone';
 
 // Pavement
 export { storePavementData, getPavementData, hasPavementData } from './offline-db/pavement';

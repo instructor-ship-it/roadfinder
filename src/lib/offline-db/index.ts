@@ -129,7 +129,7 @@ export {
 // Work Zone
 // ============================================================================
 
-export { getWorkZoneOffline, getWorkZoneFromOfflineDb } from './work-zone';
+export { getWorkZoneOffline } from './work-zone';
 
 // ============================================================================
 // Pavement

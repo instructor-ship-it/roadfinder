@@ -145,6 +145,11 @@ export function useGpsTracking(
   const prevSlkRef = useRef<number | null>(null);
   const roadGeometryRef = useRef<any>(null);
   const slkDirectionRef = useRef<'increasing' | 'decreasing' | null>(null);
+  // Cached throttle interval based on speed bucket (avoids recalculation on every GPS update)
+  const throttleBucketRef = useRef<{ threshold: number; interval: number }>({
+    threshold: 0,
+    interval: 1500,
+  });
 
   // Initialize EKF
   useEffect(() => {
@@ -294,19 +299,38 @@ export function useGpsTracking(
   );
 
   // Adaptive throttle based on speed, with precision mode override
+  // Uses cached bucket to avoid recalculation on every GPS update
   const getThrottleInterval = useCallback(
-    (speed: number) => {
+    (speed: number): number => {
       // Precision mode: use updateInterval directly when set to fast refresh (≤500ms)
       // This allows "Turbo" mode for precise SLK positioning
       if (fullConfig.updateInterval <= 500) {
         return fullConfig.updateInterval;
       }
 
-      // Adaptive throttle for normal driving (saves battery)
-      if (speed > 80) return 2000;
-      if (speed > 40) return 1000;
-      if (speed > 10) return 750;
-      return 1500;
+      // Determine speed bucket
+      let threshold: number;
+      let interval: number;
+      if (speed > 80) {
+        threshold = 80;
+        interval = 2000;
+      } else if (speed > 40) {
+        threshold = 40;
+        interval = 1000;
+      } else if (speed > 10) {
+        threshold = 10;
+        interval = 750;
+      } else {
+        threshold = 0;
+        interval = 1500;
+      }
+
+      // Cache the bucket to avoid repeated calculations
+      if (throttleBucketRef.current.threshold !== threshold) {
+        throttleBucketRef.current = { threshold, interval };
+      }
+
+      return throttleBucketRef.current.interval;
     },
     [fullConfig.updateInterval]
   );

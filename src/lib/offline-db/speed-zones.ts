@@ -24,6 +24,61 @@ const CORRECTIONS_KEY = 'speedZoneCorrections';
 let cachedSigns: SpeedSignOverride[] | null = null;
 
 // ============================================================================
+// LRU Cache for Speed Zones
+// ============================================================================
+
+interface CacheEntry<T> {
+  data: T;
+  timestamp: number;
+}
+
+const SPEED_ZONE_CACHE_MAX_SIZE = 50; // Max roads to cache
+const SPEED_ZONE_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes TTL
+
+const speedZoneCache = new Map<string, CacheEntry<ParsedSpeedZone[]>>();
+
+/**
+ * Get cached speed zones for a road
+ */
+function getCachedSpeedZones(roadId: string): ParsedSpeedZone[] | null {
+  const entry = speedZoneCache.get(roadId);
+  if (!entry) return null;
+
+  // Check TTL
+  if (Date.now() - entry.timestamp > SPEED_ZONE_CACHE_TTL_MS) {
+    speedZoneCache.delete(roadId);
+    return null;
+  }
+
+  return entry.data;
+}
+
+/**
+ * Cache speed zones for a road
+ */
+function setCachedSpeedZones(roadId: string, zones: ParsedSpeedZone[]): void {
+  // LRU eviction: remove oldest if at capacity
+  if (speedZoneCache.size >= SPEED_ZONE_CACHE_MAX_SIZE) {
+    const oldestKey = speedZoneCache.keys().next().value;
+    if (oldestKey) {
+      speedZoneCache.delete(oldestKey);
+    }
+  }
+
+  speedZoneCache.set(roadId, {
+    data: zones,
+    timestamp: Date.now(),
+  });
+}
+
+/**
+ * Clear the speed zone cache (call when overrides are updated)
+ */
+export function clearSpeedZoneCache(): void {
+  speedZoneCache.clear();
+}
+
+// ============================================================================
 // Speed Sign Overrides (Community-Verified Corrections)
 // ============================================================================
 
@@ -71,10 +126,11 @@ export async function getSpeedSignOverrides(roadId: string): Promise<SpeedSignOv
 }
 
 /**
- * Clear the cached signs (call when signs are updated)
+ * Clear the cached signs and speed zone cache (call when signs are updated)
  */
 export function clearSpeedOverridesCache(): void {
   cachedSigns = null;
+  clearSpeedZoneCache(); // Also clear zone cache since overrides affect zones
 }
 
 /**
@@ -250,10 +306,17 @@ function parseSpeedLimit(speedLimit: number | string): number {
  * Get speed zones for a road, with sign-based overrides applied
  *
  * Priority:
- * 1. Community-verified signs converted to zones
- * 2. MRWA data from IndexedDB
+ * 1. Cached result (if valid)
+ * 2. Community-verified signs converted to zones
+ * 3. MRWA data from IndexedDB
  */
 export async function getSpeedZones(roadId: string): Promise<ParsedSpeedZone[]> {
+  // Check cache first
+  const cached = getCachedSpeedZones(roadId);
+  if (cached) {
+    return cached;
+  }
+
   try {
     // First, get sign overrides for this road and convert to zones
     const signs = await getSpeedSignOverrides(roadId);
@@ -285,6 +348,7 @@ export async function getSpeedZones(roadId: string): Promise<ParsedSpeedZone[]> 
 
     // If no overrides, just return MRWA data
     if (overrideZones.length === 0) {
+      setCachedSpeedZones(roadId, mrwaZones);
       return mrwaZones;
     }
 
@@ -316,6 +380,9 @@ export async function getSpeedZones(roadId: string): Promise<ParsedSpeedZone[]> 
 
     // Sort by start_slk
     combinedZones.sort((a, b) => a.start_slk - b.start_slk);
+
+    // Cache the result
+    setCachedSpeedZones(roadId, combinedZones);
 
     return combinedZones;
   } catch {
