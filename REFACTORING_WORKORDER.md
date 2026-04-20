@@ -141,7 +141,7 @@ interface AmenitiesSectionProps {
 
 ### Item 1.3: Use Existing IntersectionsSection Component
 
-**Status**: [ ]
+**Status**: [x]
 
 **Problem**: `IntersectionsSection` component exists at `src/components/home/IntersectionsSection.tsx` and is already imported in page.tsx (line 30), but page.tsx renders intersecting roads content INLINE (lines 1426-1490).
 
@@ -703,7 +703,7 @@ If any check fails, fix the issue before marking the item as done.
 | ---- | -------------------------------------------- | ------ | ------------- | -------------- |
 | 1.1  | Use existing WeatherSection                  | [x]    | ~150          | 2026-04-21     |
 | 1.2  | Use existing AmenitiesSection                | [x]    | ~210          | 2026-04-21     |
-| 1.3  | Use existing IntersectionsSection            | [ ]    | ~65           |                |
+| 1.3  | Use existing IntersectionsSection            | [x]    | ~65           | 2026-04-21     |
 | 2.1  | Use existing useRegions hook                 | [ ]    | ~130          |                |
 | 2.2  | Use existing useRoads hook                   | [ ]    | ~100          |                |
 | 2.3  | Use existing useGpsLocation hook             | [ ]    | ~90           |                |
