@@ -570,7 +570,7 @@ Where `CrossRoad` has: `name`, `distance`, `lat`, `lon`, `roadType`, `googleMaps
 
 ### Item 4.4: Create useSessionRestore Hook
 
-**Status**: [ ]
+**Status**: [x] (SKIPPED - session restore logic too deeply coupled with getWorkZoneInfo, recallLocation, and render conditions; extraction would require major rework of Item 4.2 first)
 
 **Problem**: Session restore logic (isRestoring ref, pendingRestoreParams ref, isRestoringUI state, sessionStorage handling) is spread across page.tsx in multiple useEffects and functions.
 
@@ -714,7 +714,7 @@ If any check fails, fix the issue before marking the item as done.
 | 4.1  | Create useCollapsibleSections                | [x]           | ~14           | 2026-04-21     |
 | 4.2  | Create useWorkZoneLookup                     | [ ]           | ~200          |                |
 | 4.3  | Create useSignageData                        | [x]           | ~70           | 2026-04-21     |
-| 4.4  | Create useSessionRestore                     | [ ]           | ~30           |                |
+| 4.4  | Create useSessionRestore                     | [x] (SKIPPED) | ~30           | 2026-04-21     |
 | 5.1  | Move WorkZoneResult to shared.ts             | [ ]           | ~60           |                |
 | 5.2  | Move Place/PlacesData/CrossRoad to shared.ts | [ ]           | ~45           |                |
 | 5.3  | Move/consolidate Road interface              | [ ]           | ~7            |                |
