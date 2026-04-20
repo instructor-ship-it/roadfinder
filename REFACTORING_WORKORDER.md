@@ -411,7 +411,7 @@ Where `CrossRoad` has: `name`, `distance`, `lat`, `lon`, `roadType`, `googleMaps
 
 ### Item 4.1: Create useCollapsibleSections Hook
 
-**Status**: [ ]
+**Status**: [x]
 
 **Problem**: page.tsx has 7 boolean state variables for collapsible sections, each with a toggle.
 
@@ -711,7 +711,7 @@ If any check fails, fix the issue before marking the item as done.
 | 3.2  | Extract GenerateReportButton                 | [x]           | ~20           | 2026-04-21     |
 | 3.3  | Extract HomeHeader                           | [x]           | ~55           | 2026-04-21     |
 | 3.4  | Extract StartSlkTrackingButton               | [x]           | ~15           | 2026-04-21     |
-| 4.1  | Create useCollapsibleSections                | [ ]           | ~14           |                |
+| 4.1  | Create useCollapsibleSections                | [x]           | ~14           | 2026-04-21     |
 | 4.2  | Create useWorkZoneLookup                     | [ ]           | ~200          |                |
 | 4.3  | Create useSignageData                        | [ ]           | ~70           |                |
 | 4.4  | Create useSessionRestore                     | [ ]           | ~30           |                |
