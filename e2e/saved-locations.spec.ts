@@ -6,7 +6,7 @@ import { test, expect } from '@playwright/test';
  *
  * Key facts:
  * - Save button text: "💾 Save Location" — visible only when selectedRoad && startSlk
- * - Save mechanism: uses browser prompt() for name input (NOT an in-page dialog)
+ * - Save mechanism: uses custom PromptDialog component (NOT native browser prompt())
  * - Saved locations heading: "📌 Saved Locations ({count})" — only when locations exist
  * - Empty state: component returns null (nothing rendered when no saved locations)
  * - Delete button: "×" with title="Delete"
@@ -67,6 +67,39 @@ async function completeLookup(page: import('@playwright/test').Page) {
     .catch(() => {});
 }
 
+/**
+ * Helper: Save a location using the custom PromptDialog component.
+ * The app uses a custom dialog (not native prompt()) for the save flow.
+ */
+async function saveLocationWithName(
+  page: import('@playwright/test').Page,
+  saveButton: import('@playwright/test').Locator,
+  name: string
+) {
+  // Click the Save Location button — opens the custom PromptDialog
+  await saveButton.click();
+
+  // Wait for the custom prompt dialog to appear
+  // The dialog input has aria-label set to the dialog title ("Save Location")
+  const dialogInput = page.locator('input[aria-label="Save Location"]');
+  await expect(dialogInput).toBeVisible({ timeout: 5000 });
+
+  // Clear the default value and type the new name
+  await dialogInput.clear();
+  await dialogInput.fill(name);
+
+  // Click the Save (confirm) button inside the dialog
+  // The dialog's confirm button has text matching the confirmLabel ("Save")
+  const confirmButton = page
+    .locator('[role="dialog"] button')
+    .filter({ hasText: /^Save$/ })
+    .first();
+  await confirmButton.click();
+
+  // Wait for the dialog to close and IndexedDB save to complete
+  await page.waitForTimeout(1500);
+}
+
 test.describe('Saved Locations', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
@@ -92,12 +125,8 @@ test.describe('Saved Locations', () => {
     const saveButton = page.getByRole('button', { name: /Save Location/i });
 
     if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
-      // Handle the browser prompt() dialog
-      page.once('dialog', async (dialog) => {
-        await dialog.accept('Test Location');
-      });
-      await saveButton.click();
-      await page.waitForTimeout(1000);
+      // Use the custom PromptDialog instead of native prompt()
+      await saveLocationWithName(page, saveButton, 'Test Location');
 
       // Verify location appears in saved list (heading "📌 Saved Locations")
       const savedLocationsHeading = page.locator('text=/Saved Locations/i');
@@ -120,11 +149,7 @@ test.describe('Saved Locations', () => {
 
     const saveButton = page.getByRole('button', { name: /Save Location/i });
     if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
-      page.once('dialog', async (dialog) => {
-        await dialog.accept('Recall Test');
-      });
-      await saveButton.click();
-      await page.waitForTimeout(1000);
+      await saveLocationWithName(page, saveButton, 'Recall Test');
     }
 
     // Now find and click the saved location to recall it
@@ -173,11 +198,7 @@ test.describe('Saved Locations', () => {
 
     const saveButton = page.getByRole('button', { name: /Save Location/i });
     if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
-      page.once('dialog', async (dialog) => {
-        await dialog.accept('Delete Test');
-      });
-      await saveButton.click();
-      await page.waitForTimeout(1000);
+      await saveLocationWithName(page, saveButton, 'Delete Test');
     }
 
     // Find the delete button (× with title="Delete")
@@ -204,11 +225,7 @@ test.describe('Saved Locations', () => {
 
     const saveButton = page.getByRole('button', { name: /Save Location/i });
     if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
-      page.once('dialog', async (dialog) => {
-        await dialog.accept('Sort Test');
-      });
-      await saveButton.click();
-      await page.waitForTimeout(1000);
+      await saveLocationWithName(page, saveButton, 'Sort Test');
     }
 
     // Look for sort buttons: "📅 Date" and "🛣️ Road"
@@ -247,11 +264,7 @@ test.describe('Saved Locations Persistence', () => {
 
     const saveButton = page.getByRole('button', { name: /Save Location/i });
     if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
-      page.once('dialog', async (dialog) => {
-        await dialog.accept('Persistent Test Location');
-      });
-      await saveButton.click();
-      await page.waitForTimeout(1000);
+      await saveLocationWithName(page, saveButton, 'Persistent Test Location');
     }
 
     // Reload the page
@@ -275,11 +288,7 @@ test.describe('Saved Locations Persistence', () => {
 
     const saveButton = page.getByRole('button', { name: /Save Location/i });
     if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
-      page.once('dialog', async (dialog) => {
-        await dialog.accept('Offline Persist Test');
-      });
-      await saveButton.click();
-      await page.waitForTimeout(1000);
+      await saveLocationWithName(page, saveButton, 'Offline Persist Test');
     }
 
     // Verify saved locations are visible before going offline
@@ -337,11 +346,7 @@ test.describe('Saved Locations UX', () => {
 
     const saveButton = page.getByRole('button', { name: /Save Location/i });
     if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
-      page.once('dialog', async (dialog) => {
-        await dialog.accept('Road Info Test');
-      });
-      await saveButton.click();
-      await page.waitForTimeout(1000);
+      await saveLocationWithName(page, saveButton, 'Road Info Test');
     }
 
     // Look for saved location entries that show road info
@@ -362,11 +367,7 @@ test.describe('Saved Locations UX', () => {
 
     const saveButton = page.getByRole('button', { name: /Save Location/i });
     if (await saveButton.isVisible({ timeout: 10000 }).catch(() => false)) {
-      page.once('dialog', async (dialog) => {
-        await dialog.accept('Drive Nav Test');
-      });
-      await saveButton.click();
-      await page.waitForTimeout(1000);
+      await saveLocationWithName(page, saveButton, 'Drive Nav Test');
     }
 
     // Find and click a saved location to recall

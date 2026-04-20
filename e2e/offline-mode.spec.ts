@@ -10,6 +10,7 @@ import { test, expect } from '@playwright/test';
  * - Offline toggles are clickable <span> elements showing "OFFLINE"/"ONLINE" (NOT role="switch")
  * - Network status banner: "📴 You are offline • App will work with cached data"
  * - Offline status indicators show: "Live", "Cached Xh Xm ago", "No Cached Data"
+ * - Save Location uses custom PromptDialog component (NOT native browser prompt())
  */
 
 /**
@@ -47,6 +48,39 @@ async function selectFirstRoad(page: import('@playwright/test').Page) {
   await expect(firstRoad).toBeVisible({ timeout: 5000 });
   await firstRoad.click();
   await page.waitForTimeout(500);
+}
+
+/**
+ * Helper: Save a location using the custom PromptDialog component.
+ * The app uses a custom dialog (not native prompt()) for the save flow.
+ */
+async function saveLocationWithName(
+  page: import('@playwright/test').Page,
+  saveButton: import('@playwright/test').Locator,
+  name: string
+) {
+  // Click the Save Location button — opens the custom PromptDialog
+  await saveButton.click();
+
+  // Wait for the custom prompt dialog to appear
+  // The dialog input has aria-label set to the dialog title ("Save Location")
+  const dialogInput = page.locator('input[aria-label="Save Location"]');
+  await expect(dialogInput).toBeVisible({ timeout: 5000 });
+
+  // Clear the default value and type the new name
+  await dialogInput.clear();
+  await dialogInput.fill(name);
+
+  // Click the Save (confirm) button inside the dialog
+  // The dialog's confirm button has text matching the confirmLabel ("Save")
+  const confirmButton = page
+    .locator('[role="dialog"] button')
+    .filter({ hasText: /^Save$/ })
+    .first();
+  await confirmButton.click();
+
+  // Wait for the dialog to close and IndexedDB save to complete
+  await page.waitForTimeout(1500);
 }
 
 /**
@@ -153,12 +187,8 @@ test.describe('Offline Mode', () => {
     const saveButton = page.getByRole('button', { name: /Save Location/i });
     await expect(saveButton).toBeVisible({ timeout: 5000 });
 
-    // Handle the browser prompt() dialog
-    page.once('dialog', async (dialog) => {
-      await dialog.accept('Offline Test Location');
-    });
-    await saveButton.click();
-    await page.waitForTimeout(1000);
+    // Use the custom PromptDialog instead of native prompt()
+    await saveLocationWithName(page, saveButton, 'Offline Test Location');
 
     // Verify the save was successful - Saved Locations heading should appear
     const savedLocationsHeading = page.locator('text=/Saved Locations/i');
