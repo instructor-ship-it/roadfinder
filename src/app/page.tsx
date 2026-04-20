@@ -87,6 +87,9 @@ import {
   SavedLocation,
   WorkZoneResult,
   Position,
+  Place,
+  PlacesData,
+  CrossRoad,
 } from '@/types/shared';
 import {
   getSavedLocations as getSavedLocationsFromDB,
@@ -101,58 +104,6 @@ interface Road {
   min_slk: number;
   max_slk: number;
   region?: string;
-}
-
-interface Place {
-  name: string;
-  distance: string;
-  lat: number;
-  lon: number;
-  phone?: string;
-  address?: string;
-  googleMapsUrl: string;
-  isEmergency?: boolean;
-  // Hospital-specific (from WA Health SLIP)
-  hospitalType?: string; // 'Public' | 'Private' | 'Nursing Post'
-  hospitalCategory?: string; // e.g. 'Acute Hospital', 'Nursing Post'
-  beds?: number;
-  suburb?: string;
-  // Fuel station-specific (from FuelWatch WA)
-  fuelBrand?: string;
-  fuelPrice?: number; // cents per litre (e.g. 231.3 = $2.313/L)
-  fuelDate?: string; // date of price
-  siteFeatures?: string[]; // e.g. ['Open 24 hours', 'Toilets', 'ATM']
-  // Toilet-specific (from National Public Toilet Map)
-  toiletType?: string; // e.g. 'Park or reserve', 'Service station', 'Community building'
-  openingHours?: string;
-  wheelchair?: boolean;
-  toiletNote?: string;
-  toiletUrl?: string;
-  toiletSource?: string; // 'NationalToiletMap' | 'OpenStreetMap'
-}
-
-interface PlacesData {
-  hospital: Place | null;
-  toilet: Place | null;
-  fuelStation: Place | null;
-  fromCache?: boolean;
-  cachedAt?: number;
-  cachedLocation?: { lat: number; lon: number };
-  source?: string;
-  dataUnavailable?: boolean; // True when offline mode but no cached data available
-  // Enhanced source tracking
-  hospitalSource?: string; // e.g. 'WA Health SLIP' | 'Overpass API'
-  fuelSource?: string; // e.g. 'FuelWatch WA' | 'Overpass API'
-}
-
-interface CrossRoad {
-  name: string;
-  distance: string;
-  lat: number;
-  lon: number;
-  roadType: string;
-  googleMapsUrl: string;
-  intersectionSlk?: number; // SLK of intersection on main road (from MRWA Layer 6)
 }
 
 export default function Home() {

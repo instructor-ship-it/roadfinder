@@ -1,18 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import type { CrossRoad } from '@/types/shared';
 
-// ─── Types ───────────────────────────────────────────────────────────────────
-
-export interface CrossRoad {
-  name: string;
-  distance: string;
-  lat: number;
-  lon: number;
-  roadType: string;
-  googleMapsUrl: string;
-  intersectionSlk?: number;
-}
+// Re-export CrossRoad for backward compatibility
+export type { CrossRoad } from '@/types/shared';
 
 interface IntersectionsSectionProps {
   crossRoads: CrossRoad[];
