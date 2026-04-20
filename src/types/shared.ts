@@ -433,6 +433,74 @@ export interface SignageRecord {
 // ─── Utility Types ───────────────────────────────────────────────
 
 /**
+ * Position with SLK context (used in work zone results)
+ */
+export interface Position {
+  lat: number;
+  lon: number;
+  speed: string;
+  cwy: string;
+}
+
+/**
+ * Work zone lookup result
+ */
+export interface WorkZoneResult {
+  road_id: string;
+  road_name: string;
+  network_type?: string;
+  work_zone: {
+    start_slk: number;
+    end_slk: number;
+    length_m: number;
+    start: Position | null;
+    end: Position | null;
+  };
+  tc_positions: {
+    start_slk: number;
+    end_slk: number;
+    start: Position | null;
+    end: Position | null;
+    tc_length_m?: number;
+  };
+  approach_signs: {
+    start_slk: number;
+    end_slk: number;
+    start: Position | null;
+    end: Position | null;
+  };
+  speed_zones: {
+    approach_start: string;
+    tc_start: string;
+    work_zone_start: string;
+    work_zone_end: string;
+    tc_end: string;
+    approach_end: string;
+  };
+  carriageway: string;
+  pavement?: {
+    lanes: number | null;
+    width_m: number | null;
+    cwy: string;
+    total_pave_width: number | null;
+    total_seal_width: number | null;
+    sealed_shoulder_l: number | null;
+    sealed_shoulder_r: number | null;
+    unsealed_shoulder_l: number | null;
+    unsealed_shoulder_r: number | null;
+    kerb_l: string | null;
+    kerb_r: string | null;
+  };
+  midpoint: { lat: number; lon: number; slk: number } | null;
+  google_maps: {
+    work_zone_start: string | null;
+    work_zone_end: string | null;
+    tc_start: string | null;
+    tc_end: string | null;
+  };
+}
+
+/**
  * Geographic coordinate
  */
 export interface Coordinate {
