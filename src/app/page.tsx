@@ -62,7 +62,6 @@ import {
   storeRegulatorySignsData,
   storeWarningSignsData,
   clearDataset,
-  getRoadsForRegion,
   getWorkZoneOffline,
   cacheWeatherData,
   getCachedWeatherData,
@@ -216,12 +215,11 @@ export default function Home() {
     updateSelectedRegion,
     refreshRegions: fetchRegions,
   } = useRegions();
-  const [roads, setRoads] = useState<Road[]>([]);
   const [selectedRoad, setSelectedRoad] = useState<string>('');
   const [startSlk, setStartSlk] = useState<string>('');
   const [endSlk, setEndSlk] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [loadingRoads, setLoadingRoads] = useState<boolean>(false);
+
   const [result, setResult] = useState<WorkZoneResult | null>(null);
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [warnings, setWarnings] = useState<WarningData | null>(null);
@@ -333,6 +331,19 @@ export default function Home() {
     setDownloadProgress,
   } = useOfflineData();
 
+  // Roads hook - must be after useOfflineData since it needs offlineToggles
+  const {
+    roads,
+    loadingRoads,
+    error: roadsError,
+    fetchRoads,
+  } = useRoads(selectedRegion, offlineToggles);
+
+  // Sync roads error to page error state
+  useEffect(() => {
+    if (roadsError) setError(roadsError);
+  }, [roadsError]);
+
   const [speedLimit, setSpeedLimit] = useState<number | null>(null);
   const [debugInfo, setDebugInfo] = useState<string>('');
   const [showDebug, setShowDebug] = useState<boolean>(false);
@@ -440,12 +451,11 @@ export default function Home() {
     }
   }, [updateSelectedRegion]);
 
-  // Fetch roads when region changes
+  // Clear road selection when region changes (unless restoring)
   useEffect(() => {
-    if (selectedRegion) {
-      fetchRoads(selectedRegion);
+    if (selectedRegion && !isRestoring.current) {
+      setSelectedRoad('');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedRegion]);
 
   const generateDebugInfo = async () => {
@@ -499,98 +509,6 @@ export default function Home() {
 
     setDebugInfo(lines.join('\n'));
     setShowDebug(true);
-  };
-
-  const fetchRoads = async (region: string) => {
-    setLoadingRoads(true);
-    // Only reset road selection if we're not restoring state
-    if (!isRestoring.current) {
-      setSelectedRoad('');
-    }
-    try {
-      // Check toggle: ON = offline mode (try offline first, fallback to online)
-      // OFF = online mode (try online first, fallback to offline)
-      if (offlineToggles.roadsList) {
-        // OFFLINE MODE: Try IndexedDB first, fall back to API if not available
-        const storedRoads = await getRoadsForRegion(region);
-        if (storedRoads && storedRoads.length > 0) {
-          setRoads(storedRoads);
-        } else {
-          // No offline data - check if we're online before trying API
-          if (!navigator.onLine) {
-            console.log('Offline: No roads data available');
-            setError('No offline roads data. Download data first or connect to internet.');
-            setRoads([]);
-          } else {
-            // Online: Try API with timeout
-            console.log('No offline roads data, falling back to online API');
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-
-            try {
-              const response = await fetch(
-                `/api/roads?action=list&region=${encodeURIComponent(region)}`,
-                { signal: controller.signal }
-              );
-              clearTimeout(timeoutId);
-              if (response.ok) {
-                const data = await response.json();
-                setRoads(data.roads || []);
-              } else {
-                setError('No roads data available (offline or online)');
-                setRoads([]);
-              }
-            } catch {
-              clearTimeout(timeoutId);
-              setError('Failed to load roads - offline data not available and API unreachable');
-              setRoads([]);
-            }
-          }
-        }
-      } else {
-        // ONLINE MODE: Try API first (with timeout), fall back to IndexedDB
-        if (!navigator.onLine) {
-          // Offline: Go straight to IndexedDB
-          console.log('Offline: Loading roads from IndexedDB');
-          const storedRoads = await getRoadsForRegion(region);
-          if (storedRoads && storedRoads.length > 0) {
-            setRoads(storedRoads);
-          } else {
-            setError('No offline roads data. Download data first or connect to internet.');
-            setRoads([]);
-          }
-        } else {
-          // Online: Try API with timeout
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-
-          try {
-            const response = await fetch(
-              `/api/roads?action=list&region=${encodeURIComponent(region)}`,
-              { signal: controller.signal }
-            );
-            clearTimeout(timeoutId);
-            if (response.ok) {
-              const data = await response.json();
-              setRoads(data.roads || []);
-            } else {
-              // API failed, try IndexedDB fallback
-              const storedRoads = await getRoadsForRegion(region);
-              setRoads(storedRoads || []);
-            }
-          } catch {
-            clearTimeout(timeoutId);
-            // API failed, try IndexedDB fallback
-            const storedRoads = await getRoadsForRegion(region);
-            setRoads(storedRoads || []);
-          }
-        }
-      }
-    } catch (err) {
-      setError('Failed to load roads');
-    } finally {
-      setLoadingRoads(false);
-    }
   };
 
   useEffect(() => {
