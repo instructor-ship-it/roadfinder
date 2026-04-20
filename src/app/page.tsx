@@ -1422,71 +1422,11 @@ export default function Home() {
             </div>
 
             {/* Intersecting Roads */}
-            {crossRoads.filter((road) => road.name.toLowerCase() !== result.road_name.toLowerCase())
-              .length > 0 && (
-              <div className="bg-gray-800 rounded-lg">
-                <button
-                  onClick={() => setShowIntersections(!showIntersections)}
-                  className="w-full p-4 flex items-center justify-between text-left"
-                >
-                  <h3 className="text-sm font-semibold text-blue-400">
-                    🔀 Intersecting Roads in TC Zone
-                  </h3>
-                  <span className="text-gray-400 text-lg">{showIntersections ? '−' : '+'}</span>
-                </button>
-                {showIntersections && (
-                  <div className="px-4 pb-4">
-                    <div className="space-y-2 text-sm">
-                      {crossRoads
-                        .filter(
-                          (road) => road.name.toLowerCase() !== result.road_name.toLowerCase()
-                        )
-                        .map((road, i) => {
-                          // Intersection colors matching SpeedZoneLayout
-                          const intColors = [
-                            '#a855f7',
-                            '#ec4899',
-                            '#14b8a6',
-                            '#f97316',
-                            '#06b6d4',
-                            '#84cc16',
-                            '#ef4444',
-                            '#8b5cf6',
-                          ];
-                          const color = intColors[i % intColors.length];
-                          return (
-                            <div
-                              key={i}
-                              className="flex justify-between items-center py-1 border-b border-gray-700/50"
-                            >
-                              <div className="flex items-center gap-2 flex-1">
-                                {/* Colored vertical line indicator */}
-                                <span
-                                  className="w-0.5 h-8 border-l-2 rounded-sm"
-                                  style={{ borderLeftColor: color }}
-                                ></span>
-                                <div>
-                                  <span className="font-medium">{road.name}</span>
-                                  <span className="text-xs text-gray-500 ml-2">
-                                    ({road.roadType})
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <span className="text-gray-400">{road.distance} km</span>
-                                <span className="text-xs text-gray-500 block">from TC start</span>
-                              </div>
-                            </div>
-                          );
-                        })}
-                    </div>
-                    <p className="text-xs text-amber-400 mt-3">
-                      ⚠️ Consider TC coverage for these intersecting roads
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
+            <IntersectionsSection
+              crossRoads={crossRoads}
+              roadName={result.road_name}
+              defaultExpanded={showIntersections}
+            />
 
             {/* Signage Corridor Report */}
             {/* Signage Corridor */}
