@@ -90,7 +90,7 @@ interface WeatherSectionProps {
 
 ### Item 1.2: Use Existing AmenitiesSection Component
 
-**Status**: [ ]
+**Status**: [x]
 
 **Problem**: `AmenitiesSection` component exists at `src/components/home/AmenitiesSection.tsx` and is already imported in page.tsx (line 26), but page.tsx renders amenities content INLINE (lines 1682-1890).
 
@@ -702,7 +702,7 @@ If any check fails, fix the issue before marking the item as done.
 | Item | Description                                  | Status | Lines Removed | Date Completed |
 | ---- | -------------------------------------------- | ------ | ------------- | -------------- |
 | 1.1  | Use existing WeatherSection                  | [x]    | ~150          | 2026-04-21     |
-| 1.2  | Use existing AmenitiesSection                | [ ]    | ~210          |                |
+| 1.2  | Use existing AmenitiesSection                | [x]    | ~210          | 2026-04-21     |
 | 1.3  | Use existing IntersectionsSection            | [ ]    | ~65           |                |
 | 2.1  | Use existing useRegions hook                 | [ ]    | ~130          |                |
 | 2.2  | Use existing useRoads hook                   | [ ]    | ~100          |                |
