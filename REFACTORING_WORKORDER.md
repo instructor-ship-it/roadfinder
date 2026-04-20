@@ -653,7 +653,7 @@ Where `CrossRoad` has: `name`, `distance`, `lat`, `lon`, `roadType`, `googleMaps
 
 ### Item 5.3: Move Road Interface to shared.ts
 
-**Status**: [ ]
+**Status**: [x]
 
 **What to do**:
 
@@ -715,9 +715,9 @@ If any check fails, fix the issue before marking the item as done.
 | 4.2  | Create useWorkZoneLookup                     | [ ]           | ~200          |                |
 | 4.3  | Create useSignageData                        | [x]           | ~70           | 2026-04-21     |
 | 4.4  | Create useSessionRestore                     | [x] (SKIPPED) | ~30           | 2026-04-21     |
-| 5.1  | Move WorkZoneResult to shared.ts             | [ ]           | ~60           |                |
-| 5.2  | Move Place/PlacesData/CrossRoad to shared.ts | [ ]           | ~45           |                |
-| 5.3  | Move/consolidate Road interface              | [ ]           | ~7            |                |
+| 5.1  | Move WorkZoneResult to shared.ts             | [x]           | ~60           | 2026-04-21     |
+| 5.2  | Move Place/PlacesData/CrossRoad to shared.ts | [x]           | ~45           | 2026-04-21     |
+| 5.3  | Move/consolidate Road interface              | [x]           | ~7            | 2026-04-21     |
 
 **Starting line count**: 1987 lines
 **Estimated final line count**: ~700-800 lines (after all items)
