@@ -28,6 +28,7 @@ import { IntersectionsSection } from '@/components/home/IntersectionsSection';
 import { SpeedZoneLayoutSection } from '@/components/home/SpeedZoneLayoutSection';
 import { GenerateReportButton } from '@/components/home/GenerateReportButton';
 import { HomeHeader } from '@/components/home/HomeHeader';
+import { StartSlkTrackingButton } from '@/components/home/StartSlkTrackingButton';
 import { RoadWidthBreakdown } from '@/components/home/RoadWidthBreakdown';
 import { LaneDirectionDiagram } from '@/components/home/LaneDirectionDiagram';
 import { WorkZoneForm } from '@/components/home/WorkZoneForm';
@@ -1063,19 +1064,10 @@ export default function Home() {
         />
 
         {/* Quick Start SLK Tracking Button - only show when no results displayed */}
-        {!result && !isRestoringUI && (
-          <div className="mb-4">
-            <Button
-              onClick={startSlkTracking}
-              className="w-full h-12 text-lg bg-blue-800 hover:bg-blue-900"
-            >
-              📍 Start SLK Tracking
-            </Button>
-            <p className="text-xs text-gray-500 text-center mt-1">
-              Auto-start GPS tracking for real-time SLK updates
-            </p>
-          </div>
-        )}
+        <StartSlkTrackingButton
+          onStartTracking={startSlkTracking}
+          visible={!result && !isRestoringUI}
+        />
 
         {/* Input sections - hide when results are displayed or during restore */}
         {!result && !isRestoringUI && (
