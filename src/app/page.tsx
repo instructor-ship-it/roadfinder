@@ -13,6 +13,7 @@ import { useSavedLocations } from '@/hooks/useSavedLocations';
 import { useRegions } from '@/hooks/useRegions';
 import { useRoads } from '@/hooks/useRoads';
 import { useCollapsibleSections } from '@/hooks/useCollapsibleSections';
+import { useSignageData } from '@/hooks/useSignageData';
 import { useWeather } from '@/hooks/useWeather';
 import { usePlaces } from '@/hooks/usePlaces';
 import { IncidentsSection } from '@/components/IncidentsSection';
@@ -49,7 +50,6 @@ import {
   storeSpeedZones,
   storeMetadata,
   clearOfflineData,
-  getSpeedZones,
   storeRailCrossings,
   storeRegulatorySigns,
   storeWarningSigns,
@@ -58,7 +58,6 @@ import {
   storeAllAmenitiesData,
   getAllAmenitiesData,
   findNearestAmenities,
-  getSignageInCorridor,
   getDetailedStats,
   storeRoadsData,
   storeSpeedZonesData,
@@ -348,7 +347,17 @@ export default function Home() {
     if (roadsError) setError(roadsError);
   }, [roadsError]);
 
-  const [speedLimit, setSpeedLimit] = useState<number | null>(null);
+  // Signage data hook
+  const {
+    speedLimit,
+    signageCorridor,
+    signageLoading,
+    corridorSpeedZones,
+    fetchSpeedLimit,
+    fetchSignageCorridor,
+    resetSignageData,
+  } = useSignageData({ offlineToggles });
+
   const [debugInfo, setDebugInfo] = useState<string>('');
   const [showDebug, setShowDebug] = useState<boolean>(false);
 
@@ -381,11 +390,6 @@ export default function Home() {
   } = useSetDistance();
 
   const [trafficEventLoggerOpen, setTrafficEventLoggerOpen] = useState<boolean>(false);
-
-  // Signage corridor data
-  const [signageCorridor, setSignageCorridor] = useState<SignageItem[]>([]);
-  const [signageLoading, setSignageLoading] = useState<boolean>(false);
-  const [corridorSpeedZones, setCorridorSpeedZones] = useState<ParsedSpeedZone[]>([]);
 
   // Work zone fetch hook - extracts fetch logic for weather, traffic, places, warnings, cross roads
   const { fetchWeather, fetchTraffic, fetchPlaces, fetchWarnings, fetchCrossRoads } =
@@ -724,85 +728,12 @@ export default function Home() {
     setSelectedRoad('');
     setStartSlk('');
     setEndSlk('');
-    setSpeedLimit(null);
+    resetSignageData();
     setIsSinglePoint(false);
     setGpsRoadInfo(null);
-    setSignageCorridor([]);
-    setCorridorSpeedZones([]);
     isRestoring.current = false;
     pendingRestoreParams.current = null;
     setIsRestoringUI(false);
-  };
-
-  // Look up speed limit for a road at a specific SLK
-  const fetchSpeedLimit = async (roadId: string, slk: number) => {
-    // Check toggle: ON = use offline data, OFF = skip (no online speed limit API)
-    if (!offlineToggles.speedZones) {
-      setSpeedLimit(null);
-      return;
-    }
-
-    try {
-      const zones = await getSpeedZones(roadId);
-      if (zones.length === 0) {
-        setSpeedLimit(null);
-        return;
-      }
-      // Find the zone that contains this SLK
-      const matchingZone = zones.find((z) => slk >= z.start_slk && slk <= z.end_slk);
-      if (matchingZone) {
-        setSpeedLimit(matchingZone.speed_limit);
-      } else {
-        // Find nearest zone if not in any zone
-        const sortedZones = [...zones].sort((a, b) => {
-          const distA = Math.min(Math.abs(a.start_slk - slk), Math.abs(a.end_slk - slk));
-          const distB = Math.min(Math.abs(b.start_slk - slk), Math.abs(b.end_slk - slk));
-          return distA - distB;
-        });
-        if (sortedZones.length > 0) {
-          setSpeedLimit(sortedZones[0].speed_limit);
-        }
-      }
-    } catch (err) {
-      console.error('Error fetching speed limit:', err);
-      setSpeedLimit(null);
-    }
-  };
-
-  // Fetch signage corridor data for work zone
-  const fetchSignageCorridor = async (roadId: string, startSlk: number, endSlk?: number) => {
-    setSignageLoading(true);
-    setSignageCorridor([]);
-    setCorridorSpeedZones([]);
-
-    try {
-      // Calculate corridor bounds
-      // If only start SLK: corridor is start-0.7 to start+0.7
-      // If start and end SLK: corridor is start-0.7 to end+0.7
-      const corridorStart = startSlk - 0.7;
-      const corridorEnd = endSlk && endSlk > startSlk ? endSlk + 0.7 : startSlk + 0.7;
-
-      // Fetch speed zones for the road (combines MRWA + community overrides)
-      // This gives us actual zone extents, not just sign positions
-      const speedZones = await getSpeedZones(roadId);
-      // Filter to zones that overlap with the corridor (with extended margin for context)
-      const corridorZones = speedZones.filter(
-        (zone) => zone.end_slk > corridorStart - 0.5 && zone.start_slk < corridorEnd + 0.5
-      );
-      setCorridorSpeedZones(corridorZones);
-
-      // getSignageInCorridor reads from IndexedDB (offline data source)
-      // For reports, show ALL signage data regardless of toggles
-      // The toggles control the main display, but reports should show everything available
-      const signage = await getSignageInCorridor(roadId, corridorStart, corridorEnd);
-      setSignageCorridor(signage);
-    } catch (err) {
-      console.error('Error fetching signage corridor:', err);
-      setSignageCorridor([]);
-      setCorridorSpeedZones([]);
-    } finally {
-      setSignageLoading(false);
-    }
   };
 
   // Get current GPS location from device
