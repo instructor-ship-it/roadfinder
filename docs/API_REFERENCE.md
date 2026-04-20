@@ -571,7 +571,7 @@ The ArcGIS Feature Service approach was chosen because it is a proper, stable da
 
 ## 7.2 Amenity Architecture Note
 
-The home page (`fetchPlaces()` in `src/app/page.tsx`) uses a **3-source parallel architecture** for fetching amenity data:
+The home page (`fetchPlaces()` via `useWorkZoneLookup` hook and `usePlaces` hook) uses a **3-source parallel architecture** for fetching amenity data:
 
 1. **Hospitals**: WA Health SLIP Services (primary, via `/api/nearest-hospital`) → Overpass API (fallback via `/api/places`)
 2. **Fuel Stations**: FuelWatch WA + Overpass merge (via `/api/fuel-stations`) → Overpass API (fallback via `/api/places`)

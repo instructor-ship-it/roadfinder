@@ -697,6 +697,8 @@ bunx playwright test --ui
 | `e2e/saved-locations.spec.ts`  | Saved locations CRUD         |
 | `e2e/work-zone-lookup.spec.ts` | Work zone search and results |
 
+> **Note on Custom Dialogs:** The application uses a custom `PromptDialog` component instead of native browser `prompt()`. E2E tests interact with the custom dialog by locating the dialog input via `aria-label` and clicking the confirm button, rather than using Playwright's `page.on('dialog')` event handler. See `e2e/saved-locations.spec.ts` for an example of the `saveLocationWithName()` helper pattern.
+
 ### Key Differences from Unit Tests
 
 | Aspect      | Unit Tests (Vitest)             | E2E Tests (Playwright)          |

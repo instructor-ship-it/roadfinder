@@ -80,22 +80,28 @@ TC Work Zone Locator is a mobile-first Progressive Web Application (PWA) designe
 
 ## 2. Application Pages
 
-The application has twelve main pages:
+The application has eighteen main pages:
 
-| Page             | Route               | Purpose                            |
-| ---------------- | ------------------- | ---------------------------------- |
-| Home             | `/`                 | Work zone lookup interface         |
-| Drive            | `/drive`            | Real-time GPS tracking             |
-| AfterCare        | `/aftercare`        | Signage tracking for retrieval     |
-| AfterCare Map    | `/aftercare/map`    | Map view of all signs              |
-| Overrides        | `/overrides`        | Speed sign override management     |
-| Overrides Layout | `/overrides/layout` | Visual overview of overrides       |
-| Overrides Map    | `/overrides/map`    | Map view of speed overrides        |
-| Calibrate        | `/calibrate`        | GPS lag measurement                |
-| Library          | `/library`          | Documentation and resources        |
-| Traffic Counter  | `/traffic-counter`  | Vehicle counting tool              |
-| QA               | `/qa`               | AI Q&A assistant                   |
-| Offline          | `/offline`          | Offline status and data management |
+| Page                | Route                  | Purpose                            |
+| ------------------- | ---------------------- | ---------------------------------- |
+| Home                | `/`                    | Work zone lookup interface         |
+| Drive               | `/drive`               | Real-time GPS tracking             |
+| AfterCare           | `/aftercare`           | Signage tracking for retrieval     |
+| AfterCare Map       | `/aftercare/map`       | Map view of all signs              |
+| Overrides           | `/overrides`           | Speed sign override management     |
+| Overrides Layout    | `/overrides/layout`    | Visual overview of overrides       |
+| Overrides Map       | `/overrides/map`       | Map view of speed overrides        |
+| Calibrate           | `/calibrate`           | GPS lag measurement                |
+| Library             | `/library`             | Documentation and resources        |
+| Traffic Counter     | `/traffic-counter`     | Vehicle counting tool              |
+| QA                  | `/qa`                  | AI Q&A assistant                   |
+| Offline             | `/offline`             | Offline status and data management |
+| Contacts            | `/contacts`            | Contact directory                  |
+| Cycle Timer         | `/cycle-timer`         | Cycle timing tool                  |
+| Event Logger        | `/event-logger`        | Traffic event logger               |
+| Settings            | `/settings`            | Settings page                      |
+| Manual              | `/manual`              | User manual page                   |
+| Saved Locations Map | `/saved-locations/map` | Saved locations map                |
 
 ---
 
@@ -154,6 +160,7 @@ The application has twelve main pages:
 - Start SLK input
 - End SLK input (optional)
 - "Get Work Zone Info" button
+- **Save Location** button (visible when road and SLK are set)
 
 ### 4.3 Results Sections
 
@@ -165,12 +172,15 @@ The application has twelve main pages:
 - **TC Positions** - Start/end positions with navigation
 - **Weather** - Current conditions, forecast, UV index, wind gusts
 - **Amenities** - Hospital, fuel station, toilet
+- **Save Location** - Save and recall frequently used locations
 
 ### 4.4 TC Tools Section
 
+- **Save Location** - Save frequently used locations for quick recall
 - **AfterCare Signs** - Link to AfterCare page
 - **Set Distance** - GPS-based distance measurement tool
-- **Export Work Zone Info** - Generate text report
+- **Start SLK Tracking** - Navigate to drive page
+- **Generate Report** - Generate work zone report (text or PDF)
 
 ---
 
@@ -618,6 +628,7 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 | `/api/documents/summarize`        | POST     | AI document summarization                                          |
 | `/api/documents/analyze-diagrams` | POST     | AI diagram analysis                                                |
 | `/api/fuel-stations`              | GET      | Diesel fuel stations (FuelWatch WA + Overpass merge, 30-min cache) |
+| `/api/route`                      | GET      | Route API                                                          |
 
 ---
 
@@ -625,12 +636,16 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 
 ### 1.34.1 (Current) - Phase 3 Refactoring & Component Extraction
 
-- **Migrated saved locations from localStorage to IndexedDB**
-  - Removed 200 location limit - now supports unlimited saved locations
-  - Auto-migration from existing localStorage data on first load
-  - Added sort options: by date (most recent first) or by road (road_id then SLK)
-  - New saved-locations-db.ts module for IndexedDB operations
-  - Added savedLocations object store to offline-db.ts (DB version 7)
+- **Phase 1–5 Refactoring** — Reduced page.tsx from 1,987 to 926 lines (53% reduction)
+  - Replaced inline JSX with existing extracted components (WeatherSection, AmenitiesSection, IntersectionsSection)
+  - Replaced inline logic with existing hooks (useRegions, useRoads)
+  - Extracted new components (SpeedZoneLayoutSection, GenerateReportButton, HomeHeader, StartSlkTrackingButton)
+  - Extracted new hooks (useCollapsibleSections, useWorkZoneLookup, useSignageData)
+  - Moved shared interfaces to types/shared.ts (WorkZoneResult, Place, PlacesData, CrossRoad, Road)
+- **Custom PromptDialog** — Replaced native browser prompt() with custom dialog component
+- **E2E test fixes** — Updated Playwright tests for custom PromptDialog
+- **CI badge fix** — Fixed Platform badge URL to correct Vercel deployment
+- **TypeScript build fix** — mrwaStatus prop type mismatch in SettingsDrawer component
 
 ### RC 1.9.9 - Fuel Stations, Hospital Badges, Multi-Source Amenities
 

@@ -39,6 +39,8 @@ Comprehensive Data Structure Reference
 | max_slk   | number   | Maximum SLK value                   |
 | region    | string?  | MRWA region name                    |
 
+> **Note:** The `Road` interface is defined in `src/types/shared.ts` and extends `RoadInfo` with required `min_slk` and `max_slk` fields. Other interfaces including `WorkZoneResult`, `Position`, `Place`, `PlacesData`, and `CrossRoad` have also been consolidated into `shared.ts` to eliminate duplication across components.
+
 ### 1.2 RoadData (IndexedDB Storage)
 
 | **Field**    | **Type** | **Description**                                                                  |
@@ -394,6 +396,8 @@ Nearest cross road for emergency location:
 | distanceM | number   | Distance in meters                 |
 | direction | string   | Direction (e.g., "north of")       |
 
+> **Note:** The `CrossRoad` interface used for intersecting roads display is defined in `src/types/shared.ts` and includes additional fields: `lat`, `lon`, `roadType`, `googleMapsUrl`, and `intersectionSlk?`.
+
 ### 7.2 NearestTown
 
 Nearest town/city for emergency location:
@@ -596,7 +600,7 @@ Cached amenities by region:
 | toilets      | AmenityPlace[] | Public toilet locations      |
 | last_updated | string         | ISO timestamp of last update |
 
-### 10.3 Place (Legacy)
+### 10.3 Place
 
 | **Field**        | **Type**  | **Description**                                                    |
 | ---------------- | --------- | ------------------------------------------------------------------ |
@@ -617,6 +621,8 @@ Cached amenities by region:
 | fuelPrice        | number?   | Diesel price in cents/L (e.g., 231.3 = $2.313/L)                   |
 | fuelDate         | string?   | Date of fuel price (YYYY-MM-DD)                                    |
 | siteFeatures     | string[]? | Station features array (e.g., ['Open 24 hours', 'Toilets', 'ATM']) |
+
+> **Note:** The `Place` and `PlacesData` interfaces are defined in `src/types/shared.ts` and serve as the source of truth for all components. The `Place` interface includes optional `cachedAt` (string | number) and `googleMapsUrl` fields.
 
 ---
 

@@ -14,17 +14,16 @@ The TC Work Zone Locator is a Next.js 16 application built with the App Router a
 
 ## 2. Root Directory Structure
 
-| File/Directory       | Purpose                       |
-| -------------------- | ----------------------------- |
-| `src/`               | Source code                   |
-| `public/`            | Static assets                 |
-| `docs/`              | Documentation                 |
-| `scripts/`           | Build/utility scripts         |
-| `prisma/`            | Database schema               |
-| `package.json`       | Dependencies and scripts      |
-| `README.md`          | Project readme                |
-| `PROJECT_CONTEXT.md` | Single source of truth for AI |
-| `worklog.md`         | Development work log          |
+| File/Directory | Purpose                  |
+| -------------- | ------------------------ |
+| `src/`         | Source code              |
+| `public/`      | Static assets            |
+| `docs/`        | Documentation            |
+| `scripts/`     | Build/utility scripts    |
+| `prisma/`      | Database schema          |
+| `package.json` | Dependencies and scripts |
+| `README.md`    | Project readme           |
+| `worklog.md`   | Development work log     |
 
 ---
 
@@ -130,30 +129,39 @@ The TC Work Zone Locator is a Next.js 16 application built with the App Router a
 | `speed-zones.ts`             | Speed zone logic                                                    |
 | `traffic-calculations.ts`    | Traffic calculations                                                |
 | `offline-db/`                | Modular offline database subdirectory (see below)                   |
+| `config.ts`                  | Application configuration                                           |
+| `max-hold-time.ts`           | Maximum hold time calculations                                      |
+| `performance.ts`             | Performance monitoring utilities                                    |
+| `validation.ts`              | Zod schemas for input validation                                    |
 
 ### 3.4 React Hooks (src/hooks/)
 
-| File                   | Purpose                                          |
-| ---------------------- | ------------------------------------------------ |
-| `useGpsTracking.ts`    | GPS tracking with EKF, speed zones, speed alerts |
-| `useOrientation.ts`    | Screen orientation detection                     |
-| `use-mobile.ts`        | Mobile device detection                          |
-| `use-toast.ts`         | Toast notification hook                          |
-| `useHomeSettings.ts`   | Home page settings hook                          |
-| `useSavedLocations.ts` | Saved locations hook                             |
-| `useGpsLocation.ts`    | GPS location hook                                |
-| `useWorkZoneData.ts`   | Work zone data hook                              |
-| `useWorkZoneFetch.ts`  | Work zone fetch hook                             |
-| `useWorkZone.ts`       | Work zone hook                                   |
-| `useRoads.ts`          | Roads data hook                                  |
-| `useRegions.ts`        | Regions data hook                                |
-| `useWeather.ts`        | Weather data hook                                |
-| `useTraffic.ts`        | Traffic data hook                                |
-| `usePlaces.ts`         | Places/amenities hook                            |
-| `useOfflineData.ts`    | Offline data hook                                |
-| `useSetDistance.ts`    | Set distance hook                                |
+| File                        | Purpose                                          |
+| --------------------------- | ------------------------------------------------ |
+| `useGpsTracking.ts`         | GPS tracking with EKF, speed zones, speed alerts |
+| `useOrientation.ts`         | Screen orientation detection                     |
+| `use-mobile.ts`             | Mobile device detection                          |
+| `use-toast.ts`              | Toast notification hook                          |
+| `useHomeSettings.ts`        | Home page settings hook                          |
+| `useSavedLocations.ts`      | Saved locations hook                             |
+| `useGpsLocation.ts`         | GPS location hook                                |
+| `useWorkZoneData.ts`        | Work zone data hook                              |
+| `useWorkZoneFetch.ts`       | Work zone fetch hook                             |
+| `useWorkZone.ts`            | Work zone hook                                   |
+| `useRoads.ts`               | Roads data hook                                  |
+| `useRegions.ts`             | Regions data hook                                |
+| `useWeather.ts`             | Weather data hook                                |
+| `useTraffic.ts`             | Traffic data hook                                |
+| `usePlaces.ts`              | Places/amenities hook                            |
+| `useOfflineData.ts`         | Offline data hook                                |
+| `useSetDistance.ts`         | Set distance hook                                |
+| `useCollapsibleSections.ts` | Collapsible section state management             |
+| `useSignageData.ts`         | Speed limit and signage corridor data hook       |
+| `useWorkZoneLookup.ts`      | Work zone lookup and report generation hook      |
 
 ### 3.5 React Components (src/components/)
+
+#### Top-level Components (src/components/)
 
 | File                            | Purpose                                         |
 | ------------------------------- | ----------------------------------------------- |
@@ -165,7 +173,41 @@ The TC Work Zone Locator is a Next.js 16 application built with the App Router a
 | `WarningsSection.tsx`           | Weather warnings section                        |
 | `WeatherWarningBanner.tsx`      | Weather warning banner                          |
 | `ServiceWorkerRegistration.tsx` | PWA service worker registration                 |
+| `DebugInfoPopup.tsx`            | Debug information popup                         |
+| `EmergencyLocationModal.tsx`    | Emergency location modal                        |
+| `GpsLookupDialog.tsx`           | GPS location lookup dialog                      |
+| `Onboarding.tsx`                | First-run onboarding wizard                     |
+| `PdfViewerModal.tsx`            | PDF document viewer                             |
+| `ReportExportModal.tsx`         | Report export dialog                            |
+| `SetDistanceControls.tsx`       | GPS distance measurement controls               |
+| `TrafficCountDetailModal.tsx`   | Traffic count detail popup                      |
+| `TrafficEventLoggerModal.tsx`   | Traffic event logger modal                      |
+| `WorkZoneReport.tsx`            | Work zone report component                      |
 | `ui/`                           | shadcn/ui components (Radix primitives)         |
+
+#### Home Page Components (src/components/home/)
+
+| File                          | Purpose                            |
+| ----------------------------- | ---------------------------------- |
+| `AmenitiesSection.tsx`        | Nearby amenities display           |
+| `EmergencyLocationButton.tsx` | Emergency location button          |
+| `GenerateReportButton.tsx`    | Work zone report generation button |
+| `HomeHeader.tsx`              | Home page header with settings     |
+| `IntersectionsSection.tsx`    | Intersecting roads display         |
+| `LaneDirectionDiagram.tsx`    | Lane direction visual diagram      |
+| `OfflineDataSection.tsx`      | Offline data status section        |
+| `OfflineStatusIndicator.tsx`  | Offline status indicator           |
+| `RoadWidthBreakdown.tsx`      | Road width breakdown display       |
+| `SavedLocations.tsx`          | Saved locations list component     |
+| `SignageCorridorSection.tsx`  | Signage corridor display           |
+| `SpeedZoneLayoutSection.tsx`  | Speed zone layout section          |
+| `StartSlkTrackingButton.tsx`  | Start SLK tracking button          |
+| `TrafficSection.tsx`          | Traffic volume section             |
+| `TrafficVolumeSection.tsx`    | Traffic volume detailed section    |
+| `WeatherSection.tsx`          | Weather conditions section         |
+| `WorkZoneForm.tsx`            | Work zone input form component     |
+| `WorkZoneSummary.tsx`         | Work zone summary display          |
+| `index.ts`                    | Barrel export file                 |
 
 ---
 

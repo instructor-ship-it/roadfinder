@@ -43,21 +43,21 @@ The design philosophy prioritizes offline-first functionality, ensuring that cri
 
 The application is built on Next.js 16 with the App Router architecture, which provides server-side rendering capabilities and API routes within a single framework. The frontend utilizes React with TypeScript for type safety and improved developer experience. Tailwind CSS handles styling with a custom dark theme optimized for outdoor visibility. The shadcn/ui component library provides accessible, customizable UI components including dialogs, buttons, and input fields. The application runs exclusively on port 3000 in the development environment.
 
-| Component        | Technology                                |
-| ---------------- | ----------------------------------------- |
-| Framework        | Next.js 16 with App Router                |
-| Language         | TypeScript (strict mode)                  |
-| Styling          | Tailwind CSS with dark theme              |
-| UI Components    | shadcn/ui (Radix primitives)              |
-| Storage          | IndexedDB + localStorage (client-side)    |
-| Maps             | Leaflet + OpenStreetMap                   |
-| State Management | React hooks + localStorage/sessionStorage |
+| Component        | Technology                                          |
+| ---------------- | --------------------------------------------------- |
+| Framework        | Next.js 16 with App Router                          |
+| Language         | TypeScript (strict mode)                            |
+| Styling          | Tailwind CSS with dark theme                        |
+| UI Components    | shadcn/ui (Radix primitives)                        |
+| Storage          | IndexedDB + localStorage (client-side)              |
+| Maps             | Leaflet + OpenStreetMap                             |
+| State Management | React hooks + Zustand + localStorage/sessionStorage |
 
 ### 2.2 Page Structure
 
 The application consists of multiple main pages:
 
-- **Home page** (`src/app/page.tsx`): Work zone planning interface
+- **Home page** (`src/app/page.tsx`): Work zone planning interface (~926 lines, refactored from 1,987 lines)
 - **Drive page** (`src/app/drive/page.tsx`): Real-time GPS tracking with speed alerts
 - **Nearby Signs** (`src/app/drive/nearby-signs/page.tsx`): Signs requiring action
 - **AfterCare** (`src/app/aftercare/page.tsx`): Signage tracking management
@@ -70,7 +70,12 @@ The application consists of multiple main pages:
 - **QA** (`src/app/qa/page.tsx`): Quality assurance testing
 - **Offline** (`src/app/offline/page.tsx`): Offline data management
 - **Calibrate** (`src/app/calibrate/page.tsx`): GPS calibration tool
-- **Manual** (`src/app/manual/page.tsx`): User manual page
+- **Contacts** (`src/app/contacts/page.tsx`): Contact directory
+- **Cycle Timer** (`src/app/cycle-timer/page.tsx`): Cycle timing tool
+- **Event Logger** (`src/app/event-logger/page.tsx`): Traffic event logger with cloud sync
+- **Settings** (`src/app/settings/page.tsx`): Application settings
+- **Manual** (`src/app/manual/page.tsx`): User manual
+- **Saved Locations Map** (`src/app/saved-locations/map/page.tsx`): Interactive map of saved locations
 
 The home page allows users to select roads by region, specify work zone SLK ranges, and retrieve comprehensive location information including speed zones, nearby amenities, intersections, and weather data. The drive page is designed for active traffic control operations, providing real-time speed monitoring with WA speeding fine alerts, destination tracking, and navigation assistance. The AfterCare pages manage signage tracking for signs placed on roads awaiting retrieval. The Traffic Counter provides manual vehicle counting with VPH calculations. The Library provides access to MRWA documentation.
 
@@ -222,16 +227,17 @@ The application uses IndexedDB for client-side storage of all road-related data,
 
 Database name: `RoadFinderDB` (version 7)
 
-| Object Store   | Key Path             | Purpose                      |
-| -------------- | -------------------- | ---------------------------- |
-| regions        | 'region' (string)    | Road data grouped by region  |
-| speedZones     | 'road_id' (string)   | Speed zone data              |
-| signage        | 'road_id' (string)   | Regulatory and warning signs |
-| railCrossings  | 'road_id' (string)   | Rail crossing data           |
-| amenitiesData  | 'region' (string)    | Amenities data               |
-| pavementData   | 'road_id' (string)   | Pavement data                |
-| trafficData    | 'road_name' (string) | Traffic volume data          |
-| savedLocations | 'id' (string)        | Saved locations              |
+| Object Store    | Key Path             | Purpose                     |
+| --------------- | -------------------- | --------------------------- |
+| regions         | 'region' (string)    | Road data grouped by region |
+| speedZones      | 'road_id' (string)   | Speed zone data             |
+| regulatorySigns | 'road_id' (string)   | Regulatory sign data        |
+| warningSigns    | 'road_id' (string)   | Warning sign data           |
+| railCrossings   | 'road_id' (string)   | Rail crossing data          |
+| amenitiesData   | 'region' (string)    | Amenities data              |
+| pavementData    | 'road_id' (string)   | Pavement data               |
+| trafficData     | 'road_name' (string) | Traffic volume data         |
+| savedLocations  | 'id' (string)        | Saved locations             |
 
 ### 4.2 Data Persistence Strategy
 
@@ -660,7 +666,7 @@ When user stops count before timer completes:
 
 ### 10.1 Home Page Layout
 
-The home page follows a mobile-first responsive design optimized for 400px maximum width, suitable for smartphone use. The header displays the application title and a settings icon. The main input section contains region selector, road selector with manual ID entry option, and SLK input fields. The results section uses collapsible panels for Traffic, Signage Corridor, TC Positions, Intersections, Weather, and Amenities data.
+The home page follows a mobile-first responsive design optimized for 400px maximum width, suitable for smartphone use. The header displays the application title and a settings icon. The main input section contains region selector, road selector with manual ID entry option, and SLK input fields. The results section uses collapsible panels for Traffic, Signage Corridor, TC Positions, Intersections, Weather, and Amenities data. The home page has been significantly refactored, with inline JSX and logic extracted into dedicated components (`src/components/home/`) and hooks (`src/hooks/`), including `useWorkZoneLookup` for the core lookup logic, `useCollapsibleSections` for section state management, and `useSignageData` for speed limit and signage data.
 
 ### 10.2 Drive Page Layout
 
@@ -797,11 +803,12 @@ React best practices are followed to prevent unnecessary re-renders:
 - `isRestoring` ref prevents clearing selected road during state restoration
 - `pendingRestoreParams` ref defers work zone queries until roads are loaded
 - Collapsible sections use local state for expand/collapse
+- Extracted hooks (useWorkZoneLookup, useSignageData, useCollapsibleSections) manage their own state independently
 - Suspense boundaries handle async parameter parsing
 
 ### 13.4 fetchPlaces() 3-Source Parallel Architecture
 
-The home page (`src/app/page.tsx`) implements a sophisticated parallel data fetching strategy for amenity data through the `fetchPlaces()` function. This architecture ensures the best available data is displayed while maintaining resilience through smart fallback chains.
+The home page (via `useWorkZoneLookup` hook and `usePlaces` hook) implements a sophisticated parallel data fetching strategy for amenity data through the `fetchPlaces()` function. This architecture ensures the best available data is displayed while maintaining resilience through smart fallback chains.
 
 **Architecture Overview:**
 
