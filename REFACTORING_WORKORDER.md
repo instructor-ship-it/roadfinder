@@ -253,7 +253,7 @@ Where `CrossRoad` has: `name`, `distance`, `lat`, `lon`, `roadType`, `googleMaps
 
 ### Item 2.3: Use Existing useGpsLocation Hook
 
-**Status**: [ ]
+**Status**: [x] (SKIPPED - hook interface doesn't match well; inline GPS logic has page-level side effects that the hook doesn't handle)
 
 **Problem**: `useGpsLocation` hook exists at `src/hooks/useGpsLocation.ts`, but page.tsx has inline GPS state and functions (lines 299-311, 1022-1111).
 
@@ -699,25 +699,25 @@ If any check fails, fix the issue before marking the item as done.
 
 ## Progress Tracking
 
-| Item | Description                                  | Status | Lines Removed | Date Completed |
-| ---- | -------------------------------------------- | ------ | ------------- | -------------- |
-| 1.1  | Use existing WeatherSection                  | [x]    | ~150          | 2026-04-21     |
-| 1.2  | Use existing AmenitiesSection                | [x]    | ~210          | 2026-04-21     |
-| 1.3  | Use existing IntersectionsSection            | [x]    | ~65           | 2026-04-21     |
-| 2.1  | Use existing useRegions hook                 | [x]    | ~130          | 2026-04-21     |
-| 2.2  | Use existing useRoads hook                   | [x]    | ~100          | 2026-04-21     |
-| 2.3  | Use existing useGpsLocation hook             | [ ]    | ~90           |                |
-| 3.1  | Extract SpeedZoneLayoutSection               | [ ]    | ~30           |                |
-| 3.2  | Extract GenerateReportButton                 | [ ]    | ~20           |                |
-| 3.3  | Extract HomeHeader                           | [ ]    | ~55           |                |
-| 3.4  | Extract StartSlkTrackingButton               | [ ]    | ~15           |                |
-| 4.1  | Create useCollapsibleSections                | [ ]    | ~14           |                |
-| 4.2  | Create useWorkZoneLookup                     | [ ]    | ~200          |                |
-| 4.3  | Create useSignageData                        | [ ]    | ~70           |                |
-| 4.4  | Create useSessionRestore                     | [ ]    | ~30           |                |
-| 5.1  | Move WorkZoneResult to shared.ts             | [ ]    | ~60           |                |
-| 5.2  | Move Place/PlacesData/CrossRoad to shared.ts | [ ]    | ~45           |                |
-| 5.3  | Move/consolidate Road interface              | [ ]    | ~7            |                |
+| Item | Description                                  | Status        | Lines Removed | Date Completed |
+| ---- | -------------------------------------------- | ------------- | ------------- | -------------- |
+| 1.1  | Use existing WeatherSection                  | [x]           | ~150          | 2026-04-21     |
+| 1.2  | Use existing AmenitiesSection                | [x]           | ~210          | 2026-04-21     |
+| 1.3  | Use existing IntersectionsSection            | [x]           | ~65           | 2026-04-21     |
+| 2.1  | Use existing useRegions hook                 | [x]           | ~130          | 2026-04-21     |
+| 2.2  | Use existing useRoads hook                   | [x]           | ~100          | 2026-04-21     |
+| 2.3  | Use existing useGpsLocation hook             | [x] (SKIPPED) | ~90           | 2026-04-21     |
+| 3.1  | Extract SpeedZoneLayoutSection               | [ ]           | ~30           |                |
+| 3.2  | Extract GenerateReportButton                 | [ ]           | ~20           |                |
+| 3.3  | Extract HomeHeader                           | [ ]           | ~55           |                |
+| 3.4  | Extract StartSlkTrackingButton               | [ ]           | ~15           |                |
+| 4.1  | Create useCollapsibleSections                | [ ]           | ~14           |                |
+| 4.2  | Create useWorkZoneLookup                     | [ ]           | ~200          |                |
+| 4.3  | Create useSignageData                        | [ ]           | ~70           |                |
+| 4.4  | Create useSessionRestore                     | [ ]           | ~30           |                |
+| 5.1  | Move WorkZoneResult to shared.ts             | [ ]           | ~60           |                |
+| 5.2  | Move Place/PlacesData/CrossRoad to shared.ts | [ ]           | ~45           |                |
+| 5.3  | Move/consolidate Road interface              | [ ]           | ~7            |                |
 
 **Starting line count**: 1987 lines
 **Estimated final line count**: ~700-800 lines (after all items)
