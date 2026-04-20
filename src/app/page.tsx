@@ -15,7 +15,6 @@ import { useRoads } from '@/hooks/useRoads';
 import { useWeather } from '@/hooks/useWeather';
 import { usePlaces } from '@/hooks/usePlaces';
 import { IncidentsSection } from '@/components/IncidentsSection';
-import SpeedZoneLayout from '@/components/SpeedZoneLayout';
 import SettingsDrawer, { APP_VERSION } from '@/components/SettingsDrawer';
 import { TrafficEventLoggerModal } from '@/components/TrafficEventLoggerModal';
 import { Onboarding } from '@/components/Onboarding';
@@ -26,6 +25,7 @@ import { AmenitiesSection } from '@/components/home/AmenitiesSection';
 import { WorkZoneSummary } from '@/components/home/WorkZoneSummary';
 import { SignageCorridorSection } from '@/components/home/SignageCorridorSection';
 import { IntersectionsSection } from '@/components/home/IntersectionsSection';
+import { SpeedZoneLayoutSection } from '@/components/home/SpeedZoneLayoutSection';
 import { RoadWidthBreakdown } from '@/components/home/RoadWidthBreakdown';
 import { LaneDirectionDiagram } from '@/components/home/LaneDirectionDiagram';
 import { WorkZoneForm } from '@/components/home/WorkZoneForm';
@@ -1179,37 +1179,22 @@ export default function Home() {
             </SectionErrorBoundary>
 
             {/* Speed Zone Layout Diagram */}
-            <div className="bg-gray-800 rounded-lg">
-              <button
-                onClick={() => setShowSpeedZoneLayout(!showSpeedZoneLayout)}
-                className="w-full p-4 flex items-center justify-between text-left"
-              >
-                <h3 className="text-sm font-semibold text-blue-400">
-                  📊 Speed Zone Layout (±850m)
-                </h3>
-                <span className="text-gray-400 text-lg">{showSpeedZoneLayout ? '−' : '+'}</span>
-              </button>
-              {showSpeedZoneLayout && (
-                <div className="px-4 pb-4">
-                  <SpeedZoneLayout
-                    workZoneStart={result.work_zone.start_slk}
-                    workZoneEnd={result.work_zone.end_slk || result.work_zone.start_slk}
-                    signageCorridor={signageCorridor}
-                    speedZones={corridorSpeedZones}
-                    intersections={crossRoads
-                      .filter((road) => road.name.toLowerCase() !== result.road_name.toLowerCase())
-                      .map((road) => ({
-                        name: road.name,
-                        slk:
-                          road.intersectionSlk ??
-                          parseFloat(road.distance) + result.work_zone.start_slk,
-                        roadType: road.roadType,
-                      }))}
-                    corridorMargin={0.85}
-                  />
-                </div>
-              )}
-            </div>
+            <SpeedZoneLayoutSection
+              workZoneStart={result.work_zone.start_slk}
+              workZoneEnd={result.work_zone.end_slk || result.work_zone.start_slk}
+              signageCorridor={signageCorridor}
+              speedZones={corridorSpeedZones}
+              intersections={crossRoads
+                .filter((road) => road.name.toLowerCase() !== result.road_name.toLowerCase())
+                .map((road) => ({
+                  name: road.name,
+                  slk:
+                    road.intersectionSlk ?? parseFloat(road.distance) + result.work_zone.start_slk,
+                  roadType: road.roadType,
+                }))}
+              corridorMargin={0.85}
+              defaultExpanded={showSpeedZoneLayout}
+            />
 
             {/* Intersecting Roads */}
             <IntersectionsSection

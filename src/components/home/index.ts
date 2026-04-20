@@ -9,5 +9,6 @@ export { RoadWidthBreakdown } from './RoadWidthBreakdown';
 export { LaneDirectionDiagram } from './LaneDirectionDiagram';
 export { SignageCorridorSection } from './SignageCorridorSection';
 export { IntersectionsSection } from './IntersectionsSection';
+export { SpeedZoneLayoutSection } from './SpeedZoneLayoutSection';
 export { WorkZoneForm } from './WorkZoneForm';
 export { TrafficVolumeSection } from './TrafficVolumeSection';
