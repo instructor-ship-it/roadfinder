@@ -617,7 +617,7 @@ Where `CrossRoad` has: `name`, `distance`, `lat`, `lon`, `roadType`, `googleMaps
 
 ### Item 5.1: Move WorkZoneResult Interface to shared.ts
 
-**Status**: [ ]
+**Status**: [x]
 
 **What to do**:
 
@@ -636,7 +636,7 @@ Where `CrossRoad` has: `name`, `distance`, `lat`, `lon`, `roadType`, `googleMaps
 
 ### Item 5.2: Move Place, PlacesData, CrossRoad Interfaces to shared.ts
 
-**Status**: [ ]
+**Status**: [x]
 
 **What to do**:
 
