@@ -741,10 +741,51 @@ refactor: 1.1 use existing WeatherSection component from page.tsx
 
 ---
 
+## Session Resilience & Recovery
+
+### If the Local Filesystem is Wiped
+
+Between sessions, the local server filesystem (`/home/z/my-project/roadfinder/`) may be reset.
+When this happens, the workorder file and all code changes will be gone locally — but they
+persist on GitHub. Here's the recovery procedure:
+
+1. **Clone the repo fresh:**
+
+   ```bash
+   git clone https://github.com/instructor-ship-it/roadfinder.git /home/z/my-project/roadfinder
+   cd /home/z/my-project/roadfinder
+   bun install
+   ```
+
+2. **Read the workorder from the repo** — it's now at `/home/z/my-project/roadfinder/REFACTORING_WORKORDER.md`
+   with all completed items marked `[x]` and the latest code already reflecting those changes.
+
+3. **Continue from the next `[ ]` item.**
+
+### If Only the Workorder File is Missing (Code is Fine)
+
+If the code changes are still local but just the workorder file got deleted:
+
+```bash
+cd /home/z/my-project/roadfinder
+git checkout main -- REFACTORING_WORKORDER.md
+```
+
+Or simply `git pull origin main` to sync with GitHub.
+
+### Why GitHub is the Source of Truth
+
+- Every completed item is committed AND pushed to GitHub
+- The workorder file status is updated and pushed after each item
+- The code changes for each item are also committed and pushed
+- Therefore, GitHub always has the latest state — local is just a working copy
+
+---
+
 ## Session Continuation Prompt
 
-To continue this refactoring in a new session, use:
+To continue this refactoring in a new session (whether local files exist or not), use:
 
 ```
-Read the file REFACTORING_WORKORDER.md in the roadfinder repo at /home/z/my-project/roadfinder/REFACTORING_WORKORDER.md. Find the next incomplete item (marked [ ]) and execute it. After completing it, run the verification steps, commit, push to GitHub, update the status in the workorder file to [x], commit and push the workorder file too. Then proceed to the next item.
+Resume the page.tsx refactoring for the roadfinder project. First, if /home/z/my-project/roadfinder doesn't exist or is empty, clone it from https://github.com/instructor-ship-it/roadfinder.git and run bun install. Then read REFACTORING_WORKORDER.md in the repo root. Find the next incomplete item (marked [ ]) and execute it. After completing it, run the verification steps from the workorder, commit, push to GitHub, update the status in the workorder file to [x], commit and push the workorder file too. Then proceed to the next item.
 ```
