@@ -319,7 +319,7 @@ Where `CrossRoad` has: `name`, `distance`, `lat`, `lon`, `roadType`, `googleMaps
 
 ### Item 3.2: Extract GenerateReportButton Component
 
-**Status**: [ ]
+**Status**: [x]
 
 **Problem**: The "Generate Work Zone Report" button section is inline JSX in page.tsx (~20 lines).
 
@@ -708,7 +708,7 @@ If any check fails, fix the issue before marking the item as done.
 | 2.2  | Use existing useRoads hook                   | [x]           | ~100          | 2026-04-21     |
 | 2.3  | Use existing useGpsLocation hook             | [x] (SKIPPED) | ~90           | 2026-04-21     |
 | 3.1  | Extract SpeedZoneLayoutSection               | [x]           | ~30           | 2026-04-21     |
-| 3.2  | Extract GenerateReportButton                 | [ ]           | ~20           |                |
+| 3.2  | Extract GenerateReportButton                 | [x]           | ~20           | 2026-04-21     |
 | 3.3  | Extract HomeHeader                           | [ ]           | ~55           |                |
 | 3.4  | Extract StartSlkTrackingButton               | [ ]           | ~15           |                |
 | 4.1  | Create useCollapsibleSections                | [ ]           | ~14           |                |
