@@ -211,19 +211,19 @@ test.describe('GPS Lookup with Coordinates', () => {
     await expect(lookupButton).toBeEnabled({ timeout: 3000 });
     await lookupButton.click();
 
-    // Should populate the Start SLK input with the returned SLK value
-    // The GPS lookup populates the form with the road's SLK
-    const startSlkInput = page.getByPlaceholder('e.g. 100.0');
-    // The value may be formatted differently (e.g. "0.57" instead of "100.5")
-    // depending on the road's actual SLK, so just verify the input has some value
-    const slkValue = await startSlkInput.inputValue({ timeout: 10000 });
-    expect(slkValue.length).toBeGreaterThan(0);
+    // Wait for the GPS lookup to complete - "Found via GPS" text confirms success
+    const foundViaGps = page.locator('text=/Found via GPS/i').first();
+    await expect(foundViaGps).toBeVisible({ timeout: 10000 });
 
-    // Road should be selected - check the road trigger contains some text
+    // The GPS lookup populates the Start SLK input with the returned SLK value
+    // Use expect().toHaveValue() which properly waits for the input to be populated
+    const startSlkInput = page.getByPlaceholder('e.g. 100.0');
+    await expect(startSlkInput).toHaveValue(/.+/, { timeout: 10000 });
+
+    // Road should be selected - the road trigger should contain text (not the placeholder)
+    // The GPS lookup sets selectedRoad which populates the road dropdown
     const roadTrigger = page.locator('button[data-slot="select-trigger"]').nth(1);
-    // The road trigger should have some text (not the placeholder)
-    const roadText = await roadTrigger.textContent({ timeout: 5000 });
-    expect(roadText?.trim().length).toBeGreaterThan(0);
+    await expect(roadTrigger).toContainText(/.+/, { timeout: 5000 });
   });
 
   test('should handle GPS API error (mocked 404)', async ({ page }) => {
