@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { haversineDistance } from '@/lib/utils';
 import { EmergencyLocationModal } from '@/components/EmergencyLocationModal';
 import { TrafficCountDetailModal } from '@/components/TrafficCountDetailModal';
 import { DebugInfoPopup } from '@/components/DebugInfoPopup';
@@ -36,68 +35,26 @@ import { LaneDirectionDiagram } from '@/components/home/LaneDirectionDiagram';
 import { WorkZoneForm } from '@/components/home/WorkZoneForm';
 import { TrafficVolumeSection } from '@/components/home/TrafficVolumeSection';
 import { useWorkZoneFetch } from '@/hooks/useWorkZoneFetch';
+import { useWorkZoneLookup } from '@/hooks/useWorkZoneLookup';
 import { WorkZoneReport } from '@/components/WorkZoneReport';
 import { SetDistanceControls } from '@/components/SetDistanceControls';
 import { GpsLookupDialog } from '@/components/GpsLookupDialog';
 import { ReportExportModal } from '@/components/ReportExportModal';
 import { SectionErrorBoundary } from '@/components/ui/section-error-boundary';
 
-import {
-  initDB,
-  isOfflineDataAvailable,
-  getOfflineMetadata,
-  storeRegionData,
-  storeSpeedZones,
-  storeMetadata,
-  clearOfflineData,
-  storeRailCrossings,
-  storeRegulatorySigns,
-  storeWarningSigns,
-  storePavementData,
-  storeTrafficData,
-  storeAllAmenitiesData,
-  getAllAmenitiesData,
-  findNearestAmenities,
-  getDetailedStats,
-  storeRoadsData,
-  storeSpeedZonesData,
-  storeRailCrossingsData,
-  storeRegulatorySignsData,
-  storeWarningSignsData,
-  clearDataset,
-  getWorkZoneOffline,
-  cacheWeatherData,
-  getCachedWeatherData,
-  type SignageItem,
-  type DatasetMetadata,
-  type ParsedSpeedZone,
-} from '@/lib/offline-db';
-import { loadStaticData, checkStaticData } from '@/lib/download-roads';
-import {
-  getRecordsForRoadNearSlk,
-  generateShareText,
-  formatAusDate,
-  type TrafficCountRecord,
-} from '@/lib/traffic-counter-storage';
+// offline-db imports removed — used by hooks, not directly by page.tsx
+// download-roads imports removed — used by hooks, not directly by page.tsx
+import { type TrafficCountRecord } from '@/lib/traffic-counter-storage';
 import {
   WeatherData,
-  WarningItem,
   WarningData,
   TrafficData,
   SavedLocation,
-  WorkZoneResult,
-  Position,
-  Place,
   PlacesData,
   CrossRoad,
   Road,
 } from '@/types/shared';
-import {
-  getSavedLocations as getSavedLocationsFromDB,
-  saveLocation as saveLocationToDB,
-  deleteSavedLocation as deleteSavedLocationFromDB,
-  migrateFromLocalStorage,
-} from '@/lib/saved-locations-db';
+// saved-locations-db imports removed — used by useSavedLocations hook
 
 export default function Home() {
   const {
@@ -111,27 +68,16 @@ export default function Home() {
   const [selectedRoad, setSelectedRoad] = useState<string>('');
   const [startSlk, setStartSlk] = useState<string>('');
   const [endSlk, setEndSlk] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
 
-  const [result, setResult] = useState<WorkZoneResult | null>(null);
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [warnings, setWarnings] = useState<WarningData | null>(null);
   const [traffic, setTraffic] = useState<TrafficData | null>(null);
-  const [userTrafficCounts, setUserTrafficCounts] = useState<TrafficCountRecord[]>([]);
   const [selectedCountDetail, setSelectedCountDetail] = useState<TrafficCountRecord | null>(null);
   const [userTrafficOverride, setUserTrafficOverride] = useState<TrafficCountRecord | null>(null);
   const [places, setPlaces] = useState<PlacesData | null>(null);
   const [crossRoads, setCrossRoads] = useState<CrossRoad[]>([]);
   const [corridorIntersections, setCorridorIntersections] = useState<CrossRoad[]>([]); // For signage corridor (±700m)
-  const [error, setError] = useState<string>('');
   const [roadInfo, setRoadInfo] = useState<Road | null>(null);
-  const [isSinglePoint, setIsSinglePoint] = useState<boolean>(false);
-  const [exporting, setExporting] = useState<boolean>(false);
-
-  // Sync regions error to page error state
-  useEffect(() => {
-    if (regionsError) setError(regionsError);
-  }, [regionsError]);
 
   // Saved locations hook
   const {
@@ -232,11 +178,6 @@ export default function Home() {
     fetchRoads,
   } = useRoads(selectedRegion, offlineToggles);
 
-  // Sync roads error to page error state
-  useEffect(() => {
-    if (roadsError) setError(roadsError);
-  }, [roadsError]);
-
   // Signage data hook
   const {
     speedLimit,
@@ -292,6 +233,45 @@ export default function Home() {
       setCrossRoads,
       setCorridorIntersections,
     });
+
+  // Work zone lookup hook - manages result, error, loading, isSinglePoint, exporting, getWorkZoneInfo
+  const {
+    result,
+    error,
+    setError,
+    loading,
+    isSinglePoint,
+    exporting,
+    userTrafficCounts,
+    setUserTrafficCounts,
+    getWorkZoneInfo,
+    exportReport: exportLookupReport,
+    clearLookupResults,
+  } = useWorkZoneLookup({
+    offlineToggles,
+    fetchSpeedLimit,
+    fetchSignageCorridor,
+    fetchWeather,
+    fetchTraffic,
+    fetchPlaces,
+    fetchWarnings,
+    fetchCrossRoads,
+    onSetFormFields: ({ roadId, startSlk: slk, endSlk: eslk }) => {
+      setSelectedRoad(roadId);
+      setStartSlk(slk);
+      setEndSlk(eslk);
+    },
+    selectedRegion,
+    onUpdateSelectedRegion: updateSelectedRegion,
+  });
+
+  // Sync error states from other hooks to the lookup hook's error state
+  useEffect(() => {
+    if (regionsError) setError(regionsError);
+  }, [regionsError, setError]);
+  useEffect(() => {
+    if (roadsError) setError(roadsError);
+  }, [roadsError, setError]);
 
   // Collapsible sections state
   const sections = useCollapsibleSections();
@@ -412,15 +392,14 @@ export default function Home() {
     }
     // Only clear results if not restoring
     if (!isRestoring.current) {
-      setResult(null);
+      clearLookupResults();
       setWeather(null);
       setWarnings(null);
       setTraffic(null);
       setPlaces(null);
       setCrossRoads([]);
-      setError('');
     }
-  }, [selectedRoad, roads]);
+  }, [selectedRoad, roads, clearLookupResults]);
 
   // When roads are loaded during restore, call getWorkZoneInfo
   useEffect(() => {
@@ -438,161 +417,6 @@ export default function Home() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roads]);
 
-  // Main function to get work zone info - can be called with parameters or from UI
-  const getWorkZoneInfo = async (
-    region: string,
-    roadId: string,
-    startSlkVal: string,
-    endSlkVal: string,
-    keepInfo: boolean = false
-  ) => {
-    if (!roadId) {
-      setError('Select a road');
-      return;
-    }
-    if (!startSlkVal) {
-      setError('Enter Start SLK');
-      return;
-    }
-
-    // Save parameters to sessionStorage if keepInfo is true
-    if (keepInfo) {
-      sessionStorage.setItem(
-        'workZoneParams',
-        JSON.stringify({
-          region,
-          roadId,
-          startSlk: startSlkVal,
-          endSlk: endSlkVal,
-        })
-      );
-    }
-
-    // Set state variables
-    if (region && region !== selectedRegion) {
-      updateSelectedRegion(region);
-    }
-    setSelectedRoad(roadId);
-    setStartSlk(startSlkVal);
-    setEndSlk(endSlkVal);
-
-    setLoading(true);
-    setError('');
-    setResult(null);
-    setWeather(null);
-    setWarnings(null);
-    setTraffic(null);
-    setUserTrafficCounts([]);
-    setUserTrafficOverride(null);
-    setPlaces(null);
-    setCrossRoads([]);
-
-    // Track if this is a single point lookup (no end SLK provided)
-    const singlePoint = !endSlkVal || endSlkVal === '';
-    setIsSinglePoint(singlePoint);
-
-    try {
-      // Use end_slk if provided, otherwise same as start (single point)
-      const endSlkValue = endSlkVal || startSlkVal;
-      const startSlkNum = parseFloat(startSlkVal);
-      const endSlkNum = parseFloat(endSlkValue);
-
-      let data: any = null;
-
-      // Check toggle: ON = offline mode (try offline first, fallback to online)
-      // OFF = online mode (try online first, fallback to offline)
-      if (offlineToggles.workZoneLookup) {
-        // OFFLINE MODE: Try IndexedDB first, fall back to API if not found
-        data = await getWorkZoneOffline(roadId, startSlkNum, endSlkNum);
-
-        if (!data) {
-          // No offline data, fall back to online API
-          console.log('Road not found in offline data, falling back to online API');
-          try {
-            const response = await fetch('/api/roads', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                road_id: roadId,
-                start_slk: startSlkNum,
-                end_slk: endSlkNum,
-              }),
-            });
-
-            if (response.ok) {
-              data = await response.json();
-            }
-          } catch {
-            // Both offline and online failed
-          }
-        }
-      } else {
-        // ONLINE MODE: Try API first, fall back to IndexedDB
-        try {
-          const response = await fetch('/api/roads', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              road_id: roadId,
-              start_slk: startSlkNum,
-              end_slk: endSlkNum,
-            }),
-          });
-
-          if (response.ok) {
-            data = await response.json();
-          } else {
-            // API returned error, try offline fallback
-            data = await getWorkZoneOffline(roadId, startSlkNum, endSlkNum);
-          }
-        } catch {
-          // API failed, try offline fallback
-          data = await getWorkZoneOffline(roadId, startSlkNum, endSlkNum);
-        }
-      }
-
-      if (!data) {
-        setError('Road not found');
-        setLoading(false);
-        return;
-      }
-
-      setResult(data);
-
-      // Fetch speed limit for this road at the start SLK
-      fetchSpeedLimit(roadId, parseFloat(startSlkVal));
-
-      // Fetch signage corridor for work zone
-      fetchSignageCorridor(
-        roadId,
-        parseFloat(startSlkVal),
-        endSlkValue ? parseFloat(endSlkValue) : undefined
-      );
-
-      // Fetch additional data using midpoint (only if online)
-      if (data.midpoint) {
-        fetchWeather(data.midpoint.lat, data.midpoint.lon);
-        fetchWarnings(); // BOM weather warnings for WA
-        fetchTraffic(roadId, data.midpoint.lat, data.midpoint.lon);
-        fetchPlaces(data.midpoint.lat, data.midpoint.lon);
-      }
-      // Look up user-saved traffic counts for this road near the work zone
-      try {
-        const startSlkNum = parseFloat(startSlkVal);
-        const nearCounts = getRecordsForRoadNearSlk(roadId, startSlkNum);
-        setUserTrafficCounts(nearCounts);
-      } catch {
-        setUserTrafficCounts([]);
-      }
-      // Fetch cross roads using TC corridor
-      fetchCrossRoads(data);
-    } catch (err) {
-      setError('Failed to get location');
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Handle search from UI button - uses current state
   const handleSearch = async () => {
     await getWorkZoneInfo(selectedRegion, selectedRoad, startSlk, endSlk, true);
@@ -605,21 +429,18 @@ export default function Home() {
     sessionStorage.removeItem('workZoneState');
 
     // Reset all state
-    setResult(null);
+    clearLookupResults();
     setWeather(null);
     setWarnings(null);
     setTraffic(null);
-    setUserTrafficCounts([]);
     setUserTrafficOverride(null);
     setPlaces(null);
     setCrossRoads([]);
-    setError('');
     updateSelectedRegion('');
     setSelectedRoad('');
     setStartSlk('');
     setEndSlk('');
     resetSignageData();
-    setIsSinglePoint(false);
     setGpsRoadInfo(null);
     isRestoring.current = false;
     pendingRestoreParams.current = null;
@@ -731,44 +552,7 @@ export default function Home() {
 
   const exportReport = async () => {
     if (!result) return;
-
-    setExporting(true);
-    try {
-      const response = await fetch('/api/export-pdf', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          road_id: result.road_id,
-          road_name: result.road_name,
-          work_zone: result.work_zone,
-          tc_positions: result.tc_positions,
-          speed_zones: result.speed_zones,
-          carriageway: result.carriageway,
-          weather: weather,
-          traffic: traffic,
-          side_roads: crossRoads.filter(
-            (road) => road.name.toLowerCase() !== result.road_name.toLowerCase()
-          ),
-          amenities: places,
-        }),
-      });
-
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `work-zone-${result.road_id}-${result.work_zone.start_slk.toFixed(2)}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-      }
-    } catch (err) {
-      console.error('Export failed:', err);
-    } finally {
-      setExporting(false);
-    }
+    await exportLookupReport(result, weather, traffic, crossRoads, places);
   };
 
   // Generate work zone report (opens the report modal)
