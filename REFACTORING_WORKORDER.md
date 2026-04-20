@@ -534,7 +534,7 @@ Where `CrossRoad` has: `name`, `distance`, `lat`, `lon`, `roadType`, `googleMaps
 
 ### Item 4.3: Create useSignageData Hook
 
-**Status**: [ ]
+**Status**: [x]
 
 **Problem**: Speed limit and signage corridor fetching logic (~70 lines total) is inline in page.tsx.
 
@@ -713,7 +713,7 @@ If any check fails, fix the issue before marking the item as done.
 | 3.4  | Extract StartSlkTrackingButton               | [x]           | ~15           | 2026-04-21     |
 | 4.1  | Create useCollapsibleSections                | [x]           | ~14           | 2026-04-21     |
 | 4.2  | Create useWorkZoneLookup                     | [ ]           | ~200          |                |
-| 4.3  | Create useSignageData                        | [ ]           | ~70           |                |
+| 4.3  | Create useSignageData                        | [x]           | ~70           | 2026-04-21     |
 | 4.4  | Create useSessionRestore                     | [ ]           | ~30           |                |
 | 5.1  | Move WorkZoneResult to shared.ts             | [ ]           | ~60           |                |
 | 5.2  | Move Place/PlacesData/CrossRoad to shared.ts | [ ]           | ~45           |                |
