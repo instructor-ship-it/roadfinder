@@ -141,6 +141,17 @@ export interface RoadInfo {
 }
 
 /**
+ * Road with required SLK range (used in road selection dropdowns)
+ */
+export interface Road {
+  road_id: string;
+  road_name: string;
+  min_slk: number;
+  max_slk: number;
+  region?: string;
+}
+
+/**
  * Road segment with geometry
  */
 export interface RoadSegment {

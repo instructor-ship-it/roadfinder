@@ -90,6 +90,7 @@ import {
   Place,
   PlacesData,
   CrossRoad,
+  Road,
 } from '@/types/shared';
 import {
   getSavedLocations as getSavedLocationsFromDB,
@@ -97,14 +98,6 @@ import {
   deleteSavedLocation as deleteSavedLocationFromDB,
   migrateFromLocalStorage,
 } from '@/lib/saved-locations-db';
-
-interface Road {
-  road_id: string;
-  road_name: string;
-  min_slk: number;
-  max_slk: number;
-  region?: string;
-}
 
 export default function Home() {
   const {

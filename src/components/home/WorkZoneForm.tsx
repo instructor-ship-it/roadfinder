@@ -25,17 +25,9 @@ import {
 } from '@/components/ui/select';
 import { GpsLookupDialog } from '@/components/GpsLookupDialog';
 import { usePromptDialog } from '@/components/ui/prompt-dialog';
-import type { SavedLocation } from '@/types/shared';
+import type { SavedLocation, Road } from '@/types/shared';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
-
-interface Road {
-  road_id: string;
-  road_name: string;
-  min_slk: number;
-  max_slk: number;
-  region?: string;
-}
 
 interface GpsRoadInfo {
   road_id: string;

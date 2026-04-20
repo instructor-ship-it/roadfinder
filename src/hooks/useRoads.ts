@@ -2,14 +2,9 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { getRoadsForRegion } from '@/lib/offline-db';
+import type { Road } from '@/types/shared';
 
-export interface Road {
-  road_id: string;
-  road_name: string;
-  min_slk: number;
-  max_slk: number;
-  region?: string;
-}
+export type { Road };
 
 interface UseRoadsReturn {
   roads: Road[];
