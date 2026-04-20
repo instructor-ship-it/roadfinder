@@ -190,7 +190,7 @@ Where `CrossRoad` has: `name`, `distance`, `lat`, `lon`, `roadType`, `googleMaps
 
 ### Item 2.1: Use Existing useRegions Hook
 
-**Status**: [ ]
+**Status**: [x]
 
 **Problem**: `useRegions` hook exists at `src/hooks/useRegions.ts` with full offline/API fallback logic, but page.tsx has its own `fetchRegions` function (lines 510-631) that duplicates this logic.
 
@@ -704,7 +704,7 @@ If any check fails, fix the issue before marking the item as done.
 | 1.1  | Use existing WeatherSection                  | [x]    | ~150          | 2026-04-21     |
 | 1.2  | Use existing AmenitiesSection                | [x]    | ~210          | 2026-04-21     |
 | 1.3  | Use existing IntersectionsSection            | [x]    | ~65           | 2026-04-21     |
-| 2.1  | Use existing useRegions hook                 | [ ]    | ~130          |                |
+| 2.1  | Use existing useRegions hook                 | [x]    | ~130          | 2026-04-21     |
 | 2.2  | Use existing useRoads hook                   | [ ]    | ~100          |                |
 | 2.3  | Use existing useGpsLocation hook             | [ ]    | ~90           |                |
 | 3.1  | Extract SpeedZoneLayoutSection               | [ ]    | ~30           |                |
