@@ -27,6 +27,7 @@ import { SignageCorridorSection } from '@/components/home/SignageCorridorSection
 import { IntersectionsSection } from '@/components/home/IntersectionsSection';
 import { SpeedZoneLayoutSection } from '@/components/home/SpeedZoneLayoutSection';
 import { GenerateReportButton } from '@/components/home/GenerateReportButton';
+import { HomeHeader } from '@/components/home/HomeHeader';
 import { RoadWidthBreakdown } from '@/components/home/RoadWidthBreakdown';
 import { LaneDirectionDiagram } from '@/components/home/LaneDirectionDiagram';
 import { WorkZoneForm } from '@/components/home/WorkZoneForm';
@@ -1014,59 +1015,44 @@ export default function Home() {
       </a>
       <div className="max-w-md mx-auto px-4 py-6">
         {/* Header */}
-        <header className="flex items-center justify-between mb-1" role="banner">
-          <button
-            onClick={() => setShowEmergencyModal(true)}
-            className="w-8 h-8 flex items-center justify-center rounded-full text-lg bg-red-600 hover:bg-red-700"
-            title="Emergency Location (000)"
-            aria-label="Get emergency location for 000 call"
-          >
-            🆘
-          </button>
-          <div className="text-center flex-1">
-            <h1 className="text-xl font-bold">TC Work Zone Locator</h1>
-            <p className="text-xs text-gray-400">
-              v{APP_VERSION}{' '}
-              {offlineReady && <span className="text-green-400">• Offline Ready</span>}
-            </p>
-          </div>
-          <div className="flex items-center gap-1">
-            <SettingsDrawer
-              variant="home"
-              offlineStats={offlineStats}
-              downloading={downloading}
-              downloadProgress={downloadProgress}
-              onDownloadData={handleDownloadOfflineData}
-              onClearData={handleClearOfflineData}
-              gpsSettings={gpsSettings}
-              onUpdateGpsSetting={updateGpsSetting}
-              defaultRegion={defaultRegion}
-              regions={regions}
-              onUpdateRegion={(region) => {
-                updateDefaultRegion(region);
-              }}
-              windGustThreshold={windGustThreshold}
-              onUpdateWindGustThreshold={updateWindGustThreshold}
-              result={result}
-              setDistanceActive={setDistanceActive}
-              onStartSetDistance={startSetDistance}
-              onOpenTrafficEventLogger={() => setTrafficEventLoggerOpen(true)}
-              onExportReport={exportReport}
-              exporting={exporting}
-              mrwaStatus={mrwaStatus}
-              datasetStats={datasetStats}
-              syncProgress={syncProgress}
-              syncingDatasets={syncingDatasets}
-              onSyncAll={syncAllDatasets}
-              onSyncDataset={syncDatasetFromMrwa}
-              onGenerateDebug={generateDebugInfo}
-              offlineToggles={offlineToggles}
-              onUpdateOfflineToggle={updateOfflineToggle}
-              onResetOfflineToggles={resetOfflineToggles}
-              offlineReady={offlineReady}
-            />
-          </div>
-        </header>
+        <HomeHeader
+          offlineReady={offlineReady}
+          onShowEmergency={() => setShowEmergencyModal(true)}
+          settingsDrawerProps={{
+            variant: 'home',
+            offlineStats,
+            downloading,
+            downloadProgress,
+            onDownloadData: handleDownloadOfflineData,
+            onClearData: handleClearOfflineData,
+            gpsSettings,
+            onUpdateGpsSetting: updateGpsSetting,
+            defaultRegion,
+            regions,
+            onUpdateRegion: (region: string) => {
+              updateDefaultRegion(region);
+            },
+            windGustThreshold,
+            onUpdateWindGustThreshold: updateWindGustThreshold,
+            result,
+            setDistanceActive,
+            onStartSetDistance: startSetDistance,
+            onOpenTrafficEventLogger: () => setTrafficEventLoggerOpen(true),
+            onExportReport: exportReport,
+            exporting,
+            mrwaStatus,
+            datasetStats,
+            syncProgress,
+            syncingDatasets,
+            onSyncAll: syncAllDatasets,
+            onSyncDataset: syncDatasetFromMrwa,
+            onGenerateDebug: generateDebugInfo,
+            offlineToggles,
+            onUpdateOfflineToggle: updateOfflineToggle,
+            onResetOfflineToggles: resetOfflineToggles,
+            offlineReady,
+          }}
+        />
 
         {/* Debug Info Popup */}
         <DebugInfoPopup

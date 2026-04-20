@@ -11,5 +11,6 @@ export { SignageCorridorSection } from './SignageCorridorSection';
 export { IntersectionsSection } from './IntersectionsSection';
 export { SpeedZoneLayoutSection } from './SpeedZoneLayoutSection';
 export { GenerateReportButton } from './GenerateReportButton';
+export { HomeHeader } from './HomeHeader';
 export { WorkZoneForm } from './WorkZoneForm';
 export { TrafficVolumeSection } from './TrafficVolumeSection';
