@@ -8,38 +8,40 @@ interface Place {
   lat: number;
   lon: number;
   phone?: string;
-  isEmergency?: boolean;
-  googleMapsUrl?: string;
   address?: string;
-  suburb?: string;
+  googleMapsUrl: string;
+  isEmergency?: boolean;
   // Hospital-specific (from WA Health SLIP)
-  hospitalType?: string;
-  hospitalCategory?: string;
+  hospitalType?: string; // 'Public' | 'Private' | 'Nursing Post'
+  hospitalCategory?: string; // e.g. 'Acute Hospital', 'Nursing Post'
   beds?: number;
+  suburb?: string;
   // Fuel station-specific (from FuelWatch WA)
   fuelBrand?: string;
-  fuelPrice?: number;
-  fuelDate?: string;
-  siteFeatures?: string[];
+  fuelPrice?: number; // cents per litre (e.g. 231.3 = $2.313/L)
+  fuelDate?: string; // date of price
+  siteFeatures?: string[]; // e.g. ['Open 24 hours', 'Toilets', 'ATM']
   // Toilet-specific (from National Public Toilet Map)
-  toiletType?: string;
+  toiletType?: string; // e.g. 'Park or reserve', 'Service station', 'Community building'
   openingHours?: string;
   wheelchair?: boolean;
   toiletNote?: string;
   toiletUrl?: string;
-  toiletSource?: string;
+  toiletSource?: string; // 'NationalToiletMap' | 'OpenStreetMap'
 }
 
 interface PlacesData {
-  hospital?: Place;
-  fuelStation?: Place;
-  toilet?: Place;
+  hospital: Place | null;
+  toilet: Place | null;
+  fuelStation: Place | null;
   fromCache?: boolean;
-  cachedAt?: string | number;
-  dataUnavailable?: boolean;
+  cachedAt?: number;
+  cachedLocation?: { lat: number; lon: number };
   source?: string;
-  hospitalSource?: string;
-  fuelSource?: string;
+  dataUnavailable?: boolean; // True when offline mode but no cached data available
+  // Enhanced source tracking
+  hospitalSource?: string; // e.g. 'WA Health SLIP' | 'Overpass API'
+  fuelSource?: string; // e.g. 'FuelWatch WA' | 'Overpass API'
 }
 
 interface AmenitiesSectionProps {
