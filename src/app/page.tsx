@@ -12,6 +12,7 @@ import { useHomeSettings } from '@/hooks/useHomeSettings';
 import { useSavedLocations } from '@/hooks/useSavedLocations';
 import { useRegions } from '@/hooks/useRegions';
 import { useRoads } from '@/hooks/useRoads';
+import { useCollapsibleSections } from '@/hooks/useCollapsibleSections';
 import { useWeather } from '@/hooks/useWeather';
 import { usePlaces } from '@/hooks/usePlaces';
 import { IncidentsSection } from '@/components/IncidentsSection';
@@ -399,13 +400,7 @@ export default function Home() {
     });
 
   // Collapsible sections state
-  const [showTraffic, setShowTraffic] = useState<boolean>(true);
-  const [showSignageCorridor, setShowSignageCorridor] = useState<boolean>(true);
-  const [showSpeedZoneLayout, setShowSpeedZoneLayout] = useState<boolean>(true);
-  const [showTcPositions, setShowTcPositions] = useState<boolean>(true);
-  const [showIntersections, setShowIntersections] = useState<boolean>(true);
-  const [showWeather, setShowWeather] = useState<boolean>(true);
-  const [showAmenities, setShowAmenities] = useState<boolean>(true);
+  const sections = useCollapsibleSections();
 
   // Emergency location modal state
   const [showEmergencyModal, setShowEmergencyModal] = useState<boolean>(false);
@@ -1172,14 +1167,14 @@ export default function Home() {
                   roadType: road.roadType,
                 }))}
               corridorMargin={0.85}
-              defaultExpanded={showSpeedZoneLayout}
+              defaultExpanded={sections.showSpeedZoneLayout}
             />
 
             {/* Intersecting Roads */}
             <IntersectionsSection
               crossRoads={crossRoads}
               roadName={result.road_name}
-              defaultExpanded={showIntersections}
+              defaultExpanded={sections.showIntersections}
             />
 
             {/* Signage Corridor Report */}
@@ -1205,7 +1200,7 @@ export default function Home() {
                 tcLengthM={result?.tc_positions?.tc_length_m}
                 onSetUserTrafficOverride={setUserTrafficOverride}
                 onSelectCountDetail={setSelectedCountDetail}
-                defaultExpanded={showTraffic}
+                defaultExpanded={sections.showTraffic}
               />
             </SectionErrorBoundary>
 
@@ -1215,8 +1210,8 @@ export default function Home() {
                 weather={weather}
                 warnings={warnings}
                 windGustThreshold={windGustThreshold}
-                showWeather={showWeather}
-                onToggle={() => setShowWeather(!showWeather)}
+                showWeather={sections.showWeather}
+                onToggle={sections.toggleWeather}
                 getUvColor={getUvColor}
               />
             </SectionErrorBoundary>
@@ -1234,8 +1229,8 @@ export default function Home() {
             <SectionErrorBoundary sectionName="Amenities">
               <AmenitiesSection
                 places={places}
-                showAmenities={showAmenities}
-                onToggle={() => setShowAmenities(!showAmenities)}
+                showAmenities={sections.showAmenities}
+                onToggle={sections.toggleAmenities}
                 onOpenGoogleMaps={(url) => openGoogleMaps(url)}
                 onOpenStreetView={openStreetView}
               />
