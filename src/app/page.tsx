@@ -26,6 +26,7 @@ import { WorkZoneSummary } from '@/components/home/WorkZoneSummary';
 import { SignageCorridorSection } from '@/components/home/SignageCorridorSection';
 import { IntersectionsSection } from '@/components/home/IntersectionsSection';
 import { SpeedZoneLayoutSection } from '@/components/home/SpeedZoneLayoutSection';
+import { GenerateReportButton } from '@/components/home/GenerateReportButton';
 import { RoadWidthBreakdown } from '@/components/home/RoadWidthBreakdown';
 import { LaneDirectionDiagram } from '@/components/home/LaneDirectionDiagram';
 import { WorkZoneForm } from '@/components/home/WorkZoneForm';
@@ -1263,24 +1264,11 @@ export default function Home() {
             </SectionErrorBoundary>
 
             {/* Generate Report Button */}
-            {result && (
-              <div className="mt-6 bg-gray-800 rounded-lg p-4">
-                <Button
-                  onClick={generateWorkZoneReport}
-                  disabled={reportGenerating}
-                  className="w-full bg-purple-700 hover:bg-purple-600 h-12 text-base font-medium"
-                >
-                  {reportGenerating ? (
-                    <>⏳ Generating Report...</>
-                  ) : (
-                    <>📋 Generate Work Zone Report</>
-                  )}
-                </Button>
-                <p className="text-xs text-gray-500 mt-2 text-center">
-                  Creates a comprehensive report with all work zone information
-                </p>
-              </div>
-            )}
+            <GenerateReportButton
+              onGenerate={generateWorkZoneReport}
+              isGenerating={reportGenerating}
+              visible={!!result}
+            />
           </div>
         )}
       </div>
