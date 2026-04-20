@@ -1,8 +1,9 @@
 // TC Work Zone Locator - Service Worker for Offline Support
-// Version: 1.35.0
-const CACHE_NAME = 'tc-workzone-v135';
-const OFFLINE_CACHE = 'tc-workzone-offline-v135';
-const STATIC_CACHE = 'tc-workzone-static-v135';
+// Version: must match APP_VERSION in package.json / src/lib/config.ts / src/components/SettingsDrawer.tsx
+const APP_VERSION = '1.34.1';
+const CACHE_NAME = 'tc-workzone-v1341';
+const OFFLINE_CACHE = 'tc-workzone-offline-v1341';
+const STATIC_CACHE = 'tc-workzone-static-v1341';
 const SYNC_QUEUE_DB = 'tc-sync-queue';
 
 // App shell - core files needed for app to work
@@ -20,7 +21,7 @@ const STATIC_ASSETS = ['/data/roads.json', '/data/speed-zones.json', '/data/regi
 
 // Install - cache app shell and static assets
 self.addEventListener('install', (event) => {
-  console.log('[SW] Installing service worker v1.34.0...');
+  console.log(`[SW] Installing service worker v${APP_VERSION}...`);
   event.waitUntil(
     Promise.all([
       // Cache app shell
@@ -54,7 +55,7 @@ self.addEventListener('install', (event) => {
 
 // Activate - clean up old caches and notify clients of update
 self.addEventListener('activate', (event) => {
-  console.log('[SW] Activating service worker v1.34.0...');
+  console.log(`[SW] Activating service worker v${APP_VERSION}...`);
   event.waitUntil(
     caches
       .keys()
@@ -82,7 +83,7 @@ self.addEventListener('activate', (event) => {
         clients.forEach((client) => {
           client.postMessage({
             type: 'SW_UPDATED',
-            version: '1.34.0',
+            version: APP_VERSION,
             message: 'App updated to the latest version',
           });
         });
@@ -286,7 +287,7 @@ self.addEventListener('message', (event) => {
     case 'GET_VERSION':
       event.source.postMessage({
         type: 'VERSION',
-        version: '1.34.0',
+        version: APP_VERSION,
       });
       break;
 

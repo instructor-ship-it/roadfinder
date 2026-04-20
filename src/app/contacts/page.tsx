@@ -28,9 +28,11 @@ import {
   BriefcaseIcon,
   CheckCircleIcon,
 } from 'lucide-react';
+import { usePromptDialog } from '@/components/ui/prompt-dialog';
 
 export default function ContactsPage() {
   const router = useRouter();
+  const promptDialog = usePromptDialog();
 
   // Initialize state from storage
   const initialState = getState();
@@ -155,8 +157,14 @@ export default function ContactsPage() {
     alert('Contacts exported to clipboard!');
   };
 
-  const handleImport = () => {
-    const json = prompt('Paste contacts JSON:');
+  const handleImport = async () => {
+    const json = await promptDialog.prompt({
+      title: 'Import Contacts',
+      message: 'Paste your exported contacts JSON below:',
+      placeholder: 'Paste JSON here...',
+      multiline: true,
+      confirmLabel: 'Import',
+    });
     if (!json) return;
 
     const result = importContacts(json);

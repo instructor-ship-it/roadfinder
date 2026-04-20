@@ -4,6 +4,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
 import { ConfirmProvider } from '@/components/ui/confirm-dialog';
+import { PromptProvider } from '@/components/ui/prompt-dialog';
 import { BottomNavWrapper } from '@/components/ui/bottom-nav-wrapper';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 
@@ -81,12 +82,14 @@ export default function RootLayout({
       >
         <ErrorBoundary>
           <ConfirmProvider>
-            <ServiceWorkerRegistration />
-            <main id="main-content" className="min-h-screen">
-              {children}
-            </main>
-            <BottomNavWrapper />
-            <Toaster />
+            <PromptProvider>
+              <ServiceWorkerRegistration />
+              <main id="main-content" className="min-h-screen">
+                {children}
+              </main>
+              <BottomNavWrapper />
+              <Toaster />
+            </PromptProvider>
           </ConfirmProvider>
         </ErrorBoundary>
       </body>

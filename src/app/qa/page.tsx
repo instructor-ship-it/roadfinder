@@ -20,6 +20,7 @@ import {
   saveQaEntry,
   type QaEntry,
 } from '@/lib/qa-storage';
+import { usePromptDialog } from '@/components/ui/prompt-dialog';
 
 // Types
 interface SearchableDocument {
@@ -31,6 +32,7 @@ interface SearchableDocument {
 
 export default function QaPage() {
   const router = useRouter();
+  const promptDialog = usePromptDialog();
 
   // State
   const [activeTab, setActiveTab] = useState('answers');
@@ -316,8 +318,14 @@ Save this to: \`public/library/qa-saved.json\` (append to the array)`;
   };
 
   // Import Q&As
-  const handleImport = () => {
-    const json = prompt('Paste Q&A history JSON:');
+  const handleImport = async () => {
+    const json = await promptDialog.prompt({
+      title: 'Import Q&A History',
+      message: 'Paste your exported Q&A history JSON below:',
+      placeholder: 'Paste JSON here...',
+      multiline: true,
+      confirmLabel: 'Import',
+    });
     if (!json) return;
 
     const result = importQaHistory(json);

@@ -76,6 +76,7 @@ import {
   countSignsByStatus,
   generateReport,
 } from '@/lib/route-optimizer';
+import { usePromptDialog } from '@/components/ui/prompt-dialog';
 
 // Helper to fetch GPS coordinates from road_id + slk
 async function fetchGpsFromSlk(
@@ -103,6 +104,9 @@ async function fetchGpsFromSlk(
 // ============================================
 
 function AfterCareContent() {
+  // Prompt dialog for JSON import
+  const promptDialog = usePromptDialog();
+
   // Get query params for filtering
   const searchParams = useSearchParams();
   const filterRoadId = searchParams.get('road_id');
@@ -892,8 +896,14 @@ function AfterCareContent() {
                   📤 Export All
                 </Button>
                 <Button
-                  onClick={() => {
-                    const json = prompt('Paste exported jobs JSON:');
+                  onClick={async () => {
+                    const json = await promptDialog.prompt({
+                      title: 'Import Jobs',
+                      message: 'Paste your exported jobs JSON below:',
+                      placeholder: 'Paste JSON here...',
+                      multiline: true,
+                      confirmLabel: 'Import',
+                    });
                     if (json) {
                       const result = importJobs(json, false);
                       if (result.success) {

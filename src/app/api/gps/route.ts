@@ -11,6 +11,7 @@
 
 import { NextResponse } from 'next/server';
 import { haversineDistance } from '@/lib/utils';
+import { latitudeSchema, longitudeSchema } from '@/lib/validation';
 
 const ROAD_NETWORK_URL =
   'https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/17/query'; // Layer 17 has RA_NAME for all roads
@@ -178,6 +179,19 @@ export async function GET(request: Request) {
 
   if (isNaN(lat) || isNaN(lon)) {
     return NextResponse.json({ error: 'Invalid coordinates' }, { status: 400 });
+  }
+
+  // Validate coordinate ranges using Zod schemas
+  if (!latitudeSchema.safeParse(lat).success || !longitudeSchema.safeParse(lon).success) {
+    return NextResponse.json({ error: 'Coordinates out of valid range' }, { status: 400 });
+  }
+
+  // Clamp radius to reasonable range
+  if (isNaN(radius) || radius < 10 || radius > 5000) {
+    return NextResponse.json(
+      { error: 'Radius must be between 10 and 5000 meters' },
+      { status: 400 }
+    );
   }
 
   try {

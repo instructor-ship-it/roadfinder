@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { GpsLookupDialog } from '@/components/GpsLookupDialog';
+import { usePromptDialog } from '@/components/ui/prompt-dialog';
 import type { SavedLocation } from '@/types/shared';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -163,11 +164,16 @@ export function WorkZoneForm({
     }
   };
 
-  const handleSaveLocationClick = () => {
-    const name = prompt(
-      'Enter a name for this location (optional):',
-      `${selectedRoad} @ ${startSlk}`
-    );
+  const promptDialog = usePromptDialog();
+
+  const handleSaveLocationClick = async () => {
+    const name = await promptDialog.prompt({
+      title: 'Save Location',
+      message: 'Enter a name for this location (optional):',
+      defaultValue: `${selectedRoad} @ ${startSlk}`,
+      placeholder: 'e.g., Site A entrance',
+      confirmLabel: 'Save',
+    });
     if (name !== null) {
       onSaveLocation(name);
     }

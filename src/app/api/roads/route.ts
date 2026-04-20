@@ -13,6 +13,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { roadIdSchema, regionSchema, slkSchema } from '@/lib/validation';
 
 const STATE_ROAD_URL =
   'https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/OpenData/RoadAssets_DataPortal/MapServer/24/query';
@@ -71,6 +72,20 @@ function loadOfflineTrafficData(): Map<string, any> {
   }
 
   return offlineTrafficData || new Map();
+}
+
+/**
+ * Sanitize a value for use in ArcGIS where clause.
+ * Escapes single quotes and removes potentially dangerous characters.
+ * Used as defense-in-depth alongside Zod schema validation.
+ */
+function sanitizeArcGISValue(value: string): string {
+  return value
+    .replace(/'/g, "''") // Escape single quotes for SQL
+    .replace(/;/g, '') // Remove statement terminators
+    .replace(/--/g, '') // Remove SQL comments
+    .replace(/\/\*/g, '') // Remove block comment start
+    .replace(/\*\//g, ''); // Remove block comment end
 }
 
 async function fetchArcGIS(
@@ -146,7 +161,7 @@ function interpolateGpsFromGeometry(
 async function getSpeedLimit(roadId: string, slk: number): Promise<{ speed: string; cwy: string }> {
   try {
     const query = {
-      where: `ROAD = '${roadId}' AND START_SLK <= ${slk} AND END_SLK >= ${slk}`,
+      where: `ROAD = '${sanitizeArcGISValue(roadId)}' AND START_SLK <= ${Number(slk)} AND END_SLK >= ${Number(slk)}`,
       outFields: 'SPEED_LIMIT,CWY',
       returnGeometry: 'false',
       f: 'json',
@@ -205,7 +220,7 @@ async function getPavementData(
   if (!isOffline) {
     try {
       const query = {
-        where: `ROAD = '${roadId}' AND START_SLK <= ${slk} AND END_SLK >= ${slk}`,
+        where: `ROAD = '${sanitizeArcGISValue(roadId)}' AND START_SLK <= ${Number(slk)} AND END_SLK >= ${Number(slk)}`,
         outFields:
           'NO_OF_LANES,TRAFFICABLE_SURF_WIDTH,CWY,TOTAL_PAVE_WIDTH,TOTAL_SEAL_WIDTH,SEALED_SHOULDER_L,SEALED_SHOULDER_R,UNSEALED_SHOULDER_L,UNSEALED_SHOULDER_R,KERB_L,KERB_R',
         returnGeometry: 'false',
@@ -311,10 +326,18 @@ export async function GET(request: Request) {
     const region = searchParams.get('region');
 
     try {
+      // Validate region if provided
+      if (region && region.trim() !== '') {
+        const regionResult = regionSchema.safeParse(region);
+        if (!regionResult.success) {
+          return NextResponse.json({ error: 'Invalid region parameter' }, { status: 400 });
+        }
+      }
+
       // Build where clause - filter by region if provided
       let whereClause = "ROAD LIKE 'H%' OR ROAD LIKE 'M%'";
       if (region && region.trim() !== '') {
-        whereClause = `(ROAD LIKE 'H%' OR ROAD LIKE 'M%') AND RA_NAME = '${region.replace(/'/g, "''")}'`;
+        whereClause = `(ROAD LIKE 'H%' OR ROAD LIKE 'M%') AND RA_NAME = '${sanitizeArcGISValue(region)}'`;
       }
 
       const query = {
@@ -382,9 +405,15 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'road_id required' }, { status: 400 });
     }
 
+    // Validate road_id format to prevent injection
+    const roadIdResult = roadIdSchema.safeParse(roadId);
+    if (!roadIdResult.success) {
+      return NextResponse.json({ error: 'Invalid road_id format' }, { status: 400 });
+    }
+
     try {
       const query = {
-        where: `ROAD = '${roadId}'`,
+        where: `ROAD = '${sanitizeArcGISValue(roadId)}'`,
         outFields: 'ROAD,ROAD_NAME,START_SLK,END_SLK,RA_NAME',
         returnGeometry: 'false',
         f: 'json',
@@ -429,14 +458,26 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'road_id and slk required' }, { status: 400 });
     }
 
+    // Validate road_id format to prevent injection
+    const roadIdResult = roadIdSchema.safeParse(roadId);
+    if (!roadIdResult.success) {
+      return NextResponse.json({ error: 'Invalid road_id format' }, { status: 400 });
+    }
+
     const targetSlk = parseFloat(slkStr);
     if (isNaN(targetSlk)) {
       return NextResponse.json({ error: 'Invalid SLK value' }, { status: 400 });
     }
 
+    // Validate SLK range
+    const slkResult = slkSchema.safeParse(targetSlk);
+    if (!slkResult.success) {
+      return NextResponse.json({ error: 'SLK value out of range' }, { status: 400 });
+    }
+
     try {
       const query = {
-        where: `ROAD = '${roadId}' AND START_SLK <= ${targetSlk} AND END_SLK >= ${targetSlk}`,
+        where: `ROAD = '${sanitizeArcGISValue(roadId)}' AND START_SLK <= ${targetSlk} AND END_SLK >= ${targetSlk}`,
         outFields: 'ROAD,ROAD_NAME,START_SLK,END_SLK,RA_NAME',
         returnGeometry: 'true',
         f: 'json',
@@ -447,7 +488,7 @@ export async function GET(request: Request) {
       if (!result.features || result.features.length === 0) {
         // Try to find closest segment
         const rangeQuery = {
-          where: `ROAD = '${roadId}'`,
+          where: `ROAD = '${sanitizeArcGISValue(roadId)}'`,
           outFields: 'ROAD,ROAD_NAME,START_SLK,END_SLK,RA_NAME',
           returnGeometry: 'true',
           f: 'json',
@@ -549,11 +590,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'road_id and start_slk required' }, { status: 400 });
     }
 
+    // Validate road_id format to prevent injection
+    const roadIdResult = roadIdSchema.safeParse(road_id);
+    if (!roadIdResult.success) {
+      return NextResponse.json({ error: 'Invalid road_id format' }, { status: 400 });
+    }
+
     const startSlk = parseFloat(start_slk);
     const endSlk = end_slk !== undefined ? parseFloat(end_slk) : undefined;
 
     if (isNaN(startSlk) || (endSlk !== undefined && isNaN(endSlk))) {
       return NextResponse.json({ error: 'Invalid SLK values' }, { status: 400 });
+    }
+
+    // Validate SLK ranges
+    if (!slkSchema.safeParse(startSlk).success) {
+      return NextResponse.json({ error: 'Start SLK out of range' }, { status: 400 });
+    }
+    if (endSlk !== undefined && !slkSchema.safeParse(endSlk).success) {
+      return NextResponse.json({ error: 'End SLK out of range' }, { status: 400 });
     }
 
     if (endSlk !== undefined && startSlk > endSlk) {
@@ -573,7 +628,7 @@ export async function POST(request: Request) {
 
     // Get road geometry within TC zone
     const query = {
-      where: `ROAD = '${road_id}' AND START_SLK < ${tcEndSlk} AND END_SLK > ${tcStartSlk}`,
+      where: `ROAD = '${sanitizeArcGISValue(road_id)}' AND START_SLK < ${tcEndSlk} AND END_SLK > ${tcStartSlk}`,
       outFields: 'ROAD,ROAD_NAME,START_SLK,END_SLK,RA_NAME,NETWORK_TYPE',
       returnGeometry: 'true',
       f: 'json',

@@ -36,6 +36,7 @@ import { WorkZoneReport } from '@/components/WorkZoneReport';
 import { SetDistanceControls } from '@/components/SetDistanceControls';
 import { GpsLookupDialog } from '@/components/GpsLookupDialog';
 import { ReportExportModal } from '@/components/ReportExportModal';
+import { SectionErrorBoundary } from '@/components/ui/section-error-boundary';
 
 import {
   initDB,
@@ -267,15 +268,25 @@ export default function Home() {
     // Use ref to avoid stale closure — always reads latest region value
     const currentRegion = selectedRegionRef.current;
 
-    // If the region is different, we need to switch regions first
+    // If the region is different, we need to switch regions first.
+    // Instead of a fragile setTimeout, we use the same pendingRestoreParams
+    // pattern as the sessionStorage restore flow — it waits for the roads
+    // useEffect to populate the roads list, then calls getWorkZoneInfo.
     if (loc.region && loc.region !== currentRegion) {
+      isRestoring.current = true;
+      pendingRestoreParams.current = {
+        region: loc.region,
+        roadId: loc.road_id,
+        startSlk: loc.start_slk.toString(),
+        endSlk: loc.end_slk ? loc.end_slk.toString() : '',
+      };
       updateSelectedRegion(loc.region);
-      // The roads will be loaded by the useEffect that watches selectedRegion
-      // We need to wait for the roads to load
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // The useEffect watching [roads] will pick up pendingRestoreParams
+      // and call getWorkZoneInfo once the road list is loaded.
+      return;
     }
 
-    // Directly call getWorkZoneInfo — fills the form AND loads the work zone
+    // Same region — directly call getWorkZoneInfo
     await getWorkZoneInfo(
       loc.region || selectedRegionRef.current,
       loc.road_id,
@@ -1368,13 +1379,15 @@ export default function Home() {
         {result && (
           <div className="mt-6 space-y-4">
             {/* Work Zone Summary */}
-            <WorkZoneSummary
-              result={result}
-              isSinglePoint={isSinglePoint}
-              onOpenStreetView={openStreetView}
-              onOpenGoogleMaps={(url) => openGoogleMaps(url)}
-              onStartSlkTracking={startSlkTracking}
-            />
+            <SectionErrorBoundary sectionName="Work Zone Summary">
+              <WorkZoneSummary
+                result={result}
+                isSinglePoint={isSinglePoint}
+                onOpenStreetView={openStreetView}
+                onOpenGoogleMaps={(url) => openGoogleMaps(url)}
+                onStartSlkTracking={startSlkTracking}
+              />
+            </SectionErrorBoundary>
 
             {/* Speed Zone Layout Diagram */}
             <div className="bg-gray-800 rounded-lg">
@@ -1478,381 +1491,403 @@ export default function Home() {
 
             {/* Signage Corridor Report */}
             {/* Signage Corridor */}
-            <SignageCorridorSection
-              workZone={result.work_zone}
-              signageCorridor={signageCorridor}
-              signageLoading={signageLoading}
-            />
+            <SectionErrorBoundary sectionName="Signage Corridor">
+              <SignageCorridorSection
+                workZone={result.work_zone}
+                signageCorridor={signageCorridor}
+                signageLoading={signageLoading}
+              />
+            </SectionErrorBoundary>
 
             {/* Traffic Volume */}
-            <TrafficVolumeSection
-              traffic={traffic}
-              userTrafficCounts={userTrafficCounts}
-              userTrafficOverride={userTrafficOverride}
-              selectedRoad={selectedRoad}
-              selectedRegion={selectedRegion}
-              startSlk={startSlk}
-              roadName={result?.road_name || ''}
-              tcLengthM={result?.tc_positions?.tc_length_m}
-              onSetUserTrafficOverride={setUserTrafficOverride}
-              onSelectCountDetail={setSelectedCountDetail}
-              defaultExpanded={showTraffic}
-            />
+            <SectionErrorBoundary sectionName="Traffic Volume">
+              <TrafficVolumeSection
+                traffic={traffic}
+                userTrafficCounts={userTrafficCounts}
+                userTrafficOverride={userTrafficOverride}
+                selectedRoad={selectedRoad}
+                selectedRegion={selectedRegion}
+                startSlk={startSlk}
+                roadName={result?.road_name || ''}
+                tcLengthM={result?.tc_positions?.tc_length_m}
+                onSetUserTrafficOverride={setUserTrafficOverride}
+                onSelectCountDetail={setSelectedCountDetail}
+                defaultExpanded={showTraffic}
+              />
+            </SectionErrorBoundary>
 
             {/* Weather with Sun Data */}
-            {weather && (
-              <div className="bg-gray-800 rounded-lg">
-                <button
-                  onClick={() => setShowWeather(!showWeather)}
-                  className="w-full p-4 flex items-center justify-between text-left"
-                >
-                  <h3 className="text-sm font-semibold text-blue-400">
-                    🌤️ Weather - {weather.location}
-                    {weather.dataUnavailable && (
-                      <span className="ml-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
-                        No Cached Data
-                      </span>
-                    )}
-                    {weather.fromCache && !weather.dataUnavailable && (
-                      <span className="ml-2 bg-amber-600 text-white text-xs px-2 py-0.5 rounded-full">
-                        Cached{' '}
-                        {weather.cachedAt ? new Date(weather.cachedAt).toLocaleTimeString() : ''}
-                      </span>
-                    )}
-                    {warnings && warnings.count > 0 && (
-                      <span className="ml-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
-                        {warnings.count} warning{warnings.count !== 1 ? 's' : ''}
-                      </span>
-                    )}
-                  </h3>
-                  <span className="text-gray-400 text-lg">{showWeather ? '−' : '+'}</span>
-                </button>
-                {showWeather && (
-                  <div className="px-4 pb-4">
-                    {/* Data Unavailable Warning */}
-                    {weather.dataUnavailable && (
-                      <div className="bg-red-900/30 border border-red-500/50 rounded p-3 mb-4">
-                        <p className="text-sm font-semibold text-red-400">
-                          ⚠️ Weather Data Unavailable
-                        </p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          {weather.source || 'No cached weather data available in offline mode.'}
-                        </p>
-                        <p className="text-xs text-amber-400 mt-2">
-                          💡 Switch to ONLINE mode to fetch weather, or previously fetched weather
-                          will be cached for offline use.
-                        </p>
-                      </div>
-                    )}
-                    {/* Weather Warnings - Live from Bureau of Meteorology */}
-                    <WarningsSection state="WA" enabled={true} />
+            <SectionErrorBoundary sectionName="Weather">
+              {weather && (
+                <div className="bg-gray-800 rounded-lg">
+                  <button
+                    onClick={() => setShowWeather(!showWeather)}
+                    className="w-full p-4 flex items-center justify-between text-left"
+                  >
+                    <h3 className="text-sm font-semibold text-blue-400">
+                      🌤️ Weather - {weather.location}
+                      {weather.dataUnavailable && (
+                        <span className="ml-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+                          No Cached Data
+                        </span>
+                      )}
+                      {weather.fromCache && !weather.dataUnavailable && (
+                        <span className="ml-2 bg-amber-600 text-white text-xs px-2 py-0.5 rounded-full">
+                          Cached{' '}
+                          {weather.cachedAt ? new Date(weather.cachedAt).toLocaleTimeString() : ''}
+                        </span>
+                      )}
+                      {warnings && warnings.count > 0 && (
+                        <span className="ml-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+                          {warnings.count} warning{warnings.count !== 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </h3>
+                    <span className="text-gray-400 text-lg">{showWeather ? '−' : '+'}</span>
+                  </button>
+                  {showWeather && (
+                    <div className="px-4 pb-4">
+                      {/* Data Unavailable Warning */}
+                      {weather.dataUnavailable && (
+                        <div className="bg-red-900/30 border border-red-500/50 rounded p-3 mb-4">
+                          <p className="text-sm font-semibold text-red-400">
+                            ⚠️ Weather Data Unavailable
+                          </p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            {weather.source || 'No cached weather data available in offline mode.'}
+                          </p>
+                          <p className="text-xs text-amber-400 mt-2">
+                            💡 Switch to ONLINE mode to fetch weather, or previously fetched weather
+                            will be cached for offline use.
+                          </p>
+                        </div>
+                      )}
+                      {/* Weather Warnings - Live from Bureau of Meteorology */}
+                      <WarningsSection state="WA" enabled={true} />
 
-                    {/* Wind Gust Alert */}
-                    {weather.current.windGust >= windGustThreshold && (
-                      <div className="bg-amber-900/30 border border-amber-500/50 rounded p-3 mb-4">
-                        <p className="text-sm font-semibold text-amber-400">
-                          💨 High Wind Gust Alert: {weather.current.windGust} km/h
-                        </p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          Threshold: {windGustThreshold} km/h - Exercise caution with traffic
-                          control devices
-                        </p>
-                      </div>
-                    )}
+                      {/* Wind Gust Alert */}
+                      {weather.current.windGust >= windGustThreshold && (
+                        <div className="bg-amber-900/30 border border-amber-500/50 rounded p-3 mb-4">
+                          <p className="text-sm font-semibold text-amber-400">
+                            💨 High Wind Gust Alert: {weather.current.windGust} km/h
+                          </p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            Threshold: {windGustThreshold} km/h - Exercise caution with traffic
+                            control devices
+                          </p>
+                        </div>
+                      )}
 
-                    {/* Sun Data - First */}
-                    <div className="bg-gray-700/30 rounded p-3 mb-4">
-                      <div className="grid grid-cols-3 gap-2 text-center text-sm">
+                      {/* Sun Data - First */}
+                      <div className="bg-gray-700/30 rounded p-3 mb-4">
+                        <div className="grid grid-cols-3 gap-2 text-center text-sm">
+                          <div>
+                            <p className="text-gray-400 text-xs">🌅 Sunrise</p>
+                            <p className="font-medium">{weather.sun.sunrise}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-400 text-xs">🌇 Sunset</p>
+                            <p className="font-medium">{weather.sun.sunset}</p>
+                          </div>
+                          <div>
+                            <p className="text-gray-400 text-xs">☀️ Daylight</p>
+                            <p className="font-medium">{weather.sun.daylightHours}</p>
+                          </div>
+                        </div>
+                        <div className="mt-2 text-center">
+                          <p className="text-gray-400 text-xs">UV Index</p>
+                          <p className={`text-lg font-bold ${getUvColor(weather.sun.uvLevel)}`}>
+                            {weather.sun.uvIndex} ({weather.sun.uvLevel})
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Current Conditions */}
+                      <div className="grid grid-cols-2 gap-3 text-sm mb-4">
                         <div>
-                          <p className="text-gray-400 text-xs">🌅 Sunrise</p>
-                          <p className="font-medium">{weather.sun.sunrise}</p>
+                          <p className="text-gray-400">Condition</p>
+                          <p className="font-medium">{weather.current.condition}</p>
                         </div>
                         <div>
-                          <p className="text-gray-400 text-xs">🌇 Sunset</p>
-                          <p className="font-medium">{weather.sun.sunset}</p>
+                          <p className="text-gray-400">Temp</p>
+                          <p className="font-medium">{weather.current.temp}°C</p>
                         </div>
                         <div>
-                          <p className="text-gray-400 text-xs">☀️ Daylight</p>
-                          <p className="font-medium">{weather.sun.daylightHours}</p>
+                          <p className="text-gray-400">Wind</p>
+                          <p className="font-medium">
+                            {weather.current.windSpeed} km/h {weather.current.windDir}
+                          </p>
+                          <p
+                            className={`text-xs ${weather.current.windGust >= windGustThreshold ? 'text-amber-400 font-semibold' : 'text-gray-500'}`}
+                          >
+                            Gusts: {weather.current.windGust} km/h
+                            {weather.current.windGust >= windGustThreshold && ' ⚠️'}
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-gray-400">Humidity</p>
+                          <p className="font-medium">{weather.current.humidity}%</p>
                         </div>
                       </div>
-                      <div className="mt-2 text-center">
-                        <p className="text-gray-400 text-xs">UV Index</p>
-                        <p className={`text-lg font-bold ${getUvColor(weather.sun.uvLevel)}`}>
-                          {weather.sun.uvIndex} ({weather.sun.uvLevel})
-                        </p>
-                      </div>
-                    </div>
 
-                    {/* Current Conditions */}
-                    <div className="grid grid-cols-2 gap-3 text-sm mb-4">
-                      <div>
-                        <p className="text-gray-400">Condition</p>
-                        <p className="font-medium">{weather.current.condition}</p>
+                      <h4 className="text-xs text-gray-400 mb-2">8 Hour Forecast</h4>
+                      <div className="text-xs space-y-1">
+                        {weather.forecast.map((hour, i) => (
+                          <p key={i} className="flex justify-between text-gray-300">
+                            <span className="w-12">{hour.time}</span>
+                            <span className="flex-1 text-center">{hour.condition}</span>
+                            <span className="w-10 text-right">{hour.temp}°</span>
+                            <span className="w-20 text-right text-gray-500">
+                              {hour.windSpeed} km/h
+                            </span>
+                          </p>
+                        ))}
                       </div>
-                      <div>
-                        <p className="text-gray-400">Temp</p>
-                        <p className="font-medium">{weather.current.temp}°C</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-400">Wind</p>
-                        <p className="font-medium">
-                          {weather.current.windSpeed} km/h {weather.current.windDir}
-                        </p>
-                        <p
-                          className={`text-xs ${weather.current.windGust >= windGustThreshold ? 'text-amber-400 font-semibold' : 'text-gray-500'}`}
+
+                      {/* BOM Links */}
+                      <div className="mt-4 pt-3 border-t border-gray-700 flex gap-2">
+                        <a
+                          href="https://www.bom.gov.au/products/IDR703.shtml"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 text-center text-xs bg-gray-700 hover:bg-gray-600 text-blue-400 py-2 rounded"
                         >
-                          Gusts: {weather.current.windGust} km/h
-                          {weather.current.windGust >= windGustThreshold && ' ⚠️'}
-                        </p>
+                          📡 BOM Radar
+                        </a>
+                        <a
+                          href="https://www.bom.gov.au/wa/warnings/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 text-center text-xs bg-gray-700 hover:bg-gray-600 text-blue-400 py-2 rounded"
+                        >
+                          ⚠️ BOM Warnings
+                        </a>
                       </div>
-                      <div>
-                        <p className="text-gray-400">Humidity</p>
-                        <p className="font-medium">{weather.current.humidity}%</p>
-                      </div>
                     </div>
-
-                    <h4 className="text-xs text-gray-400 mb-2">8 Hour Forecast</h4>
-                    <div className="text-xs space-y-1">
-                      {weather.forecast.map((hour, i) => (
-                        <p key={i} className="flex justify-between text-gray-300">
-                          <span className="w-12">{hour.time}</span>
-                          <span className="flex-1 text-center">{hour.condition}</span>
-                          <span className="w-10 text-right">{hour.temp}°</span>
-                          <span className="w-20 text-right text-gray-500">
-                            {hour.windSpeed} km/h
-                          </span>
-                        </p>
-                      ))}
-                    </div>
-
-                    {/* BOM Links */}
-                    <div className="mt-4 pt-3 border-t border-gray-700 flex gap-2">
-                      <a
-                        href="https://www.bom.gov.au/products/IDR703.shtml"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 text-center text-xs bg-gray-700 hover:bg-gray-600 text-blue-400 py-2 rounded"
-                      >
-                        📡 BOM Radar
-                      </a>
-                      <a
-                        href="https://www.bom.gov.au/wa/warnings/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 text-center text-xs bg-gray-700 hover:bg-gray-600 text-blue-400 py-2 rounded"
-                      >
-                        ⚠️ BOM Warnings
-                      </a>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
+                </div>
+              )}
+            </SectionErrorBoundary>
 
             {/* Road Incidents - Live from WebEOC */}
-            <IncidentsSection roadId={result.road_id} roadName={result.road_name} enabled={true} />
+            <SectionErrorBoundary sectionName="Road Incidents">
+              <IncidentsSection
+                roadId={result.road_id}
+                roadName={result.road_name}
+                enabled={true}
+              />
+            </SectionErrorBoundary>
 
             {/* Nearby Amenities */}
-            {places && (
-              <div className="bg-gray-800 rounded-lg">
-                <button
-                  onClick={() => setShowAmenities(!showAmenities)}
-                  className="w-full p-4 flex items-center justify-between text-left"
-                >
-                  <h3 className="text-sm font-semibold text-blue-400">
-                    🏥 Amenities
-                    {places.dataUnavailable && (
-                      <span className="ml-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
-                        No Cached Data
-                      </span>
-                    )}
-                    {places.fromCache && !places.dataUnavailable && (
-                      <span className="ml-2 bg-amber-600 text-white text-xs px-2 py-0.5 rounded-full">
-                        Cached{' '}
-                        {places.cachedAt ? new Date(places.cachedAt).toLocaleTimeString() : ''}
-                      </span>
-                    )}
-                  </h3>
-                  <span className="text-gray-400 text-lg">{showAmenities ? '−' : '+'}</span>
-                </button>
-                {showAmenities && (
-                  <div className="px-4 pb-4">
-                    {/* Data Unavailable Warning */}
-                    {places.dataUnavailable && (
-                      <div className="bg-red-900/30 border border-red-500/50 rounded p-3 mb-4">
-                        <p className="text-sm font-semibold text-red-400">
-                          ⚠️ Amenities Data Unavailable
-                        </p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          {places.source || 'No cached amenities data available in offline mode.'}
-                        </p>
-                        <p className="text-xs text-amber-400 mt-2">
-                          💡 Switch to ONLINE mode to download amenities data, or previously fetched
-                          amenities will be cached for offline use.
-                        </p>
-                      </div>
-                    )}
-                    {/* Hospital */}
-                    {places.hospital ? (
-                      <div className="mb-4">
-                        <div className="flex items-center justify-between">
-                          <p className="font-medium text-red-400">
-                            🏥 {places.hospital.name}
-                            <span className="text-gray-500 text-sm ml-2">
-                              ({places.hospital.distance} km)
-                            </span>
-                            {places.hospital.isEmergency && (
-                              <span className="text-xs bg-red-600 text-white px-1.5 py-0.5 rounded ml-1">
-                                ED
-                              </span>
-                            )}
-                            {places.hospital.hospitalType === 'Public' && (
-                              <span className="text-xs bg-blue-700 text-white px-1.5 py-0.5 rounded ml-1">
-                                Public
-                              </span>
-                            )}
-                            {places.hospital.hospitalType === 'Private' && (
-                              <span className="text-xs bg-gray-600 text-white px-1.5 py-0.5 rounded ml-1">
-                                Private
-                              </span>
-                            )}
-                            {places.hospital.hospitalType === 'Nursing Post' && (
-                              <span className="text-xs bg-amber-700 text-white px-1.5 py-0.5 rounded ml-1">
-                                Nursing Post
-                              </span>
-                            )}
+            <SectionErrorBoundary sectionName="Amenities">
+              {places && (
+                <div className="bg-gray-800 rounded-lg">
+                  <button
+                    onClick={() => setShowAmenities(!showAmenities)}
+                    className="w-full p-4 flex items-center justify-between text-left"
+                  >
+                    <h3 className="text-sm font-semibold text-blue-400">
+                      🏥 Amenities
+                      {places.dataUnavailable && (
+                        <span className="ml-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+                          No Cached Data
+                        </span>
+                      )}
+                      {places.fromCache && !places.dataUnavailable && (
+                        <span className="ml-2 bg-amber-600 text-white text-xs px-2 py-0.5 rounded-full">
+                          Cached{' '}
+                          {places.cachedAt ? new Date(places.cachedAt).toLocaleTimeString() : ''}
+                        </span>
+                      )}
+                    </h3>
+                    <span className="text-gray-400 text-lg">{showAmenities ? '−' : '+'}</span>
+                  </button>
+                  {showAmenities && (
+                    <div className="px-4 pb-4">
+                      {/* Data Unavailable Warning */}
+                      {places.dataUnavailable && (
+                        <div className="bg-red-900/30 border border-red-500/50 rounded p-3 mb-4">
+                          <p className="text-sm font-semibold text-red-400">
+                            ⚠️ Amenities Data Unavailable
                           </p>
-                          <div className="flex gap-1">
-                            <Button
-                              onClick={() => openGoogleMaps(places.hospital?.googleMapsUrl || null)}
-                              className="h-7 w-7 p-0 bg-green-600 hover:bg-green-700"
-                              title="Navigate"
-                            >
-                              🗺️
-                            </Button>
-                            <Button
-                              onClick={() =>
-                                openStreetView(places.hospital!.lat, places.hospital!.lon)
-                              }
-                              className="h-7 w-7 p-0 bg-blue-600 hover:bg-blue-700"
-                              title="Street View"
-                            >
-                              🏠
-                            </Button>
-                          </div>
-                        </div>
-                        <div className="mt-1 space-y-0.5">
-                          {places.hospital.address && (
-                            <p className="text-xs text-gray-400">📍 {places.hospital.address}</p>
-                          )}
-                          {places.hospital.phone && (
-                            <p className="text-xs text-gray-400">📞 {places.hospital.phone}</p>
-                          )}
-                          {places.hospital.beds && places.hospital.beds > 0 && (
-                            <p className="text-xs text-gray-500">🛏️ {places.hospital.beds} beds</p>
-                          )}
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500 text-sm mb-4">No hospital found nearby</p>
-                    )}
-
-                    {/* Fuel Station */}
-                    {places.fuelStation ? (
-                      <div className="mb-4">
-                        <div className="flex items-center justify-between">
-                          <p className="font-medium text-yellow-400">
-                            ⛽ {places.fuelStation.name}
-                            <span className="text-gray-500 text-sm ml-2">
-                              ({places.fuelStation.distance} km)
-                            </span>
-                            {places.fuelStation.fuelPrice && (
-                              <span className="text-xs bg-green-700 text-white px-1.5 py-0.5 rounded ml-1">
-                                $${(places.fuelStation.fuelPrice / 100).toFixed(2)}/L Diesel
-                              </span>
-                            )}
-                            {!places.fuelStation.fuelPrice && (
-                              <span className="text-xs bg-gray-600 text-gray-300 px-1.5 py-0.5 rounded ml-1">
-                                No price today
-                              </span>
-                            )}
+                          <p className="text-xs text-gray-400 mt-1">
+                            {places.source || 'No cached amenities data available in offline mode.'}
                           </p>
-                          <div className="flex gap-1">
-                            <Button
-                              onClick={() =>
-                                openGoogleMaps(places.fuelStation?.googleMapsUrl || null)
-                              }
-                              className="h-7 w-7 p-0 bg-green-600 hover:bg-green-700"
-                              title="Navigate"
-                            >
-                              🗺️
-                            </Button>
-                            <Button
-                              onClick={() =>
-                                openStreetView(places.fuelStation!.lat, places.fuelStation!.lon)
-                              }
-                              className="h-7 w-7 p-0 bg-blue-600 hover:bg-blue-700"
-                              title="Street View"
-                            >
-                              🏠
-                            </Button>
-                          </div>
+                          <p className="text-xs text-amber-400 mt-2">
+                            💡 Switch to ONLINE mode to download amenities data, or previously
+                            fetched amenities will be cached for offline use.
+                          </p>
                         </div>
-                        <div className="mt-1 space-y-0.5">
-                          {places.fuelStation.address && (
-                            <p className="text-xs text-gray-400">📍 {places.fuelStation.address}</p>
-                          )}
-                          {places.fuelStation.phone && (
-                            <p className="text-xs text-gray-400">📞 {places.fuelStation.phone}</p>
-                          )}
-                          {places.fuelStation.siteFeatures &&
-                            places.fuelStation.siteFeatures.length > 0 && (
+                      )}
+                      {/* Hospital */}
+                      {places.hospital ? (
+                        <div className="mb-4">
+                          <div className="flex items-center justify-between">
+                            <p className="font-medium text-red-400">
+                              🏥 {places.hospital.name}
+                              <span className="text-gray-500 text-sm ml-2">
+                                ({places.hospital.distance} km)
+                              </span>
+                              {places.hospital.isEmergency && (
+                                <span className="text-xs bg-red-600 text-white px-1.5 py-0.5 rounded ml-1">
+                                  ED
+                                </span>
+                              )}
+                              {places.hospital.hospitalType === 'Public' && (
+                                <span className="text-xs bg-blue-700 text-white px-1.5 py-0.5 rounded ml-1">
+                                  Public
+                                </span>
+                              )}
+                              {places.hospital.hospitalType === 'Private' && (
+                                <span className="text-xs bg-gray-600 text-white px-1.5 py-0.5 rounded ml-1">
+                                  Private
+                                </span>
+                              )}
+                              {places.hospital.hospitalType === 'Nursing Post' && (
+                                <span className="text-xs bg-amber-700 text-white px-1.5 py-0.5 rounded ml-1">
+                                  Nursing Post
+                                </span>
+                              )}
+                            </p>
+                            <div className="flex gap-1">
+                              <Button
+                                onClick={() =>
+                                  openGoogleMaps(places.hospital?.googleMapsUrl || null)
+                                }
+                                className="h-7 w-7 p-0 bg-green-600 hover:bg-green-700"
+                                title="Navigate"
+                              >
+                                🗺️
+                              </Button>
+                              <Button
+                                onClick={() =>
+                                  openStreetView(places.hospital!.lat, places.hospital!.lon)
+                                }
+                                className="h-7 w-7 p-0 bg-blue-600 hover:bg-blue-700"
+                                title="Street View"
+                              >
+                                🏠
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="mt-1 space-y-0.5">
+                            {places.hospital.address && (
+                              <p className="text-xs text-gray-400">📍 {places.hospital.address}</p>
+                            )}
+                            {places.hospital.phone && (
+                              <p className="text-xs text-gray-400">📞 {places.hospital.phone}</p>
+                            )}
+                            {places.hospital.beds && places.hospital.beds > 0 && (
                               <p className="text-xs text-gray-500">
-                                🏷️ {places.fuelStation.siteFeatures.join(' · ')}
+                                🛏️ {places.hospital.beds} beds
                               </p>
                             )}
-                        </div>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500 text-sm mb-4">No fuel station found nearby</p>
-                    )}
-
-                    {/* Toilet */}
-                    {places.toilet ? (
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <p className="font-medium text-blue-400">
-                            🚻 {places.toilet.name}
-                            <span className="text-gray-500 text-sm ml-2">
-                              ({places.toilet.distance} km)
-                            </span>
-                          </p>
-                          <div className="flex gap-1">
-                            <Button
-                              onClick={() => openGoogleMaps(places.toilet?.googleMapsUrl || null)}
-                              className="h-7 w-7 p-0 bg-green-600 hover:bg-green-700"
-                              title="Navigate"
-                            >
-                              🗺️
-                            </Button>
-                            <Button
-                              onClick={() => openStreetView(places.toilet!.lat, places.toilet!.lon)}
-                              className="h-7 w-7 p-0 bg-blue-600 hover:bg-blue-700"
-                              title="Street View"
-                            >
-                              🏠
-                            </Button>
                           </div>
                         </div>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500 text-sm">No public toilet found nearby</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
+                      ) : (
+                        <p className="text-gray-500 text-sm mb-4">No hospital found nearby</p>
+                      )}
+
+                      {/* Fuel Station */}
+                      {places.fuelStation ? (
+                        <div className="mb-4">
+                          <div className="flex items-center justify-between">
+                            <p className="font-medium text-yellow-400">
+                              ⛽ {places.fuelStation.name}
+                              <span className="text-gray-500 text-sm ml-2">
+                                ({places.fuelStation.distance} km)
+                              </span>
+                              {places.fuelStation.fuelPrice && (
+                                <span className="text-xs bg-green-700 text-white px-1.5 py-0.5 rounded ml-1">
+                                  $${(places.fuelStation.fuelPrice / 100).toFixed(2)}/L Diesel
+                                </span>
+                              )}
+                              {!places.fuelStation.fuelPrice && (
+                                <span className="text-xs bg-gray-600 text-gray-300 px-1.5 py-0.5 rounded ml-1">
+                                  No price today
+                                </span>
+                              )}
+                            </p>
+                            <div className="flex gap-1">
+                              <Button
+                                onClick={() =>
+                                  openGoogleMaps(places.fuelStation?.googleMapsUrl || null)
+                                }
+                                className="h-7 w-7 p-0 bg-green-600 hover:bg-green-700"
+                                title="Navigate"
+                              >
+                                🗺️
+                              </Button>
+                              <Button
+                                onClick={() =>
+                                  openStreetView(places.fuelStation!.lat, places.fuelStation!.lon)
+                                }
+                                className="h-7 w-7 p-0 bg-blue-600 hover:bg-blue-700"
+                                title="Street View"
+                              >
+                                🏠
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="mt-1 space-y-0.5">
+                            {places.fuelStation.address && (
+                              <p className="text-xs text-gray-400">
+                                📍 {places.fuelStation.address}
+                              </p>
+                            )}
+                            {places.fuelStation.phone && (
+                              <p className="text-xs text-gray-400">📞 {places.fuelStation.phone}</p>
+                            )}
+                            {places.fuelStation.siteFeatures &&
+                              places.fuelStation.siteFeatures.length > 0 && (
+                                <p className="text-xs text-gray-500">
+                                  🏷️ {places.fuelStation.siteFeatures.join(' · ')}
+                                </p>
+                              )}
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-gray-500 text-sm mb-4">No fuel station found nearby</p>
+                      )}
+
+                      {/* Toilet */}
+                      {places.toilet ? (
+                        <div>
+                          <div className="flex items-center justify-between">
+                            <p className="font-medium text-blue-400">
+                              🚻 {places.toilet.name}
+                              <span className="text-gray-500 text-sm ml-2">
+                                ({places.toilet.distance} km)
+                              </span>
+                            </p>
+                            <div className="flex gap-1">
+                              <Button
+                                onClick={() => openGoogleMaps(places.toilet?.googleMapsUrl || null)}
+                                className="h-7 w-7 p-0 bg-green-600 hover:bg-green-700"
+                                title="Navigate"
+                              >
+                                🗺️
+                              </Button>
+                              <Button
+                                onClick={() =>
+                                  openStreetView(places.toilet!.lat, places.toilet!.lon)
+                                }
+                                className="h-7 w-7 p-0 bg-blue-600 hover:bg-blue-700"
+                                title="Street View"
+                              >
+                                🏠
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="text-gray-500 text-sm">No public toilet found nearby</p>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </SectionErrorBoundary>
 
             {/* Generate Report Button */}
             {result && (
