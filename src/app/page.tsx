@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { haversineDistance } from '@/lib/utils';
 import { EmergencyLocationModal } from '@/components/EmergencyLocationModal';
@@ -62,7 +62,6 @@ import {
   storeRegulatorySignsData,
   storeWarningSignsData,
   clearDataset,
-  getStoredRegions,
   getRoadsForRegion,
   getWorkZoneOffline,
   cacheWeatherData,
@@ -209,20 +208,19 @@ interface CrossRoad {
 }
 
 export default function Home() {
-  const [regions, setRegions] = useState<string[]>([]);
-  const [selectedRegion, setSelectedRegion] = useState<string>('');
-  const selectedRegionRef = useRef<string>('');
-  // Keep ref in sync with state to avoid stale closures in async functions
-  const updateSelectedRegion = useCallback((region: string) => {
-    selectedRegionRef.current = region;
-    setSelectedRegion(region);
-  }, []);
+  const {
+    regions,
+    selectedRegion,
+    loadingRegions,
+    error: regionsError,
+    updateSelectedRegion,
+    refreshRegions: fetchRegions,
+  } = useRegions();
   const [roads, setRoads] = useState<Road[]>([]);
   const [selectedRoad, setSelectedRoad] = useState<string>('');
   const [startSlk, setStartSlk] = useState<string>('');
   const [endSlk, setEndSlk] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [loadingRegions, setLoadingRegions] = useState<boolean>(true);
   const [loadingRoads, setLoadingRoads] = useState<boolean>(false);
   const [result, setResult] = useState<WorkZoneResult | null>(null);
   const [weather, setWeather] = useState<WeatherData | null>(null);
@@ -238,6 +236,11 @@ export default function Home() {
   const [roadInfo, setRoadInfo] = useState<Road | null>(null);
   const [isSinglePoint, setIsSinglePoint] = useState<boolean>(false);
   const [exporting, setExporting] = useState<boolean>(false);
+
+  // Sync regions error to page error state
+  useEffect(() => {
+    if (regionsError) setError(regionsError);
+  }, [regionsError]);
 
   // Saved locations hook
   const {
@@ -265,13 +268,11 @@ export default function Home() {
 
   const recallLocation = async (loc: SavedLocation) => {
     // Use ref to avoid stale closure — always reads latest region value
-    const currentRegion = selectedRegionRef.current;
-
     // If the region is different, we need to switch regions first.
     // Instead of a fragile setTimeout, we use the same pendingRestoreParams
     // pattern as the sessionStorage restore flow — it waits for the roads
     // useEffect to populate the roads list, then calls getWorkZoneInfo.
-    if (loc.region && loc.region !== currentRegion) {
+    if (loc.region && loc.region !== selectedRegion) {
       isRestoring.current = true;
       pendingRestoreParams.current = {
         region: loc.region,
@@ -287,7 +288,7 @@ export default function Home() {
 
     // Same region — directly call getWorkZoneInfo
     await getWorkZoneInfo(
-      loc.region || selectedRegionRef.current,
+      loc.region || selectedRegion,
       loc.road_id,
       loc.start_slk.toString(),
       loc.end_slk ? loc.end_slk.toString() : '',
@@ -411,12 +412,6 @@ export default function Home() {
   // State to trigger UI re-render during restore (hides inputs)
   const [isRestoringUI, setIsRestoringUI] = useState<boolean>(false);
 
-  // Fetch regions on mount
-  useEffect(() => {
-    fetchRegions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // Restore state from sessionStorage when returning from tracking
   useEffect(() => {
     const savedParams = sessionStorage.getItem('workZoneParams');
@@ -504,129 +499,6 @@ export default function Home() {
 
     setDebugInfo(lines.join('\n'));
     setShowDebug(true);
-  };
-
-  const fetchRegions = async () => {
-    try {
-      // Try IndexedDB first (works offline)
-      const storedRegions = await getStoredRegions();
-      if (storedRegions && storedRegions.length > 0) {
-        setRegions(storedRegions);
-        // Check for saved default region first
-        const savedDefault = localStorage.getItem('defaultRegion');
-        if (savedDefault && storedRegions.includes(savedDefault)) {
-          updateSelectedRegion(savedDefault);
-        } else if (storedRegions.includes('Wheatbelt')) {
-          updateSelectedRegion('Wheatbelt');
-        } else {
-          updateSelectedRegion(storedRegions[0]);
-        }
-        setLoadingRegions(false);
-        return; // Exit early, no need to fetch from API
-      }
-
-      // OFFLINE CHECK: Skip API entirely if no internet connection
-      // This prevents the app from hanging while waiting for network timeout
-      if (!navigator.onLine) {
-        console.log('Offline: Loading regions from static metadata.json');
-        const metaResponse = await fetch('/data/metadata.json');
-        if (metaResponse.ok) {
-          const metaData = await metaResponse.json();
-          if (metaData.regions && metaData.regions.length > 0) {
-            setRegions(metaData.regions);
-            const savedDefault = localStorage.getItem('defaultRegion');
-            if (savedDefault && metaData.regions.includes(savedDefault)) {
-              updateSelectedRegion(savedDefault);
-            } else if (metaData.regions.includes('Wheatbelt')) {
-              updateSelectedRegion('Wheatbelt');
-            } else {
-              updateSelectedRegion(metaData.regions[0]);
-            }
-          }
-        }
-        return;
-      }
-
-      // Online: Try API with timeout to prevent hanging
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-
-      try {
-        const response = await fetch('/api/roads?action=regions', { signal: controller.signal });
-        clearTimeout(timeoutId);
-        const data = await response.json();
-
-        // Check for API error response
-        if (data.error) {
-          console.error('API error fetching regions:', data.error);
-          // Try to get regions from static metadata as fallback
-          const metaResponse = await fetch('/data/metadata.json');
-          if (metaResponse.ok) {
-            const metaData = await metaResponse.json();
-            if (metaData.regions && metaData.regions.length > 0) {
-              setRegions(metaData.regions);
-              const savedDefault = localStorage.getItem('defaultRegion');
-              if (savedDefault && metaData.regions.includes(savedDefault)) {
-                updateSelectedRegion(savedDefault);
-              } else {
-                updateSelectedRegion(metaData.regions[0]);
-              }
-            }
-          }
-          return;
-        }
-
-        if (data.regions && data.regions.length > 0) {
-          setRegions(data.regions);
-          // Check for saved default region first
-          const savedDefault = localStorage.getItem('defaultRegion');
-          if (savedDefault && data.regions.includes(savedDefault)) {
-            updateSelectedRegion(savedDefault);
-          } else if (data.regions.includes('Wheatbelt')) {
-            updateSelectedRegion('Wheatbelt');
-          } else {
-            updateSelectedRegion(data.regions[0]);
-          }
-        }
-      } catch (fetchErr) {
-        clearTimeout(timeoutId);
-        // API timed out or failed - fall back to static metadata
-        console.log('API fetch failed, loading regions from static metadata.json');
-        const metaResponse = await fetch('/data/metadata.json');
-        if (metaResponse.ok) {
-          const metaData = await metaResponse.json();
-          if (metaData.regions && metaData.regions.length > 0) {
-            setRegions(metaData.regions);
-            const savedDefault = localStorage.getItem('defaultRegion');
-            if (savedDefault && metaData.regions.includes(savedDefault)) {
-              updateSelectedRegion(savedDefault);
-            } else if (metaData.regions.includes('Wheatbelt')) {
-              updateSelectedRegion('Wheatbelt');
-            } else {
-              updateSelectedRegion(metaData.regions[0]);
-            }
-          }
-        }
-      }
-    } catch (err) {
-      console.error('Failed to load regions:', err);
-      setError('Failed to load regions');
-      // Try static metadata as last resort
-      try {
-        const metaResponse = await fetch('/data/metadata.json');
-        if (metaResponse.ok) {
-          const metaData = await metaResponse.json();
-          if (metaData.regions && metaData.regions.length > 0) {
-            setRegions(metaData.regions);
-            updateSelectedRegion(metaData.regions[0]);
-          }
-        }
-      } catch {
-        // No regions available - user will only see Local option
-      }
-    } finally {
-      setLoadingRegions(false);
-    }
   };
 
   const fetchRoads = async (region: string) => {
