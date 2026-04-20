@@ -1079,9 +1079,13 @@ export default function Home() {
         setStartSlk(data.slk.toString());
         setEndSlk(''); // Clear end SLK for single point
 
-        // Set region based on road type
+        // Set region based on road type and region from GPS response
         if (data.network_type === 'Local Road') {
           updateSelectedRegion('Local');
+        } else if (data.region) {
+          // Use the region (RA_NAME) returned by the GPS API for State/Regional roads.
+          // This ensures the road appears in the correct region's road list.
+          updateSelectedRegion(data.region);
         }
 
         // Clear any previous error

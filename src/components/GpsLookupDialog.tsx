@@ -104,8 +104,13 @@ export function GpsLookupDialog({
           {/* GPS Road Info Display */}
           {roadInfo && (
             <div className="mt-3 bg-gray-900 rounded-lg p-3 border border-green-600">
-              <p className="font-mono text-green-400 text-lg">{roadInfo.road_id}</p>
+              <p className="font-mono text-green-400 text-lg">
+                {roadInfo.road_id} SLK {roadInfo.slk.toFixed(2)}
+              </p>
               <p className="text-sm text-gray-300">{roadInfo.road_name}</p>
+              {roadInfo.network_type && (
+                <p className="text-xs text-gray-500 mt-1">{roadInfo.network_type}</p>
+              )}
               <p className="text-xs text-gray-500 mt-1">📍 Found via GPS lookup</p>
             </div>
           )}
