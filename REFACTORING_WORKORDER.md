@@ -226,7 +226,7 @@ Where `CrossRoad` has: `name`, `distance`, `lat`, `lon`, `roadType`, `googleMaps
 
 ### Item 2.2: Use Existing useRoads Hook
 
-**Status**: [ ]
+**Status**: [x]
 
 **Problem**: `useRoads` hook exists at `src/hooks/useRoads.ts` with full offline/API fallback logic, but page.tsx has its own `fetchRoads` function (lines 633-723) that duplicates this logic.
 
@@ -705,7 +705,7 @@ If any check fails, fix the issue before marking the item as done.
 | 1.2  | Use existing AmenitiesSection                | [x]    | ~210          | 2026-04-21     |
 | 1.3  | Use existing IntersectionsSection            | [x]    | ~65           | 2026-04-21     |
 | 2.1  | Use existing useRegions hook                 | [x]    | ~130          | 2026-04-21     |
-| 2.2  | Use existing useRoads hook                   | [ ]    | ~100          |                |
+| 2.2  | Use existing useRoads hook                   | [x]    | ~100          | 2026-04-21     |
 | 2.3  | Use existing useGpsLocation hook             | [ ]    | ~90           |                |
 | 3.1  | Extract SpeedZoneLayoutSection               | [ ]    | ~30           |                |
 | 3.2  | Extract GenerateReportButton                 | [ ]    | ~20           |                |
