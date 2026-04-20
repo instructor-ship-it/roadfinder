@@ -37,7 +37,7 @@ This is the lowest-risk, highest-reward work.
 
 ### Item 1.1: Use Existing WeatherSection Component
 
-**Status**: [ ]
+**Status**: [x]
 
 **Problem**: `WeatherSection` component exists at `src/components/home/WeatherSection.tsx` and is already imported in page.tsx (line 24), but page.tsx renders weather content INLINE (lines 1520-1670) instead of using the component.
 
@@ -701,7 +701,7 @@ If any check fails, fix the issue before marking the item as done.
 
 | Item | Description                                  | Status | Lines Removed | Date Completed |
 | ---- | -------------------------------------------- | ------ | ------------- | -------------- |
-| 1.1  | Use existing WeatherSection                  | [ ]    | ~150          |                |
+| 1.1  | Use existing WeatherSection                  | [x]    | ~150          | 2026-04-21     |
 | 1.2  | Use existing AmenitiesSection                | [ ]    | ~210          |                |
 | 1.3  | Use existing IntersectionsSection            | [ ]    | ~65           |                |
 | 2.1  | Use existing useRegions hook                 | [ ]    | ~130          |                |
