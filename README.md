@@ -4,7 +4,7 @@
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/codeql.yml?branch=main&label=security)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/codeql.yml)
 [![Version](https://img.shields.io/badge/version-1.34.1-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://tc-work-zone-locator.vercel.app)
+[![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://roadfinder.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
 
