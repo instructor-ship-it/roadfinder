@@ -461,7 +461,7 @@ Where `CrossRoad` has: `name`, `distance`, `lat`, `lon`, `roadType`, `googleMaps
 
 ### Item 4.2: Create useWorkZoneLookup Hook
 
-**Status**: [ ]
+**Status**: [x]
 
 **Problem**: The `getWorkZoneInfo` function (lines 761-913) is ~150 lines of complex logic mixing data fetching, state management, and coordination of sub-fetches (weather, traffic, places, signage, speed limit, cross roads). This is the most complex function in the file.
 
@@ -712,7 +712,7 @@ If any check fails, fix the issue before marking the item as done.
 | 3.3  | Extract HomeHeader                           | [x]           | ~55           | 2026-04-21     |
 | 3.4  | Extract StartSlkTrackingButton               | [x]           | ~15           | 2026-04-21     |
 | 4.1  | Create useCollapsibleSections                | [x]           | ~14           | 2026-04-21     |
-| 4.2  | Create useWorkZoneLookup                     | [ ]           | ~200          |                |
+| 4.2  | Create useWorkZoneLookup                     | [x]           | ~200          | 2026-04-21     |
 | 4.3  | Create useSignageData                        | [x]           | ~70           | 2026-04-21     |
 | 4.4  | Create useSessionRestore                     | [x] (SKIPPED) | ~30           | 2026-04-21     |
 | 5.1  | Move WorkZoneResult to shared.ts             | [x]           | ~60           | 2026-04-21     |
