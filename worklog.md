@@ -5931,3 +5931,23 @@ Stage Summary:
 - Version 1.34.1 confirmed across all files
 - Minor test failures: 3 lib tests (withRetry) + component tests need investigation
 - One minor cleanup opportunity: north/south keys still exist in AdvancedFlashers interface/labels but not exposed in UI
+
+---
+
+Task ID: 2026-04-21-002
+Agent: Main Agent
+Task: Fix failing tests
+
+Work Log:
+
+- Investigated test failures from `bun test` (137 pass, 84 fail)
+- Discovered all 248 tests pass with `vitest run` (the configured test runner)
+- Root cause: `bun test` doesn't properly support vitest's fake timers (`vi.useFakeTimers()`, `vi.runAllTimersAsync()`) or jsdom environment for React component tests
+- No code changes needed — tests are correct, just need to use `vitest run` (or `bun run test` which maps to `vitest run`)
+- Verified: TypeScript 0 errors, ESLint 0 errors, 248/248 tests pass
+
+Stage Summary:
+
+- All tests pass with correct test runner (`vitest run`)
+- No code fixes required — the "failures" were a test runner mismatch
+- Project is healthy: 248 tests, 0 TS errors, 0 lint errors
