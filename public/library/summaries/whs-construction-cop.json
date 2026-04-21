@@ -1,13 +1,49 @@
 {
   "title": "Construction Work Code of Practice",
-  "abstract": "The Construction Work Code of Practice is an approved code of practice under the WHS Act that provides practical guidance on managing health and safety risks in construction work. It is admissible in court proceedings as evidence of what is known about a hazard and appropriate control measures.\n\nThe code covers the definition of construction work, duty holder responsibilities, and risk management requirements. It specifically addresses high-risk construction work which requires a Safe Work Method Statement (SWMS), including work on roads, work near traffic, work at heights, and work involving mobile plant.\n\nFor Traffic Controllers and road workers, this code is essential reading as it establishes the legal requirement for SWMS for road work and provides guidance on consultation, training, and supervision. Non-compliance with the code may be used as evidence of a breach of the WHS Act, though alternative methods may be used if they provide equivalent or better protection.",
-  "keywords": ["code-of-practice", "construction", "swms"],
-  "targetAudience": [],
-  "completeSections": [],
-  "source": "repo",
-  "note": "External document - no local file for section extraction",
+  "abstract": "The Construction Work Code of Practice (July 2012) is an approved code of practice under the WHS Act that provides practical guidance on managing health and safety risks in construction work. It is admissible in court proceedings as evidence of what is known about a hazard and appropriate control measures.\n\nThe code covers the definition of construction work, duty holder responsibilities, and risk management requirements. It specifically addresses high-risk construction work which requires a Safe Work Method Statement (SWMS), including work on roads, work near traffic, work at heights, and work involving mobile plant.\n\nFor Traffic Controllers and road workers, this code is essential reading as it establishes the legal requirement for SWMS for road work and provides guidance on consultation, training, and supervision. Non-compliance with the code may be used as evidence of a breach of the WHS Act, though alternative methods may be used if they provide equivalent or better protection.",
+  "keywords": [
+    "code-of-practice",
+    "construction",
+    "swms",
+    "high-risk",
+    "duty-of-care",
+    "PCBU",
+    "risk-management"
+  ],
+  "targetAudience": [
+    "Traffic Controllers",
+    "PCBUs",
+    "Construction workers",
+    "Site supervisors",
+    "WHS Officers",
+    "Project managers"
+  ],
+  "completeSections": [
+    {
+      "id": "intro",
+      "title": "Introduction",
+      "summary": "Defines construction work, key terms, and who has health and safety duties relating to construction work."
+    },
+    {
+      "id": "duties",
+      "title": "Duties Relating to Construction Work",
+      "summary": "Outlines the duties of PCBUs, officers, workers, and other parties in relation to construction work safety."
+    },
+    {
+      "id": "hrcc",
+      "title": "High Risk Construction Work",
+      "summary": "Identifies categories of high-risk construction work that require a Safe Work Method Statement (SWMS), including work on or near traffic corridors."
+    }
+  ],
+  "keyRequirements": [
+    "SWMS must be prepared before commencing high-risk construction work",
+    "Work on or near traffic corridors is classified as high-risk construction work",
+    "PCBUs must consult with workers on health and safety matters",
+    "Risk management must follow the hierarchy of controls"
+  ],
+  "source": "local",
   "documentId": "whs-construction-cop",
-  "generatedAt": "2026-04-05T16:24:57.916580",
-  "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "generatedAt": "2026-04-21T12:55:00.000Z",
+  "generatedBy": "Phase 1 Extended Summary Generator",
+  "version": "2.1"
 }

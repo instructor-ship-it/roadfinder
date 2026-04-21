@@ -1,13 +1,43 @@
 {
   "title": "General Guide to Workplace Traffic Management",
-  "abstract": "The General Guide to Workplace Traffic Management provides practical guidance on managing the risks associated with traffic movement in workplaces. It complements the traffic management requirements for public roads but focuses on workplace premises such as warehouses, construction sites, and industrial facilities.\n\nThe guide covers separation of pedestrians and vehicles, traffic control measures, speed management, visibility requirements, and the design of traffic management plans for workplace sites. It addresses both powered mobile plant and conventional vehicles operating in work areas.\n\nFor Traffic Controllers working on internal traffic management within depot yards, laydown areas, or construction compounds, this guide provides essential principles. It should be read alongside the MRWA Code of Practice for work on public roads, as different requirements may apply to workplace premises versus public roadways.",
-  "keywords": ["traffic-management", "workplace-safety"],
-  "targetAudience": [],
-  "completeSections": [],
-  "source": "repo",
-  "note": "External document - no local file for section extraction",
+  "abstract": "The General Guide to Workplace Traffic Management (April 2021) provides practical guidance on managing the risks associated with traffic movement in workplaces. It complements the traffic management requirements for public roads but focuses on workplace premises such as warehouses, construction sites, and industrial facilities.\n\nThe guide covers separation of pedestrians and vehicles, traffic control measures, speed management, visibility requirements, and the design of traffic management plans for workplace sites. It addresses both powered mobile plant and conventional vehicles operating in work areas.\n\nFor Traffic Controllers working on internal traffic management within depot yards, laydown areas, or construction compounds, this guide provides essential principles. It should be read alongside the MRWA Code of Practice for work on public roads, as different requirements may apply to workplace premises versus public roadways.",
+  "keywords": [
+    "traffic-management",
+    "workplace-safety",
+    "pedestrian-separation",
+    "mobile-plant",
+    "vehicle-management",
+    "risk-assessment"
+  ],
+  "targetAudience": [
+    "Site managers",
+    "Traffic Controllers",
+    "WHS Officers",
+    "PCBUs",
+    "Construction supervisors",
+    "Warehouse managers"
+  ],
+  "completeSections": [
+    {
+      "id": "intro",
+      "title": "Introduction",
+      "summary": "Who should use this guide, how to use it, and who has duties under the law."
+    },
+    {
+      "id": "risk-management",
+      "title": "How to Manage Traffic Risks",
+      "summary": "Consultation, risk management process, hazard identification, risk assessment, and implementing control measures including elimination and substitution."
+    }
+  ],
+  "keyRequirements": [
+    "PCBUs must manage risks from traffic movement in workplaces",
+    "Elimination of traffic hazards is the preferred control measure",
+    "Separation of pedestrians and vehicles is essential",
+    "Traffic management plans should be documented for workplace sites"
+  ],
+  "source": "local",
   "documentId": "whs-workplace-traffic",
-  "generatedAt": "2026-04-05T16:24:57.916580",
-  "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "generatedAt": "2026-04-21T12:55:00.000Z",
+  "generatedBy": "Phase 1 Extended Summary Generator",
+  "version": "2.1"
 }

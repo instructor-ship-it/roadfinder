@@ -10,7 +10,7 @@
  * - Weather caching
  *
  * @module lib/offline-db
- * @version 1.34.1
+ * @version 1.35.0
  *
  * @example
  * // Search for a road by GPS coordinates

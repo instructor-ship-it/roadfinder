@@ -1,13 +1,49 @@
 {
   "title": "Safe Work Method Statement for High Risk Construction Work",
-  "abstract": "This information sheet provides detailed guidance on preparing and implementing Safe Work Method Statements (SWMS) for high-risk construction work. An SWMS is a legal document that sets out the high-risk construction work to be carried out, the hazards and risks arising from that work, and the measures to be put in place to control the risks.\n\nHigh-risk construction work includes work on or near roads, work near traffic corridors, work at heights above 2 metres, work using powered mobile plant, and work involving excavations. Traffic management and road work activities fall squarely within this definition, making SWMS preparation mandatory.\n\nThe guide explains the required content of an SWMS, the consultation process with workers, review and revision requirements, and record-keeping obligations. It includes a practical template and examples relevant to road work. SWMS must be developed before work commences and must be readily accessible to any worker carrying out the high-risk construction work.",
-  "keywords": ["swms", "high-risk", "guidance"],
-  "targetAudience": [],
-  "completeSections": [],
-  "source": "repo",
-  "note": "External document - no local file for section extraction",
+  "abstract": "This WorkSafe WA information sheet provides detailed guidance on preparing and implementing Safe Work Method Statements (SWMS) for high-risk construction work. An SWMS is a legal document that sets out the high-risk construction work to be carried out, the hazards and risks arising from that work, and the measures to be put in place to control the risks.\n\nHigh-risk construction work includes work on or near roads, work near traffic corridors, work at heights above 2 metres, work using powered mobile plant, and work involving excavations. Traffic management and road work activities fall squarely within this definition, making SWMS preparation mandatory.\n\nThe guide lists all 19 categories of high-risk construction work, explains the required content of an SWMS, the consultation process with workers, review and revision requirements, and record-keeping obligations. SWMS must be developed before work commences and must be readily accessible to any worker carrying out the high-risk construction work.",
+  "keywords": [
+    "swms",
+    "high-risk",
+    "construction",
+    "safe-work-method-statement",
+    "traffic-corridor",
+    "WHS-regulations"
+  ],
+  "targetAudience": [
+    "Traffic Controllers",
+    "Traffic Management Supervisors",
+    "PCBUs",
+    "Site supervisors",
+    "WHS Officers"
+  ],
+  "completeSections": [
+    {
+      "id": "overview",
+      "title": "SWMS Overview",
+      "summary": "What a SWMS is, when it is required, and the 19 categories of high-risk construction work including work on or near traffic corridors."
+    },
+    {
+      "id": "content",
+      "title": "SWMS Content Requirements",
+      "summary": "What must be included in a SWMS: the work being done, hazards, risks, and control measures."
+    },
+    {
+      "id": "process",
+      "title": "SWMS Process",
+      "summary": "How to prepare, review, and revise SWMS. Consultation requirements and accessibility obligations."
+    }
+  ],
+  "keyRequirements": [
+    "SWMS required for all 19 categories of high-risk construction work",
+    "Work on or near a road, railway, shipping lane or traffic corridor is high-risk",
+    "Work involving movement of powered mobile plant is high-risk",
+    "SWMS must be prepared before work commences",
+    "SWMS must be accessible to workers carrying out the high-risk work",
+    "A SWMS is not required for work of a minor nature"
+  ],
+  "source": "local",
   "documentId": "whs-swms-guide",
-  "generatedAt": "2026-04-05T16:24:57.916580",
-  "generatedBy": "Phase 1 Summary Generator v2.0",
-  "version": "2.0"
+  "generatedAt": "2026-04-21T12:55:00.000Z",
+  "generatedBy": "Phase 1 Extended Summary Generator",
+  "version": "2.1"
 }

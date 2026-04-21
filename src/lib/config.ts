@@ -5,14 +5,14 @@
  * API endpoints, and other application settings.
  *
  * @module lib/config
- * @version 1.34.1
+ * @version 1.35.0
  */
 
 // ─── Application Info ─────────────────────────────────────────────────────
 
 export const APP_CONFIG = {
   name: 'TC Work Zone Locator',
-  version: '1.34.1',
+  version: '1.35.0',
   description: 'Traffic Control Work Zone Locator for Western Australia',
   author: 'TC Work Zone Locator Team',
 } as const;

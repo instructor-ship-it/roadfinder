@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select';
 
 // App version constant - single source of truth
-export const APP_VERSION = '1.34.1';
+export const APP_VERSION = '1.35.0';
 
 // Offline toggles type - shared with page.tsx
 export interface OfflineToggles {

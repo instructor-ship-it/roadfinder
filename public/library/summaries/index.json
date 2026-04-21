@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "generatedAt": "2026-04-05T18:20:20.099Z",
+  "generatedAt": "2026-04-21T12:55:00.000Z",
   "generatedBy": "Phase 1 Extended Summary Generator",
   "documentsCount": 35,
   "documents": [
@@ -408,11 +408,18 @@
       "id": "whs-construction-cop",
       "title": "Construction Work Code of Practice",
       "hasAbstract": true,
-      "sectionsCount": 0,
-      "hasExtendedSummary": false,
-      "hasCrossReferences": false,
-      "targetAudience": [],
-      "lastProcessed": null
+      "sectionsCount": 3,
+      "hasExtendedSummary": true,
+      "hasCrossReferences": true,
+      "targetAudience": [
+        "Traffic Controllers",
+        "PCBUs",
+        "Construction workers",
+        "Site supervisors",
+        "WHS Officers",
+        "Project managers"
+      ],
+      "lastProcessed": "2026-04-21T12:55:00.000Z"
     },
     {
       "id": "whs-general-regs-2022",
@@ -451,21 +458,34 @@
       "id": "whs-swms-guide",
       "title": "Safe Work Method Statement for High Risk Construction Work",
       "hasAbstract": true,
-      "sectionsCount": 0,
-      "hasExtendedSummary": false,
-      "hasCrossReferences": false,
-      "targetAudience": [],
-      "lastProcessed": null
+      "sectionsCount": 3,
+      "hasExtendedSummary": true,
+      "hasCrossReferences": true,
+      "targetAudience": [
+        "Traffic Controllers",
+        "Traffic Management Supervisors",
+        "PCBUs",
+        "Site supervisors",
+        "WHS Officers"
+      ],
+      "lastProcessed": "2026-04-21T12:55:00.000Z"
     },
     {
       "id": "whs-workplace-traffic",
       "title": "General Guide to Workplace Traffic Management",
       "hasAbstract": true,
-      "sectionsCount": 0,
-      "hasExtendedSummary": false,
-      "hasCrossReferences": false,
-      "targetAudience": [],
-      "lastProcessed": null
+      "sectionsCount": 2,
+      "hasExtendedSummary": true,
+      "hasCrossReferences": true,
+      "targetAudience": [
+        "Site managers",
+        "Traffic Controllers",
+        "WHS Officers",
+        "PCBUs",
+        "Construction supervisors",
+        "Warehouse managers"
+      ],
+      "lastProcessed": "2026-04-21T12:55:00.000Z"
     },
     {
       "id": "worksafe-wa-cop-working-hours-2006",

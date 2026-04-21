@@ -380,7 +380,7 @@ export default function OverridesMapPage() {
             </Link>
             <h1 className="text-xl font-bold">Speed Zone Map</h1>
           </div>
-          <div className="text-xs text-gray-500">v1.34.1</div>
+          <div className="text-xs text-gray-500">v1.35.0</div>
         </div>
       </div>
 
