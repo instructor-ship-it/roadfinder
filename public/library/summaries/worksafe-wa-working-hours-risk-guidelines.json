@@ -1,0 +1,47 @@
+{
+  "title": "Working Hours - Risk Management Guidelines (Excerpt from Code of Practice: Working Hours 2006)",
+  "abstract": "A 4-page excerpt from the Commission for Occupational Safety and Health's Code of Practice: Working Hours (2006). This standalone tool provides the risk management guidelines table for use at workplaces to assess hazard factors and risks from working hours arrangements. Shows general risk indicators on a scale from lower risk to higher risk for each hazard factor, including daily work hours, work-related travel, shift length, breaks, recovery time, and night work.",
+  "keywords": [
+    "risk management",
+    "working hours",
+    "hazard factors",
+    "risk indicators",
+    "fatigue",
+    "shiftwork",
+    "recovery time",
+    "work-related travel",
+    "WorkSafe WA"
+  ],
+  "targetAudience": ["Employers", "Supervisors", "Safety and health representatives", "Workers"],
+  "pages": 4,
+  "source": "download",
+  "documentId": "worksafe-wa-working-hours-risk-guidelines",
+  "generatedAt": "2026-04-21T12:15:00.000Z",
+  "generatedBy": "Manual entry from downloaded PDF",
+  "version": "1.0",
+  "keyRequirements": [
+    {
+      "requirement": "Use this tool to assess working hours hazard factors against general risk indicators",
+      "section": "General",
+      "priority": "high"
+    },
+    {
+      "requirement": "Where a hazard factor is assessed as above low/medium risk, implement control measures from Section 2.5.1 of the Code of Practice",
+      "section": "Step 3",
+      "priority": "critical"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "These guidelines should be used in conjunction with the full Code of Practice: Working Hours (2006)"
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "worksafe-wa-cop-working-hours-2006",
+      "reason": "This is an excerpt from the full Code of Practice",
+      "relevance": "essential"
+    }
+  ],
+  "lastProcessed": "2026-04-21T12:15:00.000Z"
+}

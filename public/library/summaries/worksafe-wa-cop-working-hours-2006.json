@@ -1,0 +1,205 @@
+{
+  "title": "Code of Practice: Working Hours (2006)",
+  "abstract": "A WorkSafe WA Code of Practice issued by the Commission for Occupational Safety and Health under the OSH Act 1984 and MSI Act 1994. Provides practical guidance for employers and workers on managing safety and health hazards and risks associated with working hours arrangements, including extended hours, shiftwork, on-call work, and fatigue management. Includes a risk management tool with general risk indicators for hazard factors such as daily work hours, work-related travel, breaks between shifts, and night work.",
+  "keywords": [
+    "working hours",
+    "fatigue management",
+    "shiftwork",
+    "night work",
+    "Code of Practice",
+    "WorkSafe WA",
+    "risk management",
+    "recovery time",
+    "work-related travel",
+    "OSH Act 1984"
+  ],
+  "targetAudience": [
+    "Employers",
+    "Workers",
+    "Safety and health representatives",
+    "Traffic controllers",
+    "Construction workers",
+    "Shift workers",
+    "Supervisors"
+  ],
+  "completeSections": [
+    {
+      "sectionNumber": "1",
+      "sectionTitle": "Introduction",
+      "page": 1
+    },
+    {
+      "sectionNumber": "1.1",
+      "sectionTitle": "General duties at the workplace",
+      "page": 2
+    },
+    {
+      "sectionNumber": "1.2",
+      "sectionTitle": "Working hours arrangements and occupational safety and health",
+      "page": 2
+    },
+    {
+      "sectionNumber": "1.3",
+      "sectionTitle": "Industry codes of practice",
+      "page": 3
+    },
+    {
+      "sectionNumber": "2",
+      "sectionTitle": "The risk management process: the three step process",
+      "page": 4
+    },
+    {
+      "sectionNumber": "2.1",
+      "sectionTitle": "Step 1: Hazard identification",
+      "page": 4
+    },
+    {
+      "sectionNumber": "2.2",
+      "sectionTitle": "Step 2: Risk assessment",
+      "page": 6
+    },
+    {
+      "sectionNumber": "2.3",
+      "sectionTitle": "Step 3: Risk control",
+      "page": 8
+    },
+    {
+      "sectionNumber": "2.4",
+      "sectionTitle": "Holistic approach to risk management",
+      "page": 9
+    },
+    {
+      "sectionNumber": "2.5",
+      "sectionTitle": "Risk management guidelines",
+      "page": 10
+    },
+    {
+      "sectionNumber": "2.5.1",
+      "sectionTitle": "Control measures",
+      "page": 15
+    },
+    {
+      "sectionNumber": "Appendix 1",
+      "sectionTitle": "Relevant sections of acts and regulations",
+      "page": 25
+    },
+    {
+      "sectionNumber": "Appendix 2",
+      "sectionTitle": "Other sources of information",
+      "page": 26
+    },
+    {
+      "sectionNumber": "Appendix 3",
+      "sectionTitle": "Fatigue",
+      "page": 29
+    }
+  ],
+  "pages": 32,
+  "source": "download",
+  "documentId": "worksafe-wa-cop-working-hours-2006",
+  "generatedAt": "2026-04-21T12:15:00.000Z",
+  "generatedBy": "Manual entry from downloaded PDF",
+  "version": "1.0",
+  "keyRequirements": [
+    {
+      "requirement": "Daily work hours exceeding 12 hours are higher risk and require control measures (Section 1.1.4)",
+      "section": "1.1.4",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Daily work hours AND work-related travel exceeding 13 hours total are higher risk (Section 1.1.4)",
+      "section": "1.1.4",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Recovery time between work periods must be adequate for sleep, travel and meals (Section 1.5)",
+      "section": "1.5",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Average weekly hours exceeding 48 hours are higher risk (Section 1.1.1)",
+      "section": "1.1.1",
+      "priority": "high"
+    },
+    {
+      "requirement": "Employers must avoid situations where employees drive when tired or fatigued due to extended working hours (Section 2.5.1)",
+      "section": "2.5.1",
+      "priority": "critical"
+    },
+    {
+      "requirement": "Long commuting distance is a specific lifestyle risk factor that limits sleep (Section 7.2)",
+      "section": "7.2",
+      "priority": "high"
+    },
+    {
+      "requirement": "Shifts and rosters must be designed to allow good quality sleep and enough recovery time between shifts for traveling, eating, washing and sleeping (Section 2.5.1)",
+      "section": "2.5.1",
+      "priority": "critical"
+    }
+  ],
+  "complianceNotes": [
+    {
+      "note": "This is an approved Code of Practice under the OSH Act 1984 and MSI Act 1994. It may be used by courts as the standard when assessing other methods or practices used."
+    },
+    {
+      "note": "Employers can either follow this Code or adopt another method that gives the same level of protection against the risk."
+    }
+  ],
+  "crossReferences": [
+    {
+      "documentId": "whs-act-2020",
+      "reason": "Current WHS legislation replaces OSH Act 1984 for most workplaces",
+      "relevance": "essential"
+    },
+    {
+      "documentId": "agttm-part-7",
+      "reason": "AGTTM Part 7 Section 2.3.8 defers to relevant jurisdictional legislation for fatigue management",
+      "relevance": "essential"
+    },
+    {
+      "documentId": "mrwa-whs-controls",
+      "reason": "MRWA WHS Controls Section 13.3 requires journey management and Section 17 covers thermal stress",
+      "relevance": "related"
+    },
+    {
+      "documentId": "mrwa-tmp-wheatbelt-0922-part1",
+      "reason": "TMP Part 1 Section 6.2.1 requires Delivery Supervisor to ensure adequate breaks",
+      "relevance": "related"
+    }
+  ],
+  "riskIndicators": {
+    "dailyWorkHours": {
+      "lowerRisk": "9 hours",
+      "higherRisk": "12 hours"
+    },
+    "dailyWorkHoursAndWorkRelatedTravel": {
+      "lowerRisk": "10 hours",
+      "higherRisk": "13 hours"
+    },
+    "averageWeeklyHours": {
+      "lowerRisk": "35-40 hours",
+      "higherRisk": "48 hours"
+    },
+    "totalHoursOverThreeMonths": {
+      "lowerRisk": "624 hours",
+      "higherRisk": "728 hours (FIFO)"
+    },
+    "shiftLengthNonFIFO": {
+      "lowerRisk": "10 hours",
+      "higherRisk": "12 hours"
+    },
+    "breaksBetweenWorkPeriods": {
+      "lowerRisk": "Adequate time for sleep, travel and meals",
+      "higherRisk": "Inadequate time for sleep, travel and meals"
+    },
+    "nightShiftLength": {
+      "lowerRisk": "8 hours",
+      "higherRisk": "10 hours"
+    },
+    "sequentialNightShifts": {
+      "lowerRisk": "6 or more 8-hour shifts / 5 or more 10-hour shifts / 4 or more 12-hour shifts",
+      "higherRisk": "Exceeding these limits"
+    }
+  },
+  "lastProcessed": "2026-04-21T12:15:00.000Z"
+}

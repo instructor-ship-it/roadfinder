@@ -2,7 +2,7 @@
   "version": "2.0",
   "generatedAt": "2026-04-05T18:20:20.099Z",
   "generatedBy": "Phase 1 Extended Summary Generator",
-  "documentsCount": 33,
+  "documentsCount": 35,
   "documents": [
     {
       "id": "agrs-part-3-safe-speed",
@@ -466,6 +466,39 @@
       "hasCrossReferences": false,
       "targetAudience": [],
       "lastProcessed": null
+    },
+    {
+      "id": "worksafe-wa-cop-working-hours-2006",
+      "title": "Code of Practice: Working Hours (2006)",
+      "hasAbstract": true,
+      "sectionsCount": 14,
+      "hasExtendedSummary": true,
+      "hasCrossReferences": true,
+      "targetAudience": [
+        "Employers",
+        "Workers",
+        "Safety and health representatives",
+        "Traffic controllers",
+        "Construction workers",
+        "Shift workers",
+        "Supervisors"
+      ],
+      "lastProcessed": "2026-04-21T12:15:00.000Z"
+    },
+    {
+      "id": "worksafe-wa-working-hours-risk-guidelines",
+      "title": "Working Hours - Risk Management Guidelines",
+      "hasAbstract": true,
+      "sectionsCount": 2,
+      "hasExtendedSummary": true,
+      "hasCrossReferences": true,
+      "targetAudience": [
+        "Employers",
+        "Supervisors",
+        "Safety and health representatives",
+        "Workers"
+      ],
+      "lastProcessed": "2026-04-21T12:15:00.000Z"
     }
   ]
 }
