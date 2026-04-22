@@ -5997,3 +5997,62 @@ Stage Summary:
 - All tests pass with correct test runner (`vitest run`)
 - No code fixes required — the "failures" were a test runner mismatch
 - Project is healthy: 248 tests, 0 TS errors, 0 lint errors
+
+---
+
+## Task ID: 2026-04-22-002
+
+**Agent:** Main Agent (Continuation Session)
+**Task:** Comprehensive Documentation Audit & Update for v1.35.0
+
+### Work Log:
+
+- **Cloned fresh from GitHub** and ran `bun install` (802 packages)
+- **Version Check**: All versions match at 1.35.0 ✅
+  - SettingsDrawer.tsx, PROJECT_CONTEXT.md, README.md, worklog.md, RC1_Test_Checklist.md
+- **Code vs Documentation Verification** (comprehensive audit):
+  - ✅ All 8 documented pages exist in code
+  - ✅ All 22+ documented API routes exist in code
+  - ✅ All 11 documented lib files exist in code
+  - ✅ All 12 documented components exist in code
+  - ✅ All v1.35.0 changes verified (WHS PDFs, registry.json)
+  - ✅ All v1.34.1 changes verified (Work site debrief, hold duration, True Left/Right)
+  - ⚠️ Found undocumented pages: cycle-timer, settings, event-logger, contacts, manual, offline
+  - ⚠️ Found undocumented API routes: incidents, nearest-hospital, nearest-intersections, police-stations, emergency-stations, toilets, documents/, qa-saved, weather/warnings, route (health check)
+  - ⚠️ Found undocumented lib files: offline-db/ (13 files), traffic-event-logger.ts, traffic-counter-storage.ts, qa-storage.ts, offline-storage.ts, emergency.ts, toilet-map.ts, fire-stations.ts, contacts-storage.ts, cycle-timer-storage.ts, saved-locations-db.ts, summaries-storage.ts, config.ts, logger.ts, errors.ts, validation.ts, performance.ts, traffic-calculations.ts, max-hold-time.ts, speed-zones.ts, route-optimizer.ts, download-roads.ts, db.ts
+  - ⚠️ Found undocumented components: Onboarding.tsx, WorkZoneReport.tsx, ReportExportModal.tsx, EmergencyLocationModal.tsx, TrafficCountDetailModal.tsx, IncidentsSection.tsx, IncidentWarningBanner.tsx, WeatherWarningBanner.tsx
+- **Documentation Updates Applied**:
+  - PROJECT_CONTEXT.md: Expanded Key Files section with all pages, API routes, lib files, and components
+  - docs/TC_Work_Zone_Locator_User_Manual.md: Updated to v1.35.0, added WHS Library, Turbo Mode, Contact Directory, Onboarding, Saved Locations Map sections
+  - docs/ARCHITECTURE.md: Updated to v1.35.0, added missing pages, features, API endpoints, version history
+  - docs/TC_Work_Zone_Locator_File_Structure.md: Already at v1.35.0 with version history entry
+  - docs/DATA_STRUCTURES.md: Updated version from 1.34.1 to 1.35.0
+  - docs/TC_Work_Zone_Locator_Program_Logic.md: Updated version from 1.34.1 to 1.35.0
+  - docs/API_REFERENCE.md: Updated version from 1.34.1 to 1.35.0
+  - docs/TROUBLESHOOTING.md: Added Turbo Mode, Saved Locations, WHS Library, Event Logger Cloud Sync troubleshooting sections; fixed GitHub Issues URL
+  - docs/RC1_Test_Checklist.md: Updated version from 1.34.1 to 1.35.0
+  - docs/TC_Work_Zone_Locator_Direction_Aware_Zones.md: Updated version from 1.34.1 to 1.35.0, added v1.35.0 to version history
+  - docs/Work_Zone_Report_Implementation_Guide.md: Updated version from 1.34.1 to 1.35.0
+
+### Files Changed:
+
+- `PROJECT_CONTEXT.md` (expanded Key Files with all undocumented pages, routes, libs, components)
+- `docs/TC_Work_Zone_Locator_User_Manual.md` (v1.35.0, new sections for WHS Library, Turbo Mode, Contact Directory, Onboarding, Saved Locations Map)
+- `docs/ARCHITECTURE.md` (v1.35.0, added pages, features, API endpoints, version history)
+- `docs/DATA_STRUCTURES.md` (v1.35.0)
+- `docs/TC_Work_Zone_Locator_Program_Logic.md` (v1.35.0)
+- `docs/API_REFERENCE.md` (v1.35.0)
+- `docs/TROUBLESHOOTING.md` (new troubleshooting sections, fixed GitHub URL)
+- `docs/RC1_Test_Checklist.md` (v1.35.0)
+- `docs/TC_Work_Zone_Locator_Direction_Aware_Zones.md` (v1.35.0, version history)
+- `docs/Work_Zone_Report_Implementation_Guide.md` (v1.35.0)
+- `worklog.md` (this entry)
+
+### Stage Summary:
+
+- All documentation files updated to v1.35.0
+- PROJECT_CONTEXT.md now comprehensively documents all pages, API routes, lib files, and components
+- User Manual updated with WHS Library, Turbo Mode, Contact Directory, Onboarding, Saved Locations Map sections
+- Troubleshooting guide updated with Turbo Mode, Saved Locations, WHS Library, Event Logger Cloud Sync sections
+- GitHub Issues URL corrected in troubleshooting guide
+- Ready for push to GitHub

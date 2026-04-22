@@ -2,7 +2,7 @@
 
 **User Manual**
 
-Version 1.34.1
+Version 1.35.0
 
 April 2026
 
@@ -27,9 +27,11 @@ https://github.com/instructor-ship-it/roadfinder
 11. Library Page - Documentation & Resources
 12. Traffic Counter - Vehicle Counting
 13. Q&A Assistant - AI Help
-14. Settings
-15. Troubleshooting
-16. Quick Reference
+14. Onboarding
+15. Saved Locations Map
+16. Settings
+17. Troubleshooting
+18. Quick Reference
 
 ---
 
@@ -58,6 +60,11 @@ TC Work Zone Locator is a mobile-first web application designed specifically for
 - **Q&A Assistant** - AI-powered help with questions (prompt generation or direct chat)
 - **Speeding Alert** - Warning with WA fine information
 - **Saved Locations** - Save work zones for quick recall with unlimited storage via IndexedDB
+- **WHS Library** - Access WHS Codes of Practice and guidance material offline with AI summaries
+- **Turbo Mode** - High-precision GPS refresh for exact SLK positioning
+- **Contact Directory** - Job-based contact management with local storage
+- **Onboarding** - First-run wizard for new users with accessibility support
+- **Saved Locations Map** - Interactive map view of all saved locations
 
 ### 1.3 Who Should Use This App
 
@@ -113,7 +120,7 @@ When prompted, allow the app to access your location. This is required for:
 
 The header shows important status information:
 
-- Version number (e.g., v1.34.1)
+- Version number (e.g., v1.35.0)
 - Offline status indicator
 - Hamburger menu (☰) = Settings access
 
@@ -169,10 +176,15 @@ This is essential for Traffic Controllers working in remote areas of Western Aus
 | Google Maps Links       | Generated URLs           | ✓ Yes                     |
 | Set Distance Tool       | Device GPS               | ✓ Yes                     |
 | Library                 | Cached docs              | ✓ Yes                     |
+| WHS Library             | Cached docs + IndexedDB  | ✓ Yes                     |
 | Traffic Counter         | localStorage             | ✓ Yes                     |
 | Cycle Timer             | localStorage             | ✓ Yes                     |
 | Traffic Event Logger    | localStorage             | ✓ Yes (syncs when online) |
 | Saved Locations         | IndexedDB                | ✓ Yes (unlimited)         |
+| Saved Locations Map     | OpenStreetMap tiles\*    | ✓ Yes                     |
+| Contact Directory       | localStorage             | ✓ Yes                     |
+| Onboarding              | localStorage             | ✓ Yes                     |
+| Turbo Mode              | Device GPS               | ✓ Yes                     |
 | Q&A Assistant           | AI API                   | ✗ No                      |
 | Settings                | localStorage             | ✓ Yes                     |
 
@@ -473,6 +485,35 @@ When you rotate your phone to landscape:
 - Minimalist "Exit" button in top-left corner
 - Optimized for in-vehicle phone mounts
 
+### 5.10 Turbo Mode
+
+Turbo Mode provides high-precision GPS tracking for situations where you need exact SLK positioning. It is controlled by the RefreshRateToggle component on the drive page.
+
+**Default Mode (Adaptive):**
+
+- GPS refresh rate: 750–2000ms (adaptive)
+- Balances accuracy with battery life
+- Suitable for normal driving and general tracking
+
+**Turbo/Precision Mode:**
+
+- GPS refresh rate: 200ms (5 updates per second)
+- Provides exact SLK positioning for precision work
+- Pulsing green button indicator when Turbo is active
+- **5-minute auto-revert** with countdown timer to prevent battery drain
+- Automatically returns to adaptive mode after 5 minutes
+
+**Use Cases:**
+
+- Creeping up to an exact SLK marker
+- Precise signage placement verification
+- Finding exact work zone boundaries
+- Any situation requiring sub-meter SLK accuracy
+
+**Battery Considerations:**
+
+Turbo Mode significantly increases GPS polling frequency. The 5-minute auto-revert timer prevents excessive battery drain. The countdown timer is visible on the button so you can see how much time remains before it reverts to adaptive mode.
+
 ---
 
 ## 6. TC Tools
@@ -525,6 +566,13 @@ Count vehicles and calculate lane capacity or shuttle flow requirements.
 
 Log TC events with timestamps, notes, and GPS coordinates. Works offline - events queue locally and sync when connection is restored.
 
+**Cloud Sync:**
+
+- Sync is **disabled by default**
+- To enable, you must configure your own private Google Sheet URL in the Event Logger settings
+- Events are queued locally when offline and automatically synced when connectivity returns
+- Your data remains private - only your configured Google Sheet receives the data
+
 **Quick Event Buttons:**
 
 - **Sent TL / Sent TR** - Log vehicle sent on True Left or True Right
@@ -563,11 +611,31 @@ Log TC events with timestamps, notes, and GPS coordinates. Works offline - event
 **Export Options:**
 
 - CSV export for local backup
-- Google Sheets sync when online (configurable)
+- Google Sheets sync when online (disabled by default; requires user-configured private Google Sheet URL; offline queue for sync when connectivity returns)
 
 ### 6.4 Set Distance Tool
 
 GPS-based distance measurement tool for measuring distances on site.
+
+### 6.5 Contact Directory
+
+A contact directory for managing work-related contacts with job-based tagging. Access it from the TC Tools menu at `/contacts`.
+
+**Features:**
+
+- **Job-Based Tagging** - Tag contacts with job labels for quick filtering (e.g., "Supervisor", "Plant Operator", "Client")
+- **LocalStorage Persistence** - All contacts are stored locally and available offline
+- **Add/Edit/Delete** - Full CRUD operations for contact management
+- **Quick Access** - Access from TC Tools menu in Settings
+
+**Adding a Contact:**
+
+- Tap the add button to create a new contact
+- Enter name, phone number, and other details
+- Assign job tags for categorization
+- Contacts are saved immediately to localStorage
+
+**Use Case:** Keep a directory of supervisors, plant operators, and other key contacts organized by job role for quick access on site.
 
 ---
 
@@ -873,6 +941,32 @@ Navigate to `/library` or use the link in Settings.
 - Download as PDF (if available)
 - Share link to document
 
+### 11.6 WHS Library
+
+The WHS Library provides access to Work Health and Safety documents relevant to traffic control operations in Western Australia. All WHS documents are available offline with a built-in PDF viewer.
+
+**WHS Codes of Practice:**
+
+| **Document**                       | **Source**          | **Pages** |
+| ---------------------------------- | ------------------- | --------- |
+| Construction Work Code of Practice | Safe Work Australia | 13        |
+| Workplace Traffic Management Guide | Safe Work Australia | 30        |
+| Working Hours Code of Practice     | Safe Work Australia | —         |
+| Risk Tool                          | Safe Work Australia | —         |
+
+**WHS Guidance Material:**
+
+| **Document**             | **Source**  | **Pages** |
+| ------------------------ | ----------- | --------- |
+| SWMS Information Sheet   | WorkSafe WA | 16        |
+| Records Management Guide | —           | —         |
+
+**Features:**
+
+- **Offline Access** - All WHS documents are cached locally for offline viewing
+- **PDF Viewer** - Built-in PDF viewer for reading documents directly in the app
+- **AI-Powered Summaries** - Get AI-generated summaries of WHS documents directly in the library, helping you quickly find relevant information without reading the entire document
+
 ---
 
 ## 12. Traffic Counter - Vehicle Counting
@@ -1108,11 +1202,63 @@ Navigate to `/qa` from the Settings menu or Library page.
 
 ---
 
-## 14. Settings
+## 14. Onboarding
+
+### 14.1 Overview
+
+The Onboarding wizard provides a first-run experience for new users. When you open the app for the first time, the onboarding wizard guides you through the key features and setup steps.
+
+### 14.2 First-Run Wizard
+
+On first launch, the onboarding wizard presents:
+
+- **Welcome Screen** - Introduction to TC Work Zone Locator
+- **Key Feature Walkthrough** - Step-by-step tour of major features including work zone lookup, GPS tracking, AfterCare, and TC Tools
+- **Setup Guidance** - Help with downloading offline data, setting default region, and enabling location access
+- **Getting Started Tips** - Quick tips for using the app effectively
+
+### 14.3 Accessibility
+
+The app includes several accessibility enhancements:
+
+- **ARIA Labels** - All interactive elements have descriptive ARIA labels for screen reader compatibility
+- **User-Scalable Viewport** - The viewport supports user scaling, allowing pinch-to-zoom for users who need larger text
+- **Semantic Navigation** - Proper heading hierarchy and landmark regions for assistive technology
+
+The onboarding can be revisited from Settings if you want to review the feature walkthrough.
+
+---
+
+## 15. Saved Locations Map
+
+### 15.1 Overview
+
+The Saved Locations Map provides an interactive map view of all your saved work zone locations. Navigate to `/saved-locations/map` to access it.
+
+### 15.2 Map Features
+
+- **Interactive Map** - Full-screen OpenStreetMap showing all saved locations with markers
+- **Navigate to Any Location** - Tap a marker to navigate to that saved location via Google Maps
+- **Unlimited Storage** - Saved locations are stored in IndexedDB (introduced in v1.34.0), providing unlimited storage capacity
+
+### 15.3 Sorting and Filtering
+
+- **Sort by Date** - View locations ordered by when they were saved (most recent first)
+- **Sort by Road Name** - View locations ordered alphabetically by road name
+
+### 15.4 Navigation
+
+- Tap any location marker to view details
+- Use the navigate button to open Google Maps directions
+- Zoom and pan the map to explore your saved locations
+
+---
+
+## 16. Settings
 
 Access settings by tapping the ☰ (hamburger) icon in the header. A bottom sheet drawer slides up from the bottom.
 
-### 14.1 Settings Sections
+### 16.1 Settings Sections
 
 | **Section**          | **Contents**                             |
 | -------------------- | ---------------------------------------- |
@@ -1122,9 +1268,10 @@ Access settings by tapping the ☰ (hamburger) icon in the header. A bottom shee
 | Offline Data         | Download/clear data, offline toggles     |
 | Preferences          | Default region, wind gust threshold      |
 | Speed Zone Overrides | Override management link                 |
-| TC Tools             | AfterCare, Set Distance links            |
+| TC Tools             | AfterCare, Set Distance, Contacts links  |
+| WHS Library          | WHS documents and AI summaries           |
 
-### 14.2 GPS Settings
+### 16.2 GPS Settings
 
 | **Setting**          | **Default** | **Description**                |
 | -------------------- | ----------- | ------------------------------ |
@@ -1136,13 +1283,13 @@ Access settings by tapping the ☰ (hamburger) icon in the header. A bottom shee
 | Speed Lookahead      | 5s          | Lookahead time for warnings    |
 | GPS Lag Compensation | 0s          | Measured lag offset            |
 
-### 14.3 Wind Gust Alert
+### 16.3 Wind Gust Alert
 
 Set threshold for wind gust warnings. Options: 40, 50, 60, 80 km/h. Default is 60 km/h.
 
 Alert shows when gusts exceed threshold - important for traffic control device safety.
 
-### 14.4 Speeding Alert Settings
+### 16.4 Speeding Alert Settings
 
 | **Setting**         | **Default** | **Description**               |
 | ------------------- | ----------- | ----------------------------- |
@@ -1150,7 +1297,7 @@ Alert shows when gusts exceed threshold - important for traffic control device s
 | Show WA Fines       | On          | Display WA fine information   |
 | Alert Threshold     | 5 km/h      | km/h over limit to trigger    |
 
-### 14.5 Offline Data
+### 16.5 Offline Data
 
 **Download Data:**
 
@@ -1171,18 +1318,19 @@ Six toggles to switch between online API and offline IndexedDB data:
 - Regulatory Signs
 - Warning Signs
 
-### 14.6 TC Tools
+### 16.6 TC Tools
 
 Quick access to:
 
 - **AfterCare Signs** - Signage tracking page
 - **Set Distance** - GPS distance measurement tool
+- **Contact Directory** - Job-based contact management
 
 ---
 
-## 15. Troubleshooting
+## 17. Troubleshooting
 
-### 15.1 App Shows Wrong Road
+### 17.1 App Shows Wrong Road
 
 If GPS is detecting the wrong road:
 
@@ -1191,7 +1339,7 @@ If GPS is detecting the wrong road:
 - Try clearing and re-downloading data
 - For local roads, use manual entry instead of GPS
 
-### 15.2 Speed Limit Incorrect
+### 17.2 Speed Limit Incorrect
 
 If speed limit doesn't match physical signs:
 
@@ -1200,7 +1348,7 @@ If speed limit doesn't match physical signs:
 - Record the physical sign details
 - Override will take precedence over MRWA data
 
-### 15.3 GPS Not Working
+### 17.3 GPS Not Working
 
 If GPS tracking won't start:
 
@@ -1209,7 +1357,7 @@ If GPS tracking won't start:
 - Wait for GPS signal (can take 30+ seconds)
 - Try refreshing the page
 
-### 15.4 Data Won't Download
+### 17.4 Data Won't Download
 
 If download fails:
 
@@ -1218,7 +1366,7 @@ If download fails:
 - Try a different browser
 - Check available storage on device
 
-### 15.5 App Slow or Unresponsive
+### 17.5 App Slow or Unresponsive
 
 If app is running slowly:
 
@@ -1227,7 +1375,7 @@ If app is running slowly:
 - Restart the browser
 - Check device storage
 
-### 15.6 Speed Warnings Too Early/Late
+### 17.6 Speed Warnings Too Early/Late
 
 If lookahead timing seems off:
 
@@ -1235,7 +1383,7 @@ If lookahead timing seems off:
 - Apply the measured lag compensation
 - Recalibrate if you change devices
 
-### 15.7 AfterCare Signs Not Showing on Map
+### 17.7 AfterCare Signs Not Showing on Map
 
 If signs don't appear on the map:
 
@@ -1244,7 +1392,7 @@ If signs don't appear on the map:
 - Or the sign will auto-fetch coordinates when road_id + SLK is known
 - Check that signs have lat/lon values
 
-### 15.8 Map Tiles Not Loading Offline
+### 17.8 Map Tiles Not Loading Offline
 
 If map doesn't work offline:
 
@@ -1254,16 +1402,16 @@ If map doesn't work offline:
 
 ---
 
-## 16. Quick Reference
+## 18. Quick Reference
 
-### 16.1 Direction Terminology
+### 18.1 Direction Terminology
 
 | **Term**   | **Meaning**       | **SLK Direction** |
 | ---------- | ----------------- | ----------------- |
 | True Left  | Left Carriageway  | INCREASING SLK    |
 | True Right | Right Carriageway | DECREASING SLK    |
 
-### 16.2 Status Colors
+### 18.2 Status Colors
 
 | **Color**        | **Meaning**                                         |
 | ---------------- | --------------------------------------------------- |
@@ -1274,7 +1422,7 @@ If map doesn't work offline:
 | Amber border     | Speed decrease ahead                                |
 | Green border + ✓ | In override zone                                    |
 
-### 16.3 AfterCare Status Colors
+### 18.3 AfterCare Status Colors
 
 | **Status**      | **Color** | **Marker** |
 | --------------- | --------- | ---------- |
@@ -1284,7 +1432,7 @@ If map doesn't work offline:
 | Retrieved       | Blue      | ✓          |
 | TBA             | Gray      | ⏸          |
 
-### 16.4 EKF Confidence Indicators
+### 18.4 EKF Confidence Indicators
 
 | **Symbol**     | **Confidence**         |
 | -------------- | ---------------------- |
@@ -1293,7 +1441,7 @@ If map doesn't work offline:
 | ◔ Orange dot   | Low accuracy           |
 | ◇ Cyan diamond | Predicted (GPS outage) |
 
-### 16.5 Key Distances
+### 18.5 Key Distances
 
 | **Feature**          | **Distance**          |
 | -------------------- | --------------------- |
@@ -1302,7 +1450,7 @@ If map doesn't work offline:
 | Intersection Display | ±1100m from work zone |
 | Speed Sign Detection | ±700m from work zone  |
 
-### 16.6 Offline Data Summary
+### 18.6 Offline Data Summary
 
 | **Data Type** | **Count**      |
 | ------------- | -------------- |
@@ -1310,7 +1458,7 @@ If map doesn't work offline:
 | Speed Zones   | 69,000+        |
 | Regions       | 8 MRWA regions |
 
-### 16.7 Keyboard Shortcuts (Desktop)
+### 18.7 Keyboard Shortcuts (Desktop)
 
 When using on a computer:
 

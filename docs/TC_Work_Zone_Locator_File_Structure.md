@@ -2,7 +2,7 @@
 
 ## File Structure Documentation
 
-**Version 1.34.1**
+**Version 1.35.0**
 
 ---
 
@@ -36,6 +36,7 @@ The TC Work Zone Locator is a Next.js 16 application built with the App Router a
 | `page.tsx`                                  | Home page - Work zone lookup                       |
 | `drive/page.tsx`                            | GPS tracking page with EKF filtering, speed alerts |
 | `drive/nearby-signs/page.tsx`               | Nearby signs requiring action                      |
+| `drive/RefreshRateToggle.tsx`               | Turbo Mode GPS refresh rate toggle                 |
 | `overrides/page.tsx`                        | Speed sign override management                     |
 | `overrides/layout/page.tsx`                 | Override layout visualization                      |
 | `overrides/map/page.tsx`                    | Override map with Leaflet                          |
@@ -185,6 +186,18 @@ The TC Work Zone Locator is a Next.js 16 application built with the App Router a
 | `WorkZoneReport.tsx`            | Work zone report component                      |
 | `ui/`                           | shadcn/ui components (Radix primitives)         |
 
+#### Traffic Event Logger Components (src/components/traffic-event-logger/)
+
+| File               | Purpose                              |
+| ------------------ | ------------------------------------ |
+| `Counters.tsx`     | Event counter buttons and display    |
+| `TimerBadge.tsx`   | Elapsed time badge for active events |
+| `EventButtons.tsx` | Event type selection buttons         |
+| `EventList.tsx`    | Scrollable list of logged events     |
+| `FlasherSheet.tsx` | Bottom sheet for flasher events      |
+| `MoreSheet.tsx`    | Additional actions bottom sheet      |
+| `ShiftSheet.tsx`   | Shift start/end management sheet     |
+
 #### Home Page Components (src/components/home/)
 
 | File                          | Purpose                            |
@@ -287,6 +300,7 @@ The AfterCare module provides comprehensive signage tracking and management:
 - Real-time GPS tracking with EKF smoothing
 - Speed limit display with override zone indicators
 - Speeding alert with WA fine/demerit information
+- Turbo Mode / GPS refresh rate toggle (1s or 5s intervals)
 - Minutes per km and 10km travel time display
 - AfterCare integration with nearby sign alerts
 
@@ -337,7 +351,18 @@ The AfterCare module provides comprehensive signage tracking and management:
 - Community-verified speed zone corrections
 - Export/Import functionality
 
-### 7.6 Library Modules (src/lib/)
+### 7.6 WHS Library Directory (public/library/whs/)
+
+| Directory/File            | Purpose                                              |
+| ------------------------- | ---------------------------------------------------- |
+| `legislation/`            | WHS legislation PDF documents                        |
+| `legislation/*.pdf`       | WHS Act, Regulations, and related legislation files  |
+| `codes-of-practice/`      | Codes of practice documents                          |
+| `codes-of-practice/*.pdf` | Safe work method statements, traffic management CoPs |
+| `ai-summaries/`           | AI-generated document summaries                      |
+| `ai-summaries/*.json`     | JSON summaries with key points and sections          |
+
+### 7.7 Library Modules (src/lib/)
 
 #### offline-db.ts
 
@@ -422,29 +447,30 @@ The offline database is split into 12 modular files for maintainability:
 
 ## 9. Version History
 
-| Version   | Date       | Key Changes                                                                         |
-| --------- | ---------- | ----------------------------------------------------------------------------------- |
-| 1.34.1    | April 2026 | Phase 3 refactoring, component extraction, mrwaStatus type fix                      |
-| 1.34.0    | April 2026 | IndexedDB for saved locations, unlimited storage, localStorage migration            |
-| 1.28.5    | April 2026 | Traffic Event Logger, Cycle Timer, AI direct chat, PDF viewer improvements          |
-| 1.28.0    | April 2026 | Traffic Event Logger with TC assignments, Google Sheets sync                        |
-| 1.27.0    | April 2026 | PDF Viewer Modal with landscape/portrait support                                    |
-| 1.21.0    | April 2026 | Direct AI Chat for Q&A Assistant                                                    |
-| 1.20.0    | April 2026 | TypeScript strict mode, ESLint zero-warning baseline                                |
-| RC 1.9.9  | June 2025  | Fuel stations (FuelWatch WA + Overpass), hospital type badges, amenity data sources |
-| RC 1.9.7  | March 2026 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements           |
-| RC 1.9.1  | March 2026 | Speeding alerts with WA fine info, minutes per km, 10km time                        |
-| RC 1.9.0  | March 2026 | Traffic Counter feature, Documents Library                                          |
-| RC 1.8.0  | March 2026 | QA page, Settings Drawer consolidation                                              |
-| RC 1.7.18 | March 2026 | Signage Corridor intersection fix (Layer 6)                                         |
-| RC 1.7.17 | March 2026 | Emergency cross road detection, shared module                                       |
-| RC 1.7.14 | March 2026 | Emergency location enhancement                                                      |
-| RC 1.6.0  | March 2026 | AfterCare Map View, Leaflet integration                                             |
-| RC 1.5.0  | March 2026 | Nearby Signs page, filtered view                                                    |
-| RC 1.4.0  | March 2026 | AfterCare signage tracking system                                                   |
-| RC 1.2.1  | March 2026 | Override zone visual indicator                                                      |
-| RC 1.2.0  | March 2026 | Speed sign override system                                                          |
-| RC 1.0    | March 2026 | Official release candidate                                                          |
+| Version   | Date       | Key Changes                                                                                                 |
+| --------- | ---------- | ----------------------------------------------------------------------------------------------------------- |
+| 1.35.0    | May 2026   | Turbo Mode, Traffic Event Logger components, WHS Library, onboarding, saved locations map, API health check |
+| 1.34.1    | April 2026 | Phase 3 refactoring, component extraction, mrwaStatus type fix                                              |
+| 1.34.0    | April 2026 | IndexedDB for saved locations, unlimited storage, localStorage migration                                    |
+| 1.28.5    | April 2026 | Traffic Event Logger, Cycle Timer, AI direct chat, PDF viewer improvements                                  |
+| 1.28.0    | April 2026 | Traffic Event Logger with TC assignments, Google Sheets sync                                                |
+| 1.27.0    | April 2026 | PDF Viewer Modal with landscape/portrait support                                                            |
+| 1.21.0    | April 2026 | Direct AI Chat for Q&A Assistant                                                                            |
+| 1.20.0    | April 2026 | TypeScript strict mode, ESLint zero-warning baseline                                                        |
+| RC 1.9.9  | June 2025  | Fuel stations (FuelWatch WA + Overpass), hospital type badges, amenity data sources                         |
+| RC 1.9.7  | March 2026 | Max Hold Time calc, shuttle flow fix, clearance time fix, UI improvements                                   |
+| RC 1.9.1  | March 2026 | Speeding alerts with WA fine info, minutes per km, 10km time                                                |
+| RC 1.9.0  | March 2026 | Traffic Counter feature, Documents Library                                                                  |
+| RC 1.8.0  | March 2026 | QA page, Settings Drawer consolidation                                                                      |
+| RC 1.7.18 | March 2026 | Signage Corridor intersection fix (Layer 6)                                                                 |
+| RC 1.7.17 | March 2026 | Emergency cross road detection, shared module                                                               |
+| RC 1.7.14 | March 2026 | Emergency location enhancement                                                                              |
+| RC 1.6.0  | March 2026 | AfterCare Map View, Leaflet integration                                                                     |
+| RC 1.5.0  | March 2026 | Nearby Signs page, filtered view                                                                            |
+| RC 1.4.0  | March 2026 | AfterCare signage tracking system                                                                           |
+| RC 1.2.1  | March 2026 | Override zone visual indicator                                                                              |
+| RC 1.2.0  | March 2026 | Speed sign override system                                                                                  |
+| RC 1.0    | March 2026 | Official release candidate                                                                                  |
 
 ---
 

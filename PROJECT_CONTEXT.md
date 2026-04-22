@@ -207,14 +207,30 @@ src/
 │   ├── calibrate/page.tsx    # GPS calibration tool
 │   ├── overrides/page.tsx    # Speed sign override management
 │   ├── aftercare/page.tsx    # AfterCare signage tracking
+│   ├── traffic-counter/page.tsx  # Traffic counter tool
+│   ├── qa/page.tsx           # AI Q&A assistant
+│   ├── library/page.tsx      # Document library
+│   ├── cycle-timer/page.tsx  # Cycle timer tool
+│   ├── contacts/page.tsx     # Contact directory
+│   ├── event-logger/page.tsx # Standalone event logger
+│   ├── settings/page.tsx     # Settings page
+│   ├── manual/page.tsx       # User manual
+│   ├── offline/page.tsx      # Offline fallback page
 │   └── api/
 │       ├── roads/route.ts         # Road data, SLK coordinates
 │       ├── gps/route.ts           # GPS to SLK conversion
 │       ├── weather/route.ts       # Weather data (Open-Meteo)
 │       ├── warnings/route.ts      # BOM weather warnings RSS feed
+│       ├── weather/warnings/route.ts # BOM warnings (detailed)
 │       ├── traffic/route.ts       # Traffic volume data
 │       ├── places/route.ts        # Nearby amenities (hospital, fuel, toilet)
 │       ├── intersections/route.ts # Cross road detection
+│       ├── nearest-intersections/route.ts # Nearest cross roads
+│       ├── nearest-hospital/route.ts # Nearest hospital lookup
+│       ├── police-stations/route.ts  # Police station data
+│       ├── emergency-stations/route.ts # Emergency services data
+│       ├── toilets/route.ts       # National Public Toilet Map data
+│       ├── incidents/route.ts     # Road incident data
 │       ├── admin-sync/route.ts    # MRWA direct sync
 │       ├── overrides/route.ts     # Override storage (localStorage pass-through)
 │       ├── speed-compare/route.ts # MRWA vs OSM speed limit comparison
@@ -225,16 +241,69 @@ src/
 │       ├── hospitals/route.ts    # WA Health SLIP hospital data
 │       ├── download-signs/route.ts# Sign data download
 │       ├── export-pdf/route.ts    # Work zone report export
-│       └── sync-data/route.ts     # Offline data sync
+│       ├── sync-data/route.ts     # Offline data sync
+│       ├── documents/route.ts     # Library document management
+│       ├── documents/analyze-diagrams/route.ts # TMP diagram analysis
+│       ├── documents/summarize/route.ts # Document AI summarization
+│       ├── ai/verify/route.ts     # AI API key verification
+│       ├── ai/chat/route.ts       # AI chat completion
+│       ├── qa/route.ts            # Q&A AI search endpoint
+│       ├── qa-saved/route.ts      # Saved Q&A history endpoint
+│       └── route.ts               # Health check endpoint
 ├── lib/
 │   ├── offline-db.ts        # IndexedDB storage, signage corridor, sign-to-zone logic
+│   ├── offline-db/           # Modular offline DB subdirectory (13 files)
 │   ├── aftercare.ts         # AfterCare job/sign storage and management
 │   ├── mrwa_api.ts          # MRWA ArcGIS API integration
 │   ├── gps-ekf.ts           # Extended Kalman Filter for GPS
-│   └── utils.ts             # Haversine distance calculation
+│   ├── utils.ts             # Haversine distance, bearing, direction formatting
+│   ├── traffic-event-logger.ts  # Traffic event state, localStorage, Sheets sync
+│   ├── traffic-counter-storage.ts # Traffic counter persistence
+│   ├── qa-storage.ts        # Q&A history localStorage management
+│   ├── offline-storage.ts   # Download tracking, cache verification
+│   ├── emergency.ts         # Shared emergency location functions
+│   ├── toilet-map.ts        # National Public Toilet Map ArcGIS data
+│   ├── fire-stations.ts     # Fire station data
+│   ├── contacts-storage.ts  # Contact directory storage
+│   ├── cycle-timer-storage.ts # Cycle timer lap storage
+│   ├── saved-locations-db.ts # Saved locations IndexedDB storage
+│   ├── summaries-storage.ts # Document summary storage
+│   ├── config.ts            # App configuration
+│   ├── logger.ts            # Logging utilities
+│   ├── errors.ts            # Error handling
+│   ├── validation.ts        # Validation utilities
+│   ├── performance.ts       # Performance monitoring
+│   ├── traffic-calculations.ts # Traffic flow calculations
+│   ├── max-hold-time.ts     # Max hold time enforcement
+│   ├── speed-zones.ts       # Speed zone logic
+│   ├── route-optimizer.ts   # Route optimization
+│   ├── download-roads.ts    # Road data downloading
+│   └── db.ts                # Database module
 ├── hooks/
 │   └── useGpsTracking.ts     # GPS tracking with EKF, speed zones
-└── components/ui/            # shadcn components
+└── components/
+    ├── ui/                    # shadcn components
+    ├── TrafficEventLoggerModal.tsx  # Traffic event logger modal
+    ├── traffic-event-logger/  # Event logger sub-components
+    │   ├── EventButtons.tsx
+    │   ├── Counters.tsx
+    │   ├── EventList.tsx
+    │   ├── TimerBadge.tsx
+    │   ├── ShiftSheet.tsx
+    │   ├── MoreSheet.tsx
+    │   └── FlasherSheet.tsx
+    ├── PdfViewerModal.tsx     # PDF viewer with landscape/portrait
+    ├── drive/RefreshRateToggle.tsx  # Turbo mode toggle (200ms GPS)
+    ├── SettingsDrawer.tsx     # Settings drawer component
+    ├── home/AmenitiesSection.tsx    # Amenities display
+    ├── Onboarding.tsx         # First-run onboarding wizard
+    ├── WorkZoneReport.tsx     # Work zone reporting
+    ├── ReportExportModal.tsx  # Report export modal
+    ├── EmergencyLocationModal.tsx  # Emergency location
+    ├── TrafficCountDetailModal.tsx # Traffic count detail
+    ├── IncidentsSection.tsx   # Incidents display
+    ├── IncidentWarningBanner.tsx   # Incident warning banner
+    └── WeatherWarningBanner.tsx    # Weather warning banner
 ```
 
 ---

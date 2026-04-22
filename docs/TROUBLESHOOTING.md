@@ -12,6 +12,10 @@ This guide covers common issues encountered when using or developing the TC Work
 - [Development Environment Issues](#development-environment-issues)
 - [Build and Deployment Issues](#build-and-deployment-issues)
 - [Browser Compatibility Issues](#browser-compatibility-issues)
+- [Turbo Mode Issues](#turbo-mode-issues)
+- [Saved Locations Issues](#saved-locations-issues)
+- [WHS Library Issues](#whs-library-issues)
+- [Event Logger Cloud Sync Issues](#event-logger-cloud-sync-issues)
 - [Error Messages Reference](#error-messages-reference)
 
 ---
@@ -589,6 +593,177 @@ This guide covers common issues encountered when using or developing the TC Work
 
 ---
 
+## Turbo Mode Issues
+
+### Turbo Mode Draining Battery
+
+**Symptoms:**
+
+- Battery draining rapidly when Turbo Mode active
+- Device gets warm during extended use
+- GPS refresh rate stays high for too long
+
+**Solutions:**
+
+1. **Auto-Revert Timer**
+   - Turbo Mode automatically reverts to default after 5 minutes
+   - The countdown timer shows remaining time
+   - Let the auto-revert handle it rather than manually toggling
+
+2. **Use Only When Needed**
+   - Turbo Mode (200ms GPS refresh) is for precise SLK positioning only
+   - Use default adaptive mode (750-2000ms) for normal driving
+   - Toggle Turbo on only when creeping up to an exact SLK marker
+
+3. **Monitor Battery Level**
+   - If battery is below 20%, avoid using Turbo Mode
+   - Plug in charger during extended Turbo Mode sessions
+
+### Turbo Mode Not Activating
+
+**Symptoms:**
+
+- Toggle doesn't respond
+- GPS refresh rate stays at default
+
+**Solutions:**
+
+1. **Check GPS Permission**
+   - Turbo Mode requires active GPS tracking
+   - Ensure location permission is granted
+
+2. **Drive Page Active**
+   - Turbo Mode only works on the /drive page
+   - Start GPS tracking first, then toggle Turbo
+
+---
+
+## Saved Locations Issues
+
+### Saved Locations Not Loading
+
+**Symptoms:**
+
+- Previously saved locations don't appear
+- Map view shows no pins
+
+**Solutions:**
+
+1. **IndexedDB Migration**
+   - v1.34.0 migrated from localStorage to IndexedDB
+   - Old localStorage locations should auto-migrate on first load
+   - If not, check browser console for migration errors
+
+2. **Check IndexedDB**
+   - Open DevTools → Application → IndexedDB → look for saved locations store
+   - If missing, data may have been cleared by browser
+
+3. **Storage Limits**
+   - IndexedDB has generous storage (typically 50% of disk)
+   - Unlimited locations supported
+   - If storage is full, clear old locations
+
+### Saved Locations Map Not Showing
+
+**Symptoms:**
+
+- Map at /saved-locations/map is blank or shows Perth only
+- Pins don't appear for saved locations
+
+**Solutions:**
+
+1. **Check Internet Connection**
+   - Map tiles require internet (OpenStreetMap)
+   - Location data is stored offline but tiles need network
+
+2. **Location Data**
+   - Ensure locations have GPS coordinates saved
+   - Locations saved without coordinates won't show on map
+
+---
+
+## WHS Library Issues
+
+### PDF Not Loading in Viewer
+
+**Symptoms:**
+
+- PDF viewer shows blank page or loading spinner
+- "Failed to load PDF" error
+
+**Solutions:**
+
+1. **Check Document Download Status**
+   - In Library, check the offline indicator (📥/💾/⚠️)
+   - ⚠️ (red) means cache was cleared — re-download the document
+   - Use the download button to save to device for offline access
+
+2. **Browser PDF Support**
+   - Ensure browser supports PDF rendering
+   - Chrome and Edge have best PDF support
+   - Safari may have limited PDF.js compatibility
+
+3. **Large PDF Files**
+   - Some WHS documents are 30+ pages
+   - Allow time for full document to load
+   - Use page navigation to jump to specific sections
+
+### WHS Documents Not Available Offline
+
+**Symptoms:**
+
+- WHS documents require internet to view
+- Offline indicator shows ⚠️ (red)
+
+**Solutions:**
+
+1. **Download Documents**
+   - Tap the download button on each WHS document
+   - Documents are saved to browser Cache API
+   - Mark as "downloaded" in localStorage tracking
+
+2. **Cache Cleared by Browser**
+   - Browsers may clear Cache API under storage pressure
+   - Re-download important documents after cache clearing
+   - The ⚠️ indicator warns when this happens
+
+---
+
+## Event Logger Cloud Sync Issues
+
+### Google Sheets Sync Not Working
+
+**Symptoms:**
+
+- Events not appearing in Google Sheet
+- "Sync failed" error message
+- Offline queue growing but not syncing
+
+**Solutions:**
+
+1. **Configure Google Sheet URL**
+   - Cloud sync is disabled by default
+   - Go to Settings → Event Logger → Configure your private Google Sheet URL
+   - The Google Sheet must be publicly accessible (anyone with link can edit)
+   - Use a dedicated sheet for traffic events, not a personal sheet
+
+2. **Check Network Connection**
+   - Sync requires active internet connection
+   - Events are queued offline and synced when connectivity returns
+   - Check the offline queue count in Event Logger settings
+
+3. **Verify Sheet Permissions**
+   - Google Sheet sharing must be set to "Anyone with the link can edit"
+   - Private sheets (restricted access) will not accept incoming data
+   - Test with a simple sheet first to verify the URL works
+
+4. **Clear Sync Queue**
+   - If sync keeps failing, the queue may contain corrupted entries
+   - Go to Event Logger settings → Clear sync queue
+   - This removes pending entries but does not delete logged events
+
+---
+
 ## Error Messages Reference
 
 ### Common Error Messages
@@ -635,7 +810,7 @@ This guide covers common issues encountered when using or developing the TC Work
 If your issue isn't covered in this guide:
 
 1. **Check Existing Issues**
-   - Search [GitHub Issues](https://github.com/your-repo/issues) for similar problems
+   - Search [GitHub Issues](https://github.com/instructor-ship-it/roadfinder/issues) for similar problems
 
 2. **Enable Debug Logging**
 

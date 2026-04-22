@@ -4,7 +4,7 @@
 
 ### Complete Reference for All Data APIs and Sources
 
-**Version: 1.34.1**
+**Version: 1.35.0**
 
 **Date: April 2026**
 
@@ -619,4 +619,4 @@ The home page (`fetchPlaces()` via `useWorkZoneLookup` hook and `usePlaces` hook
 
 ---
 
-_This document is part of the TC Work Zone Locator documentation suite, Version 1.34.1._
+_This document is part of the TC Work Zone Locator documentation suite, Version 1.35.0._

@@ -4,7 +4,7 @@
 
 This document explains how the Work Zone Report Generator feature was implemented in the TC Work Zone Locator app. The feature allows users to generate a comprehensive text report of all work zone information with a visual ASCII graphic for road width breakdown.
 
-**Version: 1.34.1**
+**Version: 1.35.0**
 
 ---
 

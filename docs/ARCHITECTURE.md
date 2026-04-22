@@ -1,12 +1,12 @@
 # TC Work Zone Locator
 
-## Version 1.34.1
+## Version 1.35.0
 
 **Complete Layout & Functionality Documentation**
 
 | Field          | Value                                            |
 | -------------- | ------------------------------------------------ |
-| **Version**    | 1.34.1                                           |
+| **Version**    | 1.35.0                                           |
 | **Date**       | April 2026                                       |
 | **Repository** | https://github.com/instructor-ship-it/roadfinder |
 
@@ -64,6 +64,11 @@ TC Work Zone Locator is a mobile-first Progressive Web Application (PWA) designe
 - **Hospital type badges** (ED, Public, Private, Nursing Post)
 - **Multi-source amenity data** (WA Health SLIP + FuelWatch WA + Overpass)
 - **Saved Locations** with unlimited IndexedDB storage and sort options
+- **WHS Library** document registry and viewer
+- **Turbo Mode** for accelerated data processing
+- **Onboarding** flow for first-time user setup and guidance
+- **Contact Directory** for contact information lookup
+- **Saved Locations Map** view with map pins on OpenStreetMap
 
 ### 1.2 Technology Stack
 
@@ -80,28 +85,31 @@ TC Work Zone Locator is a mobile-first Progressive Web Application (PWA) designe
 
 ## 2. Application Pages
 
-The application has eighteen main pages:
+The application has twenty-one main pages:
 
-| Page                | Route                  | Purpose                            |
-| ------------------- | ---------------------- | ---------------------------------- |
-| Home                | `/`                    | Work zone lookup interface         |
-| Drive               | `/drive`               | Real-time GPS tracking             |
-| AfterCare           | `/aftercare`           | Signage tracking for retrieval     |
-| AfterCare Map       | `/aftercare/map`       | Map view of all signs              |
-| Overrides           | `/overrides`           | Speed sign override management     |
-| Overrides Layout    | `/overrides/layout`    | Visual overview of overrides       |
-| Overrides Map       | `/overrides/map`       | Map view of speed overrides        |
-| Calibrate           | `/calibrate`           | GPS lag measurement                |
-| Library             | `/library`             | Documentation and resources        |
-| Traffic Counter     | `/traffic-counter`     | Vehicle counting tool              |
-| QA                  | `/qa`                  | AI Q&A assistant                   |
-| Offline             | `/offline`             | Offline status and data management |
-| Contacts            | `/contacts`            | Contact directory                  |
-| Cycle Timer         | `/cycle-timer`         | Cycle timing tool                  |
-| Event Logger        | `/event-logger`        | Traffic event logger               |
-| Settings            | `/settings`            | Settings page                      |
-| Manual              | `/manual`              | User manual page                   |
-| Saved Locations Map | `/saved-locations/map` | Saved locations map                |
+| Page                | Route                               | Purpose                            |
+| ------------------- | ----------------------------------- | ---------------------------------- |
+| Home                | `/`                                 | Work zone lookup interface         |
+| Drive               | `/drive`                            | Real-time GPS tracking             |
+| AfterCare           | `/aftercare`                        | Signage tracking for retrieval     |
+| AfterCare Map       | `/aftercare/map`                    | Map view of all signs              |
+| Overrides           | `/overrides`                        | Speed sign override management     |
+| Overrides Layout    | `/overrides/layout`                 | Visual overview of overrides       |
+| Overrides Map       | `/overrides/map`                    | Map view of speed overrides        |
+| Calibrate           | `/calibrate`                        | GPS lag measurement                |
+| Library             | `/library`                          | Documentation and resources        |
+| Traffic Counter     | `/traffic-counter`                  | Vehicle counting tool              |
+| QA                  | `/qa`                               | AI Q&A assistant                   |
+| Offline             | `/offline`                          | Offline status and data management |
+| Contacts            | `/contacts`                         | Contact directory                  |
+| Cycle Timer         | `/cycle-timer`                      | Cycle timing tool                  |
+| Event Logger        | `/event-logger`                     | Traffic event logger               |
+| Settings            | `/settings`                         | Settings page                      |
+| Manual              | `/manual`                           | User manual page                   |
+| Saved Locations Map | `/saved-locations/map`              | Saved locations map                |
+| Drive Nearby Signs  | `/drive/nearby-signs`               | Nearby signs while driving         |
+| Library TMP Viewer  | `/library/tmp/[region]/[document]`  | TMP document viewer                |
+| Library PDF Viewer  | `/library/viewer/[docId]/[pageNum]` | PDF viewer with page navigation    |
 
 ---
 
@@ -149,7 +157,7 @@ The application has eighteen main pages:
 ### 4.1 Header Section
 
 - Application title: "TC Work Zone Locator"
-- Version display: "v1.34.1"
+- Version display: "v1.35.0"
 - Offline status indicator (green when data downloaded)
 - Hamburger menu (☰) - Opens Settings drawer
 
@@ -246,7 +254,7 @@ When exceeding the speed limit, a warning banner displays:
 ### 6.1 Header
 
 - Title: "AfterCare Signs"
-- Version display: "v1.34.1"
+- Version display: "v1.35.0"
 - Back to Work Zone Locator link
 
 ### 6.2 Job List
@@ -338,7 +346,7 @@ Fixed at bottom-left of map:
 
 ### 8.1 Header
 
-- Version: "v1.34.1"
+- Version: "v1.35.0"
 - Storage mode: "Local Storage"
 - Back to Work Zone Locator button
 
@@ -628,13 +636,29 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 | `/api/documents/summarize`        | POST     | AI document summarization                                          |
 | `/api/documents/analyze-diagrams` | POST     | AI diagram analysis                                                |
 | `/api/fuel-stations`              | GET      | Diesel fuel stations (FuelWatch WA + Overpass merge, 30-min cache) |
-| `/api/route`                      | GET      | Route API                                                          |
+| `/api/route`                      | GET      | Health check                                                       |
+| `/api/incidents`                  | GET      | Road incidents                                                     |
 
 ---
 
 ## 17. Version History
 
-### 1.34.1 (Current) - Phase 3 Refactoring & Component Extraction
+### 1.35.0 (Current) - WHS Library Documents & Registry Updates
+
+- **WHS Library Documents** — Registry and viewer for WHS documents with TMP and PDF support
+- **Library TMP Viewer** (`/library/tmp/[region]/[document]`) — Browse TMP documents by region
+- **Library PDF Viewer** (`/library/viewer/[docId]/[pageNum]`) — PDF viewer with page navigation
+- **Contact Directory** (`/contacts`) — Contact information lookup
+- **Cycle Timer** (`/cycle-timer`) — Cycle timing tool
+- **Settings Page** (`/settings`) — Dedicated settings page
+- **Event Logger** (`/event-logger`) — Standalone traffic event logger
+- **User Manual** (`/manual`) — In-app user manual
+- **Drive Nearby Signs** (`/drive/nearby-signs`) — Nearby signs while driving
+- **Saved Locations Map** (`/saved-locations/map`) — Map view of saved locations
+- **Turbo Mode** — Accelerated data processing option
+- **Onboarding** — First-time user setup and guidance flow
+
+### 1.34.1 - Phase 3 Refactoring & Component Extraction
 
 - **Phase 1–5 Refactoring** — Reduced page.tsx from 1,987 to 926 lines (53% reduction)
   - Replaced inline JSX with existing extracted components (WeatherSection, AmenitiesSection, IntersectionsSection)
