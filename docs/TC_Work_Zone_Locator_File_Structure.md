@@ -36,7 +36,6 @@ The TC Work Zone Locator is a Next.js 16 application built with the App Router a
 | `page.tsx`                                  | Home page - Work zone lookup                       |
 | `drive/page.tsx`                            | GPS tracking page with EKF filtering, speed alerts |
 | `drive/nearby-signs/page.tsx`               | Nearby signs requiring action                      |
-| `drive/RefreshRateToggle.tsx`               | Turbo Mode GPS refresh rate toggle                 |
 | `overrides/page.tsx`                        | Speed sign override management                     |
 | `overrides/layout/page.tsx`                 | Override layout visualization                      |
 | `overrides/map/page.tsx`                    | Override map with Leaflet                          |
@@ -47,6 +46,7 @@ The TC Work Zone Locator is a Next.js 16 application built with the App Router a
 | `library/[docId]/[pageNum]/page.tsx`        | Document page viewer                               |
 | `library/expanded/page.tsx`                 | Expanded library view                              |
 | `library/tmp/[region]/[document]/page.tsx`  | Temporary document storage                         |
+| `library/tmp/page.tsx`                      | TMP region index (8 MRWA regions grid)             |
 | `library/viewer/[docId]/page.tsx`           | Library document info                              |
 | `library/viewer/[docId]/[pageNum]/page.tsx` | PDF viewer                                         |
 | `library/tmp/[region]/page.tsx`             | TMP region viewer                                  |
@@ -60,6 +60,7 @@ The TC Work Zone Locator is a Next.js 16 application built with the App Router a
 | `offline/page.tsx`                          | Offline data management                            |
 | `qa/page.tsx`                               | Quality assurance testing page                     |
 | `traffic-counter/page.tsx`                  | Manual traffic counting tool                       |
+| `traffic-counter/count/page.tsx`            | Active counting with VPH, queue, hold              |
 | `layout.tsx`                                | Root layout                                        |
 | `globals.css`                               | Global styles                                      |
 
@@ -234,7 +235,8 @@ The TC Work Zone Locator is a Next.js 16 application built with the App Router a
 | `download-amenities.js`       | Download OpenStreetMap amenities   |
 | `version-check.sh`            | Version consistency checker        |
 | `read-docx.mjs`               | Document reader utility            |
-| `create_user_manual_pdf.py`   | Generate PDF user manual           |
+| `create-user-manual.js`       | Generate user manual script        |
+| `generate-user-manual.mjs`    | Generate user manual from docs     |
 
 ---
 

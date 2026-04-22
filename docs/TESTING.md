@@ -1,5 +1,7 @@
 # Testing Guide
 
+**Version 1.35.0**
+
 This document provides a comprehensive guide to testing the TC Work Zone Locator application. The project uses Vitest as its testing framework, along with Testing Library for React component testing.
 
 ## Table of Contents

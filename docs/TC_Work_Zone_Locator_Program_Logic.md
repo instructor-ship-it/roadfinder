@@ -23,7 +23,13 @@
 11. Configuration Settings
 12. Error Handling and Edge Cases
 13. Performance Considerations
-14. Technical Debt and Future Improvements
+14. Turbo Mode Logic
+15. Traffic Event Logger Logic
+16. Onboarding Logic
+17. Saved Locations Logic
+18. WHS Library Logic
+19. AI Assistant Module
+20. Technical Debt and Future Improvements
 
 ---
 
@@ -43,15 +49,15 @@ The design philosophy prioritizes offline-first functionality, ensuring that cri
 
 The application is built on Next.js 16 with the App Router architecture, which provides server-side rendering capabilities and API routes within a single framework. The frontend utilizes React with TypeScript for type safety and improved developer experience. Tailwind CSS handles styling with a custom dark theme optimized for outdoor visibility. The shadcn/ui component library provides accessible, customizable UI components including dialogs, buttons, and input fields. The application runs exclusively on port 3000 in the development environment.
 
-| Component        | Technology                                          |
-| ---------------- | --------------------------------------------------- |
-| Framework        | Next.js 16 with App Router                          |
-| Language         | TypeScript (strict mode)                            |
-| Styling          | Tailwind CSS with dark theme                        |
-| UI Components    | shadcn/ui (Radix primitives)                        |
-| Storage          | IndexedDB + localStorage (client-side)              |
-| Maps             | Leaflet + OpenStreetMap                             |
-| State Management | React hooks + Zustand + localStorage/sessionStorage |
+| Component        | Technology                                |
+| ---------------- | ----------------------------------------- |
+| Framework        | Next.js 16 with App Router                |
+| Language         | TypeScript (strict mode)                  |
+| Styling          | Tailwind CSS with dark theme              |
+| UI Components    | shadcn/ui (Radix primitives)              |
+| Storage          | IndexedDB + localStorage (client-side)    |
+| Maps             | Leaflet + OpenStreetMap                   |
+| State Management | React hooks + localStorage/sessionStorage |
 
 ### 2.2 Page Structure
 
@@ -381,7 +387,24 @@ findNearestToilets(lat: number, lon: number, radiusKm: number): Promise<Place[]>
 
 Fetches all WA toilets (cached for 6 hours), filters by radius, and returns results in the standard `Place` interface format.
 
-### 5.8 Incidents Route
+### 5.8 AI and Document Routes
+
+| Route                           | Method | Purpose                               |
+| ------------------------------- | ------ | ------------------------------------- |
+| /api/ai/chat                    | POST   | AI chat completions for Q&A assistant |
+| /api/ai/verify                  | POST   | Verify AI API key validity            |
+| /api/documents                  | GET    | Document listing for library          |
+| /api/documents/summarize        | POST   | AI-powered document summarization     |
+| /api/documents/analyze-diagrams | POST   | AI diagram analysis for TMP documents |
+
+### 5.9 Utility Routes
+
+| Route        | Method | Purpose                         |
+| ------------ | ------ | ------------------------------- |
+| /api/toilets | GET    | National Public Toilet Map data |
+| /api/route   | GET    | Health check                    |
+
+### 5.10 Incidents Route
 
 | Route          | Method | Purpose             |
 | -------------- | ------ | ------------------- |
@@ -854,7 +877,341 @@ When offline, the system follows this chain:
 
 ---
 
-## 14. Technical Debt and Future Improvements
+## 14. Turbo Mode Logic
+
+### 14.1 Overview
+
+Turbo Mode provides an enhanced GPS tracking experience by switching from the default adaptive refresh rate to a fixed high-frequency 200ms update interval. This is particularly useful when precise, real-time position tracking is required during critical traffic control operations such as approaching a work zone entry point or performing precise SLK positioning.
+
+### 14.2 RefreshRateToggle Component
+
+The `RefreshRateToggle` component is displayed on the drive page and allows users to switch between tracking modes:
+
+- **Default Mode (Adaptive)**: GPS refresh interval scales dynamically between 750ms and 2000ms based on vehicle speed. At higher speeds, updates are more frequent to maintain positional accuracy; at lower speeds, the interval extends to conserve battery.
+
+- **Turbo/Precision Mode**: Forces a fixed 200ms GPS refresh interval, providing maximum positional granularity regardless of vehicle speed.
+
+### 14.3 GPS Throttle Integration
+
+The `useGpsTracking.ts` hook respects the Turbo Mode setting through the `getThrottleInterval()` function:
+
+```typescript
+function getThrottleInterval(): number {
+  if (updateInterval === 200) return 200; // Turbo/Precision mode
+  // Adaptive: scale based on speed
+  if (currentSpeed > 80) return 750;
+  if (currentSpeed > 40) return 1000;
+  return 2000;
+}
+```
+
+When Turbo Mode is active, the hook bypasses the adaptive speed-based logic and uses the fixed 200ms interval directly.
+
+### 14.4 Auto-Revert Timer
+
+Turbo Mode includes a 5-minute countdown auto-revert timer. After 5 minutes of continuous Turbo Mode operation, the system automatically reverts to the default adaptive mode. This prevents excessive battery drain during extended tracking sessions where the higher refresh rate is unnecessary.
+
+### 14.5 Visual Feedback
+
+When Turbo Mode is active:
+
+- The toggle button displays a pulsing green animation to provide clear visual feedback that high-frequency tracking is engaged
+- The remaining time on the auto-revert countdown is displayed alongside the button
+- When the auto-revert triggers, the button returns to its default static appearance
+
+### 14.6 Battery Considerations
+
+The 200ms fixed refresh rate significantly increases GPS hardware utilization and network processing overhead. The auto-revert timer serves as a safeguard against unintentional battery drain, ensuring that Turbo Mode is used only when the precision benefit outweighs the power cost. Users who need extended Turbo Mode can re-enable it after the auto-revert triggers.
+
+---
+
+## 15. Traffic Event Logger Logic
+
+### 15.1 Overview
+
+The Traffic Event Logger provides comprehensive event logging for Traffic Controllers during active operations. It allows recording of traffic events, TC assignments, counters, and timers, with cloud sync capabilities for team coordination and record-keeping. The main interface is provided by `TrafficEventLoggerModal.tsx`, which serves as the primary modal component for all event logging operations.
+
+### 15.2 State Management
+
+Event logger state is managed by `traffic-event-logger.ts`, which implements state management with localStorage persistence. This ensures that event data survives page refreshes and browser restarts, which is critical during active traffic control operations where data loss is unacceptable.
+
+### 15.3 Event Types
+
+The system supports the following event types:
+
+| Event Type      | Description                                    |
+| --------------- | ---------------------------------------------- |
+| Sent True Left  | Vehicle dispatched on the True Left direction  |
+| Sent True Right | Vehicle dispatched on the True Right direction |
+| RLR             | Red Light Runner event recorded                |
+| Trip Out        | Trip Out event recorded                        |
+| Spot Call       | Spot Call event recorded                       |
+| Shuttle Send    | Shuttle vehicle dispatched                     |
+
+### 15.4 TC Assignment System
+
+The TC Assignment system allows assigning Traffic Controllers to specific positions:
+
+- **Start TC TL (True Left)**: Begin tracking a TC on the True Left position
+- **Start TC TR (True Right)**: Begin tracking a TC on the True Right position
+- **TC1 / TC2 / TC3**: Up to three TC assignments, which are mutually exclusive — only one TC can be assigned to a given position at a time
+
+When a new TC is assigned to a position already occupied, the previous assignment is automatically concluded and logged.
+
+### 15.5 Counters
+
+The event logger maintains running counters for key metrics:
+
+- **TL**: True Left count
+- **TR**: True Right count
+- **Total**: Combined total (TL + TR)
+- **RLR**: Red Light Runner count
+- **Trip Out**: Trip Out count
+
+Each counter records time intervals between events, enabling analysis of traffic flow patterns over time.
+
+### 15.6 Hold/Break Timers
+
+The system provides Hold and Break timer functionality:
+
+- **Hold Timer**: Tracks the duration of traffic holds (periods when traffic is stopped)
+- **Break Timer**: Tracks the duration of breaks in operations
+- Duration logging records the start time, end time, and total duration of each hold/break period
+
+### 15.7 Cloud Sync
+
+Event data can be synchronized to the cloud via a user-configured Google Sheet URL:
+
+- **Google Sheet URL**: Users configure their own Google Sheet endpoint in the settings
+- **Offline Queue**: When the device is offline, events are queued locally and synced automatically when connectivity is restored
+- **Sync Status**: Visual indicators show the current sync state (synced, pending, error)
+
+### 15.8 CSV Export
+
+The event logger supports CSV export functionality, allowing users to download all logged events as a CSV file for external analysis, reporting, or archival purposes.
+
+### 15.9 Sub-Components
+
+The Traffic Event Logger is composed of several specialized sub-components:
+
+- **EventButtons**: Renders the event type buttons for quick event logging
+- **Counters**: Displays running TL, TR, Total, RLR, and TripOut counters
+- **EventList**: Shows the chronological list of logged events with timestamps
+- **TimerBadge**: Displays the current Hold/Break timer state with visual status
+- **ShiftSheet**: Provides shift-level summary and export functionality
+- **MoreSheet**: Additional options and settings within the logger modal
+- **FlasherSheet**: Specialized interface for flasher/traffic signal event logging
+
+---
+
+## 16. Onboarding Logic
+
+### 16.1 Overview
+
+The Onboarding system provides a first-run wizard that guides new users through the initial setup process. It is implemented in the `Onboarding.tsx` component and is triggered automatically on the user's first visit to the application.
+
+### 16.2 Onboarding Steps
+
+The wizard consists of 5 sequential steps:
+
+1. **Welcome**: Introduction to the TC Work Zone Locator application and its purpose for Western Australian Traffic Controllers
+2. **Download Offline Data**: Guides the user to download offline road data for their region, ensuring the app is functional without internet connectivity
+3. **Find Your Work Zone**: Demonstrates how to search for and select a road and SLK range to locate a work zone
+4. **Real-Time GPS Tracking**: Introduces the drive page and GPS tracking features including speed monitoring and fine alerts
+5. **You're All Set**: Confirmation that setup is complete, with quick links to key features
+
+### 16.3 OnboardingChecklist Component
+
+The `OnboardingChecklist` component provides a quick setup progress tracker that can be shown independently of the full wizard. It displays a checklist of essential setup tasks (offline data download, GPS permission, region selection) with completion status indicators, allowing returning users to quickly see what remains to be configured.
+
+### 16.4 Accessibility Enhancements
+
+The onboarding system includes comprehensive accessibility features:
+
+- **ARIA Labels**: All interactive elements include descriptive ARIA labels for screen reader compatibility
+- **Semantic HTML**: Proper heading hierarchy, landmark regions, and focus management
+- **Keyboard Navigation**: Full keyboard support with visible focus indicators
+
+### 16.5 Viewport Configuration
+
+The onboarding system uses a user-scalable viewport setting to support pinch-to-zoom functionality, which is particularly important for users who may need to zoom in on text and controls while wearing gloves or in bright outdoor conditions.
+
+### 16.6 Trigger Logic
+
+Onboarding is triggered on the first app visit by checking for a localStorage flag. Once the user completes the onboarding wizard, the flag is set and the wizard does not reappear on subsequent visits. Users can access the manual (`/manual`) at any time for a refresher.
+
+---
+
+## 17. Saved Locations Logic
+
+### 17.1 Overview
+
+The Saved Locations system allows users to save, recall, and manage work zone locations for quick access. This feature was significantly enhanced in v1.34.0 with a migration from localStorage to IndexedDB for unlimited storage capacity.
+
+### 17.2 IndexedDB-Based Storage
+
+Saved locations are stored using `saved-locations-db.ts`, which implements an IndexedDB-based storage layer. The IndexedDB `savedLocations` object store (key path: `'id'`) is part of the main `RoadFinderDB` database.
+
+**Migration from localStorage to IndexedDB (v1.34.0):**
+
+Previously, saved locations were stored in localStorage, which has a typical 5-10MB per-origin limit. For users who save many work zone locations, this limit was easily exceeded. The migration to IndexedDB provides virtually unlimited storage capacity while maintaining the same data structure and access patterns.
+
+### 17.3 Sort Options
+
+Saved locations can be sorted by:
+
+- **By Date**: Most recently saved locations appear first (default)
+- **By Road name**: Alphabetical sorting by road name for quick lookup
+
+### 17.4 Map View
+
+The Saved Locations Map at `/saved-locations/map` provides an interactive map interface using Leaflet and react-leaflet:
+
+- Displays all saved locations as markers on the map
+- Clicking a marker shows location details
+- Supports standard Leaflet interactions (zoom, pan, layer switching)
+- Uses OpenStreetMap tile layer consistent with the rest of the application
+
+### 17.5 Auto-Load Work Zone Search
+
+When a user recalls a saved location, the application automatically populates the work zone search fields on the home page:
+
+1. Set the region selector to the saved location's region
+2. Set the road selector to the saved location's road ID
+3. Populate start and end SLK fields
+4. Automatically trigger the work zone lookup
+
+This enables one-tap access to previously configured work zones.
+
+---
+
+## 18. WHS Library Logic
+
+### 18.1 Overview
+
+The WHS (Work Health and Safety) Library provides document management capabilities for accessing MRWA documentation, Traffic Management Plans (TMPs), and other reference materials. The system supports both online and offline document access with smart routing between viewer types.
+
+### 18.2 Document Registry
+
+The document registry (`registry.json`) maintains a structured index of all available documents:
+
+```typescript
+interface DocumentEntry {
+  type: 'pdf' | 'tmp';
+  filePath: string;
+  downloaded: boolean;
+  // ... additional metadata
+}
+```
+
+The registry tracks each document's type, file path, and download status, enabling the application to determine which viewer to use and whether the document is available offline.
+
+### 18.3 PDF Viewer
+
+The `PdfViewerModal.tsx` component provides an in-app PDF viewing experience:
+
+- **Landscape/Portrait Detection**: Automatically detects PDF page orientation and adjusts the viewer layout accordingly
+- Supports standard PDF interactions: scrolling, zooming, page navigation
+- Renders PDFs using a browser-compatible PDF rendering pipeline
+
+### 18.4 TMP Viewer
+
+The TMP (Traffic Management Plan) viewer is an image-based viewer designed specifically for Traffic Management Plans:
+
+- Renders TMP documents as images rather than PDFs, providing faster loading and smoother scrolling
+- Optimized for the typically large-format, detailed TMP drawings
+
+### 18.5 Smart Document Routing
+
+The library implements smart document routing based on document type:
+
+- **TMP documents**: Routed to `/library/tmp` (image-based TMP viewer)
+- **PDF documents**: Routed to `/library/viewer` (PDF viewer modal)
+
+This routing is handled automatically when a user selects a document from the library browser, ensuring the optimal viewing experience for each document type.
+
+### 18.6 Page Offset System
+
+The WHS Library implements a page offset system to handle discrepancies between document page numbers and physical PDF page numbers:
+
+```
+Physical PDF page = document page + pageOffset
+```
+
+This accounts for cover pages, table of contents, and other front matter that causes the document's internal page numbering to differ from the PDF file's actual page index. The `pageOffset` value is stored per document in the registry.
+
+### 18.7 AI Summaries
+
+Select documents include AI-generated summary files that provide:
+
+- Key sections and topics covered by the document
+- Quick reference summaries for common queries
+- Enables users to determine document relevance before opening the full document
+
+### 18.8 Offline Status Indicators
+
+The library displays clear offline status indicators for each document:
+
+| Indicator        | Meaning                                               |
+| ---------------- | ----------------------------------------------------- |
+| 📥 Cached        | Document is cached and available offline              |
+| 💾 Downloaded    | Document is permanently downloaded to device          |
+| ⚠️ Cache cleared | Document cache has been cleared; re-download required |
+
+These indicators help users understand which documents are available without network connectivity, which is critical for traffic controllers working in remote areas.
+
+---
+
+## 19. AI Assistant Module
+
+The AI Assistant (Q&A) feature provides intelligent document search and question-answering capabilities, allowing traffic controllers to get answers from regulatory documents without manually searching through them.
+
+### 19.1 AI Chat Architecture
+
+The AI chat functionality is implemented through two API routes:
+
+- **`/api/ai/chat`** (POST): Accepts a question and optional document context, returns AI-generated responses with source citations. Uses the z-ai-web-dev-sdk for LLM completions.
+- **`/api/ai/verify`** (POST): Validates the AI API key before allowing access to chat features.
+
+The chat flow follows this sequence:
+
+1. User enters a question in the Q&A page (`/qa`)
+2. Optional document selection filters the AI context to specific documents
+3. The API sends the question with document context to the LLM
+4. The response includes source citations and relevant section references
+5. Users can save, copy, or favorite Q&A entries for later reference
+
+### 19.2 Document Summarization
+
+The document summarization pipeline (`/api/documents/summarize`) generates structured summaries of WHS and AGTTM documents:
+
+- **Key Sections**: Extracts section titles and content
+- **Key Requirements**: Identifies mandatory compliance requirements with priority levels
+- **Compliance Notes**: Flags areas requiring specific attention
+- **Diagram Analysis** (`/api/documents/analyze-diagrams`): Analyzes TMP diagrams for zone identification and layout patterns
+
+Summaries are cached in `src/lib/summaries-storage.ts` and served from the library page for quick reference.
+
+### 19.3 Q&A Storage
+
+Saved Q&A entries are managed through:
+
+- **Client-side**: `src/lib/qa-storage.ts` handles local Q&A history with favorites and search
+- **Server-side**: `/api/qa-saved` provides full CRUD operations with cloud backup support
+- Each entry includes the question, answer, source documents, timestamp, and optional category label
+
+### 19.4 Document Selection and Context
+
+The Q&A page allows users to select specific documents to constrain the AI's response context:
+
+- Documents are grouped by category (AGTTM, WHS, MRWA, Forms)
+- "Select All" and "Clear" buttons for bulk operations
+- Selection count displayed in the interface
+- Unselected context defaults to all available library documents
+
+---
+
+## 20. Technical Debt and Future Improvements
 
 The current implementation has several areas identified for future improvement:
 
@@ -874,4 +1231,4 @@ The current implementation has several areas identified for future improvement:
 
 ---
 
-_This document is part of the TC Work Zone Locator documentation suite, Version RC 1.9.9._
+_This document is part of the TC Work Zone Locator documentation suite, Version 1.35.0._

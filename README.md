@@ -99,6 +99,69 @@ A mobile-friendly web application for Traffic Controller (TC) work zone planning
 - **Q&A History** — save, favorite, search, and organize Q&A entries
 - Export/Import Q&A history as JSON backup
 
+### 🚧 AfterCare Signage Tracking (RC 1.4.0+)
+
+- Track signage placed on roads awaiting retrieval
+- Job-based organization with multiple signs per job
+- Auto-flagging for due retrieval/maintenance
+- Map view with colored status pins
+- Navigation links per sign
+- Export/Import all jobs (JSON backup)
+
+### 📚 Library & WHS Documents (v1.35.0+)
+
+- Document library with PDF/TMP viewer
+- **WHS Codes of Practice** — Construction Work, Workplace Traffic Management, Working Hours
+- **WHS Guidance Material** — SWMS Information Sheet, Records Management Guide
+- **MRWA Code of Practice 2025** — Traffic Management for Works on Roads
+- Offline status indicators (Cached / Downloaded / Needs re-cache)
+- Document summaries with key sections and requirements
+- Download to device or cache for offline
+
+### 🔢 Traffic Counter (RC 1.9.1+)
+
+- Count light and heavy vehicles separately
+- VPH (Vehicles Per Hour) calculation
+- Heavy vehicle percentage tracking
+- Direction mode: One-way or Both-ways (True Left/True Right)
+- Timer with presets (3, 5, 15 minutes) or custom duration
+- Reference tables (Lane Capacity, Shuttle Flow, Volume Reduction, Queue Length)
+- GPS location capture with road ID/SLK
+
+### ⏱️ Cycle Timer
+
+- Configurable timers for traffic control cycles
+- Description field for labeling timers
+- Persistent storage between sessions
+
+### 📇 Contact Directory (v1.29+)
+
+- Track people, titles, vehicles, contact info
+- Job-based tagging and organization
+- Persistent localStorage storage
+
+### ⚡ Turbo Mode (v1.20+)
+
+- Fast 200ms GPS refresh for precise SLK positioning
+- One-tap toggle between Default and Precision modes
+- 5-minute auto-revert to prevent battery drain
+- Pulsing green visual feedback when active
+
+### 🎓 First-Run Onboarding (v1.30+)
+
+- Step-by-step guided setup for new users
+- Offline data download prompt
+- Key feature walkthrough
+- Quick setup checklist in settings
+
+### 🏥 Emergency Location (v1.29+)
+
+- Emergency location info formatted for 000 calls
+- Road name, SLK, nearest town, cross road
+- GPS coordinates with copy-to-clipboard
+- Nearest hospital (with ED status, phone, directions)
+- Nearest fire station and police station
+
 ## Getting Started
 
 ### Prerequisites
@@ -283,6 +346,20 @@ If the SLK reading is inaccurate:
 - **Road Data**: Main Roads WA ArcGIS REST API
   - Layer 17: Road Network with SLK geometry AND region info (RA_NAME) for ALL roads
   - Layer 8: Speed Zones
+  - Layer 15: Rail Crossings
+  - Layer 18: All Roads (for local roads)
+  - Layer 22: Regulatory Signs
+  - Layer 23: Warning Signs
+- **Weather**: Open-Meteo API (free, no API key)
+- **Weather Warnings**: Bureau of Meteorology (BOM) RSS Feed IDZ00067 (5-min cache)
+- **Fuel Prices**: FuelWatch WA JSON API (daily diesel prices, 459 stations)
+- **Hospitals**: WA Health SLIP (Spatial Land Information Platform) with ED status
+- **Toilets**: National Public Toilet Map (ArcGIS, 2,714+ WA toilets)
+- **Fire/Emergency Stations**: WA DFES via SLIP ArcGIS + Geoscience Australia GNAF
+- **Amenities**: Overpass API (OpenStreetMap, fallback for hospitals/fuel/toilet)
+- **Traffic**: Main Roads WA Traffic Count Data
+- **Routing**: OSRM (Open Source Routing Machine)
+- **Geocoding**: Nominatim (OpenStreetMap)
 
 ### Offline Data
 
@@ -305,28 +382,21 @@ Plus **69,452 speed zones** for accurate speed limit display.
 - GPS-verified sign locations
 - Currently includes M031 corrections (2024 road widening updates)
 
-- **Weather**: Open-Meteo API
-- **Traffic**: Main Roads WA Traffic Count Data
-- **Amenities**: Overpass API (OpenStreetMap)
-
 ## Technical Stack
 
 - **Framework**: Next.js 16 with App Router
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS
+- **Styling**: Tailwind CSS v4
 - **UI Components**: shadcn/ui
 - **Offline Storage**: IndexedDB (client-side)
 - **Maps**: Google Maps Links (no API key required)
-- **State Management:** Zustand
-- **Database ORM:** Prisma
-- **Authentication:** NextAuth.js
-- **Interactive Maps:** Leaflet + react-leaflet
-- **Forms:** react-hook-form + Zod validation
-- **Charts:** Recharts
-- **PDF Viewer:** react-pdf
-- **Animations:** Framer Motion
-- **Document Generation:** docx
-- **Toast Notifications:** Sonner
+- **Interactive Maps**: Leaflet + react-leaflet
+- **Forms**: react-hook-form + Zod validation
+- **Charts**: Recharts
+- **PDF Viewer**: react-pdf
+- **Animations**: Framer Motion
+- **Document Generation**: docx
+- **Toast Notifications**: Sonner
 
 ## Project Structure
 
@@ -407,35 +477,42 @@ src/
 
 ## API Endpoints
 
-| Endpoint                | Method              | Description                     |
-| ----------------------- | ------------------- | ------------------------------- |
-| `/api/roads`            | GET                 | List regions and roads          |
-| `/api/roads`            | POST                | Get SLK coordinates             |
-| `/api/gps`              | GET                 | Convert GPS to SLK              |
-| `/api/sync-data`        | GET/POST            | Download offline data           |
-| `/api/weather`          | GET                 | Weather at coordinates          |
-| `/api/traffic`          | GET                 | Traffic volume data             |
-| `/api/places`           | GET                 | Nearby amenities                |
-| `/api/intersections`    | GET                 | Cross roads in zone             |
-| `/api/admin-sync`       | GET/POST            | Sync data from MRWA             |
-| `/api/qa`               | GET                 | List searchable documents       |
-| `/api/qa-saved`         | GET/POST/PUT/DELETE | Manage saved Q&A entries        |
-| `/api/ai/chat`          | POST                | AI chat completions             |
-| `/api/ai/verify`        | POST                | Verify API key                  |
-| `/api/toilets`          | GET                 | National Public Toilet Map data |
-| `/api/hospitals`        | GET                 | Hospital data (WA Health SLIP)  |
-| `/api/nearest-hospital` | GET                 | Nearest hospital lookup         |
-| `/api/fuel-stations`    | GET                 | FuelWatch WA diesel prices      |
-| `/api/police-stations`  | GET                 | WA police station data          |
-| `/api/incidents`        | GET                 | Traffic incident data           |
-| `/api/warnings`         | GET                 | BOM weather warnings            |
-| `/api/speedlimit`       | GET                 | Speed limit at coordinates      |
-| `/api/speed-compare`    | GET                 | Compare speed data sources      |
-| `/api/osm-speed`        | GET/POST            | OpenStreetMap speed data        |
-| `/api/overrides`        | GET/POST            | Speed zone overrides            |
-| `/api/download-signs`   | GET                 | Download signage data           |
-| `/api/export-pdf`       | POST                | Export work zone report as PDF  |
-| `/api/documents`        | GET                 | Document listing                |
+| Endpoint                          | Method              | Description                       |
+| --------------------------------- | ------------------- | --------------------------------- |
+| `/api/roads`                      | GET                 | List regions and roads            |
+| `/api/roads`                      | POST                | Get SLK coordinates               |
+| `/api/gps`                        | GET                 | Convert GPS to SLK                |
+| `/api/sync-data`                  | GET/POST            | Download offline data             |
+| `/api/weather`                    | GET                 | Weather at coordinates            |
+| `/api/traffic`                    | GET                 | Traffic volume data               |
+| `/api/places`                     | GET                 | Nearby amenities                  |
+| `/api/intersections`              | GET                 | Cross roads in zone               |
+| `/api/admin-sync`                 | GET/POST            | Sync data from MRWA               |
+| `/api/qa`                         | GET                 | List searchable documents         |
+| `/api/qa-saved`                   | GET/POST/PUT/DELETE | Manage saved Q&A entries          |
+| `/api/ai/chat`                    | POST                | AI chat completions               |
+| `/api/ai/verify`                  | POST                | Verify API key                    |
+| `/api/toilets`                    | GET                 | National Public Toilet Map data   |
+| `/api/hospitals`                  | GET                 | Hospital data (WA Health SLIP)    |
+| `/api/nearest-hospital`           | GET                 | Nearest hospital lookup           |
+| `/api/fuel-stations`              | GET                 | FuelWatch WA diesel prices        |
+| `/api/police-stations`            | GET                 | WA police station data            |
+| `/api/incidents`                  | GET                 | Traffic incident data             |
+| `/api/warnings`                   | GET                 | BOM weather warnings              |
+| `/api/speedlimit`                 | GET                 | Speed limit at coordinates        |
+| `/api/speed-compare`              | GET                 | Compare speed data sources        |
+| `/api/osm-speed`                  | GET/POST            | OpenStreetMap speed data          |
+| `/api/overrides`                  | GET/POST            | Speed zone overrides              |
+| `/api/download-signs`             | GET                 | Download signage data             |
+| `/api/export-pdf`                 | POST                | Export work zone report as PDF    |
+| `/api/documents`                  | GET                 | Document listing                  |
+| `/api/documents/summarize`        | POST                | AI document summarization         |
+| `/api/documents/analyze-diagrams` | POST                | TMP diagram analysis              |
+| `/api/emergency-stations`         | GET                 | Fire/emergency stations (WA DFES) |
+| `/api/nearest-intersections`      | GET                 | Nearest cross roads               |
+| `/api/speed-verify`               | GET                 | Multi-source speed verification   |
+| `/api/route`                      | GET/POST            | OSRM routing + geocoding          |
+| `/api/weather/warnings`           | GET                 | Detailed BOM weather warnings     |
 
 ## Browser Support
 

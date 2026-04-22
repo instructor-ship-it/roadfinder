@@ -30,7 +30,10 @@
 14. [Warning Banners](#14-warning-banners)
 15. [Speed Sign Override System](#15-speed-sign-override-system)
 16. [API Endpoints](#16-api-endpoints)
-17. [Version History](#17-version-history)
+17. [Component Inventory](#17-component-inventory)
+18. [Hooks Inventory](#18-hooks-inventory)
+19. [Lib Modules Inventory](#19-lib-modules-inventory)
+20. [Version History](#20-version-history)
 
 ---
 
@@ -69,6 +72,9 @@ TC Work Zone Locator is a mobile-first Progressive Web Application (PWA) designe
 - **Onboarding** flow for first-time user setup and guidance
 - **Contact Directory** for contact information lookup
 - **Saved Locations Map** view with map pins on OpenStreetMap
+- **Emergency Location** with 000-formatted info, nearest hospital, fire, and police stations
+- **Amenities** section with hospital badges, fuel stations, and toilet map
+- **Direction-aware filtering** for speed zones, signage, and intersections
 
 ### 1.2 Technology Stack
 
@@ -85,31 +91,38 @@ TC Work Zone Locator is a mobile-first Progressive Web Application (PWA) designe
 
 ## 2. Application Pages
 
-The application has twenty-one main pages:
+The application has twenty-eight main pages:
 
-| Page                | Route                               | Purpose                            |
-| ------------------- | ----------------------------------- | ---------------------------------- |
-| Home                | `/`                                 | Work zone lookup interface         |
-| Drive               | `/drive`                            | Real-time GPS tracking             |
-| AfterCare           | `/aftercare`                        | Signage tracking for retrieval     |
-| AfterCare Map       | `/aftercare/map`                    | Map view of all signs              |
-| Overrides           | `/overrides`                        | Speed sign override management     |
-| Overrides Layout    | `/overrides/layout`                 | Visual overview of overrides       |
-| Overrides Map       | `/overrides/map`                    | Map view of speed overrides        |
-| Calibrate           | `/calibrate`                        | GPS lag measurement                |
-| Library             | `/library`                          | Documentation and resources        |
-| Traffic Counter     | `/traffic-counter`                  | Vehicle counting tool              |
-| QA                  | `/qa`                               | AI Q&A assistant                   |
-| Offline             | `/offline`                          | Offline status and data management |
-| Contacts            | `/contacts`                         | Contact directory                  |
-| Cycle Timer         | `/cycle-timer`                      | Cycle timing tool                  |
-| Event Logger        | `/event-logger`                     | Traffic event logger               |
-| Settings            | `/settings`                         | Settings page                      |
-| Manual              | `/manual`                           | User manual page                   |
-| Saved Locations Map | `/saved-locations/map`              | Saved locations map                |
-| Drive Nearby Signs  | `/drive/nearby-signs`               | Nearby signs while driving         |
-| Library TMP Viewer  | `/library/tmp/[region]/[document]`  | TMP document viewer                |
-| Library PDF Viewer  | `/library/viewer/[docId]/[pageNum]` | PDF viewer with page navigation    |
+| Page                  | Route                               | Purpose                                 |
+| --------------------- | ----------------------------------- | --------------------------------------- |
+| Home                  | `/`                                 | Work zone lookup interface              |
+| Drive                 | `/drive`                            | Real-time GPS tracking                  |
+| Drive Nearby Signs    | `/drive/nearby-signs`               | Nearby signs while driving              |
+| AfterCare             | `/aftercare`                        | Signage tracking for retrieval          |
+| AfterCare Map         | `/aftercare/map`                    | Map view of all signs                   |
+| Overrides             | `/overrides`                        | Speed sign override management          |
+| Overrides Layout      | `/overrides/layout`                 | Visual overview of overrides            |
+| Overrides Map         | `/overrides/map`                    | Map view of speed overrides             |
+| Calibrate             | `/calibrate`                        | GPS lag measurement                     |
+| Library               | `/library`                          | Documentation and resources             |
+| Library Expanded      | `/library/expanded`                 | TMP/AGTTM/COP category browser          |
+| Library TMP Index     | `/library/tmp`                      | TMP region index (8 MRWA regions grid)  |
+| Library TMP Region    | `/library/tmp/[region]`             | TMP listing by region                   |
+| Library TMP Document  | `/library/tmp/[region]/[document]`  | TMP document page viewer                |
+| Library Document      | `/library/[docId]`                  | Universal document viewer (search, TOC) |
+| Library Document Page | `/library/[docId]/[pageNum]`        | Full page viewer with pinch-zoom        |
+| Library PDF Viewer    | `/library/viewer/[docId]`           | PDF viewer with AI summary              |
+| Library PDF Page      | `/library/viewer/[docId]/[pageNum]` | PDF page with navigation                |
+| Traffic Counter       | `/traffic-counter`                  | Vehicle counting tool                   |
+| Traffic Counter Count | `/traffic-counter/count`            | Active counting with VPH, queue, hold   |
+| QA                    | `/qa`                               | AI Q&A assistant                        |
+| Offline               | `/offline`                          | Offline status and data management      |
+| Contacts              | `/contacts`                         | Contact directory                       |
+| Cycle Timer           | `/cycle-timer`                      | Cycle timing tool                       |
+| Event Logger          | `/event-logger`                     | Traffic event logger                    |
+| Settings              | `/settings`                         | Settings page                           |
+| Manual                | `/manual`                           | User manual page                        |
+| Saved Locations Map   | `/saved-locations/map`              | Saved locations map                     |
 
 ---
 
@@ -615,10 +628,12 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 | `/api/roads`                      | GET/POST | Road data, SLK coordinates                                         |
 | `/api/gps`                        | GET      | GPS to SLK conversion                                              |
 | `/api/weather`                    | GET      | Weather data (Open-Meteo)                                          |
-| `/api/warnings`                   | GET      | BOM weather warnings                                               |
+| `/api/warnings`                   | GET      | BOM weather warnings (RSS)                                         |
+| `/api/weather/warnings`           | GET      | Enhanced BOM warnings (multi-state, severity, region filter)       |
 | `/api/traffic`                    | GET      | Traffic volume data                                                |
 | `/api/places`                     | GET      | Nearby amenities                                                   |
 | `/api/intersections`              | GET      | Cross road detection                                               |
+| `/api/nearest-intersections`      | GET      | Nearest intersections via MRWA Layer 6                             |
 | `/api/admin-sync`                 | GET/POST | MRWA direct sync                                                   |
 | `/api/overrides`                  | GET/POST | Override storage                                                   |
 | `/api/speed-compare`              | GET      | MRWA vs OSM comparison                                             |
@@ -629,6 +644,7 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 | `/api/export-pdf`                 | POST     | Report export                                                      |
 | `/api/sync-data`                  | POST     | Offline data sync                                                  |
 | `/api/qa`                         | GET/POST | Q&A AI assistant                                                   |
+| `/api/qa-saved`                   | CRUD     | Save/list/update/delete Q&A entries                                |
 | `/api/toilets`                    | GET      | National Public Toilet Map data                                    |
 | `/api/ai/chat`                    | POST     | AI chat completions                                                |
 | `/api/ai/verify`                  | POST     | Verify AI API key                                                  |
@@ -636,12 +652,159 @@ Community-verified corrections to MRWA speed zone data. Stored in localStorage, 
 | `/api/documents/summarize`        | POST     | AI document summarization                                          |
 | `/api/documents/analyze-diagrams` | POST     | AI diagram analysis                                                |
 | `/api/fuel-stations`              | GET      | Diesel fuel stations (FuelWatch WA + Overpass merge, 30-min cache) |
+| `/api/hospitals`                  | GET      | Nearest hospitals from WA Health SLIP                              |
+| `/api/nearest-hospital`           | GET      | Nearest hospital with ED, public, nursing posts                    |
+| `/api/emergency-stations`         | GET      | Nearest fire/emergency stations (WA DFES + GNAF)                   |
+| `/api/police-stations`            | GET      | Nearest WA Police stations                                         |
 | `/api/route`                      | GET      | Health check                                                       |
 | `/api/incidents`                  | GET      | Road incidents                                                     |
 
 ---
 
-## 17. Version History
+## 17. Component Inventory
+
+### 17.1 Application Components (`src/components/`)
+
+| Component                 | Purpose                                       |
+| ------------------------- | --------------------------------------------- |
+| SettingsDrawer            | Bottom sheet drawer for app settings          |
+| EmergencyLocationModal    | Emergency location dialog for 000 calls       |
+| TrafficEventLoggerModal   | Traffic event logger with sheets and counters |
+| PdfViewerModal            | PDF document viewer modal                     |
+| GpsLookupDialog           | GPS location lookup dialog                    |
+| Onboarding                | First-run setup wizard                        |
+| WorkZoneReport            | Work zone report generation                   |
+| ReportExportModal         | Report export dialog (text/PDF)               |
+| SignageMap                | OpenStreetMap with sign markers               |
+| SpeedZoneLayout           | Speed zone visual layout                      |
+| WeatherWarningBanner      | BOM weather warning banner                    |
+| IncidentWarningBanner     | Road incident warning banner                  |
+| IncidentsSection          | Active road incidents display                 |
+| WarningsSection           | Weather warnings display                      |
+| SetDistanceControls       | GPS distance measurement controls             |
+| ServiceWorkerRegistration | PWA service worker registration               |
+| DebugInfoPopup            | Debug information popup                       |
+| TrafficCountDetailModal   | Traffic count detail view                     |
+
+### 17.2 Home Components (`src/components/home/`)
+
+| Component               | Purpose                                      |
+| ----------------------- | -------------------------------------------- |
+| HomeHeader              | Application header with version and menu     |
+| WorkZoneForm            | Region/road/SLK input form                   |
+| WorkZoneSummary         | Work zone result summary card                |
+| LaneDirectionDiagram    | Visual lane allocation with direction arrows |
+| RoadWidthBreakdown      | Shoulders, lanes, total width display        |
+| TrafficSection          | Traffic volume data                          |
+| TrafficVolumeSection    | AADT and peak hour display                   |
+| SpeedZoneLayoutSection  | Speed zone layout display                    |
+| SignageCorridorSection  | Intersections and signs within corridor      |
+| IntersectionsSection    | Cross road detection results                 |
+| WeatherSection          | Current weather and forecast                 |
+| AmenitiesSection        | Hospital, fuel station, toilet info          |
+| EmergencyLocationButton | Emergency 000 info button                    |
+| SavedLocations          | Save/recall locations                        |
+| GenerateReportButton    | Work zone report generation                  |
+| StartSlkTrackingButton  | Navigate to drive page                       |
+| OfflineStatusIndicator  | Data download status                         |
+| OfflineDataSection      | Offline data management                      |
+
+### 17.3 Drive Components (`src/components/drive/`)
+
+| Component         | Purpose                                  |
+| ----------------- | ---------------------------------------- |
+| RefreshRateToggle | GPS refresh rate toggle (standard/turbo) |
+
+### 17.4 Traffic Event Logger Components (`src/components/traffic-event-logger/`)
+
+| Component    | Purpose                              |
+| ------------ | ------------------------------------ |
+| Counters     | Directional vehicle counters         |
+| TimerBadge   | Shift/break timer display            |
+| EventButtons | Event logging action buttons         |
+| EventList    | Scrollable event history list        |
+| FlasherSheet | Advanced flasher configuration sheet |
+| MoreSheet    | Additional options bottom sheet      |
+| ShiftSheet   | Shift start/end configuration sheet  |
+
+## 18. Hooks Inventory
+
+| Hook                   | Purpose                                   |
+| ---------------------- | ----------------------------------------- |
+| useHomeSettings        | Home page collapsible section settings    |
+| useWorkZoneFetch       | Work zone data fetching                   |
+| useWorkZoneData        | Work zone data management                 |
+| useWorkZoneLookup      | Work zone lookup logic                    |
+| useWorkZone            | Work zone state management                |
+| useRegions             | MRWA region data                          |
+| useRoads               | Road data for selected region             |
+| useGpsTracking         | GPS tracking with EKF smoothing           |
+| useGpsLocation         | GPS location state                        |
+| useSetDistance         | GPS-based distance measurement            |
+| useWeather             | Weather data fetching                     |
+| useTraffic             | Traffic volume data                       |
+| usePlaces              | Nearby amenities (hospital, fuel, toilet) |
+| useSignageData         | Signage corridor data                     |
+| useSavedLocations      | Saved locations CRUD with IndexedDB       |
+| useOfflineData         | Offline data management                   |
+| useCollapsibleSections | Section expand/collapse toggle            |
+| useOrientation         | Screen orientation detection              |
+| use-mobile             | Mobile device detection                   |
+| use-toast              | Toast notification system                 |
+
+## 19. Lib Modules Inventory
+
+### 19.1 Core Library (`src/lib/`)
+
+| Module                  | Purpose                                           |
+| ----------------------- | ------------------------------------------------- |
+| emergency               | Emergency location: cross roads, towns, hospitals |
+| gps-ekf                 | Extended Kalman Filter for GPS smoothing          |
+| offline-db              | IndexedDB database initialization                 |
+| offline-storage         | Offline data download and storage                 |
+| speed-zones             | Speed zone lookup and matching                    |
+| aftercare               | AfterCare job and sign management                 |
+| saved-locations-db      | Saved locations IndexedDB operations              |
+| contacts-storage        | Contact directory storage                         |
+| qa-storage              | Q&A history storage                               |
+| summaries-storage       | AI document summaries storage                     |
+| cycle-timer-storage     | Cycle timer CRUD with laps                        |
+| traffic-counter-storage | Traffic counter session storage                   |
+| traffic-event-logger    | Traffic event logging with Google Sheets sync     |
+| traffic-calculations    | AADT, peak hour, heavy vehicle calculations       |
+| validation              | Input validation utilities                        |
+| route-optimizer         | Route optimization logic                          |
+| performance             | Performance monitoring utilities                  |
+| push-notifications      | Push notification management                      |
+| db                      | Database configuration                            |
+| logger                  | Logging utilities                                 |
+| config                  | App configuration constants                       |
+| errors                  | Error handling and classes                        |
+| utils                   | General utility functions                         |
+| max-hold-time           | Maximum hold time calculator                      |
+| mrwa_api                | MRWA ArcGIS API client                            |
+| download-roads          | Road data download script                         |
+| toilet-map              | National Public Toilet Map integration            |
+| fire-stations           | WA DFES fire station data integration             |
+
+### 19.2 Offline Database (`src/lib/offline-db/`)
+
+| Module        | Purpose                                        |
+| ------------- | ---------------------------------------------- |
+| db-core       | IndexedDB initialization and store definitions |
+| types         | Shared offline database types                  |
+| index         | Re-exports for all offline-db modules          |
+| work-zone     | Work zone data operations                      |
+| speed-zones   | Speed zone data operations                     |
+| roads         | Road data operations                           |
+| signage       | Regulatory/warning sign data operations        |
+| metadata      | Download metadata and timestamps               |
+| pavement      | Pavement data operations                       |
+| traffic       | Traffic volume data operations                 |
+| weather-cache | Weather data caching (30-min TTL)              |
+| amenities     | Hospital/fuel/toilet data operations           |
+
+## 20. Version History
 
 ### 1.35.0 (Current) - WHS Library Documents & Registry Updates
 

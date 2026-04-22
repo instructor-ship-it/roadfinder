@@ -1,5 +1,7 @@
 # Troubleshooting Guide
 
+**Version 1.35.0**
+
 This guide covers common issues encountered when using or developing the TC Work Zone Locator application, along with their solutions. Issues are organized by category for easy navigation.
 
 ## Table of Contents

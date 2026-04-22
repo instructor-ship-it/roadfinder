@@ -30,8 +30,9 @@ https://github.com/instructor-ship-it/roadfinder
 14. Onboarding
 15. Saved Locations Map
 16. Settings
-17. Troubleshooting
-18. Quick Reference
+17. Emergency Location
+18. Troubleshooting
+19. Quick Reference
 
 ---
 
@@ -61,9 +62,10 @@ TC Work Zone Locator is a mobile-first web application designed specifically for
 - **Speeding Alert** - Warning with WA fine information
 - **Saved Locations** - Save work zones for quick recall with unlimited storage via IndexedDB
 - **WHS Library** - Access WHS Codes of Practice and guidance material offline with AI summaries
-- **Turbo Mode** - High-precision GPS refresh for exact SLK positioning
-- **Contact Directory** - Job-based contact management with local storage
-- **Onboarding** - First-run wizard for new users with accessibility support
+- **Emergency Location** - 000-formatted emergency info with nearest hospital, fire, and police stations
+- **Turbo Mode** - 200ms GPS refresh for precise SLK positioning with auto-revert
+- **Onboarding** - First-run wizard for new users with quick setup checklist
+- **Contact Directory** - Job-based contact management
 - **Saved Locations Map** - Interactive map view of all saved locations
 
 ### 1.3 Who Should Use This App
@@ -161,32 +163,33 @@ This is essential for Traffic Controllers working in remote areas of Western Aus
 
 ### 3.2 What Works Offline
 
-| **Feature**             | **Storage**              | **Offline?**              |
-| ----------------------- | ------------------------ | ------------------------- |
-| Work Zone Lookup        | IndexedDB                | ✓ Yes                     |
-| GPS Tracking            | Device + IndexedDB       | ✓ Yes                     |
-| SLK Position            | Computed locally         | ✓ Yes                     |
-| Speed Zones             | IndexedDB + localStorage | ✓ Yes                     |
-| Speed Sign Overrides    | localStorage             | ✓ Yes                     |
-| AfterCare Jobs          | localStorage             | ✓ Yes                     |
-| AfterCare Map           | OpenStreetMap tiles\*    | ✓ Yes                     |
-| Signage Corridor        | IndexedDB                | ✓ Yes                     |
-| TC Position Calculation | Computed locally         | ✓ Yes                     |
-| Direction Detection     | Computed from GPS        | ✓ Yes                     |
-| Google Maps Links       | Generated URLs           | ✓ Yes                     |
-| Set Distance Tool       | Device GPS               | ✓ Yes                     |
-| Library                 | Cached docs              | ✓ Yes                     |
-| WHS Library             | Cached docs + IndexedDB  | ✓ Yes                     |
-| Traffic Counter         | localStorage             | ✓ Yes                     |
-| Cycle Timer             | localStorage             | ✓ Yes                     |
-| Traffic Event Logger    | localStorage             | ✓ Yes (syncs when online) |
-| Saved Locations         | IndexedDB                | ✓ Yes (unlimited)         |
-| Saved Locations Map     | OpenStreetMap tiles\*    | ✓ Yes                     |
-| Contact Directory       | localStorage             | ✓ Yes                     |
-| Onboarding              | localStorage             | ✓ Yes                     |
-| Turbo Mode              | Device GPS               | ✓ Yes                     |
-| Q&A Assistant           | AI API                   | ✗ No                      |
-| Settings                | localStorage             | ✓ Yes                     |
+| **Feature**             | **Storage**              | **Offline?**                               |
+| ----------------------- | ------------------------ | ------------------------------------------ |
+| Work Zone Lookup        | IndexedDB                | ✓ Yes                                      |
+| GPS Tracking            | Device + IndexedDB       | ✓ Yes                                      |
+| SLK Position            | Computed locally         | ✓ Yes                                      |
+| Speed Zones             | IndexedDB + localStorage | ✓ Yes                                      |
+| Speed Sign Overrides    | localStorage             | ✓ Yes                                      |
+| AfterCare Jobs          | localStorage             | ✓ Yes                                      |
+| AfterCare Map           | OpenStreetMap tiles\*    | ✓ Yes                                      |
+| Signage Corridor        | IndexedDB                | ✓ Yes                                      |
+| TC Position Calculation | Computed locally         | ✓ Yes                                      |
+| Direction Detection     | Computed from GPS        | ✓ Yes                                      |
+| Google Maps Links       | Generated URLs           | ✓ Yes                                      |
+| Set Distance Tool       | Device GPS               | ✓ Yes                                      |
+| Library                 | Cached docs              | ✓ Yes                                      |
+| WHS Library             | Cached docs + IndexedDB  | ✓ Yes                                      |
+| Traffic Counter         | localStorage             | ✓ Yes                                      |
+| Cycle Timer             | localStorage             | ✓ Yes                                      |
+| Traffic Event Logger    | localStorage             | ✓ Yes (syncs when online)                  |
+| Saved Locations         | IndexedDB                | ✓ Yes (unlimited)                          |
+| Saved Locations Map     | OpenStreetMap tiles\*    | ✓ Yes                                      |
+| Emergency Location      | IndexedDB (partial)      | ✓ Road/town, ✗ Hospital/Fire/Police online |
+| Contact Directory       | localStorage             | ✓ Yes                                      |
+| Turbo Mode              | GPS only                 | ✓ Yes                                      |
+| Onboarding              | One-time wizard          | ✓ Yes                                      |
+| Q&A Assistant           | AI API                   | ✗ No                                       |
+| Settings                | localStorage             | ✓ Yes                                      |
 
 \*Map tiles are cached after first view
 
@@ -362,8 +365,34 @@ Visual bar showing road width components from left to right:
 
 In Settings (☰), you'll find TC Tools:
 
-- **AfterCare Signs** - Link to AfterCare page
 - **Set Distance** - GPS-based distance measurement tool
+- **Export Report** - Generate work zone report (PDF/text)
+- **AfterCare Signs** - Link to AfterCare page
+- **Traffic Counter** - Vehicle counting tool
+- **Cycle Timer** - Configurable traffic control timer
+- **Contact Directory** - Contact management
+- **Event Logger** - Real-time traffic event logging
+
+### 4.7 Emergency Location
+
+Both the home page and drive page provide emergency location information formatted for 000 calls:
+
+- **Home Page**: Emergency Location button in the work zone results
+- **Drive Page**: Emergency Location modal accessible from the header
+
+**Emergency Information Provided:**
+
+- Road name and SLK at your current position
+- Nearest town with distance and cardinal direction
+- Nearest cross road (intersecting road)
+- GPS coordinates (latitude/longitude)
+- Copy-to-clipboard for sharing with emergency services
+
+**Nearby Emergency Services:**
+
+- **Nearest Hospital** — Name, distance, ED status, phone number, Google Maps directions
+- **Nearest Fire Station** — Professional and volunteer stations with distance
+- **Nearest Police Station** — Station name with distance badge
 
 ---
 
@@ -872,6 +901,14 @@ To restore overrides from a backup:
 - Select a JSON file
 - Overrides are merged with existing data
 
+### 9.9 Speed Zone Map
+
+The Speed Zone Map at `/overrides/map` provides a visual map of speed zone overrides with road geometry, colored speed segments, and sign markers. Access it from the Overrides page.
+
+### 9.10 Speed Zone Layout
+
+The Speed Zone Layout at `/overrides/layout` shows a diagram view of speed zone layouts with an SLK scale, zone visualization, sign positions, boundary signs, and repeater signs. Access it from the Overrides page.
+
 ---
 
 ## 10. Calibrate Page - GPS Lag Measurement
@@ -966,6 +1003,14 @@ The WHS Library provides access to Work Health and Safety documents relevant to 
 - **Offline Access** - All WHS documents are cached locally for offline viewing
 - **PDF Viewer** - Built-in PDF viewer for reading documents directly in the app
 - **AI-Powered Summaries** - Get AI-generated summaries of WHS documents directly in the library, helping you quickly find relevant information without reading the entire document
+
+### 11.7 Expanded Library
+
+The Expanded Library at `/library/expanded` provides access to additional documentation including Traffic Management Plans (TMPs), AGTTM Parts, and Codes of Practice with page-by-page navigation. Access it from Settings (☰) → Library → Expanded Library.
+
+### 11.8 TMP Documents
+
+The TMP Documents page at `/library/tmp` provides Traffic Management Plan documents organized by region. Browse available TMPs by selecting a region, then view individual documents with the TMP image viewer. Access it from Settings (☰) → Library → TMP Documents.
 
 ---
 
@@ -1260,28 +1305,30 @@ Access settings by tapping the ☰ (hamburger) icon in the header. A bottom shee
 
 ### 16.1 Settings Sections
 
-| **Section**          | **Contents**                             |
-| -------------------- | ---------------------------------------- |
-| About                | App info, contact, user manual link      |
-| Admin Data Sync      | MRWA sync options, data status           |
-| GPS & Tracking       | EKF settings, speed display, calibration |
-| Offline Data         | Download/clear data, offline toggles     |
-| Preferences          | Default region, wind gust threshold      |
-| Speed Zone Overrides | Override management link                 |
-| TC Tools             | AfterCare, Set Distance, Contacts links  |
-| WHS Library          | WHS documents and AI summaries           |
+| **Section**          | **Contents**                                                                                                                |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| TC Tools             | Set Distance, Export Report, AfterCare, Traffic Counter, Cycle Timer, Contact Directory, Event Logger                       |
+| Library              | Document Registers, AI Q&A, Expanded Library, TMP Documents                                                                 |
+| Preferences          | EKF Filtering, Uncertainty, Early Warnings, Speed Display, AfterCare Alerts, AfterCare Lookahead, Default Region, Wind Gust |
+| GPS & Calibration    | Lag Compensation, Calibration Tool link                                                                                     |
+| Offline Data         | Download/update/clear data, 7 offline toggles                                                                               |
+| Speed Zone Overrides | Override status, affected roads, management link                                                                            |
+| Admin Data Sync      | Sync all, debug, dataset stats                                                                                              |
+| AI Assistant         | API key input, save/test, enable/disable direct chat                                                                        |
+| About                | App name, version, developer, user manual link                                                                              |
 
 ### 16.2 GPS Settings
 
-| **Setting**          | **Default** | **Description**                |
-| -------------------- | ----------- | ------------------------------ |
-| EKF Filtering        | On          | Kalman filter for smoother GPS |
-| Road Constraint      | On          | Snap predictions to road       |
-| Max Prediction Time  | 30s         | GPS outage prediction limit    |
-| Show Uncertainty     | On          | Display ±Xm accuracy           |
-| Early Warnings       | On          | Alert earlier at higher speeds |
-| Speed Lookahead      | 5s          | Lookahead time for warnings    |
-| GPS Lag Compensation | 0s          | Measured lag offset            |
+| **Setting**          | **Default** | **Description**                         |
+| -------------------- | ----------- | --------------------------------------- |
+| EKF Filtering        | On          | Kalman filter for smoother GPS          |
+| Show Uncertainty     | On          | Display ±Xm accuracy                    |
+| Early Warnings       | On          | Alert earlier at higher speeds          |
+| Speed Lookahead      | 5s          | Lookahead time for warnings (3/5/7/10s) |
+| Speed Display        | On          | Show current speed on drive page        |
+| GPS Lag Compensation | 0s          | Measured lag offset from calibration    |
+
+**Note:** Road Constraint and Max Prediction Time are internal EKF configuration values that are not user-adjustable settings.
 
 ### 16.3 Wind Gust Alert
 
@@ -1309,7 +1356,7 @@ Removes all offline data. Use if you want to re-download fresh data.
 
 **Offline Toggles:**
 
-Six toggles to switch between online API and offline IndexedDB data:
+Seven toggles to switch between online API and offline IndexedDB data:
 
 - Roads List
 - Work Zone Lookup
@@ -1317,6 +1364,7 @@ Six toggles to switch between online API and offline IndexedDB data:
 - Rail Crossings
 - Regulatory Signs
 - Warning Signs
+- Amenities
 
 ### 16.6 TC Tools
 
@@ -1328,9 +1376,41 @@ Quick access to:
 
 ---
 
-## 17. Troubleshooting
+## 17. Emergency Location
 
-### 17.1 App Shows Wrong Road
+The Emergency Location feature provides critical location information formatted for 000 emergency calls. It is available from both the home page and drive page.
+
+### 17.1 Accessing Emergency Location
+
+- **Home Page**: Tap the Emergency Location button in work zone results
+- **Drive Page**: Tap the Emergency Location icon in the header
+
+### 17.2 Information Provided
+
+When you open the Emergency Location dialog, you'll see:
+
+- **Your Location**: Road name, SLK, GPS coordinates
+- **Nearest Town**: Town name, distance, and cardinal direction (e.g., "7.4km southeast of Moora")
+- **Nearest Cross Road**: The nearest intersecting road at your location
+- **Copy to Clipboard**: One-tap copy of all emergency information
+
+### 17.3 Nearby Emergency Services
+
+The Emergency Location feature also shows:
+
+- **Nearest Hospital** — Name, distance, ED status, phone number, Google Maps directions link
+- **Nearest Fire Station** — Professional and volunteer stations with distance
+- **Nearest Police Station** — Station name with distance badge
+
+### 17.4 Emergency Services Data Sources
+
+Hospital data comes from WA Health SLIP Services (official government source). Fire and police station data comes from WA DFES and Geoscience Australia GNAF. These require an internet connection; offline fallback uses OpenStreetMap data.
+
+---
+
+## 18. Troubleshooting
+
+### 18.1 App Shows Wrong Road
 
 If GPS is detecting the wrong road:
 
@@ -1339,7 +1419,7 @@ If GPS is detecting the wrong road:
 - Try clearing and re-downloading data
 - For local roads, use manual entry instead of GPS
 
-### 17.2 Speed Limit Incorrect
+### 18.2 Speed Limit Incorrect
 
 If speed limit doesn't match physical signs:
 
@@ -1348,7 +1428,7 @@ If speed limit doesn't match physical signs:
 - Record the physical sign details
 - Override will take precedence over MRWA data
 
-### 17.3 GPS Not Working
+### 18.3 GPS Not Working
 
 If GPS tracking won't start:
 
@@ -1357,7 +1437,7 @@ If GPS tracking won't start:
 - Wait for GPS signal (can take 30+ seconds)
 - Try refreshing the page
 
-### 17.4 Data Won't Download
+### 18.4 Data Won't Download
 
 If download fails:
 
@@ -1366,7 +1446,7 @@ If download fails:
 - Try a different browser
 - Check available storage on device
 
-### 17.5 App Slow or Unresponsive
+### 18.5 App Slow or Unresponsive
 
 If app is running slowly:
 
@@ -1375,7 +1455,7 @@ If app is running slowly:
 - Restart the browser
 - Check device storage
 
-### 17.6 Speed Warnings Too Early/Late
+### 18.6 Speed Warnings Too Early/Late
 
 If lookahead timing seems off:
 
@@ -1383,7 +1463,7 @@ If lookahead timing seems off:
 - Apply the measured lag compensation
 - Recalibrate if you change devices
 
-### 17.7 AfterCare Signs Not Showing on Map
+### 18.7 AfterCare Signs Not Showing on Map
 
 If signs don't appear on the map:
 
@@ -1392,7 +1472,7 @@ If signs don't appear on the map:
 - Or the sign will auto-fetch coordinates when road_id + SLK is known
 - Check that signs have lat/lon values
 
-### 17.8 Map Tiles Not Loading Offline
+### 18.8 Map Tiles Not Loading Offline
 
 If map doesn't work offline:
 
@@ -1402,16 +1482,16 @@ If map doesn't work offline:
 
 ---
 
-## 18. Quick Reference
+## 19. Quick Reference
 
-### 18.1 Direction Terminology
+### 19.1 Direction Terminology
 
 | **Term**   | **Meaning**       | **SLK Direction** |
 | ---------- | ----------------- | ----------------- |
 | True Left  | Left Carriageway  | INCREASING SLK    |
 | True Right | Right Carriageway | DECREASING SLK    |
 
-### 18.2 Status Colors
+### 19.2 Status Colors
 
 | **Color**        | **Meaning**                                         |
 | ---------------- | --------------------------------------------------- |
@@ -1422,7 +1502,7 @@ If map doesn't work offline:
 | Amber border     | Speed decrease ahead                                |
 | Green border + ✓ | In override zone                                    |
 
-### 18.3 AfterCare Status Colors
+### 19.3 AfterCare Status Colors
 
 | **Status**      | **Color** | **Marker** |
 | --------------- | --------- | ---------- |
@@ -1432,7 +1512,7 @@ If map doesn't work offline:
 | Retrieved       | Blue      | ✓          |
 | TBA             | Gray      | ⏸          |
 
-### 18.4 EKF Confidence Indicators
+### 19.4 EKF Confidence Indicators
 
 | **Symbol**     | **Confidence**         |
 | -------------- | ---------------------- |
@@ -1441,7 +1521,7 @@ If map doesn't work offline:
 | ◔ Orange dot   | Low accuracy           |
 | ◇ Cyan diamond | Predicted (GPS outage) |
 
-### 18.5 Key Distances
+### 19.5 Key Distances
 
 | **Feature**          | **Distance**          |
 | -------------------- | --------------------- |
@@ -1450,7 +1530,7 @@ If map doesn't work offline:
 | Intersection Display | ±1100m from work zone |
 | Speed Sign Detection | ±700m from work zone  |
 
-### 18.6 Offline Data Summary
+### 19.6 Offline Data Summary
 
 | **Data Type** | **Count**      |
 | ------------- | -------------- |
@@ -1458,7 +1538,7 @@ If map doesn't work offline:
 | Speed Zones   | 69,000+        |
 | Regions       | 8 MRWA regions |
 
-### 18.7 Keyboard Shortcuts (Desktop)
+### 19.7 Keyboard Shortcuts (Desktop)
 
 When using on a computer:
 

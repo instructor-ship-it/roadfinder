@@ -5,6 +5,91 @@
 
 ---
 
+## Task ID: 2026-04-22-002
+
+**Agent:** Main Agent
+**Task:** Comprehensive Documentation Audit & Update (v1.35.0)
+
+### Work Log:
+
+- **Cloned fresh from GitHub** and ran `bun install`
+- **Three parallel audits** of all documentation vs actual codebase:
+  - ARCHITECTURE.md vs code (found 7 missing pages, 7 missing API routes, no component/hook/lib inventories)
+  - FILE_STRUCTURE.md vs code (found misplaced entry, missing pages, wrong script name)
+  - DATA_STRUCTURES.md vs code (found critical IndexedDB key path errors, duplicate sections, field mismatches)
+  - Program Logic doc (missing AI section, wrong footer version, missing API routes)
+  - User Manual (wrong sub-section numbering after section renumbering)
+
+- **README.md** (from prior session):
+  - Added missing features: AI Assistant, Emergency Location, Library, Direction-aware filtering, Amenities
+  - Fixed tech stack (Next.js 16, not 15)
+  - Added data sources section
+
+- **User Manual** (`docs/TC_Work_Zone_Locator_User_Manual.md`):
+  - Fixed sub-section numbering: Emergency Location 19.1-19.4 → 17.1-17.4
+  - Fixed sub-section numbering: Troubleshooting 19.1-19.8 → 18.1-18.8
+
+- **ARCHITECTURE.md** (`docs/ARCHITECTURE.md`):
+  - Updated page count from 21 to 28 with all missing pages listed
+  - Added 7 missing API routes (police-stations, emergency-stations, hospitals, nearest-hospital, nearest-intersections, qa-saved, weather/warnings)
+  - Added Emergency Location, Amenities, Direction-aware filtering to key features
+  - Added Section 17: Component Inventory (4 sub-sections: app, home, drive, traffic-event-logger)
+  - Added Section 18: Hooks Inventory (20 hooks)
+  - Added Section 19: Lib Modules Inventory (30 core + 12 offline-db modules)
+  - Updated Table of Contents with new sections 17-20
+
+- **DATA_STRUCTURES.md** (`docs/DATA_STRUCTURES.md`):
+  - Fixed critical IndexedDB store key paths (Section 13.4): almost all were wrong
+  - Added missing stores: metadata, amenitiesData, savedLocations
+  - Fixed PlacesData (Section 10.4): arrays → single nullable objects
+  - Fixed AfterCareJob (Section 5.1): created_at/updated_at → date_created, added status and work_area_slk fields
+  - Fixed AfterCareSign (Section 5.2): status_override → status_manually_set, maintained_date → last_maintained_date, added placed_time, retrieved_time, notes
+  - Fixed RetrievalType (Section 5.3): daily/weekly/monthly → maintain-daily/maintain-weekly/maintain-monthly
+  - Fixed CycleTimer (Section 14.4): name → label, startTime → currentLapStart, added description
+  - Fixed Lap (Section 14.5): LapRecord → Lap, added number field, durationMs → duration, endTime/duration nullable
+  - Removed duplicate sections 11-17 that contradicted the main body
+  - Fixed PWA section numbering (14.1-14.4 → 15.1-15.4)
+  - Fixed Appendix enum types: SignCategory lowercase, RetrievalType maintain- prefix
+
+- **Program Logic** (`docs/TC_Work_Zone_Locator_Program_Logic.md`):
+  - Fixed footer version: RC 1.9.9 → 1.35.0
+  - Added Section 5.8: AI and Document Routes (5 endpoints)
+  - Added Section 5.9: Utility Routes (2 endpoints)
+  - Added Section 19: AI Assistant Module (4 sub-sections)
+  - Updated Table of Contents with new sections 19-20
+
+- **FILE_STRUCTURE.md** (`docs/TC_Work_Zone_Locator_File_Structure.md`):
+  - Removed misplaced `drive/RefreshRateToggle.tsx` from pages (it's a component)
+  - Added `traffic-counter/count/page.tsx` to pages table
+  - Added `library/tmp/page.tsx` to pages table
+  - Fixed `create_user_manual_pdf.py` → `create-user-manual.js` + `generate-user-manual.mjs`
+
+- **TROUBLESHOOTING.md**: Added version number 1.35.0
+- **TESTING.md**: Added version number 1.35.0
+
+### Files Changed:
+
+- `README.md` (added features, tech stack, data sources)
+- `docs/TC_Work_Zone_Locator_User_Manual.md` (sub-section numbering fixes)
+- `docs/ARCHITECTURE.md` (pages, API routes, component/hook/lib inventories, key features)
+- `docs/DATA_STRUCTURES.md` (IndexedDB keys, AfterCare fields, PlacesData, duplicates removed)
+- `docs/TC_Work_Zone_Locator_Program_Logic.md` (AI section, API routes, footer version)
+- `docs/TC_Work_Zone_Locator_File_Structure.md` (misplacements, missing entries)
+- `docs/TROUBLESHOOTING.md` (version number added)
+- `docs/TESTING.md` (version number added)
+- `worklog.md` (this entry)
+
+### Stage Summary:
+
+- All documentation now matches current v1.35.0 codebase
+- Critical data structure errors fixed (IndexedDB keys, field names, enum values)
+- Missing features documented (AI Assistant, Emergency Location, Library sub-pages)
+- Duplicate/contradictory sections removed from DATA_STRUCTURES.md
+- Version numbers consistent across all docs
+- Ready for commit and push to GitHub
+
+---
+
 ## Task ID: 2026-04-22-001
 
 **Agent:** Main Agent

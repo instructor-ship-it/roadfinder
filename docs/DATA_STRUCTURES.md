@@ -254,51 +254,54 @@ Zone generated from sign data by signsToSpeedZones():
 
 Primary container for signage tracking:
 
-| **Field**  | **Type**        | **Required** | **Description**                                   |
-| ---------- | --------------- | ------------ | ------------------------------------------------- |
-| id         | string          | Yes          | Unique job identifier (e.g., "job_1709234567890") |
-| job_name   | string          | Yes          | Display name (auto-generated or custom)           |
-| road_id    | string          | Yes          | Road identifier                                   |
-| road_name  | string          | No           | Road name                                         |
-| signs      | AfterCareSign[] | Yes          | Array of signs in this job                        |
-| created_at | string          | Yes          | ISO timestamp of creation                         |
-| updated_at | string          | Yes          | ISO timestamp of last update                      |
-| notes      | string          | No           | Job-level notes                                   |
+| **Field**           | **Type**        | **Required** | **Description**                                   |
+| ------------------- | --------------- | ------------ | ------------------------------------------------- |
+| id                  | string          | Yes          | Unique job identifier (e.g., "job_1709234567890") |
+| job_name            | string          | Yes          | Display name (auto-generated or custom)           |
+| road_id             | string          | Yes          | Road identifier                                   |
+| road_name           | string          | No           | Road name                                         |
+| signs               | AfterCareSign[] | Yes          | Array of signs in this job                        |
+| date_created        | string          | Yes          | ISO timestamp of creation                         |
+| status              | JobStatus       | Yes          | 'active', 'partial', 'retrieved', or 'archived'   |
+| work_area_slk_start | number          | No           | Optional work area start SLK                      |
+| work_area_slk_end   | number          | No           | Optional work area end SLK                        |
+| notes               | string          | No           | Job-level notes                                   |
 
 ### 5.2 AfterCareSign
 
 Individual sign within a job:
 
-| **Field**       | **Type** | **Required** | **Description**                   |
-| --------------- | -------- | ------------ | --------------------------------- |
-| id              | string   | Yes          | Unique sign identifier            |
-| slk             | number   | Yes          | Location SLK                      |
-| direction       | enum     | Yes          | "True Left" or "True Right"       |
-| category        | enum     | Yes          | "Surface", "Speed", or "Hazard"   |
-| sign_type       | string   | Yes          | Sign type (from preset or custom) |
-| description     | string   | No           | Additional description            |
-| lat             | number   | No           | GPS latitude                      |
-| lon             | number   | No           | GPS longitude                     |
-| retrieval_type  | enum     | Yes          | See RetrievalType below           |
-| retrieval_date  | string   | No           | Scheduled retrieval date (ISO)    |
-| status          | enum     | No           | See SignStatus below              |
-| status_override | boolean  | No           | Manual status override active     |
-| placed_date     | string   | No           | Date sign was placed              |
-| retrieved_date  | string   | No           | Date sign was retrieved           |
-| maintained_date | string   | No           | Date of last maintenance          |
-| created_at      | string   | Yes          | ISO timestamp of creation         |
-| updated_at      | string   | Yes          | ISO timestamp of last update      |
+| **Field**            | **Type**      | **Required** | **Description**                                |
+| -------------------- | ------------- | ------------ | ---------------------------------------------- |
+| id                   | string        | Yes          | Unique sign identifier                         |
+| slk                  | number        | Yes          | Location SLK                                   |
+| direction            | SignDirection | Yes          | "True Left" or "True Right"                    |
+| category             | SignCategory  | Yes          | "surface", "speed", or "hazard" (lowercase)    |
+| sign_type            | string        | Yes          | Sign type (from preset or custom)              |
+| description          | string        | No           | Additional description                         |
+| lat                  | number        | No           | GPS latitude (null if not captured)            |
+| lon                  | number        | No           | GPS longitude (null if not captured)           |
+| placed_date          | string        | No           | Date sign was placed                           |
+| placed_time          | string        | No           | Time sign was placed (HH:MM 24-hour format)    |
+| retrieval_type       | RetrievalType | Yes          | See RetrievalType below                        |
+| retrieval_date       | string        | No           | Scheduled retrieval date (ISO)                 |
+| status               | SignStatus    | No           | See SignStatus below                           |
+| status_manually_set  | boolean       | No           | True if user manually overrode status          |
+| last_maintained_date | string        | No           | Date of last maintenance                       |
+| retrieved_date       | string        | No           | Date sign was retrieved                        |
+| retrieved_time       | string        | No           | Time sign was retrieved (HH:MM 24-hour format) |
+| notes                | string        | No           | Additional notes                               |
 
 ### 5.3 RetrievalType
 
-| **Value** | **Description**      | **Auto-flag Behavior** |
-| --------- | -------------------- | ---------------------- |
-| standard  | Default retrieval    | After 2 days           |
-| scheduled | Specific date set    | On retrieval_date      |
-| tba       | Indefinite           | Never auto-flags       |
-| daily     | Maintenance schedule | After 1 day            |
-| weekly    | Maintenance schedule | After 7 days           |
-| monthly   | Maintenance schedule | After 30 days          |
+| **Value**        | **Description**      | **Auto-flag Behavior** |
+| ---------------- | -------------------- | ---------------------- |
+| standard         | Default retrieval    | After 2 days           |
+| scheduled        | Specific date set    | On retrieval_date      |
+| tba              | Indefinite           | Never auto-flags       |
+| maintain-daily   | Maintenance schedule | After 1 day            |
+| maintain-weekly  | Maintenance schedule | After 7 days           |
+| maintain-monthly | Maintenance schedule | After 30 days          |
 
 ### 5.4 SignStatus
 
@@ -626,17 +629,22 @@ Cached amenities by region:
 
 ---
 
-## 10.4 PlacesData
+### 10.4 PlacesData
 
-Container for all amenity data returned by `fetchPlaces()` on the home page, with source tracking:
+Container for amenity data returned by `fetchPlaces()` on the home page, with source and cache tracking:
 
-| **Field**      | **Type**       | **Description**                                                |
-| -------------- | -------------- | -------------------------------------------------------------- |
-| hospitals      | Hospital[]     | Hospital results                                               |
-| fuelStations   | FuelStation[]  | Fuel station results                                           |
-| toilets        | AmenityPlace[] | Public toilet results                                          |
-| hospitalSource | string?        | Data source for hospitals: 'WA Health SLIP' \| 'OpenStreetMap' |
-| fuelSource     | string?        | Data source for fuel: 'FuelWatch WA' \| 'OpenStreetMap'        |
+| **Field**       | **Type**      | **Description**                                                |
+| --------------- | ------------- | -------------------------------------------------------------- |
+| hospital        | Place \| null | Nearest hospital result                                        |
+| toilet          | Place \| null | Nearest public toilet result                                   |
+| fuelStation     | Place \| null | Nearest fuel station result                                    |
+| fromCache       | boolean?      | Whether data was loaded from cache                             |
+| cachedAt        | number?       | Cache timestamp                                                |
+| cachedLocation  | { lat, lon }? | GPS location used for cached results                           |
+| source          | string?       | Data source identifier                                         |
+| dataUnavailable | boolean?      | True when offline but no cached data available                 |
+| hospitalSource  | string?       | Data source for hospitals: 'WA Health SLIP' \| 'OpenStreetMap' |
+| fuelSource      | string?       | Data source for fuel: 'FuelWatch WA' \| 'OpenStreetMap'        |
 
 ---
 
@@ -853,16 +861,21 @@ Metadata for synced datasets:
 
 ### 13.4 IndexedDB Stores
 
-| **Store**       | **Key**          | **Description**                   |
-| --------------- | ---------------- | --------------------------------- |
-| roads           | road_id + region | Road network data (69,000+ roads) |
-| speedZones      | id               | MRWA speed zone data              |
-| railCrossings   | id               | Rail crossing locations           |
-| regulatorySigns | id               | Regulatory signage                |
-| warningSigns    | id               | Warning signage                   |
-| pavement        | road_id + slk    | Pavement and lane data            |
-| trafficVolume   | road_id + slk    | Traffic count data                |
-| datasetMeta     | dataset          | Dataset metadata                  |
+Database: `RoadFinderDB` (version 7)
+
+| **Store**       | **Key**   | **Description**                                              |
+| --------------- | --------- | ------------------------------------------------------------ |
+| regions         | region    | Road network data by MRWA region (69,000+ roads)             |
+| speedZones      | road_id   | MRWA speed zone data                                         |
+| metadata        | key       | Download metadata and timestamps                             |
+| railCrossings   | road_id   | Rail crossing locations                                      |
+| regulatorySigns | road_id   | Regulatory signage                                           |
+| warningSigns    | road_id   | Warning signage                                              |
+| datasetMeta     | dataset   | Dataset sync metadata                                        |
+| pavementData    | road_id   | Pavement and lane data                                       |
+| trafficData     | road_name | Traffic volume data (keyed by road_name)                     |
+| amenitiesData   | region    | Hospital, fuel, toilet data by region                        |
+| savedLocations  | id        | User saved work locations (with road_id, created_at indexes) |
 
 ---
 
@@ -957,31 +970,33 @@ Event types enum:
 
 Cycle timer for tracking vehicle travel times:
 
-| **Field** | **Type**       | **Description**              |
-| --------- | -------------- | ---------------------------- |
-| id        | string         | Unique timer ID              |
-| name      | string         | Timer name (e.g., "Truck 1") |
-| isRunning | boolean        | Timer currently running      |
-| startTime | number \| null | Current lap start timestamp  |
-| laps      | LapRecord[]    | Array of completed laps      |
-| createdAt | string         | ISO timestamp of creation    |
+| **Field**       | **Type**       | **Description**              |
+| --------------- | -------------- | ---------------------------- |
+| id              | string         | Unique timer ID              |
+| label           | string         | Timer name (e.g., "Timer 1") |
+| description     | string?        | Optional short description   |
+| isRunning       | boolean        | Timer currently running      |
+| currentLapStart | number \| null | Current lap start timestamp  |
+| laps            | Lap[]          | Array of completed laps      |
+| createdAt       | number         | Timestamp of creation        |
 
-### 14.5 LapRecord
+### 14.5 Lap
 
 Completed lap record:
 
-| **Field**  | **Type** | **Description**              |
-| ---------- | -------- | ---------------------------- |
-| id         | string   | Unique lap ID                |
-| startTime  | number   | Lap start timestamp          |
-| endTime    | number   | Lap end timestamp            |
-| durationMs | number   | Lap duration in milliseconds |
+| **Field** | **Type**       | **Description**                      |
+| --------- | -------------- | ------------------------------------ |
+| id        | string         | Unique lap ID                        |
+| number    | number         | Lap number (sequential)              |
+| startTime | number         | Lap start timestamp                  |
+| endTime   | number \| null | Lap end timestamp (null if running)  |
+| duration  | number \| null | Lap duration in ms (null if running) |
 
 ---
 
 ## 15. PWA Manifest Structure
 
-### 14.1 manifest.json
+### 15.1 manifest.json
 
 | **Field**        | **Type**   | **Description**        |
 | ---------------- | ---------- | ---------------------- |
@@ -995,7 +1010,7 @@ Completed lap record:
 | icons            | Icon[]     | App icons array        |
 | shortcuts        | Shortcut[] | Quick action shortcuts |
 
-### 14.2 Icon
+### 15.2 Icon
 
 | **Field** | **Type** | **Description**        |
 | --------- | -------- | ---------------------- |
@@ -1004,7 +1019,7 @@ Completed lap record:
 | type      | string   | "image/png"            |
 | purpose   | string   | "any maskable"         |
 
-### 14.3 Shortcut
+### 15.3 Shortcut
 
 | **Field**   | **Type** | **Description** |
 | ----------- | -------- | --------------- |
@@ -1014,7 +1029,7 @@ Completed lap record:
 | url         | string   | Target URL      |
 | icons       | Icon[]   | Shortcut icons  |
 
-### 14.4 Service Worker Cache
+### 15.4 Service Worker Cache
 
 | **Cache Name** | **Contents**        |
 | -------------- | ------------------- |
@@ -1034,9 +1049,15 @@ type Direction = 'True Left' | 'True Right';
 
 type SignType = 'Single' | 'Double';
 
-type SignCategory = 'Surface' | 'Speed' | 'Hazard';
+type SignCategory = 'surface' | 'speed' | 'hazard';
 
-type RetrievalType = 'standard' | 'scheduled' | 'tba' | 'daily' | 'weekly' | 'monthly';
+type RetrievalType =
+  | 'standard'
+  | 'scheduled'
+  | 'tba'
+  | 'maintain-daily'
+  | 'maintain-weekly'
+  | 'maintain-monthly';
 
 type SignStatus = 'placed' | 'due-retrieval' | 'due-maintenance' | 'maintained' | 'retrieved';
 
@@ -1071,5 +1092,19 @@ interface SlkPoint {
   road_id: string;
   slk: number;
   direction?: Direction;
+}
+```
+
+---
+
+## 17. Refresh Rate Toggle Data Structures
+
+**Source:** `src/components/drive/RefreshRateToggle.tsx`
+
+```typescript
+interface RefreshRateToggleProps {
+  isTurbo: boolean; // Whether Turbo mode is active
+  onToggle: (turbo: boolean) => void; // Toggle callback
+  timeRemaining: number; // Seconds remaining in Turbo mode
 }
 ```
