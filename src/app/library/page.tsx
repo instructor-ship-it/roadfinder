@@ -203,7 +203,7 @@ function LibraryPageContent() {
   useEffect(() => {
     const loadRegistry = async () => {
       try {
-        const response = await fetch('/library/registry.json');
+        const response = await fetch('/library/registry.json?t=' + Date.now());
         if (!response.ok) throw new Error('Failed to load registry');
         const data = await response.json();
         setRegistry(data);
@@ -1514,7 +1514,10 @@ function LibraryPageContent() {
                                   pageNum = documentPage || null;
                                 } else if (section) {
                                   // Fallback: derive from section reference
-                                  pageNum = findPageForSection(section, summary.completeSections || []);
+                                  pageNum = findPageForSection(
+                                    section,
+                                    summary.completeSections || []
+                                  );
                                   physicalPage = pageNum ? pageNum + pageOffset : null;
                                 }
 
@@ -1549,12 +1552,18 @@ function LibraryPageContent() {
                                         </span>
                                       )}
                                       {employeeDuty && (
-                                        <span className="px-1.5 py-0.5 rounded text-[10px] bg-blue-900/50 text-blue-300 shrink-0" title="Employee Duty">
+                                        <span
+                                          className="px-1.5 py-0.5 rounded text-[10px] bg-blue-900/50 text-blue-300 shrink-0"
+                                          title="Employee Duty"
+                                        >
                                           👷
                                         </span>
                                       )}
                                       {employeeRight && (
-                                        <span className="px-1.5 py-0.5 rounded text-[10px] bg-green-900/50 text-green-300 shrink-0" title="Employee Right">
+                                        <span
+                                          className="px-1.5 py-0.5 rounded text-[10px] bg-green-900/50 text-green-300 shrink-0"
+                                          title="Employee Right"
+                                        >
                                           ✅
                                         </span>
                                       )}
@@ -1634,9 +1643,7 @@ function LibraryPageContent() {
                                 const reference = isObject
                                   ? (note as { reference?: string }).reference
                                   : null;
-                                const title = isObject
-                                  ? (note as { title?: string }).title
-                                  : null;
+                                const title = isObject ? (note as { title?: string }).title : null;
                                 const consequence = isObject
                                   ? (note as { consequence?: string }).consequence
                                   : null;
@@ -1664,7 +1671,10 @@ function LibraryPageContent() {
                                   pageNum = documentPage || null;
                                 } else if (reference) {
                                   // Fallback: derive from reference
-                                  pageNum = findPageForSection(reference, summary.completeSections || []);
+                                  pageNum = findPageForSection(
+                                    reference,
+                                    summary.completeSections || []
+                                  );
                                   physicalPage = pageNum ? pageNum + pageOffset : null;
                                 }
 
@@ -1685,11 +1695,18 @@ function LibraryPageContent() {
                                 const CardContent = (
                                   <>
                                     {title && (
-                                      <div className="text-amber-300 text-xs font-medium mb-1">{title}</div>
+                                      <div className="text-amber-300 text-xs font-medium mb-1">
+                                        {title}
+                                      </div>
                                     )}
                                     <div className="text-gray-300 flex items-start gap-2">
                                       {employeeDuty && (
-                                        <span className="text-blue-400 shrink-0" title="Employee Duty">👷</span>
+                                        <span
+                                          className="text-blue-400 shrink-0"
+                                          title="Employee Duty"
+                                        >
+                                          👷
+                                        </span>
                                       )}
                                       <span>{noteText}</span>
                                     </div>

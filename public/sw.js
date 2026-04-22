@@ -1,9 +1,9 @@
 // TC Work Zone Locator - Service Worker for Offline Support
 // Version: must match APP_VERSION in package.json / src/lib/config.ts / src/components/SettingsDrawer.tsx
-const APP_VERSION = '1.34.1';
-const CACHE_NAME = 'tc-workzone-v1341';
-const OFFLINE_CACHE = 'tc-workzone-offline-v1341';
-const STATIC_CACHE = 'tc-workzone-static-v1341';
+const APP_VERSION = '1.35.0';
+const CACHE_NAME = 'tc-workzone-v1350';
+const OFFLINE_CACHE = 'tc-workzone-offline-v1350';
+const STATIC_CACHE = 'tc-workzone-static-v1350';
 const SYNC_QUEUE_DB = 'tc-sync-queue';
 
 // App shell - core files needed for app to work
@@ -185,6 +185,28 @@ self.addEventListener('fetch', (event) => {
           })
       );
     }
+    return;
+  }
+
+  // For registry.json - stale-while-revalidate to ensure fresh document listings
+  if (url.pathname === '/library/registry.json') {
+    event.respondWith(
+      caches.open(STATIC_CACHE).then((cache) => {
+        return cache.match(request).then((cachedResponse) => {
+          const fetchPromise = fetch(request)
+            .then((networkResponse) => {
+              if (networkResponse.ok) {
+                cache.put(request, networkResponse.clone());
+              }
+              return networkResponse;
+            })
+            .catch(() => cachedResponse);
+
+          // Return cached version immediately, update in background
+          return cachedResponse || fetchPromise;
+        });
+      })
+    );
     return;
   }
 
