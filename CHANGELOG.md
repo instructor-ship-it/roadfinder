@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.35.0] - 2026-04-22
+
+### Added
+
+- **WHS Codes of Practice — All 4 Documents Now Available**
+  - Downloaded Construction Work Code of Practice (Safe Work Australia, 13 pages, 1.3 MB)
+  - Downloaded General Guide to Workplace Traffic Management (Safe Work Australia, 30 pages, 794 KB)
+  - Working Hours CoP and Working Hours Risk Tool already in library from previous session
+  - All 4 WHS Codes of Practice now have local PDF files available for offline viewing
+- **WHS Guidance Material — SWMS Guide Downloaded**
+  - Downloaded Safe Work Method Statement Information Sheet (WorkSafe WA, 16 pages, 537 KB)
+  - Updated Records Management Guide with file path and downloaded status
+
+### Fixed
+
+- **Construction Work COP PDF was invalid** — `construction-work-code.pdf` was actually an HTML error page (2.7 KB), not a real PDF. Replaced with valid 1.3 MB PDF from Wayback Machine archive.
+- **Workplace Traffic Guide missing** — PDF did not exist in library. Downloaded and added.
+- **SWMS Guide missing** — PDF did not exist in library. Downloaded and added.
+- **Registry inconsistencies** — Multiple WHS documents marked `downloaded: false` despite having local files, or missing `file` paths entirely. All now corrected.
+
+### Changed
+
+- **Registry Updates** — All WHS documents in `registry.json` now have `file` paths and `downloaded: true`
+- **Document Summaries** — Updated `whs-construction-cop.json`, `whs-workplace-traffic.json`, `whs-swms-guide.json` with richer content including sections, key requirements, and target audiences
+- **Summaries Index** — Updated `index.json` with processed timestamps for newly enhanced documents
+
+---
+
 ## [1.34.1] - 2026-04-19
 
 ### Changed
@@ -643,6 +671,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Version | Date       | Key Changes                                                                                 |
 | ------- | ---------- | ------------------------------------------------------------------------------------------- |
+| 1.35.0  | 2026-04-22 | WHS library PDFs (Construction COP, Workplace Traffic, SWMS), registry updates, doc audit   |
 | 1.34.1  | 2026-04-19 | Phase 3 refactoring (page.tsx 43% reduction), component extraction, mrwaStatus type fix     |
 | 1.34.0  | 2026-04-18 | Unlimited saved locations via IndexedDB, migration from localStorage                        |
 | 1.33.1  | 2026-04-17 | Saved locations day of week display                                                         |
@@ -651,7 +680,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 | 1.32.5  | 2026-04-16 | Smart distance display, AfterCare cancel button fix                                         |
 | 1.32.4  | 2026-04-16 | Destination SLK preservation fix                                                            |
 | 1.30.0  | 2026-04-14 | Onboarding, accessibility, skeleton loading, form validation                                |
-| 1.29.0  | 2026-04-13 | User-configurable cloud sync, contact directory, cycle timer rename                          |
+| 1.29.0  | 2026-04-13 | User-configurable cloud sync, contact directory, cycle timer rename                         |
 | 1.28.5  | 2026-04-12 | Q&A page restructure, tab layout, direct AI chat mode                                       |
 | 1.28.0  | 2026-04-11 | Q&A history, export/import, document selection                                              |
 | 1.27.0  | 2026-04-06 | PDF viewer modal with landscape/portrait support, navigation in header for landscape        |

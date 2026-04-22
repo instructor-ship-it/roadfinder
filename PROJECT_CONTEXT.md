@@ -1,7 +1,7 @@
 # TC Work Zone Locator - Project Context
 
-> **Last Updated:** 2026-04-19
-> **Current Version:** 1.34.1
+> **Last Updated:** 2026-04-22
+> **Current Version:** 1.35.0
 > **GitHub:** https://github.com/instructor-ship-it/roadfinder.git
 > **Branches:** master, main (kept in sync)
 > **Project Directory:** `/home/z/my-project/`
@@ -425,7 +425,31 @@ See `scripts/README.md` for full documentation of available scripts.
 
 ## Recent Changes (v1.x)
 
-### 1.34.1 (Current) - Traffic Event Logger Enhancements
+### 1.35.0 (Current) - WHS Library Documents & Registry Updates
+
+- **WHS Codes of Practice - All 4 Documents Now Available**
+  - Downloaded Construction Work Code of Practice (Safe Work Australia, 13 pages)
+  - Downloaded General Guide to Workplace Traffic Management (Safe Work Australia, 30 pages)
+  - Working Hours CoP and Risk Tool already in library from previous session
+  - Fixed construction-work-code.pdf which was an HTML error page, replaced with real PDF
+- **WHS Guidance Material - SWMS Guide Now Available**
+  - Downloaded SWMS Information Sheet (WorkSafe WA, 16 pages)
+  - Updated Records Management Guide with file path and downloaded status
+- **Registry Updates**
+  - Updated registry.json: all WHS documents now have `file` paths and `downloaded: true`
+  - Updated document summaries with richer content, sections, and key requirements
+  - Updated summaries/index.json with processed timestamps
+- **Files Changed**
+  - `public/library/whs/codes-of-practice/construction-work-code.pdf` (replaced with valid PDF)
+  - `public/library/whs/codes-of-practice/workplace-traffic-guide.pdf` (NEW)
+  - `public/library/whs/guidance/swms-high-risk-construction.pdf` (NEW)
+  - `public/library/registry.json` (updated all WHS doc entries)
+  - `public/library/summaries/whs-construction-cop.json` (updated)
+  - `public/library/summaries/whs-workplace-traffic.json` (updated)
+  - `public/library/summaries/whs-swms-guide.json` (updated)
+  - `public/library/summaries/index.json` (updated)
+
+### 1.34.1 - Traffic Event Logger Enhancements
 
 - **Shift Actions Enhancement**
   - Added 'Work site debrief' action below 'Pack up site'

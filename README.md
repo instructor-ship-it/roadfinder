@@ -2,7 +2,7 @@
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/ci.yml?branch=main&label=build)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/ci.yml)
 [![CodeQL](https://img.shields.io/github/actions/workflow/status/instructor-ship-it/roadfinder/codeql.yml?branch=main&label=security)](https://github.com/instructor-ship-it/roadfinder/actions/workflows/codeql.yml)
-[![Version](https://img.shields.io/badge/version-1.34.1-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
+[![Version](https://img.shields.io/badge/version-1.35.0-blue.svg)](https://github.com/instructor-ship-it/roadfinder)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Web%20%7C%20PWA-orange.svg)](https://roadfinder.vercel.app)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org)
@@ -492,7 +492,17 @@ API keys (e.g., for AI Assistant) are stored in **localStorage** on your device:
 
 ## Version History
 
-### 1.34.1 (Current) - Phase 3 Refactoring & Build Fix
+### 1.35.0 (Current) - WHS Library Documents & Registry Updates
+
+- **WHS Codes of Practice** — All 4 documents now available with local PDFs
+  - Downloaded Construction Work Code of Practice (Safe Work Australia, 13 pages)
+  - Downloaded General Guide to Workplace Traffic Management (Safe Work Australia, 30 pages)
+  - Fixed construction-work-code.pdf (was HTML error page, now real PDF)
+- **WHS Guidance Material** — SWMS Information Sheet downloaded (WorkSafe WA, 16 pages)
+- **Registry updates** — All WHS documents marked as downloaded with file paths
+- **Document summaries** — Updated with richer content, sections, and key requirements
+
+### 1.34.1 - Phase 3 Refactoring & Build Fix
 
 - **Phase 3 Refactoring** — Large file breakdown
   - Reduced page.tsx from 7,460 to ~4,285 lines (43% reduction)

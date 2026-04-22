@@ -1,7 +1,53 @@
 # TC Work Zone Locator - Work Log
 
-> **Last Updated:** 2026-04-19
-> **Current Version:** 1.34.1
+> **Last Updated:** 2026-04-22
+> **Current Version:** 1.35.0
+
+---
+
+## Task ID: 2026-04-22-001
+
+**Agent:** Main Agent
+**Task:** Documentation Audit & Version Sync (v1.35.0)
+
+### Work Log:
+
+- **Cloned fresh from GitHub** and ran `bun install`
+- **Version Check Found Mismatches**: Code was 1.35.0 but docs still showed 1.34.1, RC1_Test_Checklist showed 1.21.0
+- **Fixed Version Mismatches**:
+  - PROJECT_CONTEXT.md: 1.34.1 → 1.35.0 (version header + added v1.35.0 Recent Changes section)
+  - README.md: 1.34.1 → 1.35.0 (version badge + added v1.35.0 to Version History)
+  - worklog.md: 1.34.1 → 1.35.0 (version header)
+  - RC1_Test_Checklist.md: 1.21.0 → 1.35.0 (title + all version check entries)
+  - Updated "Last Updated" dates to 2026-04-22
+- **Verified Code Matches Documentation**: 17/17 feature checks passed
+  - v1.35.0: All 3 new PDFs present and valid, registry.json correct
+  - v1.34.1: ShiftSheet has 'Work site debrief', hold duration logging, True Left/Right labels
+  - v1.28.0: TrafficEventLoggerModal and all sub-components exist
+  - v1.27.0: PdfViewerModal has isLandscape orientation detection
+  - v1.26.0: Smart document routing and pageOffset support working
+  - v1.21.0: AI chat route and SettingsDrawer AI settings present
+  - v1.20.1: RefreshRateToggle component exists
+  - v1.20.0: tsconfig.json has noImplicitAny: true
+- **Quality Checks**:
+  - Version check: ✅ All 5 files match (1.35.0)
+  - Tests: ✅ 248/248 passing
+  - TypeScript: ✅ 0 errors
+  - ESLint: ✅ 0 errors, 0 warnings
+
+### Files Changed:
+
+- `PROJECT_CONTEXT.md` (version 1.35.0, added v1.35.0 Recent Changes)
+- `README.md` (version badge 1.35.0, added v1.35.0 Version History)
+- `worklog.md` (version 1.35.0, this entry)
+- `RC1_Test_Checklist.md` (version 1.35.0 in title and all check entries)
+
+### Stage Summary:
+
+- Version: 1.35.0 (fully synchronized)
+- All documented features verified present in codebase (17/17)
+- All quality gates pass (tests, typecheck, lint, version-check)
+- Ready for push to GitHub
 
 ---
 
