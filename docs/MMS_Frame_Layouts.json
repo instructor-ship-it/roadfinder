@@ -1,0 +1,259 @@
+{
+  "_meta": {
+    "title": "MMS Frame Layout Reference Data",
+    "version": "1.0.0",
+    "generated": "2026-04-22",
+    "description": "Machine-readable MMS frame layout data for Australian TGS diagrams. Use alongside mms-frame-logic.md for full rules."
+  },
+  "spacingTable": {
+    "source": "AGTTM Part 3 Table 2.2",
+    "description": "Distance 'D' by posted speed limit",
+    "values": [
+      { "postedSpeed_kmh": 110, "D_m": 200 },
+      { "postedSpeed_kmh": 100, "D_m": 175 },
+      { "postedSpeed_kmh": 80,  "D_m": 150 },
+      { "postedSpeed_kmh": 70,  "D_m": 120 },
+      { "postedSpeed_kmh": 65,  "D_m": 100 },
+      { "postedSpeed_kmh": 60,  "D_m": 80 },
+      { "postedSpeed_kmh": 55,  "D_m": 15, "note": "55 or less" }
+    ]
+  },
+  "worksiteSpeedRules": [
+    { "distanceFromLane": "> 3.0m", "worksiteSpeed_kmh": 60, "rfReference": "RF-047" },
+    { "distanceFromLane": "1.2m - 3.0m", "worksiteSpeed_kmh": 60, "rfReference": "RF-047" },
+    { "distanceFromLane": "< 1.2m", "worksiteSpeed_kmh": 40, "rfReference": "RF-046" }
+  ],
+  "speedFrameTemplate": {
+    "description": "Template for each speed reduction frame on the approach side",
+    "firstSpeedFrame": {
+      "plate1": "Speed number (regulatory)",
+      "plate2": "ROAD WORK AHEAD",
+      "plate3": "DRIVE SLOWLY",
+      "mmsCodes": ["MMS-REG-1", "MMS-ADV-11", "MMS-ADV-38"]
+    },
+    "subsequentSpeedFrame": {
+      "plate1": "Speed number (regulatory)",
+      "plate2": "Symbolic plate (ROAD WORKER SYMBOLIC for 60, SYMBOLIC CONTROL DEVICE for 40)",
+      "plate3": "REDUCE SPEED",
+      "mmsCodes": ["MMS-REG-1", "MMS-ADV-52A or MMS-ADV-10", "MMS-ADV-28"]
+    }
+  },
+  "trafficControlFrames": [
+    {
+      "position": "second-to-last approach frame",
+      "plate1": "PREPARE TO STOP",
+      "plate2": "BAT MAN SYMBOLIC",
+      "plate3": "DO NOT OVERTAKE",
+      "frameType": "triple",
+      "mmsCodes": ["MMS-ADV-82", "MMS-ADV-47", "MMS-ADV-27"]
+    },
+    {
+      "position": "last approach frame",
+      "plate1": "STOP HERE WHEN DIRECTED",
+      "plate2": null,
+      "plate3": null,
+      "frameType": "single",
+      "mmsCodes": ["MMS-ADV-82"]
+    }
+  ],
+  "departureTemplate": {
+    "description": "Applied to the reverse of the LOWEST speed frame only",
+    "plate1": "Posted speed (e.g. 110)",
+    "plate2": "END ROAD WORK",
+    "plate3": "DRIVE SAFELY",
+    "mmsCodes": ["MMS-REG-1", "MMS-TER-1", "MMS-TER-4"]
+  },
+  "conditionalRules": {
+    "postedSpeedGte100": {
+      "firstFrameSpacing": "300m between first two speed frames",
+      "aheadSignRequired": true,
+      "aheadSignDescription": "XX AHEAD advisory sign required before worksite speed sign",
+      "prepareToStopDistance": "300m from traffic control point"
+    },
+    "postedSpeedGte80": {
+      "firstFrameSpacing": "200m between first two speed frames",
+      "reduceSpeedRequired": true,
+      "endOfQueueProtectionRequired": true,
+      "endOfQueueReference": "RF-022, RF-023, RF-044"
+    },
+    "postedSpeedLt80": {
+      "reduceSpeedNotRequired": true,
+      "endOfQueueProtectionNotRequired": true
+    }
+  },
+  "frameLayouts": {
+    "RF-046": {
+      "title": "Single lane road reversible flow without EoQ",
+      "postedSpeed": "50-110 km/h",
+      "worksiteSpeed": "40 km/h",
+      "worksiteProximity": "within 1.2m",
+      "tmpPage": 312,
+      "drawingNo": "0922-01531-RF-046",
+      "approachFrames": [
+        {
+          "id": "F1",
+          "plate1": "80",
+          "plate2": "ROAD WORK AHEAD",
+          "plate3": "DRIVE SLOWLY",
+          "frameType": "triple",
+          "hasReverseSide": false,
+          "mmsCodes": ["MMS-REG-1", "MMS-ADV-11", "MMS-ADV-38"]
+        },
+        {
+          "id": "F2",
+          "plate1": "60",
+          "plate2": "ROAD WORKER SYMBOLIC",
+          "plate3": "REDUCE SPEED",
+          "frameType": "triple",
+          "hasReverseSide": false,
+          "mmsCodes": ["MMS-REG-1", "MMS-ADV-52A", "MMS-ADV-28"]
+        },
+        {
+          "id": "F3",
+          "plate1": "40",
+          "plate2": "SYMBOLIC CONTROL DEVICE",
+          "plate3": "REDUCE SPEED",
+          "frameType": "triple",
+          "hasReverseSide": true,
+          "mmsCodes": ["MMS-REG-1", "MMS-ADV-10", "MMS-ADV-28"],
+          "reverseSide": {
+            "plate1": "Posted speed (e.g. 110)",
+            "plate2": "END ROAD WORK",
+            "plate3": "DRIVE SAFELY",
+            "mmsCodes": ["MMS-REG-1", "MMS-TER-1", "MMS-TER-4"]
+          }
+        },
+        {
+          "id": "F4",
+          "plate1": "PREPARE TO STOP",
+          "plate2": "BAT MAN SYMBOLIC",
+          "plate3": "DO NOT OVERTAKE",
+          "frameType": "triple",
+          "hasReverseSide": false,
+          "mmsCodes": ["MMS-ADV-82", "MMS-ADV-47", "MMS-ADV-27"]
+        },
+        {
+          "id": "F5",
+          "plate1": "STOP HERE WHEN DIRECTED",
+          "plate2": null,
+          "plate3": null,
+          "frameType": "single",
+          "hasReverseSide": false,
+          "mmsCodes": ["MMS-ADV-82"]
+        }
+      ],
+      "spacings": {
+        "F1_to_F2": "300m (posted >=100) or 200m (posted >=80)",
+        "F2_to_F3": "200m",
+        "F3_to_F4": "D metres",
+        "F4_to_F5": "D metres (min 30m)"
+      }
+    },
+    "RF-047": {
+      "title": "Single lane road reversible flow without EoQ",
+      "postedSpeed": "70-110 km/h",
+      "worksiteSpeed": "60 km/h",
+      "worksiteProximity": "between 1.2m and 3.0m",
+      "tmpPage": 313,
+      "drawingNo": "0922-01531-RF-047",
+      "approachFrames": [
+        {
+          "id": "F1",
+          "plate1": "80",
+          "plate2": "ROAD WORK AHEAD",
+          "plate3": "DRIVE SLOWLY",
+          "frameType": "triple",
+          "hasReverseSide": false,
+          "mmsCodes": ["MMS-REG-1", "MMS-ADV-11", "MMS-ADV-38"]
+        },
+        {
+          "id": "F2",
+          "plate1": "60",
+          "plate2": "ROAD WORKER SYMBOLIC",
+          "plate3": "REDUCE SPEED",
+          "frameType": "triple",
+          "hasReverseSide": true,
+          "mmsCodes": ["MMS-REG-1", "MMS-ADV-52A", "MMS-ADV-28"],
+          "reverseSide": {
+            "plate1": "Posted speed (e.g. 110)",
+            "plate2": "END ROAD WORK",
+            "plate3": "DRIVE SAFELY",
+            "mmsCodes": ["MMS-REG-1", "MMS-TER-1", "MMS-TER-4"]
+          }
+        },
+        {
+          "id": "F3",
+          "plate1": "PREPARE TO STOP",
+          "plate2": "BAT MAN SYMBOLIC",
+          "plate3": "DO NOT OVERTAKE",
+          "frameType": "triple",
+          "hasReverseSide": false,
+          "mmsCodes": ["MMS-ADV-82", "MMS-ADV-47", "MMS-ADV-27"]
+        },
+        {
+          "id": "F4",
+          "plate1": "STOP HERE WHEN DIRECTED",
+          "plate2": null,
+          "plate3": null,
+          "frameType": "single",
+          "hasReverseSide": false,
+          "mmsCodes": ["MMS-ADV-82"]
+        }
+      ],
+      "spacings": {
+        "F1_to_F2": "300m (posted >=100) or 200m (posted >=80)",
+        "F2_to_F3": "D metres",
+        "F3_to_F4": "D metres (min 30m)"
+      }
+    }
+  },
+  "mmsCodeReference": [
+    { "code": "MMS-REG-1",  "type": "regulatory",   "description": "Speed sign (speed in red circle)" },
+    { "code": "MMS-REG-2",  "type": "regulatory",   "description": "END speed sign" },
+    { "code": "MMS-ADV-3",  "type": "advisory",     "description": "XX AHEAD advisory sign" },
+    { "code": "MMS-ADV-10", "type": "advisory",     "description": "Symbolic control device plate" },
+    { "code": "MMS-ADV-11", "type": "advisory",     "description": "Road work ahead plate" },
+    { "code": "MMS-ADV-27", "type": "advisory",     "description": "Do not overtake plate" },
+    { "code": "MMS-ADV-28", "type": "advisory",     "description": "Reduce speed plate" },
+    { "code": "MMS-ADV-38", "type": "advisory",     "description": "Drive slowly plate" },
+    { "code": "MMS-ADV-47", "type": "advisory",     "description": "Symbolic bat man / traffic controller" },
+    { "code": "MMS-ADV-48", "type": "advisory",     "description": "Symbolic portaboom" },
+    { "code": "MMS-ADV-52A","type": "advisory",     "description": "Symbolic control device (alternative)" },
+    { "code": "MMS-ADV-79", "type": "advisory",     "description": "Symbolic temporary signal" },
+    { "code": "MMS-ADV-82", "type": "advisory",     "description": "Prepare to stop / stop here when directed" },
+    { "code": "MMS-TER-1",  "type": "termination",  "description": "End road work" },
+    { "code": "MMS-TER-4",  "type": "termination",  "description": "End speed zone" }
+  ],
+  "commonMistakes": [
+    {
+      "mistake": "Splitting ROAD WORK AHEAD into two plates",
+      "correct": "One plate saying ROAD WORK AHEAD",
+      "wrong": "Two plates: ROAD WORK + AHEAD"
+    },
+    {
+      "mistake": "Separate frames for STOP HERE WHEN DIRECTED and DO NOT OVERTAKE",
+      "correct": "Combine with PREPARE TO STOP on one triple frame",
+      "wrong": "Two separate single-plate frames at same position"
+    },
+    {
+      "mistake": "Regulatory speed sign before AHEAD advisory sign",
+      "correct": "AHEAD advisory first, then regulatory speed sign",
+      "wrong": "60 regulatory, then 60 AHEAD after"
+    },
+    {
+      "mistake": "Departure messaging on multiple frames",
+      "correct": "Only on reverse of lowest speed frame",
+      "wrong": "Every frame has reverse-side messaging"
+    },
+    {
+      "mistake": "Blank plates in a frame",
+      "correct": "Match frame size to plate count",
+      "wrong": "Triple frame with only 2 plates and blank slot"
+    },
+    {
+      "mistake": "Missing REDUCE SPEED on lowest speed frame",
+      "correct": "Every speed frame has REDUCE SPEED on plate 3",
+      "wrong": "Only some speed frames have REDUCE SPEED"
+    }
+  ]
+}
