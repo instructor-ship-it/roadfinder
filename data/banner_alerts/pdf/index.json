@@ -1,11 +1,49 @@
 {
-  "version": "1.0.0",
-  "description": "MRWA Banner Alert PDF Library — Incident Investigation Documents",
+  "version": "2.0.0",
+  "description": "MRWA Banner Alert PDF Library — Workplace Safety Incident Alerts",
   "last_updated": "2026-04-24",
-  "folders": {
-    "incidents": "Active incident alert PDFs received via email",
-    "investigations": "Incident investigation reports and findings",
-    "archive": "Resolved/closed alerts moved here for historical reference"
+  "alert_types": {
+    "red": "Red Banner Alert — Serious incident / LTI / Near miss with high potential (preliminary notice)",
+    "amber": "Amber Banner Alert — Significant incident / Near miss (preliminary notice)",
+    "grey": "Grey Banner Alert — Final report with lessons learnt and recommendations",
+    "archive": "Closed/resolved alerts moved here for historical reference"
   },
-  "documents": []
+  "banner_workflow": {
+    "step_1": "Red or Amber Banner issued (preliminary notice) → goes in red/ or amber/",
+    "step_2": "ICAM investigation conducted",
+    "step_3": "Grey Banner issued (final report with lessons learnt) → goes in grey/",
+    "step_4": "Linked Red+Grey pair archived together → archive/"
+  },
+  "documents": [
+    {
+      "filename": "2026-04-15_57935_Red-Preliminary_Worker-struck-shin-sledgehammer-LTI.pdf",
+      "folder": "red",
+      "original_filename": "Red Banner Alert - Preliminary Notice - 57935- Worker struck on shin with sledgehammer, resulting in a LTI- 15 April 2026.pdf",
+      "upload_date": "2026-04-24",
+      "alert": {
+        "banner_colour": "Red",
+        "notice_type": "Preliminary Notice",
+        "eqsafe_number": 57935,
+        "date_of_incident": "2026-04-15",
+        "time_of_incident": "10:15 AM",
+        "directorates": "RMO – Great Southern Region",
+        "main_roads_or_contractor": "Main Roads",
+        "event_type": "Injury / Illness",
+        "actual_consequence": "Moderate",
+        "potential_consequence": "Moderate",
+        "short_description": "Maintenance worker struck his shin with a sledgehammer, resulting in an LTI",
+        "road": null,
+        "slk": null,
+        "work_activity": "Removing fallen tree branch from side drain at culvert face",
+        "injury_type": "Shin strike by sledgehammer",
+        "is_lti": true,
+        "investigation_type": "ICAM",
+        "investigation_status": "Commenced",
+        "distribution_reference": "D26#479158",
+        "distribution_date": "2026-04-17"
+      },
+      "linked_grey_banner": null,
+      "status": "active"
+    }
+  ]
 }
