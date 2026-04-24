@@ -1,0 +1,298 @@
+{
+  "incidents": {
+    "layer_id": 0,
+    "description": "MRWA Incidents",
+    "fields": [
+      {
+        "name": "OBJECTID",
+        "type": "esriFieldTypeOID",
+        "alias": "OBJECTID"
+      },
+      {
+        "name": "Id",
+        "type": "esriFieldTypeInteger",
+        "alias": "Id"
+      },
+      {
+        "name": "Location",
+        "type": "esriFieldTypeString",
+        "alias": "Location"
+      },
+      {
+        "name": "TrafficImpact",
+        "type": "esriFieldTypeString",
+        "alias": "TrafficImpact"
+      },
+      {
+        "name": "IncidentType",
+        "type": "esriFieldTypeString",
+        "alias": "IncidentType"
+      },
+      {
+        "name": "ClosureType",
+        "type": "esriFieldTypeString",
+        "alias": "ClosureType"
+      },
+      {
+        "name": "publishExternally",
+        "type": "esriFieldTypeString",
+        "alias": "publishExternally"
+      },
+      {
+        "name": "publishToPlaybook",
+        "type": "esriFieldTypeString",
+        "alias": "publishToPlaybook"
+      },
+      {
+        "name": "TrafficCondition",
+        "type": "esriFieldTypeString",
+        "alias": "TrafficCondition"
+      },
+      {
+        "name": "EntryDate",
+        "type": "esriFieldTypeString",
+        "alias": "EntryDate"
+      },
+      {
+        "name": "UpdateDateTime",
+        "type": "esriFieldTypeString",
+        "alias": "UpdateDateTime"
+      },
+      {
+        "name": "Road",
+        "type": "esriFieldTypeString",
+        "alias": "Road"
+      },
+      {
+        "name": "Region",
+        "type": "esriFieldTypeString",
+        "alias": "Region"
+      },
+      {
+        "name": "IncidentLevel",
+        "type": "esriFieldTypeString",
+        "alias": "IncidentLevel"
+      },
+      {
+        "name": "Suburb",
+        "type": "esriFieldTypeString",
+        "alias": "Suburb"
+      },
+      {
+        "name": "SHAPE",
+        "type": "esriFieldTypeGeometry",
+        "alias": "SHAPE"
+      }
+    ],
+    "arcgis_url": "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/TravelInformation/MapServer/0",
+    "sample_record": {
+      "OBJECTID": 1597111,
+      "Id": 147373,
+      "Location": "Great Northern Hwy, at Guda Guda Community - Road Surface Damage",
+      "TrafficImpact": "Reduced to Single Lane Traffic Only. Temporary Traffic Signals in Place. Exercise Extreme Caution. Speed Restrictions in Place.",
+      "IncidentType": "Pothole / Road Surface Damage",
+      "ClosureType": "",
+      "publishExternally": "Yes",
+      "publishToPlaybook": "Yes",
+      "TrafficCondition": "Speed Restrictions Apply",
+      "EntryDate": "24/04/2026 05:50:19",
+      "UpdateDateTime": "24/04/2026 05:50:16",
+      "Road": "Great Northern Hwy",
+      "Region": "Kimberley",
+      "IncidentLevel": "Level 1",
+      "Suburb": "Shire of Wyndham-East Kimberley"
+    }
+  },
+  "road_works": {
+    "layer_id": 1,
+    "description": "MRWA Road Works",
+    "fields": [
+      {
+        "name": "OBJECTID",
+        "type": "esriFieldTypeOID",
+        "alias": "OBJECTID"
+      },
+      {
+        "name": "Id",
+        "type": "esriFieldTypeInteger",
+        "alias": "Id"
+      },
+      {
+        "name": "DateStarted",
+        "type": "esriFieldTypeString",
+        "alias": "DateStarted"
+      },
+      {
+        "name": "EstimatedCompletionDate",
+        "type": "esriFieldTypeString",
+        "alias": "EstimatedCompletionDate"
+      },
+      {
+        "name": "WorkStatus",
+        "type": "esriFieldTypeString",
+        "alias": "WorkStatus"
+      },
+      {
+        "name": "WorkType",
+        "type": "esriFieldTypeString",
+        "alias": "WorkType"
+      },
+      {
+        "name": "Description",
+        "type": "esriFieldTypeString",
+        "alias": "Description"
+      },
+      {
+        "name": "TrafficImpact",
+        "type": "esriFieldTypeString",
+        "alias": "TrafficImpact"
+      },
+      {
+        "name": "Road",
+        "type": "esriFieldTypeString",
+        "alias": "Road"
+      },
+      {
+        "name": "Suburb",
+        "type": "esriFieldTypeString",
+        "alias": "Suburb"
+      },
+      {
+        "name": "Region",
+        "type": "esriFieldTypeString",
+        "alias": "Region"
+      },
+      {
+        "name": "EntryDate",
+        "type": "esriFieldTypeString",
+        "alias": "EntryDate"
+      },
+      {
+        "name": "SHAPE",
+        "type": "esriFieldTypeGeometry",
+        "alias": "SHAPE"
+      }
+    ],
+    "arcgis_url": "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/TravelInformation/MapServer/1",
+    "sample_record": {
+      "OBJECTID": 228690,
+      "Id": 69769,
+      "DateStarted": "01/04/2023 00:00:00",
+      "EstimatedCompletionDate": "30/04/2038 00:00:00",
+      "WorkStatus": null,
+      "WorkType": "Maintenance",
+      "Description": "Ashcroft Rd, 3 kms south of Morts Rd intersection, Boddington - Long term Temporary Closure - Mining",
+      "TrafficImpact": "Long term Road Closure - April 2023 to April 2038",
+      "Road": "LOCAL ROAD",
+      "Suburb": "Boddington",
+      "Region": "South West",
+      "EntryDate": "03/04/2023 07:08:22"
+    }
+  },
+  "events_management": {
+    "layer_id": 2,
+    "description": "MRWA Events Management",
+    "fields": [
+      {
+        "name": "OBJECTID",
+        "type": "esriFieldTypeOID",
+        "alias": "OBJECTID"
+      },
+      {
+        "name": "Id",
+        "type": "esriFieldTypeSmallInteger",
+        "alias": "Id"
+      },
+      {
+        "name": "EventDescription",
+        "type": "esriFieldTypeString",
+        "alias": "EventDescription"
+      },
+      {
+        "name": "Road",
+        "type": "esriFieldTypeString",
+        "alias": "Road"
+      },
+      {
+        "name": "LocalRoadName",
+        "type": "esriFieldTypeString",
+        "alias": "LocalRoadName"
+      },
+      {
+        "name": "DateTimeStart",
+        "type": "esriFieldTypeString",
+        "alias": "DateTimeStart"
+      },
+      {
+        "name": "DateTimeEnd",
+        "type": "esriFieldTypeString",
+        "alias": "DateTimeEnd"
+      },
+      {
+        "name": "EventType",
+        "type": "esriFieldTypeString",
+        "alias": "EventType"
+      },
+      {
+        "name": "EventName",
+        "type": "esriFieldTypeString",
+        "alias": "EventName"
+      },
+      {
+        "name": "Suburb",
+        "type": "esriFieldTypeString",
+        "alias": "Suburb"
+      },
+      {
+        "name": "TrafficImpact",
+        "type": "esriFieldTypeString",
+        "alias": "TrafficImpact"
+      },
+      {
+        "name": "EntryDate",
+        "type": "esriFieldTypeString",
+        "alias": "EntryDate"
+      },
+      {
+        "name": "Region",
+        "type": "esriFieldTypeString",
+        "alias": "Region"
+      },
+      {
+        "name": "SHAPE",
+        "type": "esriFieldTypeGeometry",
+        "alias": "SHAPE"
+      }
+    ],
+    "arcgis_url": "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/TravelInformation/MapServer/2",
+    "sample_record": {
+      "OBJECTID": 297322,
+      "Id": 7151,
+      "EventDescription": "ROAD CLOSED - Donnybrook Boyup Brook Rd near Inglis St, Boyup Brook - Anzac Day Dawn Service - Detour ",
+      "Road": "Donnybrook Boyup Brook Rd",
+      "LocalRoadName": "",
+      "DateTimeStart": "25/04/2026 05:45:00",
+      "DateTimeEnd": "25/04/2026 06:45:00",
+      "EventType": "Public Celebration",
+      "EventName": "Anzac Day Dawn Service",
+      "Suburb": "Boyup Brook",
+      "TrafficImpact": "",
+      "EntryDate": "25/02/2026 13:58:47",
+      "Region": "South West"
+    }
+  },
+  "road_closures": {
+    "layer_id": 3,
+    "description": "MRWA Road Closures",
+    "fields": [],
+    "arcgis_url": "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/TravelInformation/MapServer/3",
+    "sample_record": null
+  },
+  "detours": {
+    "layer_id": 4,
+    "description": "MRWA Detours",
+    "fields": [],
+    "arcgis_url": "https://gisservices.mainroads.wa.gov.au/arcgis/rest/services/TravelInformation/MapServer/4",
+    "sample_record": null
+  }
+}
