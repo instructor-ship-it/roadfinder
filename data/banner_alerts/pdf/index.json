@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "description": "MRWA Banner Alert PDF Library — Incident Investigation Documents",
+  "last_updated": "2026-04-24",
+  "folders": {
+    "incidents": "Active incident alert PDFs received via email",
+    "investigations": "Incident investigation reports and findings",
+    "archive": "Resolved/closed alerts moved here for historical reference"
+  },
+  "documents": []
+}
