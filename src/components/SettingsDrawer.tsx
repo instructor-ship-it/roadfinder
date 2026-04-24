@@ -396,6 +396,8 @@ export function SettingsDrawer({
             {expanded === 'library' && (
               <div className="px-2 pb-3 space-y-1">
                 <MenuItem icon="📚" label="Document Registers" href="/library" />
+                <MenuItem icon="🚨" label="MRWA Alerts" href="/library/alerts" badge="HSE" />
+                <MenuItem icon="🏗️" label="TGS / MMS Frames" href="/library/tgs" />
                 <MenuItem icon="🤖" label="AI Q&A Assistant" href="/qa" badge="AI" />
                 <MenuItem icon="📖" label="Expanded Library" href="/library/expanded" />
                 <MenuItem icon="📋" label="TMP Documents" href="/library/tmp" />
