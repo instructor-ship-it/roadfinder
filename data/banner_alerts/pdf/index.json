@@ -44,6 +44,135 @@
       },
       "linked_grey_banner": null,
       "status": "active"
+    },
+    {
+      "filename": "2026-03-04_57148_Grey-Final_Shoulder-injury-pull-start-pressure-washer-LTI.pdf",
+      "folder": "grey",
+      "original_filename": "Grey Banner Alert - Final Notice - 57148 - Shoulder injury resulting in LTI - 4 March 2026.pdf",
+      "upload_date": "2026-04-24",
+      "alert": {
+        "banner_colour": "Grey",
+        "notice_type": "Final Notice",
+        "eqsafe_number": 57148,
+        "date_of_incident": "2026-03-04",
+        "time_of_incident": "12:45 PM",
+        "directorates": "GSR (Great Southern Region)",
+        "main_roads_or_contractor": "Main Roads",
+        "event_type": "Injury / Illness",
+        "actual_consequence": "Moderate",
+        "potential_consequence": "Moderate",
+        "short_description": "Shoulder injury resulting in LTI",
+        "road": null,
+        "slk": null,
+        "work_activity": "Pull-starting pressure water pump in a gravel pit",
+        "injury_type": "Right shoulder and neck — popping sound and pain during pull-start",
+        "is_lti": true,
+        "investigation_type": "ICAM Lite",
+        "investigation_status": "Completed",
+        "contributing_factors": [
+          "Pressure water pump transported with fuel line not isolated, causing hydraulic lock",
+          "Pressure not released from wand trigger before pull starts, contributing to hydraulic lock",
+          "Pull cord on pressure washer pump was short, preventing full arm extension"
+        ],
+        "corrective_actions": [
+          "Replacement of pressure washer pump pull cord with one of suitable length",
+          "Reaffirmed requirement to release pressure with wand trigger before pull cord starts",
+          "Reaffirmed to isolate fuel line before transporting"
+        ],
+        "distribution_reference": "D26#468194",
+        "distribution_date": "2026-04-15"
+      },
+      "linked_red_banner": null,
+      "status": "closed"
+    },
+    {
+      "filename": "2026-03-23_57539_Grey-Final_Worker-tripped-parking-bay-wheel-stop-LTI.pdf",
+      "folder": "grey",
+      "original_filename": "Grey Banner Alert - Final Notice - 57539 - Worker tripped over parking bay wheel stop bar - 23 March 2026.pdf",
+      "upload_date": "2026-04-24",
+      "alert": {
+        "banner_colour": "Grey",
+        "notice_type": "Final Notice",
+        "eqsafe_number": 57539,
+        "date_of_incident": "2026-03-23",
+        "time_of_incident": "11:40 AM",
+        "directorates": "RMO – Goldfields-Esperance Region",
+        "main_roads_or_contractor": "Main Roads",
+        "event_type": "Lost Time Injury",
+        "actual_consequence": "Moderate",
+        "potential_consequence": "Moderate",
+        "short_description": "Worker tripped over parking bay wheel stop bar",
+        "road": null,
+        "slk": null,
+        "work_activity": "Preparing to depart office for unexpected delivery of supplies",
+        "injury_type": "Overstretched left leg after tripping over wheel stop bar, pulled muscle",
+        "is_lti": true,
+        "investigation_type": null,
+        "investigation_status": "Completed",
+        "contributing_factors": [
+          "No signage specifically identifying tripping hazard from wheel stop bars",
+          "Worker was unaware of the hazard when walking back to the office",
+          "Worker believed foot had cleared the wheel stop bar — different footwear would not have prevented incident",
+          "Worker was requested at short notice to collect and deliver supplies",
+          "Colour marking on wheel stop bar had faded, reducing effectiveness"
+        ],
+        "corrective_actions": [
+          "Revisit Slips, Trips & Falls PowerPoint slides at next Office Toolbox",
+          "Review and replace signage and refresh colour markings on all parking bay wheel stop bars",
+          "Install clear and visible signage identifying tripping hazard within parking bays"
+        ],
+        "additional_learnings": [
+          "Workers allocated tasks outside normal activities on short notice must assess hazards and risks before proceeding",
+          "Workers attending worksite on network must wear appropriate PPE including compliant footwear and hi-vis unless remaining in vehicle"
+        ],
+        "distribution_reference": "D26#447849",
+        "distribution_date": "2026-04-15"
+      },
+      "linked_red_banner": null,
+      "status": "closed"
+    },
+    {
+      "filename": "2026-02-17_56820_Grey-Final_Concrete-saw-strikes-worker-face.pdf",
+      "folder": "grey",
+      "original_filename": "Grey Banner Alert - Final Notice - 56820 - Concrete Saw Strikes Worker in Face - 17 February 2026.pdf",
+      "upload_date": "2026-04-24",
+      "alert": {
+        "banner_colour": "Grey",
+        "notice_type": "Final Notice",
+        "eqsafe_number": 56820,
+        "date_of_incident": "2026-02-17",
+        "time_of_incident": "10:45 AM",
+        "directorates": "RMO, Wheatbelt",
+        "main_roads_or_contractor": "Contractor",
+        "event_type": "Injury / Illness",
+        "actual_consequence": "Moderate",
+        "potential_consequence": "Moderate",
+        "short_description": "Quick-Cut Saw Strikes Worker in Face",
+        "road": null,
+        "slk": null,
+        "work_activity": "Cutting 450mm RCP to length at Road Train Assembly Area in Northam",
+        "injury_type": "Laceration from nose to lower lip on right side of face from saw blade contact",
+        "is_lti": false,
+        "investigation_type": null,
+        "investigation_status": "Completed",
+        "contributing_factors": [
+          "SWMS did not contain information on correct placement of RCP to prevent pinching the blade",
+          "Work instruction not updated on site to include hazards and risks of cutting RCP",
+          "RCP placed on 100mm of residual sand — flange supported one end, sand the other, creating space under the cut point",
+          "Contractor SWMS did not cover placement of RCP on suitable surface or in secure position",
+          "Project specific and regional risk register did not contain controls for cutting RCPs at ground level",
+          "Prestart meeting form was used for multiple days (11th-17th Feb) instead of one form per day",
+          "Project Manager required to take on Supervisor responsibilities due to resourcing issues"
+        ],
+        "corrective_actions": [
+          "Review and update SWMS relating to RCP cutting using quick-cut saws to ensure material is secured to prevent pipe pinching the blade",
+          "Update regional project risk registers to include hazards and controls associated with quick-cut saws and RCP securing methods"
+        ],
+        "distribution_reference": "D26#443919",
+        "distribution_date": "2026-02-17"
+      },
+      "linked_red_banner": null,
+      "status": "closed"
     }
   ]
 }
