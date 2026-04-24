@@ -1,18 +1,18 @@
 {
   "version": "2.0.0",
-  "description": "MRWA Banner Alert PDF Library — Workplace Safety Incident Alerts",
+  "description": "MRWA Banner Alert PDF Library \u2014 Workplace Safety Incident Alerts",
   "last_updated": "2026-04-24",
   "alert_types": {
-    "red": "Red Banner Alert — Serious incident / LTI / Near miss with high potential (preliminary notice)",
-    "amber": "Amber Banner Alert — Significant incident / Near miss (preliminary notice)",
-    "grey": "Grey Banner Alert — Final report with lessons learnt and recommendations",
+    "red": "Red Banner Alert \u2014 Serious incident / LTI / Near miss with high potential (preliminary notice)",
+    "amber": "Amber Banner Alert \u2014 Significant incident / Near miss (preliminary notice)",
+    "grey": "Grey Banner Alert \u2014 Final report with lessons learnt and recommendations",
     "archive": "Closed/resolved alerts moved here for historical reference"
   },
   "banner_workflow": {
-    "step_1": "Red or Amber Banner issued (preliminary notice) → goes in red/ or amber/",
+    "step_1": "Red or Amber Banner issued (preliminary notice) \u2192 goes in red/ or amber/",
     "step_2": "ICAM investigation conducted",
-    "step_3": "Grey Banner issued (final report with lessons learnt) → goes in grey/",
-    "step_4": "Linked Red+Grey pair archived together → archive/"
+    "step_3": "Grey Banner issued (final report with lessons learnt) \u2192 goes in grey/",
+    "step_4": "Linked Red+Grey pair archived together \u2192 archive/"
   },
   "documents": [
     {
@@ -26,7 +26,7 @@
         "eqsafe_number": 57935,
         "date_of_incident": "2026-04-15",
         "time_of_incident": "10:15 AM",
-        "directorates": "RMO – Great Southern Region",
+        "directorates": "RMO \u2013 Great Southern Region",
         "main_roads_or_contractor": "Main Roads",
         "event_type": "Injury / Illness",
         "actual_consequence": "Moderate",
@@ -65,7 +65,7 @@
         "road": null,
         "slk": null,
         "work_activity": "Pull-starting pressure water pump in a gravel pit",
-        "injury_type": "Right shoulder and neck — popping sound and pain during pull-start",
+        "injury_type": "Right shoulder and neck \u2014 popping sound and pain during pull-start",
         "is_lti": true,
         "investigation_type": "ICAM Lite",
         "investigation_status": "Completed",
@@ -96,7 +96,7 @@
         "eqsafe_number": 57539,
         "date_of_incident": "2026-03-23",
         "time_of_incident": "11:40 AM",
-        "directorates": "RMO – Goldfields-Esperance Region",
+        "directorates": "RMO \u2013 Goldfields-Esperance Region",
         "main_roads_or_contractor": "Main Roads",
         "event_type": "Lost Time Injury",
         "actual_consequence": "Moderate",
@@ -112,7 +112,7 @@
         "contributing_factors": [
           "No signage specifically identifying tripping hazard from wheel stop bars",
           "Worker was unaware of the hazard when walking back to the office",
-          "Worker believed foot had cleared the wheel stop bar — different footwear would not have prevented incident",
+          "Worker believed foot had cleared the wheel stop bar \u2014 different footwear would not have prevented incident",
           "Worker was requested at short notice to collect and deliver supplies",
           "Colour marking on wheel stop bar had faded, reducing effectiveness"
         ],
@@ -158,7 +158,7 @@
         "contributing_factors": [
           "SWMS did not contain information on correct placement of RCP to prevent pinching the blade",
           "Work instruction not updated on site to include hazards and risks of cutting RCP",
-          "RCP placed on 100mm of residual sand — flange supported one end, sand the other, creating space under the cut point",
+          "RCP placed on 100mm of residual sand \u2014 flange supported one end, sand the other, creating space under the cut point",
           "Contractor SWMS did not cover placement of RCP on suitable surface or in secure position",
           "Project specific and regional risk register did not contain controls for cutting RCPs at ground level",
           "Prestart meeting form was used for multiple days (11th-17th Feb) instead of one form per day",
@@ -173,6 +173,121 @@
       },
       "linked_red_banner": null,
       "status": "closed"
+    },
+    {
+      "filename": "2026-04-07_57801_Red-Preliminary_Chain-snaps-recoils-through-windscreen-recovery.pdf",
+      "folder": "red",
+      "original_filename": "Red Banner Alert - Preliminary Notice - 57801  - Chain used for recovery of maintenance truck, snaps and recoils, smashing through mesh guard and .pdf",
+      "upload_date": "2026-04-24",
+      "alert": {
+        "banner_colour": "Red",
+        "notice_type": "Preliminary Notice",
+        "eqsafe_number": 57801,
+        "date_of_incident": "2026-04-07",
+        "time_of_incident": "12:00 PM",
+        "directorates": "RMO \u2013 Kimberley",
+        "main_roads_or_contractor": "Main Roads",
+        "event_type": "Procedure Breach",
+        "actual_consequence": "Moderate",
+        "potential_consequence": "Major",
+        "short_description": "Chain used for recovery of maintenance truck, snaps and recoils, smashing through mesh guard and windscreen",
+        "road": "Great Northern Hwy (approx 100km west of Kununurra)",
+        "slk": null,
+        "work_activity": "Recovery of bogged flocon truck using chain attached to posi-track",
+        "injury_type": "No injuries \u2014 chain struck unoccupied vehicle",
+        "is_lti": false,
+        "critical_risk_profile": "Mobile Plant",
+        "investigation_type": "ICAM",
+        "investigation_status": "Commenced",
+        "worksafe_notified": true,
+        "key_details": [
+          "Crew used 10mm chain (lashing chain from posi-track) as recovery gear \u2014 no proper recovery equipment available",
+          "Chain attached between posi-track (6m away) and bogged flocon truck",
+          "Chain failed under load, snapped and recoiled through mesh windscreen guard and windscreen",
+          "No workers on foot at time \u2014 potential for serious injury or fatality had workers been standing nearby",
+          "Recovery abandoned, heavy tow mobilised from Kununurra"
+        ],
+        "distribution_reference": "D26#437674",
+        "distribution_date": "2026-04-08"
+      },
+      "linked_grey_banner": null,
+      "status": "active"
+    },
+    {
+      "filename": "2026-04-11_57872_Red-Preliminary_TC-shoulder-injury-slipping-on-batter.pdf",
+      "folder": "red",
+      "original_filename": "Red Banner Alert - Preliminary Notice - 57872 - TC sustains shoulder injury slipping on roadside batter - 11 April 2026.pdf",
+      "upload_date": "2026-04-24",
+      "alert": {
+        "banner_colour": "Red",
+        "notice_type": "Preliminary Notice",
+        "eqsafe_number": 57872,
+        "date_of_incident": "2026-04-11",
+        "time_of_incident": "6:15 AM",
+        "directorates": "RMO \u2013 Mid West \u2013 Gascoyne Region",
+        "main_roads_or_contractor": "Contractor",
+        "event_type": "Injury",
+        "actual_consequence": "Moderate",
+        "potential_consequence": "Moderate",
+        "short_description": "Traffic Controller sustains shoulder injury slipping on roadside batter",
+        "road": null,
+        "slk": null,
+        "work_activity": "Setting up traffic management signage for road widening project",
+        "injury_type": "Left shoulder \u2014 slipped on soft batter, grabbed door and roll bar, felt pain",
+        "is_lti": true,
+        "investigation_type": "ICAM",
+        "investigation_status": "Commenced",
+        "key_details": [
+          "TC exited vehicle on passenger side, feet slipped on soft batter at road shoulder",
+          "TC grabbed door with right hand and roll bar with left hand to right themself",
+          "Pain in left shoulder immediately \u2014 completed site set up but unable to continue",
+          "X-rays showed no bone damage, ultrasound required for further assessment",
+          "TC deemed unfit for work for 2 weeks \u2014 LTI"
+        ],
+        "distribution_reference": "D26#457363",
+        "distribution_date": "2026-04-11"
+      },
+      "linked_grey_banner": null,
+      "status": "active"
+    },
+    {
+      "filename": "2026-04-15_57937_Red-Preliminary_Truck-rollover-wet-surface.pdf",
+      "folder": "red",
+      "original_filename": "Red Banner Alert - Preliminary Notice - 57937 - Truck rollover - 15 April 2026.pdf",
+      "upload_date": "2026-04-24",
+      "alert": {
+        "banner_colour": "Red",
+        "notice_type": "Preliminary Notice",
+        "eqsafe_number": 57937,
+        "date_of_incident": "2026-04-15",
+        "time_of_incident": "8:30 AM",
+        "directorates": "RMO \u2013 Goldfields-Esperance Region",
+        "main_roads_or_contractor": "Contractor",
+        "event_type": "Damage / Loss",
+        "actual_consequence": "Moderate",
+        "potential_consequence": "Major",
+        "short_description": "Truck rollover",
+        "road": "South Coast Highway",
+        "slk": null,
+        "work_activity": "Spreader truck transporting aggregate and towing float with multi tyre roller to pavement repair location",
+        "injury_type": "No injuries \u2014 driver confirmed no injuries after health check",
+        "is_lti": false,
+        "critical_risk_profile": "Vehicles and Driving",
+        "investigation_type": "ICAM",
+        "investigation_status": "Commenced",
+        "key_details": [
+          "Spreader truck westbound on South Coast Hwy with partial aggregate load, towing float with roller",
+          "Truck came around corner at ~80km/h on slick/wet surface",
+          "Lost traction, truck and trailer slid sideways, truck flipped onto its side",
+          "Roller thrown from float",
+          "Drug and alcohol testing completed \u2014 negative",
+          "Driver taken for health check \u2014 confirmed no injuries"
+        ],
+        "distribution_reference": "D26#473429",
+        "distribution_date": "2026-04-15"
+      },
+      "linked_grey_banner": null,
+      "status": "active"
     }
   ]
 }
