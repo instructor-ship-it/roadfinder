@@ -379,6 +379,7 @@ export function SettingsDrawer({
                 <MenuItem icon="⏱️" label="Cycle Timer" href="/cycle-timer" />
                 <MenuItem icon="👥" label="Contact Directory" href="/contacts" />
                 <MenuItem icon="🤖" label="AI Q&A Assistant" href="/qa" badge="AI" />
+                <MenuItem icon="📋" label="SWMS Builder" href="/swms" badge="NEW" />
                 {onOpenTrafficEventLogger && (
                   <MenuItem icon="📝" label="Event Logger" onClick={onOpenTrafficEventLogger} />
                 )}

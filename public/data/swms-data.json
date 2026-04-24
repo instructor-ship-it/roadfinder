@@ -1,0 +1,385 @@
+{
+  "version": "1.0",
+  "description": "SWMS Builder reference data — combined from MRWA Banner Alerts, TMP Generic Risk Register, and TMP Safety Plan",
+  "last_updated": "2026-04-24",
+  "work_activities": [
+    {
+      "id": "sign-install",
+      "label": "Sign Installation & Removal",
+      "description": "Installing and removing temporary traffic management signs and devices on roadways",
+      "keywords": ["sign", "installation", "removal", "dismantling", "temporary", "devices"],
+      "tmpRiskRefs": ["3.2.9"],
+      "alertActivityMatches": ["Traffic Management", "Sign Installation", "TM Setup"]
+    },
+    {
+      "id": "lane-closure",
+      "label": "Lane Closure Setup",
+      "description": "Closing traffic lanes and implementing lane closure TGS for work zones",
+      "keywords": ["lane closure", "lane", "closure", "traffic", "lane capacity"],
+      "tmpRiskRefs": ["3.2.10"],
+      "alertActivityMatches": ["Lane Closure", "Road Closure", "Traffic Management"]
+    },
+    {
+      "id": "mobile-convoy",
+      "label": "Mobile Convoy Operations",
+      "description": "Class 2 and Class 3 mobile convoy operations for moving work zones",
+      "keywords": ["mobile", "convoy", "class 2", "class 3", "moving work"],
+      "tmpRiskRefs": [],
+      "alertActivityMatches": ["Mobile Works", "Mobile Convoy"]
+    },
+    {
+      "id": "traffic-control",
+      "label": "Traffic Control (Stop/Slow)",
+      "description": "Directing traffic using stop/slow bats at traffic control points",
+      "keywords": ["traffic control", "stop slow", "controller", "TC", "directing traffic"],
+      "tmpRiskRefs": ["3.2.2", "3.2.3"],
+      "alertActivityMatches": ["Traffic Control", "TC Operations"]
+    },
+    {
+      "id": "night-works",
+      "label": "Night Works",
+      "description": "All traffic management activities conducted during night time hours with artificial illumination",
+      "keywords": ["night", "night works", "illumination", "artificial lighting", "after dark"],
+      "tmpRiskRefs": ["3.2.2", "3.2.3", "3.2.4"],
+      "alertActivityMatches": ["Night Works", "Night Operations"]
+    },
+    {
+      "id": "road-maintenance",
+      "label": "Road Maintenance (General)",
+      "description": "General road maintenance activities including patching, grading, drainage, shoulder repairs",
+      "keywords": ["maintenance", "road", "patching", "grading", "drainage", "shoulder", "repair"],
+      "tmpRiskRefs": ["3.2.5", "3.2.7", "3.2.8"],
+      "alertActivityMatches": ["Road Maintenance", "Patching", "Drainage", "Shoulder Repair"]
+    },
+    {
+      "id": "plant-operations",
+      "label": "Plant & Heavy Equipment Operations",
+      "description": "Operating plant and heavy equipment near live traffic including excavators, graders, rollers, trucks",
+      "keywords": ["plant", "heavy equipment", "excavator", "grader", "roller", "truck", "machinery"],
+      "tmpRiskRefs": ["3.2.3"],
+      "alertActivityMatches": ["Plant Operations", "Heavy Equipment", "Truck", "Grader"]
+    },
+    {
+      "id": "excavation",
+      "label": "Excavation Near Live Traffic",
+      "description": "Trenching, potholing, or excavation works adjacent to live traffic lanes",
+      "keywords": ["excavation", "trench", "pothole", "dig", "underground", "above ground hazard"],
+      "tmpRiskRefs": ["3.2.7"],
+      "alertActivityMatches": ["Excavation", "Trenching", "Underground Works"]
+    },
+    {
+      "id": "emergency-works",
+      "label": "Emergency Works Response",
+      "description": "Urgent traffic management response for incident scenes, road hazards, or infrastructure failure",
+      "keywords": ["emergency", "urgent", "incident", "hazard", "response", "crash"],
+      "tmpRiskRefs": ["3.2.5"],
+      "alertActivityMatches": ["Emergency", "Incident Response", "Urgent Works"]
+    },
+    {
+      "id": "aftercare",
+      "label": "Aftercare Arrangements",
+      "description": "Ongoing traffic management after works completion including signage maintenance and monitoring",
+      "keywords": ["aftercare", "post-work", "monitoring", "ongoing", "signage maintenance"],
+      "tmpRiskRefs": ["3.2.8"],
+      "alertActivityMatches": ["Aftercare", "Post-Work Monitoring"]
+    },
+    {
+      "id": "lateral-shift",
+      "label": "Lateral Shift / Road Realignment",
+      "description": "Shifting traffic laterally to create a work zone, including crossover setups",
+      "keywords": ["lateral shift", "crossover", "realignment", "shift traffic"],
+      "tmpRiskRefs": ["3.2.2"],
+      "alertActivityMatches": ["Lateral Shift", "Crossover"]
+    },
+    {
+      "id": "worker-ingress",
+      "label": "Vehicle & Personnel Ingress/Egress",
+      "description": "Entry and exit of work vehicles, plant, and personnel to/from the worksite from live traffic",
+      "keywords": ["ingress", "egress", "entry", "exit", "access", "work vehicle"],
+      "tmpRiskRefs": ["3.2.3"],
+      "alertActivityMatches": ["Vehicle Access", "Site Entry"]
+    }
+  ],
+  "tmp_risk_register": [
+    {
+      "id": "3.2.1.1",
+      "category": "Temporary Traffic Management Specifications",
+      "hazard": "Temporary Traffic Management setups specified and recommended for use by an unauthorised or not adequately qualified person causing confusion for Traffic Management Personnel resulting in an exposure to unnecessary risk environments.",
+      "consequence": "Serious injury or fatality to Traffic Management Personnel.",
+      "preTreatmentRisk": { "likelihood": "B", "consequence": 4, "rating": "V16" },
+      "controls": "The Traffic Management Assessor or Project Delivery Supervisor must be adequately qualified to specify the proposed drawings and training provided where necessary. Review and endorsement for the proposed Temporary Traffic Management setups must be provided at the planning stage to ensure no significant impacts will occur. Section 7 of this TMP outlines the recommended implementation qualification and experience when specifying each TGS. Refer to section 4.2.2 of the MRWA CoP for selection qualifications.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.1 Item 1"
+    },
+    {
+      "id": "3.2.1.2",
+      "category": "Temporary Traffic Management Specifications",
+      "hazard": "Temporary Traffic Management setups specified not appropriate for the traffic, speed or environment conditions causing confusion for motorists resulting in an exposure to unnecessary risk environments.",
+      "consequence": "Serious injury or fatality to road users.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "The Temporary Traffic Management Assessor or Project Delivery Supervisor must be adequately qualified to specify the proposed drawings and training provided where necessary. Review and endorsement for the proposed Temporary Traffic Management setups must be provided at the planning stage. Traffic Management Personnel may adjust or change the site where a significant safety hazard is identified with appropriate approval and risk assessment. Refer to section 4.2.2 of the MRWA CoP for selection qualifications.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.1 Item 2"
+    },
+    {
+      "id": "3.2.1.3",
+      "category": "Temporary Traffic Management Specifications",
+      "hazard": "Proposed generic drawings do not provide a signs and devices list for Traffic Management Implementation causing incorrect/insufficient signs and devices on site resulting in an exposure to unnecessary risks.",
+      "consequence": "Serious injury or fatality to workers or Traffic Control as a result of insufficient advanced warning of approaching hazards.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "The proposed Traffic Guidance Scheme and any further Traffic Management Advice shows all the required signs and devices necessary to implement the proposed setups. Traffic Management Personnel and/or workers must review the advice prior to leaving yard to ensure that all required signs and devices are included on vehicles. Where insufficient signs and devices are provided on site, the works may be cancelled and rescheduled.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.1 Item 3"
+    },
+    {
+      "id": "3.2.2.1",
+      "category": "Environmental Conditions and Impacts",
+      "hazard": "Poor weather conditions on site decreasing visibility for road users to the proposed Traffic Management measures causing approaching vehicles to collide with worksite and/or workers resulting in serious injury or fatality.",
+      "consequence": "Serious injury or fatality to workers and Traffic Control personnel in worksite.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "Traffic Management Assessor or Project Delivery Supervisor to determine an appropriate window of clear weather to execute the proposed works. Where signs and devices are implemented during poor weather conditions periodic site checks must be conducted. Placement of additional repeater signage or 'Slippery when wet' signage if required and sign spacing may be increased by 25%. Any additional signs or changes on site must be recorded within the daily diary.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.2 Item 1"
+    },
+    {
+      "id": "3.2.2.2",
+      "category": "Environmental Conditions and Impacts",
+      "hazard": "Works conducted during night time hours causing poor visibility of Traffic Management Personnel and workers due to artificial illumination resulting in serious injury or fatality.",
+      "consequence": "Serious injury or fatality to workers and Traffic Control personnel.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "Traffic Management Personnel must be adjacent to workers on site and vigilant at all times of approaching vehicles or hazards to the worksite. All Traffic Management Personnel and workers must wear high visibility clothing with retro-reflective strips to their vests/shirts and trousers. Traffic Management Personnel operating during night time hours must use a night wand to direct traffic.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.2 Item 2"
+    },
+    {
+      "id": "3.2.2.3",
+      "category": "Environmental Conditions and Impacts",
+      "hazard": "Traffic control points during night time hours having poor visibility due to artificial illumination resulting in serious injury or fatality.",
+      "consequence": "Serious injuries to Traffic Controllers operating at Traffic Control points.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "All Traffic Control points during night time hours must be at existing street lighting or portable lighting towers must be installed. Traffic Controllers operating during night time hours must use night wands to direct traffic. Traffic Controllers must always be aware of their proposed escape routes and be aware of incoming vehicles and hazards.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.2 Item 3"
+    },
+    {
+      "id": "3.2.2.5",
+      "category": "Environmental Conditions and Impacts",
+      "hazard": "Sun glare at dawn or dusk on East/West facing road alignments causing poor visibility to advanced warning signs and other devices resulting in serious injury or fatality to personnel and property damage.",
+      "consequence": "Serious injury or fatality to personnel.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "Immediately after setup is complete a site visit must be conducted to determine the eligibility of signs and devices on approach to worksite. Signs may be angled or positioned/adjusted as per the tolerances to accommodate for poor visibility due to sun glare. Where the signs and devices cannot be adjusted, the works may be postponed to a time not affected by sun glare.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.2 Item 5"
+    },
+    {
+      "id": "3.2.2.7",
+      "category": "Environmental Conditions and Impacts",
+      "hazard": "Crests and curves causing reduced visibility of the worksite and implemented traffic control resulting in serious injury or fatality to personnel and property damage.",
+      "consequence": "Serious injury or fatality to personnel. Property damage to TM devices and road user vehicles.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "Traffic Management Assessor or Project Delivery Supervisor must provide details where on-site geometry or furniture may impact on signage positions. Sign locations can be staggered to assist driver's visibility, in accordance with the tolerances provided. Site Supervisor can move or angle signage. Site Supervisor to record changes in the daily diary as required.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.2 Item 7"
+    },
+    {
+      "id": "3.2.2.11",
+      "category": "Environmental Conditions and Impacts",
+      "hazard": "Dust from the proposed works causing reduced visibility for traffic resulting in serious injury or fatality.",
+      "consequence": "Serious injury or fatality.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 3, "rating": "M9" },
+      "controls": "Workers to monitor locations where dust may form and apply the appropriate treatment as required. Water may be applied to sections of unsealed roads to reduce the impact of dust.",
+      "residualRisk": { "likelihood": "D", "consequence": 3, "rating": "L6" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.2 Item 11"
+    },
+    {
+      "id": "3.2.2.12",
+      "category": "Environmental Conditions and Impacts",
+      "hazard": "Overhead powerlines and infrastructure may conflict with the installation of high mast lighting towers and other work equipment resulting in serious injury or fatality.",
+      "consequence": "Serious injury or fatality.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "All lighting tower locations must be checked prior to installation and consideration given to overhead hazards. Lighting tower underneath overhead powerlines should be avoided where possible. Exclusion zones depending on the voltage of the line should be observed.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.2 Item 12"
+    },
+    {
+      "id": "3.2.3.1",
+      "category": "Construction Plant & Workers Safety",
+      "hazard": "Traffic Management Personnel and workers operating in close proximity to large/heavy plant and equipment are unaware of plant movements causing personnel to be struck resulting in serious injury or fatality.",
+      "consequence": "Serious injury or fatality to Traffic Management Personnel or workers.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "Pre-start meeting must identify risks and hazards about operating adjacent to large/heavy plant and equipment and mitigating procedures implemented to ensure no conflicts occur. Traffic Management Personnel must be adequately accredited and trained to perform the tasks required. Traffic Management Personnel and workers to maintain radio communication at all times.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.3 Item 1"
+    },
+    {
+      "id": "3.2.3.2",
+      "category": "Construction Plant & Workers Safety",
+      "hazard": "Work vehicles and/or plant ingress and egress from the worksite without adequate policies and procedures causing collisions with road users resulting in serious injury or fatality.",
+      "consequence": "Serious injury or fatality.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "Work vehicles, plant and personnel ingress and egress must be at the designated locations determined on site. There must be clear communication between plant operators and Traffic Management Personnel during ingress and egress of vehicles. Plant and vehicle ingress and egress must follow the procedures outlined within this Traffic Management Plan.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.3 Item 2"
+    },
+    {
+      "id": "3.2.3.3",
+      "category": "Construction Plant & Workers Safety",
+      "hazard": "The interaction of work personnel with through traffic may cause an increase of conflicts resulting in serious injury or fatality.",
+      "consequence": "Serious injury or fatality.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "The Traffic Guidance Schemes outline the requirements and positioning for delineation and devices in accordance with the AGTTM. Table 4.1 AGTTM Part 3 details the requirements for edge clearances and protection. Site supervisor to conduct daily toolbox meetings outlining dangers of working around live traffic.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.3 Item 3"
+    },
+    {
+      "id": "3.2.5.1",
+      "category": "Emergency Services / Emergency Arrangements",
+      "hazard": "Lack of Temporary Traffic Management setups to manage hazards or risks at an Emergency causing unnecessary exposure for workers and road users resulting in serious injury or fatality.",
+      "consequence": "Serious injury or fatality.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "The Emergency Works drawings are to be used as an initial mitigation to hazards and risks. Where mitigation is required for an extended period of time the Emergency Works Scenario Temporary Traffic Management is to be replaced with suitable static setups.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.5 Item 1"
+    },
+    {
+      "id": "3.2.5.2",
+      "category": "Emergency Services / Emergency Arrangements",
+      "hazard": "Timely selection and organisation of Temporary Traffic Management signs and devices in an emergency scenario causing unnecessary exposure for road users resulting in serious injury or fatality.",
+      "consequence": "Serious injury or fatality.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "Project Delivery Supervisor with consultation with the Road Infrastructure Manager is to ensure prudent measures are implemented to cover emergency scenarios. Works and Traffic Management Crews must be briefed on the procedures and policies required in an emergency scenario prior to any works commencing. Where possible, the minimum level of traffic management devices required in an emergency scenario must be easily dispatched.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.5 Item 2"
+    },
+    {
+      "id": "3.2.7.1",
+      "category": "Excavations Adjacent to Live Traffic",
+      "hazard": "Excavations or above ground hazards associated with the works being inadequately protected causing an increase of property damage resulting in adverse public reaction and medical treatment or Lost Time Injury.",
+      "consequence": "Adverse public reaction and medical treatment or Lost Time Injury.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 3, "rating": "M9" },
+      "controls": "The Traffic Management Assessor or Project Delivery Supervisor must consider the impact of longitudinal depressions and above ground road hazards adjacent to live traffic lanes during the work and where left unattended prior to the installation of any devices. Refer to Section 4.1.9 and Table 16 of this TMP for more details.",
+      "residualRisk": { "likelihood": "D", "consequence": 3, "rating": "L6" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.7 Item 1"
+    },
+    {
+      "id": "3.2.8.2",
+      "category": "Aftercare Arrangements",
+      "hazard": "Workers or Traffic Management Personnel require extended work times than what is specified in the Traffic Management advice causing excessive delays and congestion to the road network resulting in adverse public reaction, serious injuries or fatalities.",
+      "consequence": "Serious injury or fatalities.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "On-site Traffic Management Personnel must implement the required Traffic Management between the specified times on the Traffic Management Advice. Traffic Management setups must not be implemented earlier without prior approval and a documented risk assessment. Where lower than expected vehicles occur on site, Traffic Management Supervisor may conduct site vehicle count over a 10 minute period. Should the values fall within a permissible level, the works may proceed subject to a risk assessment, approved by an AWTM/WTM and details logged in the daily diary.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.8 Item 2"
+    },
+    {
+      "id": "3.2.9.1",
+      "category": "Implementation Compliance",
+      "hazard": "Traffic Management Personnel or workers injured during installation and/or dismantling of temporary road work signs and devices resulting in serious injury or fatalities.",
+      "consequence": "Serious injury or fatality to Traffic Management Personnel or workers.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 4, "rating": "H12" },
+      "controls": "Where Traffic Management Personnel or workers have their backs to traffic, a spotter must be provided to alert of approaching traffic or hazards. Personnel installing signs and devices must have the appropriate Traffic Management accreditation and experience. Pre-start meetings must identify site-specific risks. A shadow vehicle must be provided to shadow the personnel installing signs and devices. Personnel must follow the policies and procedures detailed in AGTTM Part 7.",
+      "residualRisk": { "likelihood": "D", "consequence": 4, "rating": "M8" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.9 Item 1"
+    },
+    {
+      "id": "3.2.10.1",
+      "category": "Lane Closure Impacts",
+      "hazard": "Restrictions placed on lane capacities could cause an increase in congestion and delays resulting in adverse public reaction.",
+      "consequence": "Adverse public reaction.",
+      "preTreatmentRisk": { "likelihood": "C", "consequence": 3, "rating": "M9" },
+      "controls": "Detailed traffic analysis to be undertaken prior to the implementation of any works. Site supervisor and Traffic Management Personnel to monitor on-site congestion for the duration of the works. Project Delivery Supervisor to undertake Pre-communication plan developed to distribute traffic to surrounding roads during works as required. Works to be undertaken when volumes are within allowable limits.",
+      "residualRisk": { "likelihood": "D", "consequence": 3, "rating": "L6" },
+      "source": "TMP 0922-01531 Rev.6 Section 3.2.10 Item 1"
+    }
+  ],
+  "safety_plan": {
+    "ppe": {
+      "section": "6.3",
+      "requirement": "All personnel entering the work site shall correctly wear high visibility vests to AS/NZS 4602, in addition to other protective equipment required on a site-by-site basis (e.g. protective footwear, eye protection, helmet, sun protection, respiratory devices etc.) at all times whilst on the worksite.",
+      "standardItems": [
+        "High visibility vest (AS/NZS 4602 Class D/N)",
+        "Protective footwear (AS/NZS 2210)",
+        "Eye protection (AS/NZS 1337)",
+        "Hard hat / helmet (AS/NZS 1801)",
+        "Sun protection (hat, sunscreen, long sleeves)",
+        "Respiratory devices where required",
+        "Retro-reflective strips on vests and trousers (night works)",
+        "Night wand (night works TC operations)"
+      ],
+      "source": "TMP 0922-01531 Rev.6 Section 6.3"
+    },
+    "plant_and_equipment": {
+      "section": "6.4",
+      "requirement": "All plant and equipment at the workplace shall meet statutory requirements and have the required registration, licences or certification where required. All mobile equipment shall be fitted with suitable reversing alarms. All mobile plant and vehicles shall be fitted with a pair of rotating flashing yellow lamps in accordance with AS1742.3 clause 4.14.1. All workers are aware of the safe work practice at the time of the site induction.",
+      "standardItems": [
+        "Valid registration, licences or certification for all plant",
+        "Reversing alarms on all mobile equipment",
+        "Rotating flashing yellow lamps (AS1742.3 cl 4.14.1) on all mobile plant and vehicles",
+        "Safe work practice awareness at site induction"
+      ],
+      "source": "TMP 0922-01531 Rev.6 Section 6.4"
+    },
+    "trip_hazards": {
+      "section": "6.5",
+      "requirement": "The worksite and its immediate surroundings shall be suitably protected and free of hazards, which could result in tripping by cyclists or pedestrians. Hazards, which cannot be removed, shall be suitably protected to prevent injury to road users, including those with sight impairment. Where level differences are significant, suitable barriers, which preclude pedestrian access shall be used. Where works extend beyond daylight hours and adjacent lighting is insufficient to illuminate hazards to cyclists or pedestrians, appropriate temporary lighting shall be installed. To reduce the risk to workers the worksite will remain tidy.",
+      "source": "TMP 0922-01531 Rev.6 Section 6.5"
+    },
+    "key_roles": [
+      {
+        "role": "Road Infrastructure Manager",
+        "responsibility": "Statutory duty to ensure safe and efficient operation of the road network under their authority."
+      },
+      {
+        "role": "Traffic Management Designer",
+        "responsibility": "Designing and drafting the TMP and TGS to be compliant with legislative requirements. Ensuring scenarios will protect both workers and public."
+      },
+      {
+        "role": "Traffic Management Assessor",
+        "responsibility": "Providing additional Traffic Management related advice for proposed works including TGS selection, sign requirements, traffic analysis, and risk assessment."
+      },
+      {
+        "role": "Delivery Supervisor",
+        "responsibility": "Ultimate responsibility to ensure the TMP and TGS have been selected to cover the scope of works. Must ensure all personnel are suitably trained and qualified."
+      },
+      {
+        "role": "Site Supervisor",
+        "responsibility": "Overseeing day-to-day activities and practical application of Traffic Management staging. Instructing workers on safety standards and high-vis requirements."
+      },
+      {
+        "role": "Traffic Management Supervisor",
+        "responsibility": "Practical application of Traffic Management devices and personnel in accordance with TGS, AGTTM, MRWA CoP and AS 1742.3."
+      },
+      {
+        "role": "Traffic Controller",
+        "responsibility": "Controlling road users to avoid conflict with plant, workers, traffic and pedestrians. Must have BWTM and TC accreditations."
+      }
+    ]
+  },
+  "risk_matrix": {
+    "likelihood_labels": {
+      "A": "Almost Certain",
+      "B": "Likely",
+      "C": "Possible",
+      "D": "Unlikely",
+      "E": "Rare"
+    },
+    "consequence_labels": {
+      "1": "Catastrophic",
+      "2": "Major",
+      "3": "Moderate",
+      "4": "Minor",
+      "5": "Insignificant"
+    },
+    "rating_levels": {
+      "V20": { "level": "Very High", "colour": "red" },
+      "V16": { "level": "Very High", "colour": "red" },
+      "H15": { "level": "High", "colour": "red" },
+      "H12": { "level": "High", "colour": "red" },
+      "M9": { "level": "Medium", "colour": "amber" },
+      "M8": { "level": "Medium", "colour": "amber" },
+      "L6": { "level": "Low", "colour": "green" },
+      "L4": { "level": "Low", "colour": "green" },
+      "L3": { "level": "Low", "colour": "green" }
+    }
+  }
+}
