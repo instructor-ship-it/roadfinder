@@ -378,6 +378,7 @@ export function SettingsDrawer({
                 <MenuItem icon="📊" label="Traffic Counter" href="/traffic-counter" />
                 <MenuItem icon="⏱️" label="Cycle Timer" href="/cycle-timer" />
                 <MenuItem icon="👥" label="Contact Directory" href="/contacts" />
+                <MenuItem icon="🤖" label="AI Q&A Assistant" href="/qa" badge="AI" />
                 {onOpenTrafficEventLogger && (
                   <MenuItem icon="📝" label="Event Logger" onClick={onOpenTrafficEventLogger} />
                 )}
@@ -398,7 +399,6 @@ export function SettingsDrawer({
                 <MenuItem icon="📚" label="Document Registers" href="/library" />
                 <MenuItem icon="🚨" label="MRWA Alerts" href="/library/alerts" badge="HSE" />
                 <MenuItem icon="🏗️" label="TGS / MMS Frames" href="/library/tgs" />
-                <MenuItem icon="🤖" label="AI Q&A Assistant" href="/qa" badge="AI" />
                 <MenuItem icon="📖" label="Expanded Library" href="/library/expanded" />
                 <MenuItem icon="📋" label="TMP Documents" href="/library/tmp" />
               </div>
