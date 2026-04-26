@@ -66,12 +66,11 @@ export function PdfViewerModal({
   const containerRef = useRef<HTMLDivElement>(null);
   const pageRef = useRef<HTMLDivElement>(null);
 
-  // Configure PDF.js worker on mount
+  // Configure PDF.js worker on mount — use local copy from public/pdfjs/
   useEffect(() => {
     setMounted(true);
     import('react-pdf').then((mod) => {
-      const version = mod.pdfjs.version;
-      mod.pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${version}/build/pdf.worker.min.mjs`;
+      mod.pdfjs.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.mjs';
     });
   }, []);
 
