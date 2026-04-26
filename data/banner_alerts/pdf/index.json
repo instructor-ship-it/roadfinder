@@ -119,7 +119,12 @@
           "Interaction with Live Traffic.",
           "Distribution of Notice: | Main Roads Personnel and Contracting Organisations"
         ],
-        "distribution_reference": "D24#869031"
+        "distribution_reference": "D24#869031",
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tm_breach",
+          "reasoning": "Core tester working within 1.2m of live traffic - TM breach"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -208,7 +213,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk Profile relating to",
           "Mobile Plant",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "mechanical",
+          "reasoning": "Leaf spring dislodges from trailer - mechanical failure on highway"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": "None_39559_Red-Preliminary_Leaf-spring-dislodges-from-trailer-injuring-MoP.pdf",
@@ -308,7 +318,12 @@
           "Vehicles and Driving",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
-        "distribution_reference": "D24#954423"
+        "distribution_reference": "D24#954423",
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "journey",
+          "reasoning": "Contractor failed to arrive - journey management failure"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -380,7 +395,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk Profile relating to",
           "Vehicles and Driving",
           "Distribution of | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "journey",
+          "reasoning": "Vehicle hits livestock travelling from site - journey"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": "None_40454_Red-Preliminary_Vehicle-hits-livestock-travelling-from-site-to-accommodation.pdf",
@@ -457,7 +477,12 @@
           "Crew leaders need to ensure checks that the correct equipment is available and suitable for use,",
           "and that there are enough resources to safely complete a task.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "road_furniture",
+          "reasoning": "Worker injured repairing wire ropes - road furniture maintenance"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": "2024-05-14_40534_Red-Preliminary_Worker-injured-whilst-repairing-damaged-posts-resulting-in-L.pdf",
@@ -548,7 +573,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#954456 –12 July 2024 Page 3 of 3",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "fitness_for_duty",
+          "reasoning": "Driver fell asleep at wheel - fatigue/drugs/journey management"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": "2024-05-24_40634_Red-Preliminary_Sub-contractor-vehicle-loses-control-on-journey-to-site.pdf",
@@ -633,7 +663,12 @@
           "Service Strike (Above Ground)",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
-        "distribution_reference": "D24#954493"
+        "distribution_reference": "D24#954493",
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "utility_strike",
+          "reasoning": "Excavator struck overhead power line - service strike"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -694,7 +729,12 @@
           "Procure an alternative style of safety boot with better ankle support.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
-        "distribution_reference": "D24#954400"
+        "distribution_reference": "D24#954400",
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "slip_trip",
+          "reasoning": "Worker rolled ankle on gravel rock - slip/trip on site"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -763,7 +803,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#443811– 22/03/2024 Page 2 of 2",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "construction",
+          "reasoning": "Truck driver injured by falling asphalt - construction activity"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -848,7 +893,12 @@
           "A formal ICAM investigation has commenced. Once completed, the lessons learnt will be",
           "communicated/shared through a final Grey Banner Alert as soon as practicable.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "mop_breach",
+          "reasoning": "Worker struck by Member of Public - MoP in work zone"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -930,7 +980,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#569124– Date 11/04/2024 Page 2 of 2",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "mechanical",
+          "reasoning": "Leaf spring dislodges from trailer - mechanical failure on highway"
+        }
       },
       "linked_grey_banner": "None_39559_Grey-Final_Leaf-spring-dislodges-from-trailer-and-injures-member-of-pub.pdf",
       "linked_red_banner": null,
@@ -1003,7 +1058,12 @@
           "for the TC to be driven home.",
           "The procedural breach was reported to the TC’s company and an investigation is underway.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tc_injured",
+          "reasoning": "TC working excessive hours without sufficient breaks - TC capacity/fatigue"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -1076,7 +1136,12 @@
           "A formal ICAM investigation has commenced. Once completed, the lessons learnt will be",
           "communicated/shared through a final Grey Banner Alert as soon as practicable.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "manual_handling",
+          "reasoning": "Back strain injury MTI - manual handling"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -1143,7 +1208,12 @@
           "A formal investigation has commenced. Once completed, the lessons learnt will be communicated/shared",
           "through a final Grey Banner Alert as soon as practicable.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "road_furniture",
+          "reasoning": "Back injury replacing guide post - road furniture maintenance"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -1208,7 +1278,12 @@
           "A formal ICAM investigation has commenced. Once completed, the lessons learnt will be",
           "communicated/shared through a final Grey Banner Alert as soon as practicable.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "manual_handling",
+          "reasoning": "Worker shovelling materials - lower back pain - manual handling"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -1279,7 +1354,12 @@
           "A formal ICAM investigation has commenced. Once completed, the lessons learnt will be",
           "communicated/shared through a final Grey Banner Alert as soon as practicable.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "slip_trip",
+          "reasoning": "Worker tore calf muscle on uneven ground - slip/trip"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -1362,7 +1442,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#861138 – 17 June 2024 Page 2 of 2",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "journey",
+          "reasoning": "Vehicle hits livestock travelling from site - journey"
+        }
       },
       "linked_grey_banner": "None_40454_Grey-Final_Vehicle-hits-livestock-travelling-from-site-to-accommodation.pdf",
       "linked_red_banner": null,
@@ -1443,7 +1528,12 @@
           "Interaction with Live Traffic",
           "Distribution of | Main Roads Personnel and Contracting Organisations"
         ],
-        "distribution_reference": "D17#652671"
+        "distribution_reference": "D17#652671",
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tm_breach",
+          "reasoning": "Core tester within 1.2m of live traffic 110km/h - TM breach"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -1527,7 +1617,12 @@
           "This serious potential incident aligns with Main Roads Critical Risk profile relating to",
           "Vehicles and Driving",
           "Distribution of Notice: | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "fitness_for_duty",
+          "reasoning": "Contractor drove off road - suspected medical episode"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -1621,7 +1716,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Vehicles and Driving",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "journey",
+          "reasoning": "Vehicle rollover on journey from site - journey management"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -1703,7 +1803,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Vehicles and Driving",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "fitness_for_duty",
+          "reasoning": "Crew positive BAC results, LV operator unlicensed - fitness for duty"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -1785,7 +1890,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Interaction with Live Traffic",
           "Distribution of | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "mop_breach",
+          "reasoning": "OSOM breaches traffic management - third party TM breach"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -1854,7 +1964,12 @@
           "A formal investigation has commenced. Once completed, the lessons learnt will be communicated/shared",
           "through a final Grey Banner Alert as soon as practicable.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "equipment_tool",
+          "reasoning": "Crush injury adjusting scraper - equipment"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -1921,7 +2036,12 @@
           "A formal investigation has commenced. Once completed, the lessons learnt will be communicated/shared",
           "through a final Grey Banner Alert as soon as practicable.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "construction",
+          "reasoning": "Crush injury leveling storm water pit - construction activity"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -2001,7 +2121,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Vehicles & Driving",
           "Distribution of | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "mop_breach",
+          "reasoning": "Learner driver overtaking causes maintenance truck to veer - public driver affecting work vehicle"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -2088,7 +2213,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#978744 – 19 July 2024 Page 2 of 2",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "journey",
+          "reasoning": "TC vehicle rollover journey to campsite 7hrs away - journey management"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -2172,7 +2302,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Interaction with Live Traffic",
           "Distribution of | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "mop_breach",
+          "reasoning": "Light vehicle overtaking stationary trucks and running red light - public breaching traffic control"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -2244,7 +2379,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#565888 – Date 11/04/2024 Page 2 of 2",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "slip_trip",
+          "reasoning": "Worker tripped on windrow - slip/trip on site"
+        }
       },
       "linked_grey_banner": "2024-04-08_39477_Grey-Final_Worker-tripped-on-windrow-landing-on-knee.pdf",
       "linked_red_banner": null,
@@ -2311,7 +2451,12 @@
           "A formal ICAM lite investigation has commenced. Once completed, the lessons learnt will be",
           "communicated/shared through a final Grey Banner Alert as soon as practicable.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tc_injured",
+          "reasoning": "TC experiences back pain performing manual labour tasks - TC performing duties"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -2412,7 +2557,12 @@
           "Interaction with Live Traffic",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
-        "distribution_reference": "D24#434392"
+        "distribution_reference": "D24#434392",
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tm_breach",
+          "reasoning": "TC on foot within 1.2m in 60km speed zone - TM breach"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -2509,7 +2659,12 @@
           "Vehicle Incident.",
           "Distribution of Notice: | Main Roads Personnel and Contracting Organisations"
         ],
-        "distribution_reference": "D24#439023"
+        "distribution_reference": "D24#439023",
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "mop_breach",
+          "reasoning": "MoP collided with MR employee after veering into oncoming lane - MoP in work area"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -2607,7 +2762,12 @@
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
         "distribution_reference": "D24#395589",
-        "is_mti": true
+        "is_mti": true,
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "environmental",
+          "reasoning": "Worker suffers thermal stress LTI - environmental hazard"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -2675,7 +2835,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#168736 – 18 January 2024 Page 2 of 2",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "equipment_tool",
+          "reasoning": "Small Metal Backing Plate falls from Height - falling object"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -2769,7 +2934,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Mobile Plant",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tm_breach",
+          "reasoning": "Mobile Plant and Traffic Management Procedure Breach - TM procedure"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -2852,7 +3022,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#258434 – 24 January 2024 Page 2 of 2",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tc_injured",
+          "reasoning": "TC found lying face down with concussion - TC injured in work zone"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -2946,7 +3121,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#258612 – 31 January 2024 Page 3 of 3",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "vehicle_incident",
+          "reasoning": "Light vehicle reversed into culvert and rolled - vehicle incident"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -3022,7 +3202,12 @@
           "A formal ICAM investigation has commenced. Once completed, the lessons learnt will be",
           "communicated/shared through a final Grey Banner Alert as soon as practicable.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "manual_handling",
+          "reasoning": "Maintenance worker knee injury LTI - manual handling"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -3120,7 +3305,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk Profile relating to",
           "Vehicles and Driving",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tc_equipment",
+          "reasoning": "Follow me vehicle conducts U-turn in front of road train - TC equipment manoeuvre"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -3219,7 +3409,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#323801 – 8 February 2024 Page 2 of 2",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "mop_breach",
+          "reasoning": "MoP driven through Vehicle Control Point colliding with TC and Fire Services - MoP breaching TC"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -3298,7 +3493,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Vehicles and Driving",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "manual_handling",
+          "reasoning": "Maintenance worker shoulder injury LTI - manual handling"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -3371,7 +3571,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#354833 – 23 February 2024 Page 2 of 2",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "mop_breach",
+          "reasoning": "MoP heavy vehicle loses load and damages TC light vehicle - MoP affecting TC equipment"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -3451,7 +3656,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Vehicles and Driving",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tc_equipment",
+          "reasoning": "Lower back strain accessing TMA - TC equipment access injury"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -3529,7 +3739,12 @@
           "Vehicles and Driving",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
-        "distribution_reference": "D24#410945"
+        "distribution_reference": "D24#410945",
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tm_breach",
+          "reasoning": "Breach of Mobile Plan Onboarding Procedure - TM procedure breach"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -3603,7 +3818,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Interaction with Live Traffic",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "mop_breach",
+          "reasoning": "MoP Rollover within Works Area - MoP entering work zone"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -3753,7 +3973,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk Profile relating to",
           "‘Fall from Height’",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "equipment_tool",
+          "reasoning": "IP fell from axle of low loader - fall from height/equipment"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": "2024-03-15_38810_Red-Preliminary_IP-fell-from-position-standing-on-axle-of-low-loader-to-the.pdf",
@@ -3823,7 +4048,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#444674 22/03/2024 Page 2 of 2",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "equipment_tool",
+          "reasoning": "IP fell from axle of low loader - fall from height/equipment"
+        }
       },
       "linked_grey_banner": "2024-03-15_38810_Grey-Final_IP-fell-from-position-standing-on-axle-of-low-loader-to-the.pdf",
       "linked_red_banner": null,
@@ -3916,7 +4146,12 @@
           "Distribution of Notice Main Roads Personnel and Contracting Organisations",
           "D24#580697 – 18/04/2024 Page 2 of 2",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tm_breach",
+          "reasoning": "TM Breach - Lab tester within 1.2m of live traffic - TM breach"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -3997,7 +4232,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Vehicles & Driving",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "journey",
+          "reasoning": "Light vehicle rollover journey to site accommodation - journey"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -4072,7 +4312,12 @@
           "Vehicles and Driving",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations",
           "D24#757020 – Date 28/05/2024 Page 3 of 3"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "slip_trip",
+          "reasoning": "Worker tripped on windrow - slip/trip on site"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": "None_39477_Red-Preliminary_Worker-tripped-on-windrow-injuring-knee.pdf",
@@ -4157,7 +4402,12 @@
           "Interaction with Live Traffic",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
-        "distribution_reference": "D24#756849"
+        "distribution_reference": "D24#756849",
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tm_breach",
+          "reasoning": "TC and work vehicle within 1.2m of live traffic lane - TM breach"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -4236,7 +4486,12 @@
           "Lifting Operations",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
-        "worksafe_notified": true
+        "worksafe_notified": true,
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "road_furniture",
+          "reasoning": "Worker injured repairing wire ropes - road furniture maintenance"
+        }
       },
       "linked_grey_banner": "None_40534_Grey-Final_Worker-injured-whilst-repairing-wire-ropes-resulting-in-LTI.pdf",
       "linked_red_banner": null,
@@ -4310,7 +4565,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Vehicles and Driving.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "journey",
+          "reasoning": "Worker rolls vehicle en route to work site - journey"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -4395,7 +4655,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Vehicles and Driving",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "fitness_for_duty",
+          "reasoning": "Driver fell asleep at wheel - fatigue/drugs/journey management"
+        }
       },
       "linked_grey_banner": "None_40634_Grey-Final_Driver-fell-asleep-at-the-wheel-and-loses-control-of-the-veh.pdf",
       "linked_red_banner": null,
@@ -4478,7 +4743,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Vehicles & Driving",
           "Distribution of | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "mop_breach",
+          "reasoning": "MoP collides with Contractor Vehicle at Site Office - MoP at site entry"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -4555,7 +4825,12 @@
           "Interaction With Live Traffic",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
-        "distribution_reference": "D25#129105"
+        "distribution_reference": "D25#129105",
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tm_breach",
+          "reasoning": "Incorrect Traffic Guidance Scheme - TM setup error"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -4633,7 +4908,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Interaction With Live Traffic",
           "Distribution of | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "mop_breach",
+          "reasoning": "Heavy Vehicle veers into [work area] - public vehicle affecting work zone"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -4705,7 +4985,12 @@
           "This serious potential incident aligns with the Main Roads Critical Risk profile relating to",
           "Interaction With Live Traffic",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tm_setup",
+          "reasoning": "Worker enters live to place traffic signage - TM setup activity"
+        }
       },
       "linked_grey_banner": null,
       "linked_red_banner": null,
@@ -4797,7 +5082,12 @@
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
         "distribution_reference": "D26#443919",
-        "distribution_date": "2026-02-17"
+        "distribution_date": "2026-02-17",
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "equipment_tool",
+          "reasoning": "Quick-Cut Saw Strikes Worker in Face - tool injury"
+        }
       },
       "linked_red_banner": null,
       "status": "closed",
@@ -4890,7 +5180,12 @@
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
         "distribution_reference": "D26#468194",
-        "distribution_date": "2026-04-15"
+        "distribution_date": "2026-04-15",
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "manual_handling",
+          "reasoning": "Shoulder injury pull-start pressure washer - manual handling"
+        }
       },
       "linked_red_banner": null,
       "status": "closed",
@@ -4983,7 +5278,12 @@
           "Workers attending worksite on network must wear appropriate PPE including compliant footwear and hi-vis unless remaining in vehicle"
         ],
         "distribution_reference": "D26#447849",
-        "distribution_date": "2026-04-15"
+        "distribution_date": "2026-04-15",
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "slip_trip",
+          "reasoning": "Worker tripped over parking bay wheel stop - slip/trip"
+        }
       },
       "linked_red_banner": null,
       "status": "closed",
@@ -5075,7 +5375,12 @@
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
         "distribution_reference": "D26#437674",
-        "distribution_date": "2026-04-08"
+        "distribution_date": "2026-04-08",
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "mechanical",
+          "reasoning": "Chain snaps and recoils through windscreen - mechanical failure during recovery"
+        }
       },
       "linked_grey_banner": null,
       "status": "active",
@@ -5156,7 +5461,12 @@
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
         "distribution_reference": "D26#457363",
-        "distribution_date": "2026-04-11"
+        "distribution_date": "2026-04-11",
+        "tc_relevance": {
+          "classification": "direct",
+          "subcategory": "tc_injured",
+          "reasoning": "TC shoulder injury slipping on roadside batter - TC injured at work position"
+        }
       },
       "linked_grey_banner": null,
       "status": "active",
@@ -5238,7 +5548,12 @@
           "cuts with the chainsaw. Once completed, the lessons learnt will be communicated/shared with the team",
           "through a final Grey Banner Alert as soon as practicable.",
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
-        ]
+        ],
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "equipment_tool",
+          "reasoning": "Worker struck shin with sledgehammer - tool injury"
+        }
       },
       "linked_grey_banner": null,
       "status": "active",
@@ -5314,7 +5629,12 @@
           "Distribution of Notice | Main Roads Personnel and Contracting Organisations"
         ],
         "distribution_reference": "D26#473429",
-        "distribution_date": "2026-04-15"
+        "distribution_date": "2026-04-15",
+        "tc_relevance": {
+          "classification": "indirect",
+          "subcategory": "vehicle_incident",
+          "reasoning": "Truck rollover wet surface - vehicle incident"
+        }
       },
       "linked_grey_banner": null,
       "status": "active",
@@ -5329,5 +5649,58 @@
         "relevance_score": 5
       }
     }
-  ]
+  ],
+  "tc_relevance_schema": {
+    "description": "Traffic Control relevance classification for app filtering",
+    "classification_values": {
+      "direct": "Incident directly involves the traffic control function - TC duties, TM breaches, MoP interactions with TC setup, TC equipment, TM setup/removal",
+      "indirect": "Workplace safety incident in road work context but not specifically about the traffic control function"
+    },
+    "subcategory_definitions": {
+      "direct_subcategories": {
+        "tc_injured": "Traffic Controller injured while performing TC duties",
+        "tm_breach": "Traffic management breach (1.2m rule, wrong TGS, TM procedure violation)",
+        "mop_breach": "Member of Public breaching or interacting with TC setup/work zone",
+        "tm_setup": "TM setup or removal activity (placing signage, entering live lane)",
+        "tc_equipment": "TC equipment involved (TMA, follow-me vehicle, TC vehicle in work zone)"
+      },
+      "indirect_subcategories": {
+        "journey": "Journey management incident (driving to/from site)",
+        "manual_handling": "Manual handling injury (back strain, lifting, pulling)",
+        "slip_trip": "Slips, trips, falls on site",
+        "equipment_tool": "Equipment or tool injury",
+        "mechanical": "Mechanical failure (leaf spring, chain, vehicle component)",
+        "environmental": "Environmental hazard (thermal stress, weather)",
+        "fitness_for_duty": "Fitness for duty (drug/alcohol, medical episode, fatigue)",
+        "construction": "Construction activity injury",
+        "utility_strike": "Utility strike (power line, service)",
+        "vehicle_incident": "Vehicle incident not in work zone or TM-related",
+        "road_furniture": "Road furniture maintenance (guide posts, wire ropes)"
+      }
+    },
+    "summary": {
+      "total_alerts": 64,
+      "direct_count": 25,
+      "indirect_count": 39,
+      "direct_percentage": 39.1,
+      "subcategory_breakdown": {
+        "tm_breach": 8,
+        "mechanical": 3,
+        "journey": 7,
+        "road_furniture": 3,
+        "fitness_for_duty": 4,
+        "utility_strike": 1,
+        "slip_trip": 5,
+        "construction": 2,
+        "mop_breach": 10,
+        "tc_injured": 4,
+        "manual_handling": 5,
+        "equipment_tool": 6,
+        "environmental": 1,
+        "vehicle_incident": 2,
+        "tc_equipment": 2,
+        "tm_setup": 1
+      }
+    }
+  }
 }
