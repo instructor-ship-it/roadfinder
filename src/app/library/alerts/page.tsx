@@ -169,6 +169,7 @@ export default function AlertsPage() {
   const [showPdf, setShowPdf] = useState(false);
   const [pdfUrl, setPdfUrl] = useState('');
   const [pdfTitle, setPdfTitle] = useState('');
+  const [showInfoPanel, setShowInfoPanel] = useState(false);
 
   // ── Load data ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -464,6 +465,18 @@ export default function AlertsPage() {
             <h1 className="text-lg font-bold">MRWA Alerts</h1>
           </div>
           <div className="flex items-center gap-2">
+            {/* Info button */}
+            <button
+              onClick={() => setShowInfoPanel(!showInfoPanel)}
+              className={`w-7 h-7 rounded-full flex items-center justify-center text-sm transition-colors ${
+                showInfoPanel
+                  ? 'bg-cyan-600 text-white'
+                  : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
+              }`}
+              title="About this page"
+            >
+              &#9432;
+            </button>
             {/* View mode toggle */}
             <div className="flex bg-gray-800 rounded overflow-hidden">
               <button
@@ -851,70 +864,382 @@ export default function AlertsPage() {
           })}
         </div>
 
-        {/* Info section */}
-        {!loading && alertData && (
-          <div className="mt-6 bg-gray-900/50 border border-gray-800 rounded-lg p-4">
-            <h3 className="text-sm font-medium text-cyan-400 mb-2">About MRWA Banner Alerts</h3>
-            <div className="text-xs text-gray-400 space-y-2">
-              <p>
-                <span className="text-red-400 font-medium">Red Banner</span> — Serious incident,
-                LTI, or near miss with high potential. Preliminary notice issued while ICAM
-                investigation commences.
-              </p>
-              <p>
-                <span className="text-amber-400 font-medium">Amber Banner</span> — Significant
-                incident or near miss. Preliminary notice issued while investigation is underway.
-              </p>
-              <p>
-                <span className="text-gray-300 font-medium">Grey Banner</span> — Final report with
-                lessons learnt, contributing factors, and corrective actions after investigation
-                completion.
-              </p>
-              <div className="border-t border-gray-800 pt-2 space-y-1">
-                <p className="text-gray-300 font-medium">TC Relevance Classification</p>
-                <p>
-                  <span className="text-emerald-400 font-medium">Direct</span> — Incident directly
-                  involves traffic control operations: TC injured, TM breach, MoP breaching TC
-                  setup, TC equipment failure, TM setup activity.
-                </p>
-                <p>
-                  <span className="text-gray-400 font-medium">Indirect</span> — Incident affects TC
-                  workers but is not inherent to the traffic control system: journey management,
-                  manual handling, slips/trips, equipment/tools, fitness for duty, etc.
-                </p>
+        {/* Info Panel - slide-in overlay */}
+        {showInfoPanel && (
+          <div className="fixed inset-0 z-50 bg-black/60" onClick={() => setShowInfoPanel(false)}>
+            <div
+              className="absolute top-0 right-0 bottom-0 w-full max-w-md bg-gray-900 border-l border-gray-700 overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Panel header */}
+              <div className="sticky top-0 bg-gray-900 border-b border-gray-800 px-4 py-3 flex items-center justify-between">
+                <h2 className="text-sm font-bold text-cyan-400">About This Page</h2>
+                <button
+                  onClick={() => setShowInfoPanel(false)}
+                  className="text-gray-400 hover:text-white text-xl leading-none"
+                >
+                  &times;
+                </button>
               </div>
-              <div className="border-t border-gray-800 pt-2 space-y-1">
-                <p className="text-gray-300 font-medium">3+1 Framework Assessment</p>
-                <p>
-                  Each alert is assessed against the five indicators of the &quot;Beyond the Plan: 3
-                  Pillars, 1 Practice&quot; framework:
-                </p>
-                <div className="flex flex-wrap gap-x-3 gap-y-1 ml-2">
-                  <span>
-                    <span className="text-blue-400">Crew</span> — Competency gaps
-                  </span>
-                  <span>
-                    <span className="text-purple-400">Plan</span> — Plan adequacy failures
-                  </span>
-                  <span>
-                    <span className="text-amber-400">Equip</span> — Equipment issues
-                  </span>
-                  <span>
-                    <span className="text-rose-400">Gap</span> — Paperwork vs reality
-                  </span>
-                  <span>
-                    <span className="text-emerald-400">Change</span> — Conditions changed mid-job
-                  </span>
+
+              <div className="px-4 py-4 space-y-5 text-xs text-gray-400">
+                {/* MRWA Banner Alerts */}
+                <div>
+                  <h3 className="text-sm font-medium text-white mb-2">MRWA Banner Alerts</h3>
+                  <p className="mb-2">
+                    Main Roads Western Australia issues Banner Alerts to communicate workplace
+                    safety incidents across the road network. Each alert documents a real incident,
+                    its contributing factors, and corrective actions.
+                  </p>
+                  <div className="space-y-1.5 ml-1">
+                    <p>
+                      <span className="inline-block w-2 h-2 rounded-sm bg-red-600 mr-1.5 align-middle" />
+                      <span className="text-red-400 font-medium">Red Banner</span> — Serious
+                      incident, LTI, or near miss with high potential. Preliminary notice issued
+                      while ICAM investigation commences.
+                    </p>
+                    <p>
+                      <span className="inline-block w-2 h-2 rounded-sm bg-amber-500 mr-1.5 align-middle" />
+                      <span className="text-amber-400 font-medium">Amber Banner</span> — Significant
+                      incident or near miss. Preliminary notice issued while investigation is
+                      underway.
+                    </p>
+                    <p>
+                      <span className="inline-block w-2 h-2 rounded-sm bg-gray-500 mr-1.5 align-middle" />
+                      <span className="text-gray-300 font-medium">Grey Banner</span> — Final report
+                      with lessons learnt, contributing factors, and corrective actions after
+                      investigation completion.
+                    </p>
+                  </div>
+                  <p className="mt-2 text-gray-500">
+                    Workflow: Red/Amber (preliminary) &rarr; ICAM Investigation &rarr; Grey (final)
+                    &rarr; Archived
+                  </p>
                 </div>
-                <p>
-                  The relevance score (0-5) counts how many indicators were flagged. Higher scores
-                  indicate more severe framework failures.
-                </p>
+
+                {/* TC Relevance Classification */}
+                <div className="border-t border-gray-800 pt-4">
+                  <h3 className="text-sm font-medium text-white mb-2">
+                    TC Relevance Classification
+                  </h3>
+                  <p className="mb-2">
+                    Each alert has been classified as directly or indirectly related to traffic
+                    control operations. This classification enables filtering to focus on incidents
+                    most relevant to TC work.
+                  </p>
+                  <div className="space-y-2 ml-1">
+                    <div className="bg-emerald-900/20 border border-emerald-800/30 rounded p-2.5">
+                      <p className="text-emerald-400 font-medium mb-1">Direct (25 alerts, 39%)</p>
+                      <p>
+                        Incident directly involves traffic control operations. The TC worker, TC
+                        equipment, or the traffic management setup was central to the incident.
+                      </p>
+                      <div className="mt-1.5 flex flex-wrap gap-1">
+                        {DIRECT_SUBCATEGORIES.map((sc) => (
+                          <span
+                            key={sc}
+                            className="text-[10px] bg-emerald-900/30 text-emerald-400/80 px-1.5 py-0.5 rounded"
+                          >
+                            {subcatLabel(sc)} ({subcatCounts[sc] || 0})
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="bg-gray-800/50 border border-gray-700/50 rounded p-2.5">
+                      <p className="text-gray-400 font-medium mb-1">Indirect (39 alerts, 61%)</p>
+                      <p>
+                        Incident affects TC workers but is not inherent to the traffic control
+                        system itself. These are hazards that TC workers encounter as part of
+                        working on road projects, such as journey management, manual handling, and
+                        environmental conditions.
+                      </p>
+                      <div className="mt-1.5 flex flex-wrap gap-1">
+                        {INDIRECT_SUBCATEGORIES.map((sc) => (
+                          <span
+                            key={sc}
+                            className="text-[10px] bg-gray-700/50 text-gray-500 px-1.5 py-0.5 rounded"
+                          >
+                            {subcatLabel(sc)} ({subcatCounts[sc] || 0})
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3+1 Framework Assessment */}
+                <div className="border-t border-gray-800 pt-4">
+                  <h3 className="text-sm font-medium text-white mb-2">3+1 Framework Assessment</h3>
+                  <p className="mb-2">
+                    Each alert is assessed against the &quot;Beyond the Plan: 3 Pillars, 1
+                    Practice&quot; framework. The framework identifies five indicators that reveal
+                    whether the safety system was functioning or failing at the time of the
+                    incident.
+                  </p>
+
+                  {/* The 5 indicators */}
+                  <div className="space-y-2.5 mb-3">
+                    {PILLAR_META.map((p) => (
+                      <div key={p.key} className="flex items-start gap-2.5">
+                        <div className={`w-3 h-3 rounded-full ${p.color} mt-0.5 shrink-0`} />
+                        <div>
+                          <p className="text-white font-medium">
+                            {p.label}
+                            <span className="text-gray-500 font-normal ml-1">({p.short})</span>
+                          </p>
+                          <p className="text-gray-400 mt-0.5">
+                            {p.key === 'crew_competency_gaps' &&
+                              'Were there competency gaps? The people on the job did not have the knowledge, experience, or fitness to do the work safely. Not just "did they have a ticket?" — did they actually understand the hazards and controls?'}
+                            {p.key === 'plan_adequacy_failures' &&
+                              'Was the plan inadequate? The TMP, TGS, or SWMS was wrong for the actual work being done. A generic plan used instead of site-specific, TGS written for a different setup, or SWMS missing critical steps.'}
+                            {p.key === 'equipment_issues' &&
+                              'Were there equipment issues? The right equipment was not available, not serviceable, or not used. Faded signs, missing speed feedback signs, wrong TGS signs loaded, or TMA ergonomics causing injury.'}
+                            {p.key === 'paperwork_vs_reality_gap' &&
+                              'Was there a paperwork-vs-reality gap? On paper everything looked fine, but on the ground it was different. Prestart forms reused without proper completion, SWMS signed but not understood, setup not verified against the plan.'}
+                            {p.key === 'conditions_changed_mid_job' &&
+                              'Did conditions change mid-job? Something shifted after the prestart — sun position, traffic behaviour, weather, crew fatigue. The plan was right at 6 AM but wrong by 2 PM.'}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Relevance Score */}
+                  <div className="bg-gray-800/60 rounded p-2.5 mb-3">
+                    <p className="text-white font-medium mb-1.5">Relevance Score (0–5)</p>
+                    <p className="mb-2">
+                      The relevance score counts how many of the five indicators were flagged. It is
+                      a blunt measure of how many things went wrong — not weighted, just counted.
+                    </p>
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <div className="flex gap-0.5">
+                          {[0, 1, 2, 3, 4].map((i) => (
+                            <div key={i} className="w-2 h-2 rounded-sm bg-gray-700" />
+                          ))}
+                        </div>
+                        <span className="text-gray-500">0 — No pillar failures detected</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex gap-0.5">
+                          {[0].map(() => (
+                            <div key={1} className="w-2 h-2 rounded-sm bg-cyan-400" />
+                          ))}
+                          {[1, 2, 3].map((i) => (
+                            <div key={i} className="w-2 h-2 rounded-sm bg-gray-700" />
+                          ))}
+                        </div>
+                        <span className="text-gray-500">1 — Single point of failure</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex gap-0.5">
+                          {[0, 1].map(() => (
+                            <div key={2} className="w-2 h-2 rounded-sm bg-cyan-400" />
+                          ))}
+                          {[1, 2].map((i) => (
+                            <div key={i} className="w-2 h-2 rounded-sm bg-gray-700" />
+                          ))}
+                        </div>
+                        <span className="text-gray-500">2 — Two failures converging</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex gap-0.5">
+                          {[0, 1, 2].map(() => (
+                            <div key={3} className="w-2 h-2 rounded-sm bg-cyan-400" />
+                          ))}
+                          {[1].map((i) => (
+                            <div key={i} className="w-2 h-2 rounded-sm bg-gray-700" />
+                          ))}
+                        </div>
+                        <span className="text-gray-500">3 — Three failures — systemic</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex gap-0.5">
+                          {[0, 1, 2, 3].map(() => (
+                            <div key={4} className="w-2 h-2 rounded-sm bg-cyan-400" />
+                          ))}
+                          {[1].map((i) => (
+                            <div key={i} className="w-2 h-2 rounded-sm bg-gray-700" />
+                          ))}
+                        </div>
+                        <span className="text-gray-500">4 — Four failures — deeply systemic</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="flex gap-0.5">
+                          {[0, 1, 2, 3, 4].map(() => (
+                            <div key={5} className="w-2 h-2 rounded-sm bg-cyan-400" />
+                          ))}
+                        </div>
+                        <span className="text-gray-500">5 — Total system failure</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Evidence from the data */}
+                  <div className="bg-cyan-900/20 border border-cyan-800/30 rounded p-2.5">
+                    <p className="text-cyan-400 font-medium mb-1.5">What the Evidence Tells Us</p>
+                    <p className="mb-2">
+                      Across the 25 TC-direct alerts, the five indicators were flagged at different
+                      rates:
+                    </p>
+                    <div className="space-y-1.5 ml-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-amber-500" />
+                        <span>
+                          <span className="text-white">Equipment Issues — 72%</span> (18/25). Most
+                          common. Not broken equipment per se, but wrong equipment for the
+                          situation, not checked against the plan, or protective equipment itself
+                          creating hazards.
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-purple-500" />
+                        <span>
+                          <span className="text-white">Plan Adequacy — 52%</span> (13/25). Generic
+                          TMPs, wrong TGS for the work being done, plans that did not account for
+                          actual conditions.
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-rose-500" />
+                        <span>
+                          <span className="text-white">Paperwork vs Reality — 44%</span>
+                          (11/25). Prestart forms were formalities, SWMS signed but not understood,
+                          setup never verified against the plan.
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-blue-500" />
+                        <span>
+                          <span className="text-white">Crew Competency — 28%</span> (7/25). TCs did
+                          not understand hazards, new operators without supervision, crew not
+                          trained on specific equipment.
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                        <span>
+                          <span className="text-white">Conditions Changed — 20%</span> (5/25). The
+                          key insight: most incidents did not happen because things changed — they
+                          happened because things were wrong from the start.
+                        </span>
+                      </div>
+                    </div>
+                    <p className="mt-2 text-cyan-400/80">
+                      The low rate of conditions-changed (20%) versus equipment (72%) and plan (52%)
+                      failures confirms that the three pillars are being verified superficially at
+                      prestart, not substantively. People tick boxes saying &quot;yes we have the
+                      plan, yes we have the equipment&quot; without checking whether the plan is
+                      actually right for this job.
+                    </p>
+                    <p className="mt-1.5 text-cyan-400/80">
+                      That is exactly the gap that <strong>Dynamic Awareness</strong> (the &quot;+1
+                      Practice&quot;) is designed to close — not just at prestart, but continuously
+                      throughout the job.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Card reading guide */}
+                <div className="border-t border-gray-800 pt-4">
+                  <h3 className="text-sm font-medium text-white mb-2">How to Read the Cards</h3>
+                  <div className="space-y-2">
+                    <div>
+                      <p className="text-gray-300 font-medium mb-0.5">Standard View</p>
+                      <p>
+                        Shows the essential incident information: banner type, EQ number, TC
+                        relevance badge (Direct/Indirect), subcategory tag, pillar score visual (5
+                        dots), description, and status. The 5 filled/unfilled dots show how many of
+                        the five framework indicators were flagged — filled dots mean that indicator
+                        failed.
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-300 font-medium mb-0.5">3+1 Framework View</p>
+                      <p>
+                        Switch using the Standard / 3+1 Framework toggle in the header. Shows the
+                        full five-pillar breakdown for each alert with colour-coded indicators: Crew
+                        (blue), Plan (purple), Equip (amber), Gap (rose), Change (emerald). Filled
+                        circles and white text = flagged. Hollow circles and struck-through text =
+                        clear. The reasoning text explains why the alert was classified as it was.
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-300 font-medium mb-0.5">Detail Sheet</p>
+                      <p>
+                        Tap any card to open the detail sheet. It shows the full incident record
+                        including TC Relevance classification with reasoning, 3+1 Framework
+                        Assessment with all five pillar results, contributing factors, corrective
+                        actions, and a button to view the original PDF document.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* The Framework */}
+                <div className="border-t border-gray-800 pt-4">
+                  <h3 className="text-sm font-medium text-white mb-2">
+                    The Framework: 3 Pillars, 1 Practice
+                  </h3>
+                  <p className="mb-2">
+                    The &quot;Beyond the Plan&quot; framework is built on a single observation: the
+                    things you verify before a job starts are different in kind from the thing you
+                    must practise while the job is happening.
+                  </p>
+                  <div className="space-y-2 ml-1">
+                    <div className="bg-blue-900/20 border border-blue-800/30 rounded p-2">
+                      <p className="text-blue-400 font-medium">Pillar 1: Competent Crew</p>
+                      <p className="mt-0.5">
+                        Do we have people who know what they are doing? Competence is not the same
+                        as accreditation — it is contextual.
+                      </p>
+                    </div>
+                    <div className="bg-purple-900/20 border border-purple-800/30 rounded p-2">
+                      <p className="text-purple-400 font-medium">Pillar 2: Sound Plan</p>
+                      <p className="mt-0.5">
+                        Do we know what we are doing and how? A sound plan is site-specific, current
+                        for conditions, and understood by the crew.
+                      </p>
+                    </div>
+                    <div className="bg-amber-900/20 border border-amber-800/30 rounded p-2">
+                      <p className="text-amber-400 font-medium">Pillar 3: Right Equipment</p>
+                      <p className="mt-0.5">
+                        Do we have what the plan requires? Not just loaded — serviceable, correct
+                        for the plan, and verified against the TGS.
+                      </p>
+                    </div>
+                    <div className="bg-cyan-900/20 border border-cyan-800/30 rounded p-2">
+                      <p className="text-cyan-400 font-medium">The Practice: Dynamic Awareness</p>
+                      <p className="mt-0.5">
+                        Continuously reading the job while it is happening and being willing to act
+                        on what you see. Not a checklist — the only element that exists in real
+                        time, not at a point in time.
+                      </p>
+                    </div>
+                  </div>
+                  <p className="mt-2 text-gray-500">
+                    The three pillars are preconditions — without them, the job should not proceed.
+                    Dynamic Awareness is continuous — it exists precisely because conditions change
+                    and plans cannot predict everything.
+                  </p>
+                </div>
+
+                {/* Source */}
+                <div className="border-t border-gray-800 pt-4">
+                  <h3 className="text-sm font-medium text-white mb-2">Source &amp; Methodology</h3>
+                  <p className="mb-1.5">
+                    This evidence base comprises 64 MRWA Banner Alerts spanning November 2023 to
+                    April 2026. Each alert was read in full and classified for TC relevance by
+                    subcategory. The 3+1 Framework Assessment was applied by mapping contributing
+                    factors and corrective actions to the five indicators.
+                  </p>
+                  <p className="text-gray-500">
+                    Based on the framework document: &quot;Beyond the Plan: 3 Pillars, 1 Practice —
+                    A Frontline Safety Framework for Temporary Traffic Management&quot; (Version 3,
+                    April 2026).
+                  </p>
+                </div>
               </div>
-              <p className="text-gray-500 pt-1 border-t border-gray-800">
-                Workflow: Red/Amber (preliminary) &rarr; ICAM Investigation &rarr; Grey (final)
-                &rarr; Archived
-              </p>
             </div>
           </div>
         )}
