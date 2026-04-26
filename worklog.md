@@ -6141,3 +6141,29 @@ Stage Summary:
 - Troubleshooting guide updated with Turbo Mode, Saved Locations, WHS Library, Event Logger Cloud Sync sections
 - GitHub Issues URL corrected in troubleshooting guide
 - Ready for push to GitHub
+
+---
+
+Task ID: 1
+Agent: Main Agent
+Task: Classify all 64 banner alerts as directly or indirectly related to traffic control for app filtering
+
+Work Log:
+
+- Read existing index.json with 64 alerts (45 Red, 19 Grey, 0 Amber)
+- Defined classification criteria: DIRECT = incident involves TC function; INDIRECT = workplace safety in road context but not TM-specific
+- Created 5 direct subcategories: tc_injured, tm_breach, mop_breach, tm_setup, tc_equipment
+- Created 11 indirect subcategories: journey, manual_handling, slip_trip, equipment_tool, mechanical, environmental, fitness_for_duty, construction, utility_strike, vehicle_incident, road_furniture
+- Classified all 64 alerts and added tc_relevance field to each entry in index.json
+- Synced 57 new PDFs from data/ to public/library/alerts-data/
+- Updated public-facing index.json with tc_relevance_schema and all 64 alerts
+- Committed to git (59 files changed)
+
+Stage Summary:
+
+- 25 alerts DIRECTLY related to TC (39.1%)
+- 39 alerts INDIRECTLY related to TC (60.9%)
+- Top direct subcategories: mop_breach (10), tm_breach (8), tc_injured (4)
+- Top indirect subcategories: journey (7), equipment_tool (6), slip_trip (5), manual_handling (5)
+- GitHub push requires PAT (credentials cleaned from previous session)
+- Files committed locally, ready to push when PAT provided
