@@ -6190,3 +6190,27 @@ Stage Summary:
 - All changes pushed to https://github.com/instructor-ship-it/roadfinder
 - GitHub PAT cleaned from local git config
 - Key evidence insight: MoP breaches (10) are largest TC-direct category, validating Dynamic Awareness emphasis
+
+---
+
+Task ID: 1
+Agent: Main
+Task: Update V3 framework document with expanded evidence base and push to GitHub
+
+Work Log:
+
+- Found V3 framework document existed locally but was 1 commit ahead of GitHub (not pushed)
+- Sections 10.2-10.4 were thin (just intro sentences, no detailed content)
+- Enhanced Section 10.2 with detailed subcategory breakdowns for all 5 direct TC subcategories (MoP Breach, TM Procedure Breach, TC Injured, TC Equipment, TM Setup)
+- Enhanced Section 10.3 with detailed subcategory breakdowns for all 11 indirect TC subcategories
+- Enhanced Section 10.4 with full 25-alert register table (EQ#, Date, Banner, Subcategory, Description, LTI, Pillars Flagged, Score) and pillar frequency summary
+- Generated updated PDF via LibreOffice conversion
+- Committed and pushed to GitHub: feat: V3 framework - enhanced evidence sections 10.2-10.4
+- Cleaned PAT from git remote URL
+
+Stage Summary:
+
+- V3 framework document now on GitHub at: download/Beyond_the_Plan_3_Pillars_1_Practice_Framework.docx (and .pdf)
+- 25 direct TC alerts mapped to framework pillars with detailed analysis per subcategory
+- Pillar frequency: Equipment 72%, Plan 52%, Gap 44%, Crew 28%, Change 20%
+- All banner alert PDFs and index.json with tc_relevance classification already on GitHub
