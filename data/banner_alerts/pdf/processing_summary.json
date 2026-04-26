@@ -1,0 +1,402 @@
+{
+  "processing_date": "2026-04-26T06:47:24.285708",
+  "total_unique_alerts": 64,
+  "newly_added": 57,
+  "previously_existing": 7,
+  "duplicates_removed": 16,
+  "by_colour": {
+    "red": 45,
+    "grey": 19,
+    "amber": 0
+  },
+  "by_status": {
+    "active": 39,
+    "closed": 25
+  },
+  "lti_count": 18,
+  "mti_count": 2,
+  "linked_red_grey_pairs": 6,
+  "linked_pairs_detail": [
+    {
+      "eqsafe_number": 39559,
+      "red_filename": "2024-04-10_39559_Red-Preliminary_Leaf-spring-dislodges-from-trailer-injuring-MoP.pdf",
+      "grey_filename": "2024-04-10_39559_Grey-Final_Leaf-spring-dislodges-from-trailer-and-injures-member-of-pub.pdf"
+    },
+    {
+      "eqsafe_number": 40454,
+      "red_filename": "2024-05-15_40454_Red-Preliminary_Vehicle-hits-livestock-travelling-from-site-to-accommodation.pdf",
+      "grey_filename": "2024-05-15_40454_Grey-Final_Vehicle-hits-livestock-travelling-from-site-to-accommodation.pdf"
+    },
+    {
+      "eqsafe_number": 40534,
+      "red_filename": "2024-05-14_40534_Red-Preliminary_Worker-injured-whilst-repairing-damaged-posts-resulting-in-L.pdf",
+      "grey_filename": "2024-05-14_40534_Grey-Final_Worker-injured-whilst-repairing-wire-ropes-resulting-in-LTI.pdf"
+    },
+    {
+      "eqsafe_number": 40634,
+      "red_filename": "2024-05-24_40634_Red-Preliminary_Sub-contractor-vehicle-loses-control-on-journey-to-site.pdf",
+      "grey_filename": "2024-05-24_40634_Grey-Final_Driver-fell-asleep-at-the-wheel-and-loses-control-of-the-veh.pdf"
+    },
+    {
+      "eqsafe_number": 39477,
+      "red_filename": "2024-04-08_39477_Red-Preliminary_Worker-tripped-on-windrow-injuring-knee.pdf",
+      "grey_filename": "2024-04-08_39477_Grey-Final_Worker-tripped-on-windrow-landing-on-knee.pdf"
+    },
+    {
+      "eqsafe_number": 38810,
+      "red_filename": "2024-03-15_38810_Red-Preliminary_IP-fell-from-position-standing-on-axle-of-low-loader-to-the.pdf",
+      "grey_filename": "2024-03-15_38810_Grey-Final_IP-fell-from-position-standing-on-axle-of-low-loader-to-the.pdf"
+    }
+  ],
+  "three_pillars_summary": {
+    "high_relevance_count": 26,
+    "paperwork_gap_count": 35,
+    "pillar_counts": {
+      "conditions_changed_mid_job": 20,
+      "crew_competency_gaps": 19,
+      "plan_adequacy_failures": 25,
+      "equipment_issues": 54,
+      "paperwork_vs_reality_gap": 35
+    },
+    "high_relevance_alerts": [
+      {
+        "eq": 39231,
+        "colour": "Grey",
+        "desc": "Traffic Management Breach - Lab (core) Tester working within 1.2m of live traffic",
+        "score": 4,
+        "pillars": {
+          "conditions_changed_mid_job": false,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 39559,
+        "colour": "Grey",
+        "desc": "Leaf spring dislodges from trailer and injures member of public",
+        "score": 4,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": false,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 40218,
+        "colour": "Grey",
+        "desc": "Contractor failed to arrive to site prompting search and rescue",
+        "score": 5,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 40534,
+        "colour": "Grey",
+        "desc": "Worker injured whilst repairing wire ropes resulting in LTI",
+        "score": 5,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 40634,
+        "colour": "Grey",
+        "desc": "Driver fell asleep at the wheel and loses control of the vehicle on journey to site",
+        "score": 5,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 41942,
+        "colour": "Red",
+        "desc": "Traffic Controller working excessive hours without sufficient breaks between working shifts",
+        "score": 3,
+        "pillars": {
+          "conditions_changed_mid_job": false,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": true,
+          "equipment_issues": false,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 41002,
+        "colour": "Red",
+        "desc": "Vehicle rollover on journey from site",
+        "score": 3,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": false,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": false
+        }
+      },
+      {
+        "eq": 41039,
+        "colour": "Red",
+        "desc": "Crew returned positive BAC results and LV operator unlicensed",
+        "score": 4,
+        "pillars": {
+          "conditions_changed_mid_job": false,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 42098,
+        "colour": "Red",
+        "desc": "Learner Driver overtaking causes maintenance truck to veer from road",
+        "score": 3,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": false,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": false
+        }
+      },
+      {
+        "eq": 35211,
+        "colour": "Grey",
+        "desc": "Traffic Controller on foot within 1.2m in a 60km speed zone",
+        "score": 3,
+        "pillars": {
+          "conditions_changed_mid_job": false,
+          "crew_competency_gaps": false,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 35216,
+        "colour": "Grey",
+        "desc": "MOP collided with Main Roads Employee after veering into oncoming lane",
+        "score": 5,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 37044,
+        "colour": "Grey",
+        "desc": "Worker suffers thermal stress resulting in LTI",
+        "score": 4,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": false,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 37100,
+        "colour": "Red",
+        "desc": "Mobile Plant and Traffic Management Procedure Breach",
+        "score": 3,
+        "pillars": {
+          "conditions_changed_mid_job": false,
+          "crew_competency_gaps": false,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 37292,
+        "colour": "Red",
+        "desc": "Traffic Controller found lying face down with concussion",
+        "score": 3,
+        "pillars": {
+          "conditions_changed_mid_job": false,
+          "crew_competency_gaps": false,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 37362,
+        "colour": "Red",
+        "desc": "Light vehicle reversed into culvert and rolled onto side",
+        "score": 3,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": false,
+          "plan_adequacy_failures": false,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 37443,
+        "colour": "Grey",
+        "desc": "Follow me vehicle conducts U-turn in front of road train",
+        "score": 4,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": false
+        }
+      },
+      {
+        "eq": 37835,
+        "colour": "Red",
+        "desc": "Lower back strain accessing TMA resulting in LTI",
+        "score": 3,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": false,
+          "plan_adequacy_failures": false,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 38716,
+        "colour": "Red",
+        "desc": "Breach of Mobile Plan Onboarding Procedure",
+        "score": 3,
+        "pillars": {
+          "conditions_changed_mid_job": false,
+          "crew_competency_gaps": false,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 38810,
+        "colour": "Grey",
+        "desc": "IP fell from position standing on axle of low loader to the ground",
+        "score": 5,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 39477,
+        "colour": "Grey",
+        "desc": "Worker tripped on windrow landing on knee",
+        "score": 3,
+        "pillars": {
+          "conditions_changed_mid_job": false,
+          "crew_competency_gaps": false,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 39486,
+        "colour": "Grey",
+        "desc": "Traffic Controller and work vehicle within 1.2 of live traffic lane",
+        "score": 5,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 56820,
+        "colour": "Grey",
+        "desc": "Quick-Cut Saw Strikes Worker in Face",
+        "score": 4,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": false,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 57539,
+        "colour": "Grey",
+        "desc": "Worker tripped over parking bay wheel stop bar",
+        "score": 4,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": false,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 57801,
+        "colour": "Red",
+        "desc": "Chain used for recovery of maintenance truck, snaps and recoils, smashing through mesh guard and windscreen",
+        "score": 3,
+        "pillars": {
+          "conditions_changed_mid_job": false,
+          "crew_competency_gaps": false,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 57935,
+        "colour": "Red",
+        "desc": "Maintenance worker struck his shin with a sledgehammer, resulting in an LTI",
+        "score": 3,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": false,
+          "plan_adequacy_failures": false,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      },
+      {
+        "eq": 57937,
+        "colour": "Red",
+        "desc": "Truck rollover",
+        "score": 5,
+        "pillars": {
+          "conditions_changed_mid_job": true,
+          "crew_competency_gaps": true,
+          "plan_adequacy_failures": true,
+          "equipment_issues": true,
+          "paperwork_vs_reality_gap": true
+        }
+      }
+    ]
+  }
+}
