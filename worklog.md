@@ -6167,3 +6167,26 @@ Stage Summary:
 - Top indirect subcategories: journey (7), equipment_tool (6), slip_trip (5), manual_handling (5)
 - GitHub push requires PAT (credentials cleaned from previous session)
 - Files committed locally, ready to push when PAT provided
+
+---
+
+Task ID: 2
+Agent: Main Agent
+Task: Update framework document with expanded evidence base and push all changes to GitHub
+
+Work Log:
+
+- Created V3 generator script (generate_framework_v3.py) based on V2
+- Rewrote Section 10 with full 64-alert evidence base and TC relevance classification
+- Added 5 direct subcategory tables and 11 indirect subcategory tables
+- Added detailed 25-row direct alert register table
+- Added 5 analysis subsections with evidence-based findings
+- Generated updated .docx (62.9KB) and .pdf (333KB)
+- Committed and pushed to GitHub (PAT cleaned after push)
+
+Stage Summary:
+
+- Framework document updated to Version 3 with expanded evidence base
+- All changes pushed to https://github.com/instructor-ship-it/roadfinder
+- GitHub PAT cleaned from local git config
+- Key evidence insight: MoP breaches (10) are largest TC-direct category, validating Dynamic Awareness emphasis
